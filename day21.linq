@@ -31,27 +31,17 @@ Defense +3   80     0       3").Concat(new Item[] { null });
 		Armor = 2,
 	};
 
-	Character candidatePlayer = new Character { Cost = int.MaxValue };
-	foreach (var w in weapons)
-	{
-		if (w.Cost > candidatePlayer.Cost)
-			continue;
-
-		foreach (var a in armor)
-		{
-			foreach (var r1 in rings)
-				foreach (var r2 in rings)
-				{
-					if (r1 == r2) continue;
-
-					var player = BuildPlayerCharacter(w, a, r1, r2);
-					if (CanPlayerWin(player, boss) && player.Cost < candidatePlayer.Cost)
-						candidatePlayer = player;
-				}
-		}
-	}
-
-	candidatePlayer.Dump();
+	var candidates =
+		from w in weapons
+		from a in armor
+		from r1 in rings
+		from r2 in rings
+		where r1 != r2 || (r1 == null && r2 == null)
+		let player = BuildPlayerCharacter(w, a, r1, r2)
+		where CanPlayerWin(player, boss)
+		orderby player.Cost
+		select player;
+	candidates.First().Dump();
 }
 
 class Character
