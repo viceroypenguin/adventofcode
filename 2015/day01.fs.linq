@@ -1,14 +1,14 @@
 <Query Kind="FSharpProgram" />
 
-let mutable level = 0
-let mutable basement = 0
-File.ReadAllText(Path.Combine(Path.GetDirectoryName(Util.CurrentQueryPath), "day01.input.txt")) 
-    |> Seq.iteri (fun i c -> 
-        level <- level + 
-            match c with
-                | '(' -> +1
-                | ')' -> -1
-        if basement = 0 && level = -1 then basement <- i + 1)
- 
-level.Dump("Part A")
+let txt = File.ReadAllText(Path.Combine(Path.GetDirectoryName(Util.CurrentQueryPath), "day01.input.txt"))
+
+let levels = txt |> Seq.scan (fun acc x ->
+		match x with
+			| '(' -> acc + 1
+			| _ -> acc - 1) 0
+
+let finalLevel = levels |> Seq.rev |> Seq.head
+let basement = levels |> Seq.findIndex (fun n -> n = -1)
+			
+finalLevel.Dump("Part A")
 basement.Dump("Part B")
