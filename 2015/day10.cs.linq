@@ -3,7 +3,7 @@
 var input = "1113122113";
 var inputArr = input.ToCharArray().ToList();
 
-foreach (var _ in Enumerable.Range(0, 50))
+foreach (var _ in Enumerable.Range(1, 50))
 {
 	var curLength = 1;
 	var curChar = inputArr[0];
@@ -31,6 +31,7 @@ foreach (var _ in Enumerable.Range(0, 50))
 	newInput.Add(curChar);
 
 	inputArr = newInput;
+	
+	if (_ == 40 || _ == 50)
+		inputArr.Count.Dump(_ == 40 ? "Part A" : "Part B");
 }
-
-inputArr.Count.Dump();
