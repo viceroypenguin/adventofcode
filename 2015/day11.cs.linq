@@ -1,18 +1,46 @@
-<Query Kind="Program" />
+<Query Kind="Program">
+  <NuGetReference>System.Collections.Immutable</NuGetReference>
+  <Namespace>System.Collections.Immutable</Namespace>
+</Query>
 
-bool ContainsStrictlyIncreasingTriplet(char[] password)
+int[] invalidChars =
 {
-	var intList = password
-		.Select(c => (int)c)
-		.ToList();
+	(int)'i' - (int)'a',
+	(int)'o' - (int)'a',
+	(int)'l' - (int)'a',
+};
 
-	return intList.Zip(intList.Skip(1), (a, b) => new { a, b })
-		.Zip(intList.Skip(2), (_, c) => new { _.a, _.b, c })
-		.Where(_ => _.a + 1 == _.b && _.b + 1 == _.c)
+ImmutableStack<int> IncrementPassword(ImmutableStack<int> password)
+{
+	var chr = password.Peek();
+	var tail = password.Pop();
+	
+	if (chr == 25)
+		return IncrementPassword(tail).Push(0);
+	else if (invalidChars.Contains(chr + 1))
+		return tail.Push(chr + 2);
+	else
+		return tail.Push(chr + 1);
+}
+
+IEnumerable<ImmutableStack<int>> GetIncrementingPasswords(ImmutableStack<int> password)
+{
+	while (true)
+	{
+		password = IncrementPassword(password);
+		yield return password;
+	}
+}
+
+bool ContainsStrictlyIncreasingTriplet(IEnumerable<int> password)
+{
+	return password.Zip(password.Skip(1), (a, b) => new { a, b })
+		.Zip(password.Skip(2), (_, c) => new { _.a, _.b, c })
+		.Where(_ => _.a - 1 == _.b && _.b - 1 == _.c)
 		.Any();
 }
 
-bool ContainsTwoDuplicates(char[] password)
+bool ContainsTwoDuplicates(IEnumerable<int> password)
 {
 	var duplicates = password
 		.Zip(
@@ -24,75 +52,30 @@ bool ContainsTwoDuplicates(char[] password)
 	return duplicates.Distinct().Count() > 1;
 }
 
-char IncrementChar(char c)
+IEnumerable<ImmutableStack<int>> GetPasswords(ImmutableStack<int> password)
 {
-	switch (c)
-	{
-		case 'i':
-		case 'o':
-		case 'l':
-			return (char)((int)c + 2);
-
-		case 'z':
-			return 'a';
-
-		default:
-			return (char)((int)c + 1);
-	}
+	return GetIncrementingPasswords(password)
+		.Where(p =>
+			ContainsStrictlyIncreasingTriplet(p) &&
+			ContainsTwoDuplicates(p));
 }
 
-void IncrementCharRef(ref char c)
+string PassAsString(IImmutableStack<int> password)
 {
-	c = IncrementChar(c);
-}
-
-void ResetInvalidChars(char[] password)
-{
-	var flag = false;
-	for (int i = 0; i < password.Length; i++)
-	{
-		if (flag)
-			password[i] = 'a';
-		else
-			switch (password[i])
-			{
-				case 'i':
-				case 'o':
-				case 'l':
-					password[i] = (char)((int)password[i] + 1);
-					flag = true;
-					break;
-			}
-	}
-}
-
-void GetNextPassword(char[] password)
-{
-	while (true)
-	{
-		var i = password.Length - 1;
-		do
-		{
-			IncrementCharRef(ref password[i]);
-			i--;
-		} while (i >= 0 && password[i+1] == 'a');
-
-		if (ContainsTwoDuplicates(password) &&
-			ContainsStrictlyIncreasingTriplet(password))
-			return;
-	}
+	return string.Join("", password.Reverse().Select(i => (char)(i + (int)'a')));
 }
 
 void Main()
 {
 	var input = "hxbxwxba";
-	var inputArr = input.ToCharArray();
-
-	ResetInvalidChars(inputArr);
-
-	GetNextPassword(inputArr);
+	var stack = ImmutableStack<int>.Empty;
+	foreach (var c in input)
+		stack = stack.Push((int)c - (int)'a');
 	
-	new string(inputArr).Dump();
+	GetPasswords(stack)
+		.Take(2)
+		.Select(p => PassAsString(p))
+		.Dump();
 }
 
 // Define other methods and classes here
