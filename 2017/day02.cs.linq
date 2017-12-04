@@ -16,7 +16,7 @@ input
 			from num in arr
 			from div in arr
 			where num != div
-			where (num / div) * div == num
+			where num % div == 0
 			select num / div).Single();
 	})
 	.Sum()
