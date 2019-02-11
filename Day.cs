@@ -2,54 +2,62 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace AdventOfCode
 {
-    public enum CodeType
-    {
-        Original,
-        Fastest,
-    }
+	public enum CodeType
+	{
+		Original,
+		Fastest,
+	}
 
-    public abstract class Day
-    {
-        public abstract int Year { get; }
-        public abstract int DayNumber { get; }
-        public abstract CodeType CodeType { get; }
-        protected abstract void ExecuteDay(byte[] input);
+	public abstract class Day
+	{
+		public abstract int Year { get; }
+		public abstract int DayNumber { get; }
+		public abstract CodeType CodeType { get; }
+		protected abstract void ExecuteDay(byte[] input);
 
-        protected void Dump(char part, object output) =>
-            _output.Add($"Year {Year}, Day {DayNumber}, Part {part}: {output}");
+		protected void Dump(char part, object output) =>
+			_output.Add($"Year {Year}, Day {DayNumber}, Part {part}: {output}");
 
-        private List<string> _output = new List<string>();
+		protected void DumpScreen(char part, IEnumerable<IEnumerable<char>> output)
+		{
+			_output.Add($"Year {Year}, Day {DayNumber}, Part {part}:");
+			_output.AddRange(output
+				.Select(l => string.Join("", l)));
+		}
 
-        public int TotalMicroseconds { get; private set; }
+		private List<string> _output = new List<string>();
 
-        public void Execute()
-        {
-            var input = File.ReadAllBytes($@"..\..\..\{Year}\day{DayNumber:00}.input.txt");
+		public int TotalMicroseconds { get; private set; }
 
-            var sw = new Stopwatch();
-            sw.Start();
-            ExecuteDay(input);
-            sw.Stop();
+		public void Execute()
+		{
+			var input = File.ReadAllBytes($@"..\..\..\{Year}\day{DayNumber:00}.input.txt");
 
-            Console.WriteLine(string.Join(Environment.NewLine, _output));
-            Console.WriteLine();
+			var sw = new Stopwatch();
+			sw.Start();
+			ExecuteDay(input);
+			sw.Stop();
 
-            TotalMicroseconds = (int)
-                (sw.Elapsed.TotalMilliseconds * 1000);
-        }
-    }
+			Console.WriteLine(string.Join(Environment.NewLine, _output));
+			Console.WriteLine();
 
-    public class DummyDay : Day
-    {
-        public override int Year => 2015;
-        public override int DayNumber => 1;
-        public override CodeType CodeType => CodeType.Original;
-        protected override void ExecuteDay(byte[] input) { }
-    }
+			TotalMicroseconds = (int)
+				(sw.Elapsed.TotalMilliseconds * 1000);
+		}
+	}
+
+	public class DummyDay : Day
+	{
+		public override int Year => 2015;
+		public override int DayNumber => 1;
+		public override CodeType CodeType => CodeType.Original;
+		protected override void ExecuteDay(byte[] input) { }
+	}
 }

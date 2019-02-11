@@ -7,10 +7,4 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="2015\day16b.original.cs" />
-    <Compile Remove="2015\day19b.original.cs" />
-    <Compile Remove="2015\day20b.original.cs" />
-  </ItemGroup>
-
 </Project>
