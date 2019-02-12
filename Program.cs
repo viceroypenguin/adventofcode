@@ -28,11 +28,11 @@ namespace AdventOfCode
             {
                 Console.WriteLine(
                     string.Join(Environment.NewLine,
-                        g.Select(d => $"Year {d.Year}, Day {d.DayNumber,2}, Type {d.CodeType,9}      :   {d.TotalMicroseconds,10:N0} μs")));
+                        g.Select(d => $"Year {d.Year}, Day {d.DayNumber,2}, Type {d.CodeType,9}      :   {d.TotalMicroseconds,13:N0} μs")));
 
                 Console.WriteLine("--------------------------------------------------------");
                 Console.WriteLine(
-                    $"Year {g.Key.Year},         Type {g.Key.CodeType,9} Total:   {g.Sum(d => d.TotalMicroseconds),10:N0} μs");
+                    $"Year {g.Key.Year},         Type {g.Key.CodeType,9} Total:   {g.Sum(d => d.TotalMicroseconds),13:N0} μs");
                 Console.WriteLine();
             }
         }

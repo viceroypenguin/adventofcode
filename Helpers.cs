@@ -9,9 +9,9 @@ namespace AdventOfCode
         public static string GetString(this byte[] input) =>
             Encoding.ASCII.GetString(input);
 
-        private static char[] _splitChars = new[] { '\r', '\n', };
-        public static string[] GetLines(this byte[] input) =>
+        private static string[] _splitChars = new[] { "\r\n", "\n", };
+        public static string[] GetLines(this byte[] input, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries) =>
             GetString(input)
-                .Split(_splitChars, StringSplitOptions.RemoveEmptyEntries);
+                .Split(_splitChars, options);
     }
 }
