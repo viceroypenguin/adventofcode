@@ -12,6 +12,8 @@ namespace AdventOfCode
 
 		protected override void ExecuteDay(byte[] input)
 		{
+			if (input == null) return;
+
 			var nums = input.GetString()
 				.Split()
 				.Where(x => !string.IsNullOrWhiteSpace(x))
