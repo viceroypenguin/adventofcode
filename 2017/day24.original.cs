@@ -19,7 +19,9 @@ namespace AdventOfCode
 
 		protected override void ExecuteDay(byte[] input)
 		{
-			var ports =input.GetLines()
+			if (input == null) return;
+
+			var ports = input.GetLines()
 				.Select(x => x.Split('/'))
 				.Select(x => new Component { PortA = Convert.ToInt32(x[0]), PortB = Convert.ToInt32(x[1]), })
 				.ToList();
