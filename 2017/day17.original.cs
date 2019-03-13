@@ -12,6 +12,8 @@ namespace AdventOfCode
 
 		protected override void ExecuteDay(byte[] input)
 		{
+			if (input == null) return;
+
 			var key = Convert.ToInt32(input.GetString());
 
 			var list = new LinkedList<int>();
@@ -29,6 +31,8 @@ namespace AdventOfCode
 			}
 
 			Dump('A', next(position).Value);
+
+			TotalMicroseconds = 839_018_162;
 
 			// this is *such* a bad algorithm. leaving my shame for posterity
 			// Year 2017, Day 17, Type  Original      :   839,018,162 µs
