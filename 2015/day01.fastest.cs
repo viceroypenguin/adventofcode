@@ -12,6 +12,8 @@ namespace AdventOfCode
 
 		protected override void ExecuteDay(byte[] input)
 		{
+			if (input == null) return;
+
 			var level = 0;
 			foreach (var c in input)
 				level += ((byte)'(' - c) * 2 + 1;

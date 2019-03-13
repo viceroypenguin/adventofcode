@@ -10,6 +10,8 @@ namespace AdventOfCode
 
 		protected override void ExecuteDay(byte[] input)
 		{
+			if (input == null) return;
+
 			var level = 0;
 			var basement = 0;
 			foreach ((var c, var i) in input.Select((c, i) => (c, i + 1)))
