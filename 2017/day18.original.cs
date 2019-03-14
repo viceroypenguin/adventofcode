@@ -22,6 +22,8 @@ namespace AdventOfCode
 
 		protected override void ExecuteDay(byte[] input)
 		{
+			if (input == null) return;
+
 			var regex = new Regex(@"^(?<inst>snd|set|add|mul|mod|rcv|jgz) (?<dst>\w|-?\d+)( (?<src>\w|-?\d+))?$", RegexOptions.Compiled);
 			var instructions = input.GetLines()
 					.Select(inst => regex.Match(inst))
