@@ -14,6 +14,8 @@ namespace AdventOfCode
 
 		protected override void ExecuteDay(byte[] input)
 		{
+			if (input == null) return;
+
 			var regex = new Regex(@"^Generator (?<gen>\w) starts with (?<init>\d+)$", RegexOptions.Compiled);
 			var generators = input.GetLines()
 				.Select(l => regex.Match(l))
