@@ -12,6 +12,8 @@ namespace AdventOfCode
 
 		protected override void ExecuteDay(byte[] input)
 		{
+			if (input == null) return;
+
 			(int x, int y) GetPosition(int i)
 			{
 				var maxRoot = (int)Math.Sqrt(i - 1);
@@ -29,23 +31,14 @@ namespace AdventOfCode
 
 				var sideNum = (botRight - i) / sideLength;
 				var lastInSide = botRight - (sideLength * sideNum);
-				switch (sideNum)
+				return (sideNum) switch
 				{
-					case 0:
-						// bottom; count backwards from (rank, -rank)
-						return (x: rank - (lastInSide - i), y: -rank);
-					case 1:
-						// left; count backwards from (-rank, -rank)
-						return (x: -rank, y: (lastInSide - i) - rank);
-					case 2:
-						// top; count backwards from (-rank, rank)
-						return (x: (lastInSide - i) - rank, y: +rank);
-					case 3:
-						// right; count backwards from (rank, rank)
-						return (x: +rank, y: rank - (lastInSide - i));
-					default:
-						throw new InvalidOperationException("??");
-				}
+					0 => (x: rank - (lastInSide - i), y: -rank),
+					1 => (x: -rank, y: (lastInSide - i) - rank),
+					2 => (x: (lastInSide - i) - rank, y: +rank),
+					3 => (x: +rank, y: rank - (lastInSide - i)),
+					_ => throw new InvalidOperationException("??"),
+				};
 			}
 
 			var number = Convert.ToInt32(input.GetString());
