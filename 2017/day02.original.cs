@@ -12,6 +12,8 @@ namespace AdventOfCode
 
 		protected override void ExecuteDay(byte[] input)
 		{
+			if (input == null) return;
+
 			var lines = input.GetLines()
 				.Select(x => x.Split().Select(s => Convert.ToInt32(s)).ToList())
 				.ToList();
