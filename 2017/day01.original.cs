@@ -12,6 +12,8 @@ namespace AdventOfCode
 
 		protected override void ExecuteDay(byte[] input)
 		{
+			if (input == null) return;
+
 			var data = input.GetString()
 				.Select(x => (int)x - (int)'0')
 				.ToList();
@@ -20,7 +22,7 @@ namespace AdventOfCode
 				data.Zip(data.Skip(1), (a, b) => new { a, b })
 					.Where(x => x.a == x.b)
 					.Select(x => x.a)
-					.Sum() + input.Last());
+					.Sum() + data.Last());
 
 			var rotInput = data.Skip(data.Count / 2).Concat(data.Take(data.Count / 2));
 			Dump('B',
