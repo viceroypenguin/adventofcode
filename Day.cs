@@ -34,30 +34,38 @@ namespace AdventOfCode
 
 		private List<string> _output = new List<string>();
 
-		public int TotalMicroseconds { get; private set; }
+		public int TotalMicroseconds { get; protected set; }
 
 		public void Execute()
 		{
-			var input = File.ReadAllBytes($@"..\..\..\{Year}\day{DayNumber:00}.input.txt");
+			var input = Year != 0
+				? File.ReadAllBytes($@"..\..\..\{Year}\day{DayNumber:00}.input.txt")
+				: null;
+
+			ExecuteDay(null);
 
 			var sw = new Stopwatch();
 			sw.Start();
 			ExecuteDay(input);
 			sw.Stop();
 
-			Console.WriteLine(string.Join(Environment.NewLine, _output));
-			Console.WriteLine();
+			if (Year != 0)
+			{
+				Console.WriteLine(string.Join(Environment.NewLine, _output));
+				Console.WriteLine();
+			}
 
-			TotalMicroseconds = (int)
-				(sw.Elapsed.TotalMilliseconds * 1000);
+			if (TotalMicroseconds == 0)
+				TotalMicroseconds = (int)
+					(sw.Elapsed.TotalMilliseconds * 1000);
 		}
 	}
 
 	public class DummyDay : Day
 	{
-		public override int Year => 2015;
-		public override int DayNumber => 1;
+		public override int Year => 0;
+		public override int DayNumber => 0;
 		public override CodeType CodeType => CodeType.Original;
-		protected override void ExecuteDay(byte[] input) { }
+		protected override void ExecuteDay(byte[] input) { Dump('A', ""); DumpScreen('B', new[] { new[] { ' ' } }); }
 	}
 }
