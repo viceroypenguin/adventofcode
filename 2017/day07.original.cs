@@ -13,6 +13,8 @@ namespace AdventOfCode
 
 		protected override void ExecuteDay(byte[] input)
 		{
+			if (input == null) return;
+
 			var regex = new Regex(@"^(?<id>\w+) \((?<weight>\d+)\)( -> ((?<childid>\w+)(,\s*)?)*)?$", RegexOptions.Compiled);
 
 			var nodes = input.GetLines()
