@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -23,6 +24,7 @@ namespace AdventOfCode
 		Instruction[] instructions;
 		int instructionCount;
 
+		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
 		protected override void ExecuteDay(byte[] input)
 		{
 			if (input == null) return;
@@ -33,6 +35,7 @@ namespace AdventOfCode
 			PartB();
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
 		private void ParseInstructions(byte[] input)
 		{
 			var tmp = new Instruction[input.Length / 8];
@@ -91,6 +94,7 @@ namespace AdventOfCode
 			instructionCount = count;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
 		private unsafe void PartA()
 		{
 			fixed (Instruction* instructions = this.instructions)
@@ -132,6 +136,7 @@ namespace AdventOfCode
 			}
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
 		private unsafe void PartB()
 		{
 			fixed (Instruction* instructions = this.instructions)
