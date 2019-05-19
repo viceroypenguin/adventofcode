@@ -13,6 +13,8 @@ namespace AdventOfCode
 
 		protected override void ExecuteDay(byte[] input)
 		{
+			if (input == null) return;
+
 			var regex = new Regex(@"^(?<reg_a>\w+) (?<adj_dir>inc|dec) (?<adj_amt>-?\d+) if (?<reg_b>\w+) (?<comp>.{1,2}) (?<val>-?\d+)$", RegexOptions.Compiled);
 
 			var instructions = input.GetLines()
