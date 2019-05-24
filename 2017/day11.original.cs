@@ -13,6 +13,8 @@ namespace AdventOfCode
 
 		protected override void ExecuteDay(byte[] input)
 		{
+			if (input == null) return;
+
 			var dirs = input.GetString()
 				.Trim()
 				.Split(',')
