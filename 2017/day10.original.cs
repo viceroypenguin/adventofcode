@@ -12,6 +12,8 @@ namespace AdventOfCode
 
 		protected override void ExecuteDay(byte[] input)
 		{
+			if (input == null) return;
+
 			var nums = input.GetString()
 				.Split(',')
 				.Select(i => Convert.ToInt32(i))
@@ -23,7 +25,7 @@ namespace AdventOfCode
 			void KnotHashRound()
 			{
 				var position = 0;
-				foreach (var i in input.Select((len, skip) => (len, skip)))
+				foreach (var i in nums.Select((len, skip) => (len, skip)))
 				{
 					var indexes = Enumerable.Range(position, i.len)
 						.Select(idx => idx % listCount);
