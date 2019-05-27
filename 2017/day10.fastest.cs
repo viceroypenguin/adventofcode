@@ -32,7 +32,7 @@ namespace AdventOfCode
 					n = 0;
 				}
 			}
-			Dump('A', bytes[0] * bytes[1]);
+			PartA = (bytes[0] * bytes[1]).ToString();
 
 			var newLength = input.Length - 2 + 5;
 			var seq = stackalloc byte[newLength];
@@ -63,7 +63,7 @@ namespace AdventOfCode
 				str[i >> 3] = ToHex(b >> 4);
 				str[(i >> 3) + 1] = ToHex(b & 0xf);
 			}
-			Dump('B', new string(str));
+			PartB = new string(str);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]

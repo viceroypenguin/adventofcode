@@ -22,6 +22,9 @@ namespace AdventOfCode
 		public abstract CodeType CodeType { get; }
 		protected abstract void ExecuteDay(byte[] input);
 
+		protected string PartA { get; set; }
+		protected string PartB { get; set; }
+
 		protected void Dump(char part, object output) =>
 			_output.Add($"Year {Year}, Day {DayNumber}, Part {part}: {output}");
 
@@ -48,6 +51,12 @@ namespace AdventOfCode
 			sw.Start();
 			ExecuteDay(input);
 			sw.Stop();
+
+			if (!_output.Any())
+			{
+				Dump('A', PartA);
+				Dump('B', PartB);
+			}
 
 			if (Year != 0)
 			{

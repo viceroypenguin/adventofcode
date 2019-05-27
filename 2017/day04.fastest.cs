@@ -55,8 +55,8 @@ namespace AdventOfCode
 				}
 			}
 
-			Dump('A', part1);
-			Dump('B', part2);
+			PartA = part1.ToString();
+			PartB = part2.ToString();
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]

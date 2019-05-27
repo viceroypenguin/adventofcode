@@ -35,7 +35,7 @@ namespace AdventOfCode
 					position += nextValue;
 			}
 
-			Dump('A', nextValue);
+			PartA = nextValue.ToString();
 
 			var position1 = position = 0;
 			// loop runs in O(log i)
@@ -50,7 +50,7 @@ namespace AdventOfCode
 				position %= (i += skip);
 			}
 
-			Dump('B', position1);
+			PartB = position1.ToString();
 		}
 	}
 }

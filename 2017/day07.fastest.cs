@@ -99,11 +99,11 @@ namespace AdventOfCode
 					chars[idx--] = (char)(n & 0xff);
 					n >>= 8;
 				}
-				Dump('A', new string(chars, idx + 1, chars.Length - idx - 1));
+				PartA = new string(chars, idx + 1, chars.Length - idx - 1);
 			}
 
 
-			Dump('B', -GetRebalancedWeight(data, hashTable, root));
+			PartB = (-GetRebalancedWeight(data, hashTable, root)).ToString();
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -31,8 +31,8 @@ namespace AdventOfCode
 
 			ParseInstructions(input);
 
-			PartA();
-			PartB();
+			DoPartA();
+			DoPartB();
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
@@ -95,7 +95,7 @@ namespace AdventOfCode
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-		private unsafe void PartA()
+		private unsafe void DoPartA()
 		{
 			fixed (Instruction* instructions = this.instructions)
 			{
@@ -126,7 +126,7 @@ namespace AdventOfCode
 							{
 								if (source != 0)
 								{
-									Dump('A', snd);
+									PartA = snd.ToString();
 									return;
 								}
 								break;
@@ -137,7 +137,7 @@ namespace AdventOfCode
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-		private unsafe void PartB()
+		private unsafe void DoPartB()
 		{
 			fixed (Instruction* instructions = this.instructions)
 			{
@@ -188,7 +188,7 @@ namespace AdventOfCode
 									if (fronts[1 - cpu] == backs[1 - cpu])
 									{
 										// deadlock; return. (return 0, since 1 *sends* to 0's queue)
-										Dump('B', backs[0]);
+										PartB = backs[0].ToString();
 										return;
 									}
 

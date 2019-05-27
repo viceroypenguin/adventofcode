@@ -47,7 +47,7 @@ namespace AdventOfCode
 			// permute instructions create the inverse transformation
 			permute = Inverse(permute);
 
-			Dump('A', Format(Compose(permute, swapRotate)));
+			PartA = Format(Compose(permute, swapRotate));
 
 			ulong swapRotateB = identity, permuteB = identity;
 			for (long n = 1_000_000_000; n != 0; n >>= 1)
@@ -61,7 +61,7 @@ namespace AdventOfCode
 				permute = Compose(permute, permute);
 			}
 
-			Dump('B', Format(Compose(permuteB, swapRotateB)));
+			PartB = Format(Compose(permuteB, swapRotateB));
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]

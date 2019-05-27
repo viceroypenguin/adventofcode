@@ -109,8 +109,8 @@ namespace AdventOfCode
 				ctr++;
 				if (map.ContainsKey(x))
 				{
-					Dump('A', ctr);
-					Dump('B', ctr - map[x]);
+					PartA = ctr.ToString();
+					PartB = (ctr - map[x]).ToString();
 					return;
 				}
 

@@ -25,13 +25,13 @@ namespace AdventOfCode
 				last = input[i];
 			}
 			sum += input[^1];
-			Dump('A', sum);
+			PartA = sum.ToString();
 
 			sum = 0;
 			for (int i = 0, j = input.Length / 2; j < input.Length; i++, j++)
 				if (input[i] == input[j])
 					sum += input[i];
-			Dump('B', sum << 1);
+			PartB = (sum << 1).ToString();
 		}
 	}
 }

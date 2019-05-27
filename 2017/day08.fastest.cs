@@ -100,8 +100,8 @@ done:
 				if (registers[i] > maxEnd)
 					maxEnd = registers[i];
 
-			Dump('A', maxEnd);
-			Dump('B', maxValue);
+			PartA = maxEnd.ToString();
+			PartB = maxValue.ToString();
 		}
 	}
 }

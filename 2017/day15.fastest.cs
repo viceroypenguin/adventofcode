@@ -56,7 +56,7 @@ namespace AdventOfCode
 
 				sums = Avx2.Subtract(sums, Avx2.CompareEqual(Avx2.And(a, and16Const), Avx2.And(b, and16Const)));
 			}
-			Dump('A', Vector256.GetElement(sums, 0) + Vector256.GetElement(sums, 1) + Vector256.GetElement(sums, 2) + Vector256.GetElement(sums, 3));
+			PartA = (Vector256.GetElement(sums, 0) + Vector256.GetElement(sums, 1) + Vector256.GetElement(sums, 2) + Vector256.GetElement(sums, 3)).ToString();
 
 			a = a0; b = b0;
 			var aMask = Avx2.MoveMask(Avx2.CompareEqual(Avx2.And(a, and2Const), Vector256<ulong>.Zero).AsDouble());
@@ -84,7 +84,7 @@ namespace AdventOfCode
 				if ((Vector256.GetElement(a, aIndex) & 0xffff) == (Vector256.GetElement(b, bIndex) & 0xffff))
 					matches++;
 			}
-			Dump('B', matches);
+			PartB = matches.ToString();
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]

@@ -67,8 +67,8 @@ namespace AdventOfCode
 				}
 			}
 
-			Dump('A', Math.Abs(nw) + Math.Abs(n) + Math.Abs(ne));
-			Dump('B', max);
+			PartA = (Math.Abs(nw) + Math.Abs(n) + Math.Abs(ne)).ToString();
+			PartB = max.ToString();
 		}
 	}
 }

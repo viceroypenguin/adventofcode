@@ -24,7 +24,7 @@ namespace AdventOfCode
 			{
 				var x = number - 1;
 				var ring = (int)(Math.Sqrt((uint)x) + 1) / 2;
-				Dump('A', ring + Math.Abs(x % (ring * 2) - ring));
+				PartA = (ring + Math.Abs(x % (ring * 2) - ring)).ToString();
 			}
 
 			{
@@ -42,7 +42,7 @@ namespace AdventOfCode
 						{
 							if (arr[p] > number)
 							{
-								Dump('B', arr[p]);
+								PartB = arr[p].ToString();
 								return;
 							}
 

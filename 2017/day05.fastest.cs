@@ -16,8 +16,8 @@ namespace AdventOfCode
 		{
 			if (input == null) return;
 
-			var nums1 = new int[input.Length / 4];
-			var nums2 = new int[input.Length / 4];
+			var nums1 = stackalloc int[input.Length / 4];
+			var nums2 = stackalloc int[input.Length / 4];
 			var count = 0;
 			for (int i = 0, neg = 0, n = 0; i < input.Length; i++)
 			{
@@ -34,17 +34,17 @@ namespace AdventOfCode
 					n = n * 10 + c - '0';
 			}
 
-			fixed (int* start = nums1)
 			{
+				var start = nums1;
 				var end = &start[count];
 				var steps = 0;
 				for (var p = start; p >= start && p < end; steps++)
 					p += (*p)++;
-				Dump('A', steps);
+				PartA = steps.ToString();
 			}
 
-			fixed (int* start = nums2)
 			{
+				var start = nums2;
 				var end = &start[count];
 				var steps = 0;
 				for (var p = start; p >= start && p < end; steps++)
@@ -53,7 +53,7 @@ namespace AdventOfCode
 					*p += -(((j - 3) >> 31) << 1) - 1;
 					p += j;
 				}
-				Dump('B', steps);
+				PartB = steps.ToString();
 			}
 		}
 	}

@@ -31,8 +31,8 @@ namespace AdventOfCode
 				}
 			}
 
-			Dump('A', score);
-			Dump('B', garbage);
+			PartA = score.ToString();
+			PartB = garbage.ToString();
 		}
 	}
 }

@@ -66,8 +66,8 @@ namespace AdventOfCode
 					n = n * 10 + c - '0';
 			}
 
-			Dump('A', part1);
-			Dump('B', part2);
+			PartA = part1.ToString();
+			PartB = part2.ToString();
 		}
 	}
 }

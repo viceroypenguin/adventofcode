@@ -40,7 +40,7 @@ namespace AdventOfCode
 			// PartB(instructions);
 		}
 
-		void PartA(IList<Instruction> input)
+		private new void PartA(IList<Instruction> input)
 		{
 			var registers = new Dictionary<string, long>();
 			long getRegister(string r) => registers.ContainsKey(r) ? registers[r] : 0;
@@ -122,7 +122,7 @@ namespace AdventOfCode
 			Dump('A', sound);
 		}
 
-		void PartB(IList<Instruction> input)
+		private new void PartB(IList<Instruction> input)
 		{
 			var queues = Enumerable.Repeat(0, 2).Select(_ => new BlockingCollection<long>()).ToList();
 			var sendCount = new int[2];
