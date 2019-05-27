@@ -13,6 +13,8 @@ namespace AdventOfCode
 
 		protected override void ExecuteDay(byte[] input)
 		{
+			if (input == null) return;
+
 			var regex = new Regex(@"^((?<spin>s(?<amt>\d+))|(?<xchg>x(?<xchg_a>\d+)/(?<xchg_b>\d+))|(?<partner>p(?<part_a>\w)/(?<part_b>\w)))$", RegexOptions.Compiled);
 			var instructions = input.GetString()
 				.Split(',')
