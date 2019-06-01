@@ -13,6 +13,8 @@ namespace AdventOfCode
 
 		protected override void ExecuteDay(byte[] input)
 		{
+			if (input == null) return;
+
 			var regex = new Regex(@"^(?<prog_a>\w+) \<-\> ((?<prog_b>\w+)(,\s*)?)*$", RegexOptions.Compiled);
 			var instructions = input.GetLines()
 				.Select(l => regex.Match(l))
