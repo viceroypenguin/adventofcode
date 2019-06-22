@@ -13,6 +13,8 @@ namespace AdventOfCode
 
 		protected override void ExecuteDay(byte[] input)
 		{
+			if (input == null) return;
+
 			var regex = new Regex(@"^(?<depth>\d+): (?<range>\d+)$", RegexOptions.Compiled);
 			var depths = input.GetLines()
 				.Select(l => regex.Match(l))
