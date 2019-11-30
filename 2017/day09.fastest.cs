@@ -16,6 +16,7 @@ namespace AdventOfCode
 		{
 			if (input == null) return;
 
+			// borrowed liberally from https://github.com/Voltara/advent2017-fast/blob/master/src/day09.c
 			int score = 0, garbage = 0, depth = 0, g = 0;
 			for (int i = 0; i < input.Length; i++)
 			{

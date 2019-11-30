@@ -16,6 +16,7 @@ namespace AdventOfCode
 		{
 			if (input == null) return;
 
+			// borrowed liberally from https://github.com/Voltara/advent2017-fast/blob/master/src/day10.c
 			var bytes = stackalloc byte[256];
 			for (var i = 0; i < 256; i++)
 				bytes[i] = (byte)i;

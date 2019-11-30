@@ -31,6 +31,7 @@ namespace AdventOfCode
 		{
 			if (input == null) return;
 
+			// borrowed liberally from https://github.com/Voltara/advent2017-fast/blob/master/src/day24.c
 			var ports = new List<Component>(input.Length / 4);
 			{
 				int a = 0, n = 0;

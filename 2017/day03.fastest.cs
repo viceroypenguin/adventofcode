@@ -16,6 +16,7 @@ namespace AdventOfCode
 		{
 			if (input == null) return;
 
+			// borrowed liberally from https://github.com/Voltara/advent2017-fast/blob/master/src/day03.c
 			var number = 0;
 			for (int i = 0; i < input.Length; i++)
 				if (input[i] >= '0')

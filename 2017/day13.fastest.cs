@@ -25,6 +25,7 @@ namespace AdventOfCode
 		{
 			if (input == null) return;
 
+			// borrowed liberally from https://github.com/Voltara/advent2017-fast/blob/master/src/day13.c
 			var layers = stackalloc ModMask[input.Length / 4];
 			var p = layers;
 			uint depth = 0, range = 0, severity = 0;

@@ -20,6 +20,7 @@ namespace AdventOfCode
 		{
 			if (input == null) return;
 
+			// borrowed liberally from https://github.com/Voltara/advent2017-fast/blob/master/src/day06.c
 			var bytes = stackalloc byte[Vector128<byte>.Count];
 			var ulongs = (ulong*)bytes;
 

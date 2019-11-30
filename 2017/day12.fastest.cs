@@ -17,6 +17,7 @@ namespace AdventOfCode
 		{
 			if (input == null) return;
 
+			// borrowed liberally from https://github.com/Voltara/advent2017-fast/blob/master/src/day12.c
 			var parents = stackalloc int[input.Length / 16];
 			var rowNumbers = stackalloc int[16];
 			int entryCount = 0, rowCount = 0, n = 0;

@@ -33,6 +33,7 @@ namespace AdventOfCode
 		{
 			if (input == null) return;
 
+			// borrowed liberally from https://github.com/Voltara/advent2017-fast/blob/master/src/day07.c
 			var hashTable = stackalloc HashEntry[HASH_SIZE];
 
 			var data = stackalloc Line[input.Length / 16];

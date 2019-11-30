@@ -16,6 +16,7 @@ namespace AdventOfCode
 		{
 			if (input == null) return;
 
+			// borrowed liberally from https://github.com/Voltara/advent2017-fast/blob/master/src/day17.c
 			int key = 0;
 			for (int i = 0; i < input.Length && input[i] >= '0'; i++)
 				key = key * 10 + input[i] - '0';

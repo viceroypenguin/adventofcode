@@ -31,6 +31,7 @@ namespace AdventOfCode
 		{
 			if (input == null) return;
 
+			// borrowed liberally from https://github.com/Voltara/advent2017-fast/blob/master/src/day15.c
 			ulong aKey = 0, bKey = 0;
 			for (int i = 0; i < input.Length; i++)
 			{
