@@ -23,7 +23,7 @@ namespace AdventOfCode
 			for (int i = 0; i < input.Length; i++)
 			{
 				var c = input[i];
-				if (c == '\r')
+				if (c == '\n')
 				{
 					arr[j++] = n;
 

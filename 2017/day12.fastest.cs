@@ -26,7 +26,7 @@ namespace AdventOfCode
 			{
 				if (c >= '0' && c <= '9')
 					n = n * 10 + c - '0';
-				else if (c == ',' || c == '<' || c == '\r')
+				else if (c == ',' || c == '<')
 				{
 					// 0 is our key value, so shift everything up one
 					rowNumbers[rowCount++] = n + 1;
@@ -34,6 +34,10 @@ namespace AdventOfCode
 				}
 				else if (c == '\n')
 				{
+					// 0 is our key value, so shift everything up one
+					rowNumbers[rowCount++] = n + 1;
+					n = 0;
+
 					var min = int.MaxValue;
 					for (int i = 0; i < rowCount; i++)
 						if (rowNumbers[i] < min)

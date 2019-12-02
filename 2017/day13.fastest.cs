@@ -31,7 +31,7 @@ namespace AdventOfCode
 			uint depth = 0, range = 0, severity = 0;
 			foreach (var c in input)
 			{
-				if (c == '\r')
+				if (c == '\n')
 				{
 					var cycleLength = (range - 1) * 2;
 					var mod = depth % cycleLength;

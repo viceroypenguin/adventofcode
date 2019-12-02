@@ -274,3 +274,9 @@ __pycache__/
 
 # Cake - Uncomment if you are using it
 # tools/
+
+# Ignore app settings file, session id is secret and goes there
+appsettings.json
+
+# Ignore input files, they will be re-downloaded
+*.input.txt

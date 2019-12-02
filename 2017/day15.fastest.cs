@@ -36,7 +36,7 @@ namespace AdventOfCode
 			for (int i = 0; i < input.Length; i++)
 			{
 				var c = input[i];
-				if (c == '\r' && aKey == 0)
+				if (c == '\n' && aKey == 0)
 				{
 					aKey = bKey;
 					bKey = 0;

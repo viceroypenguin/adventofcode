@@ -27,7 +27,7 @@ namespace AdventOfCode
 			{
 				if (c >= '0')
 					n = n * 10 + c - '0';
-				else if (c == ',' || c == '\r')
+				else if (c == ',' || c == '\n')
 				{
 					(position, skip) = DoRound(bytes, (byte)n, position, skip);
 					n = 0;

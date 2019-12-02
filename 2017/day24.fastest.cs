@@ -43,7 +43,7 @@ namespace AdventOfCode
 						a = n;
 						n = 0;
 					}
-					else if (c == '\r')
+					else if (c == '\n')
 					{
 						ports.Add(new Component { PortA = a, PortB = n, });
 						n = 0;

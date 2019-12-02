@@ -27,7 +27,7 @@ namespace AdventOfCode
 				var c = input[i];
 				if (c >= 'a')
 					number = (number << 8) + c;
-				else if (c != '\n')
+				else
 				{
 					var sortedNumber = SortBytes(number);
 					for (int k = 0; !flag1 && k < j; k += 2)
@@ -37,7 +37,7 @@ namespace AdventOfCode
 						if (line[k] == sortedNumber)
 							flag2 = true;
 
-					if (c == '\r')
+					if (c == '\n')
 					{
 						if (!flag1) part1++;
 						if (!flag2) part2++;

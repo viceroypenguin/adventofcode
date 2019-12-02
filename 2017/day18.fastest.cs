@@ -47,7 +47,7 @@ namespace AdventOfCode
 			for (int i = 0; i < input.Length; i++)
 			{
 				var c = input[i];
-				if (c == '\r')
+				if (c == '\n')
 				{
 					if (state == 1)
 						l.Operation = (l.Operation & ~0x100) | ((l.Operation & 0x100) << 1);

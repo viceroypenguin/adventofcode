@@ -1,16 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using System.Threading;
+using Microsoft.Extensions.Configuration;
 using MoreLinq;
 
 namespace AdventOfCode
 {
 	public static class Program
 	{
+		public static HttpClient HttpClient { get; private set; }
+
 		public static void Main(string[] args)
 		{
+			var builder = new ConfigurationBuilder()
+				.SetBasePath(Directory.GetCurrentDirectory())
+				.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+			var configuration = builder.Build();
+			var sessionId = configuration["sessionId"];
+
+			if (string.IsNullOrWhiteSpace(sessionId))
+				throw new ArgumentNullException(nameof(sessionId), "Please provide an AoC session id in the configuration file.");
+
+			var baseAddress = new Uri("https://adventofcode.com");
+			var cookieContainer = new CookieContainer();
+			cookieContainer.Add(baseAddress, new Cookie("session", sessionId));
+
+			HttpClient = new HttpClient(
+				new HttpClientHandler
+				{
+					CookieContainer = cookieContainer,
+					AutomaticDecompression = DecompressionMethods.All,
+				})
+			{
+				BaseAddress = baseAddress,
+			};
+
 			// Pre-JIT Day and Stopwatch
 			new DummyDay().Execute();
 

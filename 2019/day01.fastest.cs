@@ -20,7 +20,7 @@ namespace AdventOfCode
 			int part1Sum = 0, part2Sum = 0, n = 0;
 			foreach (var c in input)
 			{
-				if (c == '\r')
+				if (c == '\n')
 				{
 					var fuel = n / 3 - 2;
 					part1Sum += fuel;

@@ -67,7 +67,7 @@ namespace AdventOfCode
 					GetHashEntry(hashTable, n)->ParentIdx = pidx;
 					n = 0;
 				}
-				else if (c == '\r')
+				else if (c == '\n')
 				{
 					if (n != 0)
 					{
