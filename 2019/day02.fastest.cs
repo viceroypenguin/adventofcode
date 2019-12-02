@@ -38,47 +38,25 @@ namespace AdventOfCode
 			RunProgram(copy, numCount);
 			PartA = copy[0].ToString();
 
-			// we know that output is monotonically increasing by noun
-			// and output is linear based on verb
-			// so we can binary search the space for noun
-			int min = 0, max = 99;
-			while (true)
-			{
-				int noun = (min + max) / 2;
+			Unsafe.CopyBlock((void*)copy, (void*)nums, (uint)numCount * sizeof(int));
+			copy[1] = 0;
+			copy[2] = 0;
 
-				Unsafe.CopyBlock((void*)copy, (void*)nums, (uint)numCount * sizeof(int));
-				copy[1] = noun;
-				copy[2] = 0;
+			RunProgram(copy, numCount);
+			var zero = copy[0];
 
-				RunProgram(copy, numCount);
+			Unsafe.CopyBlock((void*)copy, (void*)nums, (uint)numCount * sizeof(int));
+			copy[1] = 1;
+			copy[2] = 0;
 
-				if (copy[0] < 19690600)
-				{
-					// look above
-					min = noun;
-				}
-				else if (copy[0] > 19691000)
-				{
-					// look below
-					max = noun;
-				}
-				else
-				{ 
-					for (int verb = 0; verb < 100; verb++)
-					{
-						Unsafe.CopyBlock((void*)copy, (void*)nums, (uint)numCount * sizeof(int));
-						copy[1] = noun;
-						copy[2] = verb;
+			RunProgram(copy, numCount);
+			var one = copy[0];
 
-						RunProgram(copy, numCount);
-						if (copy[0] == 19690720)
-						{
-							PartB = (noun * 100 + verb).ToString();
-							return;
-						}
-					}
-				}
-			}
+			var perNoun = one - zero;
+			var noun = (19690720 - zero) / perNoun;
+			var verb = 19690720 - (zero + perNoun * noun);
+
+			PartB = (noun * 100 + verb).ToString();
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
