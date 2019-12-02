@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using MoreLinq;
 
 namespace AdventOfCode
@@ -11,6 +12,7 @@ namespace AdventOfCode
 		public override int DayNumber => 1;
 		public override CodeType CodeType => CodeType.Fastest;
 
+		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
 		protected override void ExecuteDay(byte[] input)
 		{
 			if (input == null) return;
