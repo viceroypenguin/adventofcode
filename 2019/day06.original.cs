@@ -40,27 +40,23 @@ namespace AdventOfCode
 				.ToString();
 
 			var visited = new Dictionary<string, int>();
-			var queue = new Queue<(string, int)>();
-			queue.Enqueue((lookup1["YOU"].orbited, 0));
-			while (true)
-			{
-				var o = queue.Dequeue();
-				if (o.Item1 == "SAN")
-				{
-					PartB = (o.Item2 - 1).ToString();
-					return;
-				}
+			var (_, steps) = MoreEnumerable.TraverseBreadthFirst(
+					(orbiter: lookup1["YOU"].orbited, steps: -1),
+					o =>
+					{
+						if (visited.ContainsKey(o.orbiter))
+							return Array.Empty<(string, int)>();
 
-				if (visited.ContainsKey(o.Item1))
-					continue;
+						visited[o.orbiter] = o.steps;
 
-				visited[o.Item1] = o.Item2;
-
-				if (lookup1.TryGetValue(o.Item1, out var x))
-					queue.Enqueue((x.orbited, o.Item2 + 1));
-				foreach (var (orbiter, _) in lookup2[o.Item1])
-					queue.Enqueue((orbiter, o.Item2 + 1));
-			}
+						var tmp = lookup2[o.orbiter]
+							.Select(r => (r.orbiter, o.steps + 1));
+						if (lookup1.TryGetValue(o.orbiter, out var x))
+							tmp = MoreEnumerable.Append(tmp, (x.orbited, o.steps + 1));
+						return tmp;
+					})
+				.FirstOrDefault(x => x.orbiter == "SAN");
+			PartB = steps.ToString();
 		}
 	}
 }
