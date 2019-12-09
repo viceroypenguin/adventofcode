@@ -30,7 +30,7 @@ namespace AdventOfCode
 			DumpScreen('B', Enumerable.Range(0, 25 * 6)
 				.Select(p => Enumerable.Range(0, layers.Count)
 					.Select(l => layers[l][p])
-					.Aggregate('2', (c, lc) => c != '2' ? c : lc == '0' ? ' ' : (char)lc))
+					.Aggregate('2', (c, lc) => c != '2' ? c : lc == '0' ? ' ' : lc == '1' ? '█' : (char)lc))
 				.Batch(25));
 		}
 	}
