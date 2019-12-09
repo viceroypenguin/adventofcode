@@ -22,116 +22,34 @@ namespace AdventOfCode
 				.Split(',')
 				.Select(long.Parse)
 				.ToList();
-
-			DoPartA(instructions).GetAwaiter().GetResult();
-			DoPartB(instructions).GetAwaiter().GetResult();
+			
+			PartA = DoPart(instructions, 0).GetAwaiter().GetResult();
+			PartB = DoPart(instructions, 5).GetAwaiter().GetResult();
 		}
 
-		async Task DoPartA(List<long> instructions)
-		{
-			var max = 0L;
-			for (int a = 0; a <= 4; a++)
-			{
-				var bufferIn = new BufferBlock<long>();
-				bufferIn.Post(a); bufferIn.Post(0);
-
-				var bufferOut = new BufferBlock<long>();
-				await new IntCodeComputer(instructions.ToArray(), bufferIn, bufferOut).RunProgram();
-				var aOut = bufferOut.Receive();
-
-				for (int b = 0; b <= 4; b++)
-				{
-					if (b == a) continue;
-
-					bufferIn.Post(b); bufferIn.Post(aOut);
-					await new IntCodeComputer(instructions.ToArray(), bufferIn, bufferOut).RunProgram();
-					var bOut = bufferOut.Receive();
-
-					for (int c = 0; c <= 4; c++)
+		async Task<string> DoPart(List<long> instructions, int start) =>
+			(await Task.WhenAll(
+				MoreEnumerable.Permutations(Enumerable.Range(start, 5))
+					.Select(async arr =>
 					{
-						if (c == a || c == b) continue;
+						var buffers = Enumerable.Range(0, 5).Select(i => new BufferBlock<long>()).ToList();
+						buffers[0].Post(arr[0]);
+						buffers[0].Post(0);
+						buffers[1].Post(arr[1]);
+						buffers[2].Post(arr[2]);
+						buffers[3].Post(arr[3]);
+						buffers[4].Post(arr[4]);
 
-						bufferIn.Post(c); bufferIn.Post(bOut);
-						await new IntCodeComputer(instructions.ToArray(), bufferIn, bufferOut).RunProgram();
-						var cOut = bufferOut.Receive();
+						await Task.WhenAll(
+							new IntCodeComputer(instructions.ToArray(), buffers[0], buffers[1]).RunProgram(),
+							new IntCodeComputer(instructions.ToArray(), buffers[1], buffers[2]).RunProgram(),
+							new IntCodeComputer(instructions.ToArray(), buffers[2], buffers[3]).RunProgram(),
+							new IntCodeComputer(instructions.ToArray(), buffers[3], buffers[4]).RunProgram(),
+							new IntCodeComputer(instructions.ToArray(), buffers[4], buffers[0]).RunProgram());
 
-						for (int d = 0; d <= 4; d++)
-						{
-							if (d == c || d == b || d == a) continue;
-
-							bufferIn.Post(d); bufferIn.Post(cOut);
-							await new IntCodeComputer(instructions.ToArray(), bufferIn, bufferOut).RunProgram();
-							var dOut = bufferOut.Receive();
-
-							for (int e = 0; e <= 4; e++)
-							{
-								if (e == a || e == b || e == c || e == d) continue;
-
-								bufferIn.Post(e); bufferIn.Post(dOut);
-								await new IntCodeComputer(instructions.ToArray(), bufferIn, bufferOut).RunProgram();
-								var eOut = bufferOut.Receive();
-
-								if (eOut > max)
-								{
-									max = eOut;
-								}
-							}
-						}
-					}
-				}
-			}
-
-			PartA = max.ToString();
-		}
-
-		async Task DoPartB(List<long> instructions)
-		{
-			var max = 0L;
-			for (int a = 5; a <= 9; a++)
-			{
-				for (int b = 5; b <= 9; b++)
-				{
-					if (b == a) continue;
-
-					for (int c = 5; c <= 9; c++)
-					{
-						if (c == a || c == b) continue;
-
-						for (int d = 5; d <= 9; d++)
-						{
-							if (d == c || d == b || d == a) continue;
-
-							for (int e = 5; e <= 9; e++)
-							{
-								if (e == a || e == b || e == c || e == d) continue;
-
-								var buffers = Enumerable.Range(0, 5).Select(i => new BufferBlock<long>()).ToList();
-								buffers[0].Post(a);
-								buffers[0].Post(0);
-								buffers[1].Post(b);
-								buffers[2].Post(c);
-								buffers[3].Post(d);
-								buffers[4].Post(e);
-
-								await Task.WhenAll(
-									new IntCodeComputer(instructions.ToArray(), buffers[0], buffers[1]).RunProgram(),
-									new IntCodeComputer(instructions.ToArray(), buffers[1], buffers[2]).RunProgram(),
-									new IntCodeComputer(instructions.ToArray(), buffers[2], buffers[3]).RunProgram(),
-									new IntCodeComputer(instructions.ToArray(), buffers[3], buffers[4]).RunProgram(),
-									new IntCodeComputer(instructions.ToArray(), buffers[4], buffers[0]).RunProgram());
-
-								var output = buffers[0].Receive();
-								if (output > max)
-								{
-									max = output;
-								}
-							}
-						}
-					}
-				}
-			}
-
-			PartB = max.ToString();
-		}
+						return buffers[0].Receive();
+					})))
+				.Max()
+				.ToString();
 	}
 }
