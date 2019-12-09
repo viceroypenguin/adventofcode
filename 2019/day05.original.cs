@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks.Dataflow;
 using MoreLinq;
 
 namespace AdventOfCode
@@ -18,103 +19,34 @@ namespace AdventOfCode
 
 			var instructions = input.GetString()
 				.Split(',')
-				.Select(s => Convert.ToInt32(s))
+				.Select(long.Parse)
 				.ToList();
 
-			var partA = new List<int>(instructions);
-			progInput = 1;
-			RunProgram(partA);
-			PartA = progOutput.ToString();
-
-			var partB = new List<int>(instructions);
-			progInput = 5;
-			RunProgram(partB);
-			PartB = progOutput.ToString();
-		}
-
-		private int progInput = 0;
-		private int progOutput = 0;
-
-		void RunProgram(List<int> instructions)
-		{
-			var ip = 0;
-			while (ip < instructions.Count && instructions[ip] != 99)
+			var inputs = new BufferBlock<long>();
+			inputs.Post(1);
+			var outputs = new BufferBlock<long>();
+			var pc = new IntCodeComputer(instructions.ToArray(), inputs, outputs);
+			pc.RunProgram()
+				.GetAwaiter()
+				.GetResult();
+			while (outputs.Count > 0)
 			{
-				static int GetFirstParameterMode(int instruction) =>
-					(instruction / 100) % 10;
-				static int GetSecondParameterMode(int instruction) =>
-					instruction / 1000;
-				int GetValue(int mode, int value) =>
-					mode != 0 ? value : instructions[value];
-
-				switch (instructions[ip] % 100)
+				var value = outputs.Receive();
+				if (value > 0)
 				{
-					case 1:
-						{
-							var num1 = GetValue(GetFirstParameterMode(instructions[ip]), instructions[ip + 1]);
-							var num2 = GetValue(GetSecondParameterMode(instructions[ip]), instructions[ip + 2]);
-							instructions[instructions[ip + 3]] = num1 + num2;
-							ip += 4;
-							break;
-						}
-					case 2:
-						{
-							var num1 = GetValue(GetFirstParameterMode(instructions[ip]), instructions[ip + 1]);
-							var num2 = GetValue(GetSecondParameterMode(instructions[ip]), instructions[ip + 2]);
-							instructions[instructions[ip + 3]] = num1 * num2;
-							ip += 4;
-							break;
-						}
-
-					case 3:
-						{
-							instructions[instructions[ip + 1]] = progInput;
-							ip += 2;
-							break;
-						}
-
-					case 4:
-						{
-							progOutput = GetValue(GetFirstParameterMode(instructions[ip]), instructions[ip + 1]);
-							ip += 2;
-							break;
-						}
-
-					case 5:
-						{
-							var num1 = GetValue(GetFirstParameterMode(instructions[ip]), instructions[ip + 1]);
-							var num2 = GetValue(GetSecondParameterMode(instructions[ip]), instructions[ip + 2]);
-							ip = num1 == 0 ? ip + 3 : num2;
-							break;
-						}
-
-					case 6:
-						{
-							var num1 = GetValue(GetFirstParameterMode(instructions[ip]), instructions[ip + 1]);
-							var num2 = GetValue(GetSecondParameterMode(instructions[ip]), instructions[ip + 2]);
-							ip = num1 != 0 ? ip + 3 : num2;
-							break;
-						}
-
-					case 7:
-						{
-							var num1 = GetValue(GetFirstParameterMode(instructions[ip]), instructions[ip + 1]);
-							var num2 = GetValue(GetSecondParameterMode(instructions[ip]), instructions[ip + 2]);
-							instructions[instructions[ip + 3]] = num1 < num2 ? 1 : 0;
-							ip += 4;
-							break;
-						}
-
-					case 8:
-						{
-							var num1 = GetValue(GetFirstParameterMode(instructions[ip]), instructions[ip + 1]);
-							var num2 = GetValue(GetSecondParameterMode(instructions[ip]), instructions[ip + 2]);
-							instructions[instructions[ip + 3]] = num1 == num2 ? 1 : 0;
-							ip += 4;
-							break;
-						}
+					PartA = value.ToString();
+					break;
 				}
 			}
+
+			inputs = new BufferBlock<long>();
+			inputs.Post(5);
+			outputs = new BufferBlock<long>();
+			pc = new IntCodeComputer(instructions.ToArray(), inputs, outputs);
+			pc.RunProgram()
+				.GetAwaiter()
+				.GetResult();
+			PartB = outputs.Receive().ToString();
 		}
 	}
 }
