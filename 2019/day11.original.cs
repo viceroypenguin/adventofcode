@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
@@ -31,24 +32,28 @@ namespace AdventOfCode
 			Dump('A', map.Count.ToString());
 
 			map = RunPart(instructions, 1);
-			var minX = map.Keys.Select(p => p.x).Min();
-			var maxX = map.Keys.Select(p => p.x).Max();
-			var minY = map.Keys.Select(p => p.y).Min();
-			var maxY = map.Keys.Select(p => p.y).Max();
+			var minX = map.Keys.Select(p => (int)(p >> 32)).Min();
+			var maxX = map.Keys.Select(p => (int)(p >> 32)).Max();
+			var minY = map.Keys.Select(p => (int)(p & 0xFFFFFFFF)).Min();
+			var maxY = map.Keys.Select(p => (int)(p & 0xFFFFFFFF)).Max();
 
 			DumpScreen('B', Enumerable.Range(minY, maxY - minY + 1)
 				.Select(y => Enumerable.Range(minX, maxX - minX + 1)
-					.Select(x => map.GetValueOrDefault((x, y)) == 0 ? ' ' : '█'))
+					.Select(x => map.GetValueOrDefault(GetCoordinate(x, y)) == 0 ? ' ' : '█'))
 				.Reverse());
 		}
 
-		private static Dictionary<(int x, int y), long> RunPart(long[] instructions, int initialPointValue)
+		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
+		private static long GetCoordinate(int x, int y) =>
+			((long)x << 32) | (uint)y;
+
+		private static Dictionary<long, long> RunPart(long[] instructions, int initialPointValue)
 		{
 			var inputs = new BufferBlock<long>();
 			var outputs = new BufferBlock<long>();
 			var pc = new IntCodeComputer(instructions.ToArray(), inputs, outputs);
 
-			var map = new Dictionary<(int x, int y), long>();
+			var map = new Dictionary<long, long>();
 
 			var tcs = new CancellationTokenSource();
 			Task.Run(async () =>
@@ -57,13 +62,14 @@ namespace AdventOfCode
 				var coord = (x: 0, y: 0);
 				var dir = 0;
 
-				map[coord] = initialPointValue;
+				map[GetCoordinate(coord.x, coord.y)] = initialPointValue;
 
 				while (true)
 				{
-					inputs.Post(map.GetValueOrDefault(coord));
+					var coordValue = GetCoordinate(coord.x, coord.y);
+					inputs.Post(map.GetValueOrDefault(coordValue));
 
-					map[coord] = await outputs.ReceiveAsync(token);
+					map[coordValue] = await outputs.ReceiveAsync(token);
 					var turn = await outputs.ReceiveAsync();
 					dir = turn switch { 0 => (dir + 3) % 4, 1 => (dir + 1) % 4, };
 					coord = dir switch
