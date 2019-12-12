@@ -33,22 +33,20 @@ namespace AdventOfCode
 			var moonsZ = positions.Select(m => (position: m.z, velocity: 0)).ToArray();
 
 			var moons = new[] { moonsX, moonsY, moonsZ };
-			var moons2 = moons;
 
 			var cycleLengths = Enumerable.Range(0, moons.Length).Select(_ => -1).ToArray();
 
 			for (var i = 1; cycleLengths.Any(x => x < 0); i++)
 			{
 				moons = moons.Select(d => Timestep(d)).ToArray();
-				moons2 = moons2.Select(d => Timestep(Timestep(d))).ToArray();
 
 				for (int d = 0; d < moons.Length; d++)
 					if (cycleLengths[d] == -1
 						&& Enumerable.Range(0, moons[d].Length)
-							.All(m => moons[d][m] == moons2[d][m]))
-						cycleLengths[d] = i;
+							.All(m => moons[d][m].velocity == 0))
+						cycleLengths[d] = i * 2;
 
-				if (i == 500)
+				if (i == 1000)
 					PartA = Enumerable.Range(0, moons[0].Length)
 						.Sum(m =>
 						{
@@ -57,7 +55,7 @@ namespace AdventOfCode
 									(pos: 0, vel: 0),
 									(agg, i) =>
 									{
-										var (dpos, dvel) = moons2[i][m];
+										var (dpos, dvel) = moons[i][m];
 										return (agg.pos + Math.Abs(dpos), agg.vel + Math.Abs(dvel));
 									});
 							return pos * vel;
