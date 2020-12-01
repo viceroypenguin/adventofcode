@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using MoreLinq;
@@ -19,27 +20,28 @@ namespace AdventOfCode
 				.Select(x => int.Parse(x))
 				.ToArray();
 
-			var max = 2020 - numbers.Min();
+			var bitArray = new BitArray(2020);
+			foreach (var n in numbers)
+			{
+				if (bitArray[2020 - n])
+					PartA = ((2020 - n) * n).ToString();
+				bitArray[n] = true;
+			}
 
-			var (x, y, z) = (
-				from _x in numbers
-				where _x <= max
-				from _y in numbers
-				where _x + _y == 2020
-				select (_x, _y, 0)).First();
-
-			PartA = (x * y).ToString();
-
-			(x, y, z) = (
-				from _x in numbers
-				where _x <= max
-				from _y in numbers
-				where _x + _y <= max
-				from _z in numbers
-				where _x + _y + _z == 2020
-				select (_x, _y, _z)).First();
-
-			PartB = (x * y * z).ToString();
+			for (var xi = 0; xi < numbers.Length; xi++)
+			{
+				var x = numbers[xi];
+				for (var yi = xi + 1; yi < numbers.Length; yi++)
+				{
+					var y = numbers[yi];
+					var z = 2020 - x - y;
+					if (z >= 0 && bitArray[z])
+					{
+						PartB = (x * y * z).ToString();
+						return;
+					}
+				}
+			}
 		}
 	}
 }
