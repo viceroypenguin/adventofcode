@@ -16,21 +16,23 @@ namespace AdventOfCode
 		{
 			if (input == null) return;
 
+			var span = new ReadOnlySpan<byte>(input);
 			int part1 = 0, part2 = 0;
-			var arr = new int[16];
+			Span<int> arr = stackalloc int[16];
 
-			int n = 0, j = 0;
-			for (int i = 0; i < input.Length; i++)
+			var j = 0;
+			for (int i = 0; i < input.Length;)
 			{
-				var c = input[i];
-				if (c == '\n')
-				{
-					arr[j++] = n;
+				var (x, y) = span[i..].AtoI();
+				arr[j++] = x;
+				i += y;
 
+				if (span[i] == '\n')
+				{
 					int min = arr[0], max = arr[0];
 					for (j = 1; j < 16; j++)
 					{
-						n = arr[j];
+						var n = arr[j];
 						if (n < min) min = n;
 						if (n > max) max = n;
 					}
@@ -38,7 +40,7 @@ namespace AdventOfCode
 					part1 += max - min;
 
 					var flag = false;
-					for (j = 0; !flag && j < 16 ; j++)
+					for (j = 0; !flag && j < 16; j++)
 						for (int k = 0; !flag && k < 16; k++)
 						{
 							if (j == k) continue;
@@ -55,15 +57,9 @@ namespace AdventOfCode
 						}
 
 					j = 0;
-					n = 0;
 				}
-				else if (c == '\t')
-				{
-					arr[j++] = n;
-					n = 0;
-				}
-				else if (c >= '0')
-					n = n * 10 + c - '0';
+
+				i++;
 			}
 
 			PartA = part1.ToString();
