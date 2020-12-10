@@ -43,28 +43,25 @@ found_match:
 				;
 			}
 
-			for (int i = maxIndex - 1; i >= 0; i--)
+			int start = 0, end = 0;
+			var sum = arr[0];
+			while (true)
 			{
-				var x = arr[i];
-				if (x > invalidNumber)
-					continue;
-
-				var (sum, min, max) = (x, x, x);
-				for (int j = i - 1; j >= 0; j++)
-				{
-					sum += arr[j];
-					min = Math.Min(min, arr[j]);
-					max = Math.Max(max, arr[j]);
-					if (sum == invalidNumber)
-					{
-						PartB = (min + max).ToString();
-						return;
-					}
-
-					if (sum > invalidNumber)
-						break;
-				}
+				if (sum == invalidNumber)
+					break;
+				else if (sum > invalidNumber)
+					sum -= arr[start++];
+				else if (sum < invalidNumber)
+					sum += arr[++end];
 			}
+
+			long min = arr[start], max = arr[start];
+			for (int i = start + 1; i <= end; i++)
+				(min, max) = (
+					Math.Min(min, arr[i]),
+					Math.Max(max, arr[i]));
+
+			PartB = (min + max).ToString();
 		}
 	}
 }
