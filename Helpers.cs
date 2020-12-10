@@ -21,6 +21,7 @@ namespace AdventOfCode
 		public static bool Between<T>(this T value, T min, T max) where T : IComparable<T> =>
 			min.CompareTo(value) <= 0 && value.CompareTo(max) <= 0;
 
+		// copied from: https://stackoverflow.com/questions/35127060/how-to-implement-atoi-using-simd
 		[MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
 		public static (int value, int numChars) AtoI(this ReadOnlySpan<byte> bytes)
 		{
@@ -99,6 +100,7 @@ namespace AdventOfCode
 			return (result + isNegSign, index);
 		}
 
+		// copied from: https://stackoverflow.com/questions/35127060/how-to-implement-atoi-using-simd
 		[MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
 		public static (long value, int numChars) AtoL(this ReadOnlySpan<byte> bytes)
 		{
