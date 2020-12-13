@@ -4,7 +4,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.Intrinsics.X86;
 using System.Text.RegularExpressions;
-using static AdventOfCode.Helpers;
 
 namespace AdventOfCode
 {
@@ -98,7 +97,7 @@ namespace AdventOfCode
 					// increase cycle length to accomodate new information
 					// cycle will be lcm of all used lengths so far,
 					// so that mod of each will remain the same
-					fullCycle *= (uint)lcm((long)p->CycleLength, fullCycle);
+					fullCycle *= (uint)p->CycleLength / GreatestCommonDivisor(fullCycle, (uint)p->CycleLength);
 					*p-- = *--end;
 				}
 			}
@@ -114,6 +113,13 @@ namespace AdventOfCode
 			}
 			// using for loop, we add fullCycle at end once too many
 			PartB = (delay - fullCycle).ToString();
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
+		private static uint GreatestCommonDivisor(uint a, uint b)
+		{
+			while (b != 0) b = a % (a = b);
+			return a;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
