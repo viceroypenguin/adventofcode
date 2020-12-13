@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
-using static MoreLinq.Extensions.RepeatExtension;
+using static AdventOfCode.Helpers;
 
 namespace AdventOfCode
 {
@@ -80,22 +80,5 @@ namespace AdventOfCode
 					return (pos + vel, vel);
 				})
 				.ToArray();
-
-		static long GCD(long a, long b)
-		{
-			if (a > b) { var tmp = a; a = b; b = tmp; }
-			while (b != 0)
-			{
-				var mod = a % b;
-				a = b;
-				b = mod;
-			}
-
-			return a;
-		}
-
-		static long lcm(long a, long b) =>
-			a * b / GCD(a, b);
-
 	}
 }

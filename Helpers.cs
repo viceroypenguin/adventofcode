@@ -174,5 +174,16 @@ namespace AdventOfCode
 
 			return (sum + isNegSign, index);
 		}
+
+		[MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
+		public static long gcd(long a, long b)
+		{
+			while (b != 0) b = a % (a = b);
+			return a;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
+		public static long lcm(long a, long b) =>
+			a * b / gcd(a, b);
 	}
 }
