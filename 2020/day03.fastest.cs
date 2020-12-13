@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using MoreLinq;
 
@@ -12,10 +13,12 @@ namespace AdventOfCode
 		public override int DayNumber => 3;
 		public override CodeType CodeType => CodeType.Fastest;
 
+		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
 		protected override void ExecuteDay(byte[] input)
 		{
 			if (input == null) return;
 
+			[MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
 			static long GetTreesOnSlope(byte[] input, int vx, int vy)
 			{
 				vx *= 32;
