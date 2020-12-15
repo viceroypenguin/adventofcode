@@ -24,28 +24,28 @@ namespace AdventOfCode
 				.Select(int.Parse)
 				.ToArray();
 
-			var spokenTimes = numbers
-				.Select((n, i) => (n, i))
-				.ToDictionary(
-					x => x.n,
-					x => x.i + 1);
+			var spokenTimes = new int[30_000_000];
+			Array.Fill(spokenTimes, -1);
+
+			var i = 1;
+			for (; i < numbers.Length + 1; i++)
+				spokenTimes[numbers[i - 1]] = i;
 
 			var curNumber = 0;
-			var i = numbers.Length + 1;
 			for (; i < 2020; i++)
 			{
-				var hadValue = spokenTimes.TryGetValue(curNumber, out var prevTime);
+				var prevTime = spokenTimes[curNumber];
 				spokenTimes[curNumber] = i;
-				curNumber = hadValue ? i - prevTime : 0;
+				curNumber = prevTime != -1 ? i - prevTime : 0;
 			}
 
 			PartA = curNumber.ToString();
 
 			for (; i < 30_000_000; i++)
 			{
-				var hadValue = spokenTimes.TryGetValue(curNumber, out var prevTime);
+				var prevTime = spokenTimes[curNumber];
 				spokenTimes[curNumber] = i;
-				curNumber = hadValue ? i - prevTime : 0;
+				curNumber = prevTime != -1 ? i - prevTime : 0;
 			}
 
 			PartB = curNumber.ToString();
