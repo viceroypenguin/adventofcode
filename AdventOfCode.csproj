@@ -2,15 +2,23 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+		<ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.*" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.*" />
-    <PackageReference Include="morelinq.temp" Version="3.*" />
+	<ItemGroup>
+		<Using Include="System.Runtime.CompilerServices" />
+		<Using Include="System.Text" />
+		<Using Include="System.Text.RegularExpressions" />
+		<Using Include="MoreLinq" />
+	</ItemGroup>
+	
+	<ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.*" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="6.*" />
+    <PackageReference Include="morelinq.temp" Version="4.*" />
 		<PackageReference Include="MedallionPriorityQueue" Version="1.*" />
   </ItemGroup>
 

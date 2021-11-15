@@ -1,42 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using MoreLinq;
+﻿namespace AdventOfCode;
 
-namespace AdventOfCode
+public class Day_2019_01_Fastest : Day
 {
-	public class Day_2019_01_Fastest : Day
+	public override int Year => 2019;
+	public override int DayNumber => 1;
+	public override CodeType CodeType => CodeType.Fastest;
+
+	[MethodImpl(MethodImplOptions.AggressiveOptimization)]
+	protected override void ExecuteDay(byte[] input)
 	{
-		public override int Year => 2019;
-		public override int DayNumber => 1;
-		public override CodeType CodeType => CodeType.Fastest;
+		if (input == null) return;
 
-		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-		protected override void ExecuteDay(byte[] input)
+		int part1Sum = 0, part2Sum = 0, n = 0;
+		foreach (var c in input)
 		{
-			if (input == null) return;
-
-			int part1Sum = 0, part2Sum = 0, n = 0;
-			foreach (var c in input)
+			if (c == '\n')
 			{
-				if (c == '\n')
+				var fuel = n / 3 - 2;
+				part1Sum += fuel;
+				while (fuel > 0)
 				{
-					var fuel = n / 3 - 2;
-					part1Sum += fuel;
-					while (fuel > 0)
-					{
-						part2Sum += fuel;
-						fuel = fuel / 3 - 2;
-					}
-					n = 0;
+					part2Sum += fuel;
+					fuel = fuel / 3 - 2;
 				}
-				else if (c >= '0')
-					n = n * 10 + c - '0';
+				n = 0;
 			}
-
-			PartA = part1Sum.ToString();
-			PartB = part2Sum.ToString();
+			else if (c >= '0')
+				n = n * 10 + c - '0';
 		}
+
+		PartA = part1Sum.ToString();
+		PartB = part2Sum.ToString();
 	}
 }

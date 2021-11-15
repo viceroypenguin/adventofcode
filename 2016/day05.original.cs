@@ -1,75 +1,70 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
+﻿using System.Security.Cryptography;
 
-namespace AdventOfCode
+namespace AdventOfCode;
+
+public class Day_2016_05_Original : Day
 {
-	public class Day_2016_05_Original : Day
+	public override int Year => 2016;
+	public override int DayNumber => 5;
+	public override CodeType CodeType => CodeType.Original;
+
+	protected override void ExecuteDay(byte[] input)
 	{
-		public override int Year => 2016;
-		public override int DayNumber => 5;
-		public override CodeType CodeType => CodeType.Original;
+		DoPartA(input);
+		DoPartB(input);
+	}
 
-		protected override void ExecuteDay(byte[] input)
+	private void DoPartA(byte[] input)
+	{
+		using (var md5 = MD5.Create())
 		{
-			DoPartA(input);
-			DoPartB(input);
-		}
+			var key = input.GetString();
+			var password = "";
 
-		private void DoPartA(byte[] input)
-		{
-			using (var md5 = MD5.Create())
+			var cnt = 0L;
+			while (password.Length < 8)
 			{
-				var key = input.GetString();
-				var password = "";
-
-				var cnt = 0L;
-				while (password.Length < 8)
+				cnt++;
+				var hashSrc = key + cnt.ToString();
+				var bytes = Encoding.ASCII.GetBytes(hashSrc);
+				var hash = md5.ComputeHash(bytes);
+				if (hash[0] == 0x00 &&
+					hash[1] == 0x00 &&
+					(hash[2] & 0xf0) == 0x00)
 				{
-					cnt++;
-					var hashSrc = key + cnt.ToString();
-					var bytes = Encoding.ASCII.GetBytes(hashSrc);
-					var hash = md5.ComputeHash(bytes);
-					if (hash[0] == 0x00 &&
-						hash[1] == 0x00 &&
-						(hash[2] & 0xf0) == 0x00)
-					{
-						password = password + (hash[2] & 0x0f).ToString("x");
-					}
+					password = password + (hash[2] & 0x0f).ToString("x");
 				}
-
-				Dump('A', password);
 			}
+
+			Dump('A', password);
 		}
+	}
 
-		private void DoPartB(byte[] input)
+	private void DoPartB(byte[] input)
+	{
+		using (var md5 = MD5.Create())
 		{
-			using (var md5 = MD5.Create())
+			var key = input.GetString();
+			var password = new char?[8];
+
+			var cnt = 0L;
+			while (password.Any(c => !c.HasValue))
 			{
-				var key = input.GetString();
-				var password = new char?[8];
-
-				var cnt = 0L;
-				while (password.Any(c => !c.HasValue))
+				cnt++;
+				var hashSrc = input + cnt.ToString();
+				var bytes = Encoding.ASCII.GetBytes(hashSrc);
+				var hash = md5.ComputeHash(bytes);
+				if (hash[0] == 0x00 &&
+					hash[1] == 0x00 &&
+					(hash[2] & 0xf0) == 0x00)
 				{
-					cnt++;
-					var hashSrc = input + cnt.ToString();
-					var bytes = Encoding.ASCII.GetBytes(hashSrc);
-					var hash = md5.ComputeHash(bytes);
-					if (hash[0] == 0x00 &&
-						hash[1] == 0x00 &&
-						(hash[2] & 0xf0) == 0x00)
-					{
-						var idx = hash[2] & 0x0f;
-						if (idx >= 8) continue;
-						if (password[idx].HasValue) continue;
+					var idx = hash[2] & 0x0f;
+					if (idx >= 8) continue;
+					if (password[idx].HasValue) continue;
 
-						password[idx] = ((hash[3] & 0xf0) >> 4).ToString("x")[0];
-						Dump('B',
-							string.Join("", password.Select(c => c ?? '_')));
-					}
+					password[idx] = ((hash[3] & 0xf0) >> 4).ToString("x")[0];
+					Dump('B',
+						string.Join("", password.Select(c => c ?? '_')));
 				}
 			}
 		}
