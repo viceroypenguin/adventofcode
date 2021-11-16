@@ -10,59 +10,69 @@ public class Day_2020_23_Original : Day
 	{
 		if (input == null) return;
 
-		var cups = input.Where(x => x > 0x30).Select(x => x - 0x30).ToList();
-		var maxValue = cups.Max();
+		var list = new int[10];
+		list[input[8] - 0x30] = input[0] - 0x30;
+		for (int i = 0; i < 8; i++)
+			list[input[i] - 0x30] = input[i + 1] - 0x30;
 
-		var curIndex = 0;
+		var idx = input[0] - 0x30;
+		for (int i = 0; i < 100; i++)
+			idx = Step(list, idx, 9);
 
-		static int incrementIndex(int value, int maxValue) =>
-			value == maxValue - 1 ? 0 : value + 1;
+		Span<char> output = stackalloc char[8];
+		var ptr = output;
+		idx = list[1];
+		do
+		{
+			ptr[0] = (char)(idx + 0x30);
+			ptr = ptr[1..];
+			idx = list[idx];
+		} while (idx != 1);
+
+		PartA = new string(output);
+
+		// so list[1_000_000] is valid
+		list = new int[1_000_001];
+		for (int i = 0; i < 8; i++)
+			list[input[i] - 0x30] = input[i + 1] - 0x30;
+		list[input[8] - 0x30] = 10;
+
+		for (int i = 10; i < 1_000_000; i++)
+			list[i] = i + 1;
+		list[1_000_000] = input[0] - 0x30;
+
+		idx = input[0] - 0x30;
+		for (int i = 0; i < 10_000_000; i++)
+			idx = Step(list, idx, 1_000_000);
+
+		var v1 = (ulong)list[1];
+		var v2 = (ulong)list[v1];
+		PartB = (v1 * v2).ToString();
+	}
+
+	private static int Step(int[] list, int idx, int maxValue)
+	{
 		static int decrementValue(int value, int maxValue) =>
 			value == 1 ? maxValue : value - 1;
 
-		for (int _ = 1; _ <= 100; _++)
-		{
-			var value = decrementValue(cups[curIndex], maxValue);
-			var i1 = incrementIndex(curIndex, cups.Count);
-			var i2 = incrementIndex(i1, cups.Count);
-			var i3 = incrementIndex(i2, cups.Count);
+		// track next three values
+		var v1 = list[idx];
+		var v2 = list[v1];
+		var v3 = list[v2];
 
-			var (v1, v2, v3) = (cups[i1], cups[i2], cups[i3]);
-			while (v1 == value || v2 == value || v3 == value)
-				value = decrementValue(value, maxValue);
+		// link-ptr to after v3
+		list[idx] = list[v3];
 
-			var destIdx = incrementIndex(i3, cups.Count);
-			while (cups[destIdx] != value)
-			{
-				cups[i1] = cups[destIdx];
-				i1 = incrementIndex(i1, cups.Count);
-				destIdx = incrementIndex(destIdx, cups.Count);
-			}
-			cups[i1] = value;
-			i1 = incrementIndex(i1, cups.Count);
-			cups[i1] = v1;
-			i1 = incrementIndex(i1, cups.Count);
-			cups[i1] = v2;
-			i1 = incrementIndex(i1, cups.Count);
-			cups[i1] = v3;
+		// find target location
+		var dest = decrementValue(idx, maxValue);
+		while (v1 == dest || v2 == dest || v3 == dest)
+			dest = decrementValue(dest, maxValue);
 
-			curIndex = incrementIndex(curIndex, cups.Count);
-		}
+		// insert three nodes into linked-list
+		list[v3] = list[dest];
+		list[dest] = v1;
 
-		curIndex = 0;
-		while (cups[curIndex] != 1)
-			curIndex++;
-		curIndex = incrementIndex(curIndex, cups.Count);
-
-		Span<char> output = stackalloc char[cups.Count];
-		var ptr = output;
-		while (cups[curIndex] != 1)
-		{
-			ptr[0] = (char)(cups[curIndex] + 0x30);
-			ptr = ptr[1..];
-			curIndex = incrementIndex(curIndex, cups.Count);
-		}
-
-		PartA = new string(output);
+		// return next entry in the list
+		return list[idx];
 	}
 }
