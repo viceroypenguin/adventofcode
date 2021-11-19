@@ -1,6 +1,4 @@
-﻿using Medallion.Collections;
-
-namespace AdventOfCode;
+﻿namespace AdventOfCode;
 
 public class Day_2018_22_Original : Day
 {
@@ -51,13 +49,13 @@ public class Day_2018_22_Original : Day
 		const int torch = 1;
 		const int gear = 2;
 
-		var queue = new PriorityQueue<(int cost, (int x, int y, int equip) pos)>();
+		var queue = new PriorityQueue<(int x, int y, int equip), int>();
 		var visited = new HashSet<(int x, int y, int equip)>();
-		queue.Enqueue((0, (0, 0, torch)));
+		queue.Enqueue((0, 0, torch), 0);
 
-		while (queue.Any())
+		while (queue.Count != 0)
 		{
-			var (cost, pos) = queue.Dequeue();
+			queue.TryDequeue(out var pos, out var cost);
 			if (visited.Contains(pos))
 				continue;
 
@@ -84,17 +82,17 @@ public class Day_2018_22_Original : Day
 				{
 					case 0:
 						if (equip == torch || equip == gear)
-							queue.Enqueue((newCost, (x, y, equip)));
+							queue.Enqueue((x, y, equip), newCost);
 						return;
 
 					case 1:
 						if (equip == neither || equip == gear)
-							queue.Enqueue((newCost, (x, y, equip)));
+							queue.Enqueue((x, y, equip), newCost);
 						return;
 
 					case 2:
 						if (equip == neither || equip == torch)
-							queue.Enqueue((newCost, (x, y, equip)));
+							queue.Enqueue((x, y, equip), newCost);
 						return;
 				}
 			}

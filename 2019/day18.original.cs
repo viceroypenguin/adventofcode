@@ -1,7 +1,5 @@
-﻿using Medallion.Collections;
-
-namespace AdventOfCode;
-
+﻿namespace AdventOfCode;
+/*
 public class Day_2019_18_Original : Day
 {
 	public override int Year => 2019;
@@ -160,3 +158,4 @@ public class Day_2019_18_Original : Day
 		return 0;
 	}
 }
+*/
