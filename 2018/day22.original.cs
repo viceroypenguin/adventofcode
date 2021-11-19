@@ -8,6 +8,8 @@ public class Day_2018_22_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var data = input.GetLines();
 		var depth = Convert.ToInt32(data[0].Split()[1]);
 		var coordStr = data[1].Split()[1].Split(',');
@@ -39,32 +41,29 @@ public class Day_2018_22_Original : Day
 			}
 		}
 
-		Dump('A',
-			ground.Take(destination.y + 1)
-				.SelectMany(y => y.Take(destination.x + 1))
-				.GroupBy(y => y % 3)
-				.Sum(g => g.Key * g.Count()));
+		PartA = ground.Take(destination.y + 1)
+			.SelectMany(y => y.Take(destination.x + 1))
+			.GroupBy(y => y % 3)
+			.Sum(g => g.Key * g.Count())
+			.ToString();
 
 		const int neither = 0;
 		const int torch = 1;
 		const int gear = 2;
 
-		var queue = new PriorityQueue<(int x, int y, int equip), int>();
-		var visited = new HashSet<(int x, int y, int equip)>();
-		queue.Enqueue((0, 0, torch), 0);
-
-		while (queue.Count != 0)
+		IEnumerable<((int, int, int), int)> getNeighbors((int x, int y, int equip) pos)
 		{
-			queue.TryDequeue(out var pos, out var cost);
-			if (visited.Contains(pos))
-				continue;
+			var states = new List<((int, int, int), int)>();
 
-			visited.Add(pos);
-			if (pos == (destination.x, destination.y, torch))
-			{
-				Dump('B', cost);
-				return;
-			}
+			addNeighbor(pos.x + 1, pos.y, pos.equip, 1);
+			addNeighbor(pos.x, pos.y + 1, pos.equip, 1);
+			addNeighbor(pos.x - 1, pos.y, pos.equip, 1);
+			addNeighbor(pos.x, pos.y - 1, pos.equip, 1);
+			if (pos.equip != neither) addNeighbor(pos.x, pos.y, neither, 7);
+			if (pos.equip != torch) addNeighbor(pos.x, pos.y, torch, 7);
+			if (pos.equip != gear) addNeighbor(pos.x, pos.y, gear, 7);
+
+			return states;
 
 			void addNeighbor(int x, int y, int equip, int newCost)
 			{
@@ -82,28 +81,27 @@ public class Day_2018_22_Original : Day
 				{
 					case 0:
 						if (equip == torch || equip == gear)
-							queue.Enqueue((x, y, equip), newCost);
+							states.Add(((x, y, equip), newCost));
 						return;
 
 					case 1:
 						if (equip == neither || equip == gear)
-							queue.Enqueue((x, y, equip), newCost);
+							states.Add(((x, y, equip), newCost));
 						return;
 
 					case 2:
 						if (equip == neither || equip == torch)
-							queue.Enqueue((x, y, equip), newCost);
+							states.Add(((x, y, equip), newCost));
 						return;
 				}
 			}
-
-			addNeighbor(pos.x + 1, pos.y, pos.equip, cost + 1);
-			addNeighbor(pos.x, pos.y + 1, pos.equip, cost + 1);
-			addNeighbor(pos.x - 1, pos.y, pos.equip, cost + 1);
-			addNeighbor(pos.x, pos.y - 1, pos.equip, cost + 1);
-			if (pos.equip != neither) addNeighbor(pos.x, pos.y, neither, cost + 7);
-			if (pos.equip != torch) addNeighbor(pos.x, pos.y, torch, cost + 7);
-			if (pos.equip != gear) addNeighbor(pos.x, pos.y, gear, cost + 7);
 		}
+
+		var costs = Helpers.Djikstra(
+			(0, 0, torch),
+			getNeighbors,
+			(d, _) => d.ContainsKey((destination.x, destination.y, torch)));
+
+		PartB = costs[(destination.x, destination.y, torch)].ToString();
 	}
 }

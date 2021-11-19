@@ -61,46 +61,26 @@ public class Day_2019_20_Original : Day
 			.ToLookup(x => x.from, x => (x.to, x.distance));
 
 		{
-			var totalDistance = new Dictionary<string, int>();
-			var pq = new PriorityQueue<string, int>();
-			pq.Enqueue("AAe", 0);
-			while (!totalDistance.ContainsKey("ZZe"))
-			{
-				pq.TryPeek(out var dest, out var dist);
-				pq.Dequeue();
-
-				totalDistance[dest] = dist;
-				pq.EnqueueRange(map[dest]
-					.Where(d => !totalDistance.ContainsKey(d.to))
-					.Select(d => (d.to, d.distance + dist)));
-			}
-
-			PartA = totalDistance["ZZe"].ToString();
+			var totalDistances = Helpers.Djikstra(
+				"AAe",
+				l => map[l],
+				(d, _) => d.ContainsKey("ZZe"));
+			PartA = totalDistances["ZZe"].ToString();
 		}
 
 		{
-			var totalDistance = new Dictionary<(string dest, int level), int>();
-			var pq = new PriorityQueue<(string dest, int level), int>();
-			pq.Enqueue(("AAe", 0), 0);
-			while (!totalDistance.ContainsKey(("ZZe", 0)))
-			{
-				pq.TryPeek(out var p, out var dist);
-				pq.Dequeue();
-
-				totalDistance[p] = dist;
-
-				pq.EnqueueRange(map[p.dest]
+			var totalDistances = Helpers.Djikstra(
+				(dest: "AAe", level: 0),
+				l => map[l.dest]
 					.Select(t =>
-						t.to[..2] == p.dest[..2]
-							? (Element: (t.to, level: t.to[^1] == 'e' ? p.level + 1 : p.level - 1), dist + 1)
-							: (Element: (t.to, p.level), dist + t.distance))
-					.Where(t => 
+						t.to[..2] == l.dest[..2]
+							? (Element: (t.to, level: t.to[^1] == 'e' ? l.level + 1 : l.level - 1), 1)
+							: (Element: (t.to, l.level), t.distance))
+					.Where(t =>
 						t.Element.to[^1] == 'i'
-						|| (t.Element.to != "ZZe" && t.Element.to != "AAe") == (t.Element.level != 0))
-					.Where(d => !totalDistance.ContainsKey(d.Element)));
-			}
-
-			PartB = totalDistance[("ZZe", 0)].ToString();
+						|| (t.Element.to != "ZZe" && t.Element.to != "AAe") == (t.Element.level != 0)),
+				(d, _) => d.ContainsKey(("ZZe", 0)));
+			PartB = totalDistances[("ZZe", 0)].ToString();
 		}
 	}
 

@@ -181,4 +181,30 @@ public static class Helpers
 	[MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
 	public static long lcm(long a, long b) =>
 		a * b / gcd(a, b);
+
+	public static Dictionary<TState, int> Djikstra<TState>(
+		TState start,
+		Func<TState, IEnumerable<(TState state, int cost)>> getNextStates,
+		Func<Dictionary<TState, int>, bool, bool> endingCondition)
+	{
+		var totalCost = new Dictionary<TState, int>();
+		var pq = new PriorityQueue<TState, int>();
+		pq.Enqueue(start, 0);
+
+		while (!endingCondition(totalCost, pq.Count == 0))
+		{
+			pq.TryPeek(out var p, out var cost);
+			pq.Dequeue();
+
+			if (totalCost.ContainsKey(p))
+				continue;
+
+			totalCost[p] = cost;
+
+			pq.EnqueueRange(getNextStates(p)
+				.Select(s => (s.state, cost + s.cost)));
+		}
+
+		return totalCost;
+	}
 }
