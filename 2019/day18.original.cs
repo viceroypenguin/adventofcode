@@ -1,5 +1,5 @@
 ﻿namespace AdventOfCode;
-/*
+
 public class Day_2019_18_Original : Day
 {
 	public override int Year => 2019;
@@ -17,95 +17,44 @@ public class Day_2019_18_Original : Day
 		PartA = DoPartA(map).ToString();
 	}
 
-	static DjikstraState allKeys;
-
-	class DjikstraState : IEquatable<DjikstraState>, IComparable<DjikstraState>
-	{
-		public DjikstraState(IEnumerable<byte> keys, byte currentKey, int steps)
-		{
-			if (currentKey != '@' && currentKey != 0)
-				keys = MoreEnumerable.Append(keys, currentKey);
-			CollectedKeys = keys.OrderBy(k => k).ToArray();
-			CurrentKey = currentKey;
-			Steps = steps;
-
-			var code = 0;
-			foreach (var k in CollectedKeys)
-				code = HashCode.Combine(code, k);
-
-			Complete = currentKey == 0 || code == allKeys.GetHashCode();
-			if (!Complete)
-				code = HashCode.Combine(code, currentKey);
-
-			this.hashCode = code;
-		}
-
-		public bool Complete { get; }
-		public IReadOnlyList<byte> CollectedKeys { get; }
-		public byte CurrentKey { get; }
-		public int Steps { get; }
-
-		private readonly int hashCode;
-
-		public override int GetHashCode() => hashCode;
-
-		public bool Equals(DjikstraState other) =>
-			hashCode == other.hashCode
-			&& CollectedKeys.Count == other.CollectedKeys.Count
-			&& CollectedKeys
-				.Zip(other.CollectedKeys, (a, b) => a == b)
-				.All(b => b);
-
-		public int CompareTo(DjikstraState other) =>
-			Steps.CompareTo(other.Steps);
-	}
-
 	private int DoPartA(byte[][] map)
 	{
 		var importantItems = BuildDistanceCache(map);
 
-		allKeys = new DjikstraState(
+		var allKeys = 
 			importantItems
 				.Select(kvp => kvp.Key)
 				.Where(k => k != '@')
-				.ToArray(),
-			0,
-			0);
+				.Aggregate(0UL, (a, i) => a | (1UL << (i - (byte)'a')));
 
-		var best = new Dictionary<DjikstraState, int>();
-		var queue = new PriorityQueue<DjikstraState>();
-		queue.Enqueue(new DjikstraState(Array.Empty<byte>(), (byte)'@', 0));
+		var distances = Helpers.Dijkstra(
+			(keys: 0UL, pos: (byte)'@'),
+			getNeighbors,
+			d => d.Keys.Any(k => k.keys == allKeys));
 
-		while (queue.Any())
+		IEnumerable<((ulong, byte), int)> getNeighbors((ulong keys, byte pos) state)
 		{
-			var state = queue.Dequeue();
-
-			if (best.GetValueOrDefault(state, int.MaxValue) < state.Steps)
-				continue;
-
-			foreach (var (key, steps, requiredKeys) in importantItems[state.CurrentKey])
+			foreach (var (_key, steps, requiredKeys) in importantItems[state.pos])
 			{
-				if (state.CollectedKeys.Contains(key))
+				var key = 1UL << (_key - (byte)'a');
+				if ((state.keys & key) != 0)
 					continue;
-				if (requiredKeys.Except(state.CollectedKeys).Any())
+				if (~(~requiredKeys | state.keys) != 0)
 					continue;
 
-				var newDjState = new DjikstraState(
-					state.CollectedKeys,
-					key,
-					state.Steps + steps);
-				if (newDjState.Steps < best.GetValueOrDefault(newDjState, int.MaxValue))
-				{
-					best[newDjState] = newDjState.Steps;
-					queue.Enqueue(newDjState);
-				}
+				yield return (
+					(state.keys | key, _key),
+					steps);
 			}
 		}
 
-		return best[allKeys];
+		return distances
+			.Where(kvp => kvp.Key.keys == allKeys)
+			.Select(kvp => kvp.Value)
+			.First();
 	}
 
-	private static Dictionary<byte, List<(byte key, int steps, byte[] requiredKeys)>> BuildDistanceCache(byte[][] map) =>
+	private static Dictionary<byte, List<(byte key, int steps, ulong requiredKeys)>> BuildDistanceCache(byte[][] map) =>
 		map
 			.SelectMany((r, y) => r
 				.Select((c, x) => (y, x, c)))
@@ -115,12 +64,12 @@ public class Day_2019_18_Original : Day
 				p =>
 				{
 					var visited = new HashSet<(int x, int y)>();
-					var destinations = new List<(byte key, int steps, byte[] requiredKeys)>();
+					var destinations = new List<(byte key, int steps, ulong requiredKeys)>();
 					MoreEnumerable.TraverseBreadthFirst(
-						(pos: (p.x, p.y), type: p.c, requiredKeys: Array.Empty<byte>(), steps: 0),
+						(pos: (p.x, p.y), type: p.c, requiredKeys: 0UL, steps: 0),
 						state =>
 						{
-							var @null = Array.Empty<((int x, int y) pos, byte type, byte[] requiredKeys, int steps)>();
+							var @null = Array.Empty<((int x, int y) pos, byte type, ulong requiredKeys, int steps)>();
 							if (visited.Contains(state.pos))
 								return @null;
 							visited.Add(state.pos);
@@ -137,15 +86,15 @@ public class Day_2019_18_Original : Day
 							}
 
 							var newKeys = (type >= 'A' && type <= 'Z')
-								? MoreEnumerable.Append(state.requiredKeys, (byte)(type | 0x20)).ToArray()
+								? state.requiredKeys | (1UL << (type - 'A'))
 								: state.requiredKeys;
 
 							return new[]
 							{
-									((x + 1, y), type, newKeys, state.steps + 1),
-									((x - 1, y), type, newKeys, state.steps + 1),
-									((x, y + 1), type, newKeys, state.steps + 1),
-									((x, y - 1), type, newKeys, state.steps + 1),
+								((x + 1, y), type, newKeys, state.steps + 1),
+								((x - 1, y), type, newKeys, state.steps + 1),
+								((x, y + 1), type, newKeys, state.steps + 1),
+								((x, y - 1), type, newKeys, state.steps + 1),
 							};
 						})
 						.Consume();
@@ -158,4 +107,3 @@ public class Day_2019_18_Original : Day
 		return 0;
 	}
 }
-*/
