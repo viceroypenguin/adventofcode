@@ -21,16 +21,16 @@ public class Day_2019_18_Original : Day
 	{
 		var importantItems = BuildDistanceCache(map);
 
-		var allKeys = 
+		var allKeys =
 			importantItems
 				.Select(kvp => kvp.Key)
 				.Where(k => k != '@')
 				.Aggregate(0UL, (a, i) => a | (1UL << (i - (byte)'a')));
 
-		var distances = Helpers.Dijkstra(
+		var (_, _, distance) = Helpers.Dijkstra(
 			(keys: 0UL, pos: (byte)'@'),
 			getNeighbors,
-			d => d.Keys.Any(k => k.keys == allKeys));
+			(d, s) => s.keys == allKeys);
 
 		IEnumerable<((ulong, byte), int)> getNeighbors((ulong keys, byte pos) state)
 		{
@@ -48,10 +48,7 @@ public class Day_2019_18_Original : Day
 			}
 		}
 
-		return distances
-			.Where(kvp => kvp.Key.keys == allKeys)
-			.Select(kvp => kvp.Value)
-			.First();
+		return distance;
 	}
 
 	private static Dictionary<byte, List<(byte key, int steps, ulong requiredKeys)>> BuildDistanceCache(byte[][] map) =>

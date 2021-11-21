@@ -182,28 +182,31 @@ public static class Helpers
 	public static long lcm(long a, long b) =>
 		a * b / gcd(a, b);
 
-	public static Dictionary<TState, int> Dijkstra<TState>(
+	public static (Dictionary<TState, int>, TState, int) Dijkstra<TState>(
 		TState start,
 		Func<TState, IEnumerable<(TState state, int cost)>> getNextStates,
-		Func<Dictionary<TState, int>, bool> endingCondition)
+		Func<Dictionary<TState, int>, TState, bool> endingCondition)
 	{
 		var totalCost = new Dictionary<TState, int>();
-		var pq = new PriorityQueue<TState, int>();
+		var pq = new UpdateablePriorityQueue<TState>();
 		pq.Enqueue(start, 0);
 
-		while (pq.Count != 0 && !endingCondition(totalCost))
+		(TState p, int cost) = (default, default);
+		while (pq.Count != 0)
 		{
-			pq.TryDequeue(out var p, out var cost);
+			pq.TryDequeue(out p, out cost);
 
 			while (pq.Count != 0 && totalCost.ContainsKey(p))
 				pq.TryDequeue(out p, out cost);
 
 			totalCost[p] = cost;
+			if (endingCondition(totalCost, p))
+				break;
 
 			pq.EnqueueRange(getNextStates(p)
 				.Select(s => (s.state, cost + s.cost)));
 		}
 
-		return totalCost;
+		return (totalCost, p, cost);
 	}
 }

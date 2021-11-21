@@ -97,11 +97,11 @@ public class Day_2018_22_Original : Day
 			}
 		}
 
-		var costs = Helpers.Dijkstra(
+		var (_, _, cost) = Helpers.Dijkstra(
 			(0, 0, torch),
 			getNeighbors,
-			d => d.ContainsKey((destination.x, destination.y, torch)));
+			(d, s) => s == (destination.x, destination.y, torch));
 
-		PartB = costs[(destination.x, destination.y, torch)].ToString();
+		PartB = cost.ToString();
 	}
 }

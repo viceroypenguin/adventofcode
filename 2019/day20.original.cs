@@ -61,15 +61,15 @@ public class Day_2019_20_Original : Day
 			.ToLookup(x => x.from, x => (x.to, x.distance));
 
 		{
-			var totalDistances = Helpers.Dijkstra(
+			var (_, _, totalDistance) = Helpers.Dijkstra(
 				"AAe",
 				l => map[l],
-				d => d.ContainsKey("ZZe"));
-			PartA = totalDistances["ZZe"].ToString();
+				(d, s) => s == "ZZe");
+			PartA = totalDistance.ToString();
 		}
 
 		{
-			var totalDistances = Helpers.Dijkstra(
+			var (_, _, totalDistance) = Helpers.Dijkstra(
 				(dest: "AAe", level: 0),
 				l => map[l.dest]
 					.Select(t =>
@@ -79,8 +79,8 @@ public class Day_2019_20_Original : Day
 					.Where(t =>
 						t.Element.to[^1] == 'i'
 						|| (t.Element.to != "ZZe" && t.Element.to != "AAe") == (t.Element.level != 0)),
-				d => d.ContainsKey(("ZZe", 0)));
-			PartB = totalDistances[("ZZe", 0)].ToString();
+				(d, s) => s.dest == "ZZe");
+			PartA = totalDistance.ToString();
 		}
 	}
 
