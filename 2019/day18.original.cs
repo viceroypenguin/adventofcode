@@ -14,10 +14,12 @@ public class Day_2019_18_Original : Day
 			.Batch(input.Index().First(kvp => kvp.Value == '\n').Key + 1)
 			.Select(arr => arr.ToArray())
 			.ToArray();
-		PartA = DoPartA(map).ToString();
+
+		DoPartA(map);
+		DoPartB(map);
 	}
 
-	private int DoPartA(byte[][] map)
+	private void DoPartA(byte[][] map)
 	{
 		var importantItems = BuildDistanceCache(map);
 
@@ -48,14 +50,20 @@ public class Day_2019_18_Original : Day
 			}
 		}
 
-		return distance;
+		PartA = distance.ToString();
 	}
 
 	private static Dictionary<byte, List<(byte key, int steps, ulong requiredKeys)>> BuildDistanceCache(byte[][] map) =>
 		map
 			.SelectMany((r, y) => r
 				.Select((c, x) => (y, x, c)))
-			.Where(p => (p.c >= 'a' && p.c <= 'z') || p.c == '@')
+			.Where(p => 
+				(p.c >= 'a' && p.c <= 'z') 
+				|| p.c == '@'
+				|| p.c == '$'
+				|| p.c == '%'
+				|| p.c == '&'
+				|| p.c == '\'')
 			.ToDictionary(
 				p => p.c,
 				p =>
@@ -99,8 +107,62 @@ public class Day_2019_18_Original : Day
 					return destinations;
 				});
 
-	private int DoPartB(byte[][] map)
+	private void DoPartB(byte[][] map)
 	{
-		return 0;
+		for (int y = 0; y < map.Length; y++)
+			for (int x = 0; x < map[y].Length; x++)
+				if (map[y][x] == (byte)'@')
+				{
+					map[y][x] = (byte)'#';
+					map[y - 1][x] = (byte)'#';
+					map[y + 1][x] = (byte)'#';
+					map[y][x - 1] = (byte)'#';
+					map[y][x + 1] = (byte)'#';
+					map[y + 1][x + 1] = (byte)'$';
+					map[y - 1][x + 1] = (byte)'%';
+					map[y + 1][x - 1] = (byte)'&';
+					map[y - 1][x - 1] = (byte)'\'';
+					goto @out;
+				}
+
+@out:
+		var importantItems = BuildDistanceCache(map);
+
+		var allKeys =
+			importantItems
+				.Select(kvp => kvp.Key)
+				.Where(k => k >= 'a')
+				.Aggregate(0UL, (a, i) => a | (1UL << (i - (byte)'a')));
+
+		var (_, _, distance) = Helpers.Dijkstra(
+			(keys: 0UL, pos: 0x24_25_26_27u),
+			getNeighbors,
+			(_, s) => s.keys == allKeys);
+
+		IEnumerable<((ulong, uint), int)> getNeighbors((ulong keys, uint pos) state)
+		{
+			var positions = BitConverter.GetBytes(state.pos);
+			for (int i = 0; i < positions.Length; i++)
+			{
+				var basePos = positions[i];
+				foreach (var (_key, steps, requiredKeys) in importantItems[basePos])
+				{
+					var key = 1UL << (_key - (byte)'a');
+					if ((state.keys & key) != 0)
+						continue;
+					if (~(~requiredKeys | state.keys) != 0)
+						continue;
+
+					positions[i] = _key;
+					yield return (
+						(state.keys | key, BitConverter.ToUInt32(positions)),
+						steps);
+				}
+
+				positions[i] = basePos;
+			}
+		}
+
+		PartB = distance.ToString();
 	}
 }

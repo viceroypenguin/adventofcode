@@ -182,6 +182,7 @@ public static class Helpers
 	public static long lcm(long a, long b) =>
 		a * b / gcd(a, b);
 
+	[MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
 	public static (Dictionary<TState, int>, TState, int) Dijkstra<TState>(
 		TState start,
 		Func<TState, IEnumerable<(TState state, int cost)>> getNextStates,
