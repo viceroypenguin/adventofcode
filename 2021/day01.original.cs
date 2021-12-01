@@ -21,9 +21,7 @@ public class Day_2021_01_Original : Day
 
 		PartB = input.GetLines()
 			.Select(l => Convert.ToInt32(l))
-			.Window(3)
-			.Select(x => x.Sum())
-			.Window(2)
+			.Window(4)
 			.Where(x => x.Last() > x.First())
 			.Count()
 			.ToString();
