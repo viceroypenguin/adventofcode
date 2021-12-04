@@ -14,6 +14,14 @@ public static class Helpers
 		GetString(input)
 			.Split(_splitChars, options);
 
+
+	private static readonly string[] _segmentSplitChars = new[] { "\r\n\r\n", "\n\n", };
+	public static string[][] GetSegments(this byte[] input) =>
+		GetString(input)
+			.Split(_segmentSplitChars, StringSplitOptions.None)
+			.Select(s => s.Split(_splitChars, StringSplitOptions.None))
+			.ToArray();
+
 	public static bool Between<T>(this T value, T min, T max) where T : IComparable<T> =>
 		min.CompareTo(value) <= 0 && value.CompareTo(max) <= 0;
 
