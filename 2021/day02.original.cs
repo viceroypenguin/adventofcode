@@ -12,31 +12,31 @@ public class Day_2021_02_Original : Day
 	{
 		if (input == null) return;
 
+		// `(?<xxx>) defines a group named xxx
+		// (x|y|z) = match one of x, y, or z
+		// \d+ = digits
 		var regex = new Regex(@"(?<dir>forward|down|up) (?<n>\d+)");
-		var (depth, hor) = input.GetLines()
+		var (depth, hor, aim) = input.GetLines()
+			// use regex to collect the direction and number
 			.Select(l => regex.Match(l))
-			.Select(m => (i: m.Groups["dir"].Value, n: Convert.ToInt32(m.Groups["n"].Value)))
-			.Aggregate((depth: 0L, hor: 0L), (p, m) =>
-				m.i switch
-				{
-					"forward" => (p.depth, p.hor + m.n),
-					"down" => (p.depth + m.n, p.hor),
-					"up" => (p.depth - m.n, p.hor),
-				});
-
-		PartA = (hor * depth).ToString();
-
-		(depth, hor, var aim) = input.GetLines()
-			.Select(l => regex.Match(l))
-			.Select(m => (i: m.Groups["dir"].Value, n: Convert.ToInt32(m.Groups["n"].Value)))
+			// extract direction and integer conversion
+			.Select(m => (
+				i: m.Groups["dir"].Value, 
+				n: Convert.ToInt32(m.Groups["n"].Value)))
+			// start at (0, 0, 0), and update for each instruction
 			.Aggregate((depth: 0L, hor: 0L, aim: 0L), (p, m) =>
 				m.i switch
 				{
+					// aim remains the same, forward movement based on n
+					// depth based on aim
 					"forward" => (p.depth + (p.aim * m.n), p.hor + m.n, p.aim),
+					// depth and forward remain the same, adjust aim
 					"down" => (p.depth, p.hor, p.aim + m.n),
 					"up" => (p.depth, p.hor, p.aim - m.n),
 				});
 
+		// aim == parta depth
+		PartA = (hor * aim).ToString();
 		PartB = (hor * depth).ToString();
 	}
 }
