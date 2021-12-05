@@ -17,12 +17,6 @@ public class Day_2019_19_Original : Day
 			.Select(long.Parse)
 			.ToArray();
 
-		// 64k should be enough for anyone
-		Array.Resize(ref instructions, 64 * 1024);
-
-		var inputs = new BufferBlock<long>();
-		var outputs = new BufferBlock<long>();
-
 		var map = Enumerable.Range(0, 50)
 			.Select(y => new long[50])
 			.ToArray();
@@ -30,17 +24,7 @@ public class Day_2019_19_Original : Day
 		int x = 0, y = 0;
 		for (y = 0; y < 50; y++)
 			for (x = 0; x < 50; x++)
-			{
-				inputs.Post(x);
-				inputs.Post(y);
-
-				new IntCodeComputer(instructions.ToArray(), inputs, outputs)
-					.RunProgram()
-					.GetAwaiter()
-					.GetResult();
-
-				map[y][x] = outputs.Receive();
-			}
+				map[y][x] = RunProgram(instructions, x, y);
 
 		PartA = map
 			.SelectMany(r => r)
@@ -53,32 +37,25 @@ public class Day_2019_19_Original : Day
 		{
 			while (true)
 			{
-				inputs.Post(x);
-				inputs.Post(y);
-
-				new IntCodeComputer(instructions.ToArray(), inputs, outputs)
-					.RunProgram()
-					.GetAwaiter()
-					.GetResult();
-
-				if (outputs.Receive() == 1)
+				if (RunProgram(instructions, x, y) == 1)
 					break;
 				y++;
 			}
 
-			inputs.Post(x - 99);
-			inputs.Post(y + 99);
-
-			new IntCodeComputer(instructions.ToArray(), inputs, outputs)
-				.RunProgram()
-				.GetAwaiter()
-				.GetResult();
-
-			if (outputs.Receive() == 1)
+			if (RunProgram(instructions, x - 99, y + 99) == 1)
 			{
 				PartB = ((x - 99) * 10000 + y).ToString();
 				return;
 			}
 		}
+	}
+
+	private static long RunProgram(long[] instructions, int x, int y)
+	{
+		var pc = new IntCodeComputer(instructions);
+		pc.Inputs.Enqueue(x);
+		pc.Inputs.Enqueue(y);
+		pc.RunProgram();
+		return pc.Outputs.Dequeue();
 	}
 }

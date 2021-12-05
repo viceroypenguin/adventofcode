@@ -17,21 +17,9 @@ public class Day_2019_21_Original : Day
 			.Select(long.Parse)
 			.ToArray();
 
-		// 64k should be enough for anyone
-		Array.Resize(ref instructions, 64 * 1024);
-
-		DoPartA(instructions);
-		DoPartB(instructions);
+		PartA = DoPart(instructions, springScriptA);
+		PartB = DoPart(instructions, springScriptB);
 	}
-
-	private void DoPartA(long[] instructions)
-	{
-		var inputs = new BufferBlock<long>();
-		var outputs = new BufferBlock<long>();
-
-		var program = new IntCodeComputer(instructions.ToArray(), inputs, outputs)
-			.RunProgram();
-		outputs.TryReceiveAll(out var output);
 
 		const string springScriptA =
 @"NOT A J
@@ -42,27 +30,6 @@ OR T J
 AND D J
 WALK
 ";
-		foreach (var b in Encoding.ASCII.GetBytes(springScriptA).Where(b => b != '\r'))
-			inputs.Post(b);
-
-		program.GetAwaiter().GetResult();
-
-		outputs.TryReceiveAll(out output);
-
-		PartA = output.Any(o => o > 255)
-			? output.Where(o => o > 255).First().ToString()
-			: Encoding.ASCII.GetString(
-				output.Select(b => (byte)b).ToArray());
-	}
-
-	private void DoPartB(long[] instructions)
-	{
-		var inputs = new BufferBlock<long>();
-		var outputs = new BufferBlock<long>();
-
-		var program = new IntCodeComputer(instructions.ToArray(), inputs, outputs)
-			.RunProgram();
-		outputs.TryReceiveAll(out var output);
 
 		const string springScriptB =
 @"NOT A J
@@ -77,16 +44,18 @@ OR H T
 AND T J
 RUN
 ";
-		foreach (var b in Encoding.ASCII.GetBytes(springScriptB).Where(b => b != '\r'))
-			inputs.Post(b);
 
-		program.GetAwaiter().GetResult();
+	private static string DoPart(long[] instructions, string scriptCode)
+	{
+		var pc = new IntCodeComputer(instructions);
+		foreach (var b in Encoding.ASCII.GetBytes(scriptCode).Where(b => b != '\r'))
+			pc.Inputs.Enqueue(b);
 
-		outputs.TryReceiveAll(out output);
+		pc.RunProgram();
 
-		PartB = output.Any(o => o > 255)
-			? output.Where(o => o > 255).First().ToString()
+		return pc.Outputs.Any(o => o > 255)
+			? pc.Outputs.Where(o => o > 255).First().ToString()
 			: Encoding.ASCII.GetString(
-				output.Select(b => (byte)b).ToArray());
+				pc.Outputs.Select(b => (byte)b).ToArray());
 	}
 }

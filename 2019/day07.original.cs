@@ -15,34 +15,38 @@ public class Day_2019_07_Original : Day
 		var instructions = input.GetString()
 			.Split(',')
 			.Select(long.Parse)
-			.ToList();
+			.ToArray();
 
-		PartA = DoPart(instructions, 0).GetAwaiter().GetResult();
-		PartB = DoPart(instructions, 5).GetAwaiter().GetResult();
+		PartA = DoPart(instructions, 0);
+		PartB = DoPart(instructions, 5);
 	}
 
-	async Task<string> DoPart(List<long> instructions, int start) =>
-		(await Task.WhenAll(
-			MoreEnumerable.Permutations(Enumerable.Range(start, 5))
-				.Select(async arr =>
+	private static string DoPart(long[] instructions, int start) =>
+		MoreEnumerable.Permutations(Enumerable.Range(start, 5))
+			.Select(arr =>
+			{
+				var computers = Enumerable.Range(0, 5)
+					.Select(i =>
+					{
+						var pc = new IntCodeComputer(instructions);
+						pc.Inputs.Enqueue(arr[i]);
+						return pc;
+					})
+					.ToList();
+
+				var signal = 0L;
+				while (computers[^1].ProgramStatus != ProgramStatus.Completed)
 				{
-					var buffers = Enumerable.Range(0, 5).Select(i => new BufferBlock<long>()).ToList();
-					buffers[0].Post(arr[0]);
-					buffers[0].Post(0);
-					buffers[1].Post(arr[1]);
-					buffers[2].Post(arr[2]);
-					buffers[3].Post(arr[3]);
-					buffers[4].Post(arr[4]);
+					foreach (var c in computers)
+					{
+						c.Inputs.Enqueue(signal);
+						c.RunProgram();
+						signal = c.Outputs.Dequeue();
+					}
+				}
 
-					await Task.WhenAll(
-						new IntCodeComputer(instructions.ToArray(), buffers[0], buffers[1]).RunProgram(),
-						new IntCodeComputer(instructions.ToArray(), buffers[1], buffers[2]).RunProgram(),
-						new IntCodeComputer(instructions.ToArray(), buffers[2], buffers[3]).RunProgram(),
-						new IntCodeComputer(instructions.ToArray(), buffers[3], buffers[4]).RunProgram(),
-						new IntCodeComputer(instructions.ToArray(), buffers[4], buffers[0]).RunProgram());
-
-					return buffers[0].Receive();
-				})))
+				return signal;
+			})
 			.Max()
 			.ToString();
 }

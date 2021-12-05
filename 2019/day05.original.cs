@@ -15,18 +15,14 @@ public class Day_2019_05_Original : Day
 		var instructions = input.GetString()
 			.Split(',')
 			.Select(long.Parse)
-			.ToList();
+			.ToArray();
 
-		var inputs = new BufferBlock<long>();
-		inputs.Post(1);
-		var outputs = new BufferBlock<long>();
-		var pc = new IntCodeComputer(instructions.ToArray(), inputs, outputs);
-		pc.RunProgram()
-			.GetAwaiter()
-			.GetResult();
-		while (outputs.Count > 0)
+		var pc = new IntCodeComputer(instructions);
+		pc.Inputs.Enqueue(1);
+		pc.RunProgram();
+		while (pc.Outputs.Count > 0)
 		{
-			var value = outputs.Receive();
+			var value = pc.Outputs.Dequeue();
 			if (value > 0)
 			{
 				PartA = value.ToString();
@@ -34,13 +30,9 @@ public class Day_2019_05_Original : Day
 			}
 		}
 
-		inputs = new BufferBlock<long>();
-		inputs.Post(5);
-		outputs = new BufferBlock<long>();
-		pc = new IntCodeComputer(instructions.ToArray(), inputs, outputs);
-		pc.RunProgram()
-			.GetAwaiter()
-			.GetResult();
-		PartB = outputs.Receive().ToString();
+		pc = new IntCodeComputer(instructions);
+		pc.Inputs.Enqueue(5);
+		pc.RunProgram();
+		PartB = pc.Outputs.Dequeue().ToString();
 	}
 }

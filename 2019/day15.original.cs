@@ -17,23 +17,10 @@ public class Day_2019_15_Original : Day
 			.Select(long.Parse)
 			.ToArray();
 
-		// 64k should be enough for anyone
-		Array.Resize(ref instructions, 64 * 1024);
+		this.pc = new IntCodeComputer(instructions);
 
-		var pc = new IntCodeComputer(instructions.ToArray(), inputs, outputs);
-
-		Task.Run(async () =>
-		{
-			for (int i = 1; i <= 4; i++)
-				await HandleDirection((0, 0), i, 1);
-
-				// anything outside 1-4 kills the program
-				inputs.Post(5);
-		});
-
-		pc.RunProgram()
-			.GetAwaiter()
-			.GetResult();
+		for (int i = 1; i <= 4; i++)
+			HandleDirection((0, 0), i, 1);
 
 		PartA = map[oxygenLocation].distance.ToString();
 
@@ -58,16 +45,12 @@ public class Day_2019_15_Original : Day
 		PartB = map.Values.Where(x => x.type == 3).Max(x => x.distance).ToString();
 	}
 
-	private readonly BufferBlock<long> inputs = new BufferBlock<long>();
-	private readonly BufferBlock<long> outputs = new BufferBlock<long>();
+	private IntCodeComputer pc;
 	private readonly Dictionary<(int x, int y), (int type, int distance)> map =
-		new Dictionary<(int x, int y), (int type, int distance)>()
-		{
-			[(0, 0)] = (0, 0),
-		};
+		new() { [(0, 0)] = (0, 0), };
 	(int x, int y) oxygenLocation = default;
 
-	private async Task HandleDirection((int x, int y) position, int direction, int distance)
+	private void HandleDirection((int x, int y) position, int direction, int distance)
 	{
 		var newPosition = direction switch
 		{
@@ -80,8 +63,9 @@ public class Day_2019_15_Original : Day
 		if (map.ContainsKey(newPosition))
 			return;
 
-		inputs.Post(direction);
-		var response = await outputs.ReceiveAsync();
+		pc.Inputs.Enqueue(direction);
+		pc.RunProgram();
+		var response = pc.Outputs.Dequeue();
 		map[newPosition] = ((int)response, distance);
 		if (response == 0)
 			return;
@@ -90,9 +74,10 @@ public class Day_2019_15_Original : Day
 			oxygenLocation = newPosition;
 
 		for (int i = 1; i <= 4; i++)
-			await HandleDirection(newPosition, i, distance + 1);
+			HandleDirection(newPosition, i, distance + 1);
 
-		inputs.Post(direction switch { 1 => 2, 2 => 1, 3 => 4, 4 => 3, });
-		await outputs.ReceiveAsync();
+		pc.Inputs.Enqueue(direction switch { 1 => 2, 2 => 1, 3 => 4, 4 => 3, });
+		pc.RunProgram();
+		pc.Outputs.Dequeue();
 	}
 }

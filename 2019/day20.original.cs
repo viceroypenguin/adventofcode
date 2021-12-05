@@ -80,7 +80,7 @@ public class Day_2019_20_Original : Day
 						t.Element.to[^1] == 'i'
 						|| (t.Element.to != "ZZe" && t.Element.to != "AAe") == (t.Element.level != 0)),
 				(d, s) => s.dest == "ZZe");
-			PartA = totalDistance.ToString();
+			PartB = totalDistance.ToString();
 		}
 	}
 

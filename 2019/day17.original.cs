@@ -17,18 +17,9 @@ public class Day_2019_17_Original : Day
 			.Select(long.Parse)
 			.ToArray();
 
-		// 64k should be enough for anyone
-		Array.Resize(ref instructions, 64 * 1024);
-
-		var inputs = new BufferBlock<long>();
-		var outputs = new BufferBlock<long>();
-		var pc = new IntCodeComputer(instructions.ToArray(), inputs, outputs);
-
-		pc.RunProgram()
-			.GetAwaiter()
-			.GetResult();
-
-		outputs.TryReceiveAll(out var mapData);
+		var pc = new IntCodeComputer(instructions);
+		pc.RunProgram();
+		var mapData = pc.Outputs.ToList();
 
 		var map = mapData
 			.Batch(mapData.IndexOf('\n') + 1)
@@ -47,27 +38,19 @@ public class Day_2019_17_Original : Day
 			.ToString();
 
 		instructions[0] = 2;
-		var data =
+		pc = new IntCodeComputer(instructions);
+		foreach (var b in Encoding.ASCII.GetBytes(script).Where(b => b != '\r'))
+			pc.Inputs.Enqueue(b);
+
+		pc.RunProgram();
+		PartB = pc.Outputs.Last().ToString();
+	}
+
+	const string script =
 @"A,C,A,B,C,B,A,C,A,B
 R,6,L,10,R,8,R,8
 R,12,L,10,R,6,L,10
 R,12,L,8,L,10
 n
-"
-			.Select(c => (byte)c)
-			.Where(c => c != '\r')
-			.ToArray();
-
-		foreach (var c in data)
-			inputs.Post(c);
-
-		pc = new IntCodeComputer(instructions.ToArray(), inputs, outputs);
-
-		pc.RunProgram()
-			.GetAwaiter()
-			.GetResult();
-
-		outputs.TryReceiveAll(out mapData);
-		PartB = mapData.Last().ToString();
-	}
+";
 }

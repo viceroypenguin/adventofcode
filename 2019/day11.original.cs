@@ -17,9 +17,6 @@ public class Day_2019_11_Original : Day
 			.Select(long.Parse)
 			.ToArray();
 
-		// 640k should be enough for anyone
-		Array.Resize(ref instructions, 640 * 1024);
-
 		var map = RunPart(instructions, 0);
 		Dump('A', map.Count.ToString());
 
@@ -41,44 +38,32 @@ public class Day_2019_11_Original : Day
 
 	private static Dictionary<long, long> RunPart(long[] instructions, int initialPointValue)
 	{
-		var inputs = new BufferBlock<long>();
-		var outputs = new BufferBlock<long>();
-		var pc = new IntCodeComputer(instructions.ToArray(), inputs, outputs);
+		var pc = new IntCodeComputer(instructions.ToArray(), size: 640 * 1024);
 
 		var map = new Dictionary<long, long>();
+		var coord = (x: 0, y: 0);
+		var dir = 0;
 
-		var tcs = new CancellationTokenSource();
-		Task.Run(async () =>
+		map[GetCoordinate(coord.x, coord.y)] = initialPointValue;
+
+		while (true)
 		{
-			var token = tcs.Token;
-			var coord = (x: 0, y: 0);
-			var dir = 0;
+			var coordValue = GetCoordinate(coord.x, coord.y);
+			pc.Inputs.Enqueue(map.GetValueOrDefault(coordValue));
 
-			map[GetCoordinate(coord.x, coord.y)] = initialPointValue;
+			if (pc.RunProgram() == ProgramStatus.Completed)
+				return map;
 
-			while (true)
+			map[coordValue] = pc.Outputs.Dequeue();
+			var turn = pc.Outputs.Dequeue();
+			dir = turn switch { 0 => (dir + 3) % 4, 1 => (dir + 1) % 4, };
+			coord = dir switch
 			{
-				var coordValue = GetCoordinate(coord.x, coord.y);
-				inputs.Post(map.GetValueOrDefault(coordValue));
-
-				map[coordValue] = await outputs.ReceiveAsync(token);
-				var turn = await outputs.ReceiveAsync();
-				dir = turn switch { 0 => (dir + 3) % 4, 1 => (dir + 1) % 4, };
-				coord = dir switch
-				{
-					0 => (coord.x, coord.y + 1),
-					1 => (coord.x + 1, coord.y),
-					2 => (coord.x, coord.y - 1),
-					3 => (coord.x - 1, coord.y),
-				};
-			}
-		});
-
-		pc.RunProgram()
-			.GetAwaiter()
-			.GetResult();
-
-		tcs.Cancel();
-		return map;
+				0 => (coord.x, coord.y + 1),
+				1 => (coord.x + 1, coord.y),
+				2 => (coord.x, coord.y - 1),
+				3 => (coord.x - 1, coord.y),
+			};
+		}
 	}
 }

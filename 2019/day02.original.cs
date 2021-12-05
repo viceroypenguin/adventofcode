@@ -13,31 +13,25 @@ public class Day_2019_02_Original : Day
 		var instructions = input.GetString()
 			.Split(',')
 			.Select(long.Parse)
-			.ToList();
+			.ToArray();
 
-		var partA = instructions.ToArray();
-		partA[1] = 12;
-		partA[2] = 2;
-		var pc = new IntCodeComputer(partA, null, null);
-		pc.RunProgram()
-			.GetAwaiter()
-			.GetResult();
+		instructions[1] = 12;
+		instructions[2] = 2;
+		var pc = new IntCodeComputer(instructions);
+		pc.RunProgram();
 
-		PartA = partA[0].ToString();
+		PartA = pc.Memory[0].ToString();
 
 		for (int noun = 0; noun < 100; noun++)
 			for (int verb = 0; verb < 100; verb++)
 			{
-				var partB = instructions.ToArray();
-				partB[1] = noun;
-				partB[2] = verb;
+				instructions[1] = noun;
+				instructions[2] = verb;
 
-				pc = new IntCodeComputer(partB, null, null);
-				pc.RunProgram()
-					.GetAwaiter()
-					.GetResult();
+				pc = new IntCodeComputer(instructions, null, null);
+				pc.RunProgram();
 
-				if (partB[0] == 19690720)
+				if (pc.Memory[0] == 19690720)
 				{
 					PartB = (noun * 100 + verb).ToString();
 					return;
