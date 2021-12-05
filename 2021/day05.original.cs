@@ -13,7 +13,9 @@ public class Day_2021_05_Original : Day
 		if (input == null) return;
 
 		var lines = input.GetLines()
+			// Parse numbers
 			.Select(l => Regex.Match(l, @"(\d+),(\d+) -> (\d+),(\d+)"))
+			// convert to integers, identify them
 			.Select(m => (
 				x1: Convert.ToInt32(m.Groups[1].Value),
 				y1: Convert.ToInt32(m.Groups[2].Value),
@@ -21,23 +23,48 @@ public class Day_2021_05_Original : Day
 				y2: Convert.ToInt32(m.Groups[4].Value)))
 			.ToList();
 
-		PartA = DoPart(lines, true);
-		PartB = DoPart(lines, false);
+		// All the hard work is done in DoPart()
+		// only difference is counting the diagonals
+		PartA = DoPart(lines, skipDiagonals: true).ToString();
+		PartB = DoPart(lines, skipDiagonals: false).ToString();
 	}
 
-	private string DoPart(List<(int x1, int y1, int x2, int y2)> lines, bool skipDiagonals)
+	private static int DoPart(
+			List<(int x1, int y1, int x2, int y2)> lines,
+			bool skipDiagonals) =>
+		lines
+			// if not skipping diagonals, then all of them
+			// if skipping diagonals, then only when x or y are same
+			.Where(x => !skipDiagonals || x.x1 == x.x2 || x.y1 == x.y2)
+			// splat/expand each line into all of its constituent points
+			.SelectMany(x => GetPointsForLine(x.x1, x.y1, x.x2, x.y2))
+			// consolidate points by their coordinates
+			.GroupBy(x => x)
+			// which groups have more than one point?
+			.Where(g => g.Count() > 1)
+			// how many of these groups?
+			.Count();
+
+	private static IEnumerable<(int x, int y)> GetPointsForLine(int x1, int y1, int x2, int y2)
 	{
-		var visited = new Dictionary<(int x, int y), int>();
-		foreach (var (x1, y1, x2, y2) in lines)
+		// NB: this only works for 45' lines 
+
+		// which direction does the line go in the x-axis?
+		var xDir = Math.Sign(x2 - x1);
+		// which direction does the line go in the y-axis?
+		var yDir = Math.Sign(y2 - y1);
+		for (
+			// start at beginning to the line
+			int x = x1, y = y1;
+			// are we at the end of the line?
+			// + xDir is so we include the final point of the line
+			// in return
+			x != (x2 + xDir) || y != (y2 + yDir);
+			// advance x/y by direction
+			x += xDir, y += yDir)
 		{
-			if (skipDiagonals && x1 != x2 && y1 != y2) continue;
-
-			var xDir = Math.Sign(x2 - x1);
-			var yDir = Math.Sign(y2 - y1);
-			for (int x = x1, y = y1; x != (x2 + xDir) || y != (y2 + yDir); x += xDir, y += yDir)
-				visited[(x, y)] = visited.GetValueOrDefault((x, y)) + 1;
+			// return each point to enumeration
+			yield return (x, y);
 		}
-
-		return visited.Where(kvp => kvp.Value > 1).Count().ToString();
 	}
 }
