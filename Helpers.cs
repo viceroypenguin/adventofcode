@@ -14,6 +14,11 @@ public static class Helpers
 		GetString(input)
 			.Split(_splitChars, options);
 
+	public static byte[][] GetMap(this byte[] input)
+	{
+		var width = input.Index().First(b => b.Value == '\n').Key;
+		return input.Batch(width + 1).Select(x => x.Take(..^1).ToArray()).ToArray();
+	}
 
 	private static readonly string[] _segmentSplitChars = new[] { "\r\n\r\n", "\n\n", };
 	public static string[][] GetSegments(this byte[] input) =>
@@ -217,5 +222,65 @@ public static class Helpers
 		}
 
 		return (totalCost, p, cost);
+	}
+
+	public static IEnumerable<((int x, int y) p, T item)> GetMapPoints<T>(
+			this IReadOnlyList<IReadOnlyList<T>> map) =>
+		 Enumerable.Range(0, map.Count)
+			.SelectMany(y => Enumerable.Range(0, map[y].Count)
+				.Select(x => ((x, y), map[y][x])));
+
+	private static readonly (int x, int y)[] Directions = 
+		new (int x, int y)[] { (0, 1), (0, -1), (1, 0), (-1, 0), };
+	public static IEnumerable<(int x, int y)> GetCartesianNeighbors(this (int x, int y) p) =>
+		Directions.Select(d => (p.x + d.x, p.y + d.y));
+
+	public static IEnumerable<(int x, int y)> GetCartesianNeighbors<T>(
+			this (int x, int y) p,
+			IReadOnlyList<IReadOnlyList<T>> map) =>
+		p.GetCartesianNeighbors()
+			.Where(q => 
+				q.y >= 0 && q.y < map.Count
+				&& q.x >= 0 && q.x < map[q.y].Count);
+
+	public static void FloodFill<T>(
+			this IReadOnlyList<IReadOnlyList<T>> map,
+			(int x, int y) startingPoint,
+			Func<(int x, int y), T, bool> canVisitPoint,
+			Action<(int x, int y), T> visitPoint)
+	{
+		// keep track of where we've been
+		var seen = new HashSet<(int x, int y)>();
+
+		// get the neighboring points...
+		IEnumerable<(int x, int y)> Traverse((int x, int y) q)
+		{
+			var (x, y) = q;
+
+			// we've been here before
+			if (seen.Contains((x, y)))
+				// don't go anywhere
+				return Array.Empty<(int x, int y)>();
+
+			// on another type of border
+			if (!canVisitPoint(q, map[y][x]))
+				// don't go anywhere
+				return Array.Empty<(int x, int y)>();
+
+			// now we've been here for the first time
+			// remember this and increase size of the basin
+			seen.Add(q);
+			visitPoint(q, map[y][x]);
+
+			// go in all four directions
+			return q.GetCartesianNeighbors(map);
+		}
+
+		// execute a BFS based on traverse method
+		MoreEnumerable
+			.TraverseBreadthFirst(
+				startingPoint,
+				Traverse)
+			.Consume();
 	}
 }
