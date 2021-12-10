@@ -12,24 +12,28 @@ public class Day_2021_10_Original : Day
 	{
 		if (input == null) return;
 
-		var lines = input.GetLines();
-
-		PartA = lines
+		var lines = input.GetLines()
+			// for each line
 			.Select(static l =>
 			{
+				// keep track of what we've seen
 				var stack = new Stack<char>();
 				foreach (var c in l)
 				{
+					// if we open a chunk, then keep track of it
 					if (c is '{' or '(' or '[' or '<')
 						stack.Push(c);
 					else
 					{
-						var o = stack.Pop();
-						var v = (o, c) switch
+						// ending a chunk - is it the right value?
+						var v = (stack.Pop(), c) switch
 						{
+							// if (), then we're good
+							// if {), [), <), then bail
 							('(', ')') => -1,
 							(_, ')') => 3,
 
+							// etc.
 							('[', ']') => -1,
 							(_, ']') => 57,
 
@@ -39,47 +43,17 @@ public class Day_2021_10_Original : Day
 							('<', '>') => -1,
 							(_, '>') => 25137,
 						};
+						// corrupted? return the value
 						if (v != -1)
-							return v;
+							return (corrupted: true, value: v);
 					}
 				}
 
-				return 0;
-			})
-			.Sum()
-			.ToString();
-
-		var scores = lines
-			.Select(static l =>
-			{
-				var stack = new Stack<char>();
-				foreach (var c in l)
-				{
-					if (c is '{' or '(' or '[' or '<')
-						stack.Push(c);
-					else
-					{
-						var o = stack.Pop();
-						var v = (o, c) switch
-						{
-							('(', ')') => -1,
-							(_, ')') => 3,
-
-							('[', ']') => -1,
-							(_, ']') => 57,
-
-							('{', '}') => -1,
-							(_, '}') => 1197,
-
-							('<', '>') => -1,
-							(_, '>') => 25137,
-						};
-						if (v != -1)
-							return 0;
-					}
-				}
-
-				return stack
+				// not corrupted, calculate score
+				var score = stack
+					// i = 0
+					// i = i * 5 + chunk value
+					// return i
 					.Aggregate(
 						0L,
 						(i, c) => i * 5 + c switch
@@ -89,11 +63,25 @@ public class Day_2021_10_Original : Day
 							'{' => 3,
 							'<' => 4,
 						});
+				return (corrupted: false, value: score);
 			})
-			.Where(x => x != 0)
+			.ToList();
+
+		PartA = lines
+			// get corrupted lines
+			.Where(x => x.corrupted)
+			// sum their values
+			.Sum(x => x.value)
+			.ToString();
+
+		// sort the non-corrupted lines by their score
+		var scores = lines
+			.Where(x => !x.corrupted)
+			.Select(x => x.value)
 			.OrderBy(x => x)
 			.ToList();
 
+		// get the median value
 		PartB = scores[scores.Count / 2].ToString();
 	}
 }
