@@ -12,13 +12,16 @@ public class Day_2021_11_Original : Day
 	{
 		if (input == null) return;
 
-		var map = input.GetIntMap();
-
-		var flashes = 0;
-		for (int i = 0; i < 100; i++)
+		// handle one step
+		int step(int[][] map)
 		{
+			// count the flashes
+			var flashes = 0;
+			// keep track of where to flash neighbors
 			var flashPoints = new Queue<(int x, int y)>();
 
+			// increment a cell, and if necessary
+			// remember to flash neighbors
 			void increment(int x, int y)
 			{
 				var l = ++map[y][x];
@@ -28,9 +31,15 @@ public class Day_2021_11_Original : Day
 					flashes++;
 				}
 			}
+
+			// for every point, just increment
+			// don't handle flashes yet
 			foreach (var ((x, y), l) in map.GetMapPoints())
 				increment(x, y);
 
+			// now, for all flash points, trigger 
+			// and increment neighbors; will recurse
+			// via queue if necessary
 			while (flashPoints.Count != 0)
 			{
 				foreach (var (x, y) in flashPoints.Dequeue()
@@ -38,45 +47,38 @@ public class Day_2021_11_Original : Day
 					increment(x, y);
 			}
 
+			// now everything is done, reset flashed values
 			foreach (var ((x, y), l) in map.GetMapPoints())
 				if (l >= 10)
 					map[y][x] = 0;
+
+			// how many flashes did we see?
+			return flashes;
 		}
+
+		// get initial state
+		var map = input.GetIntMap();
+		
+		// keep track of flashes over 100 steps
+		var flashes = 0;
+		for (int i = 0; i < 100; i++)
+			flashes += step(map);
 
 		PartA = flashes.ToString();
 
+		// reset to initial state
 		map = input.GetIntMap();
+		// how many cells are on map
+		// i.e. how many flashes == entire map flashed
 		var mapSize = map.Length * map[0].Length;
 		for (int i = 1; ; i++)
 		{
-			flashes = 0;
-			var flashPoints = new Queue<(int x, int y)>();
-
-			void increment(int x, int y)
-			{
-				var l = ++map[y][x];
-				if (l == 10)
-				{
-					flashPoints.Enqueue((x, y));
-					flashes++;
-				}
-			}
-			foreach (var ((x, y), l) in map.GetMapPoints())
-				increment(x, y);
-
-			while (flashPoints.Count != 0)
-			{
-				foreach (var (x, y) in flashPoints.Dequeue()
-						.GetCartesianAdjacent(map))
-					increment(x, y);
-			}
-
-			foreach (var ((x, y), l) in map.GetMapPoints())
-				if (l >= 10)
-					map[y][x] = 0;
-
+			// run step
+			flashes = step(map);
+			// if entire map flashed...
 			if (flashes == mapSize)
 			{
+				// print and we're done.
 				PartB = i.ToString();
 				return;
 			}
