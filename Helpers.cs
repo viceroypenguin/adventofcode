@@ -20,6 +20,12 @@ public static class Helpers
 		return input.Batch(width + 1).Select(x => x.Take(..^1).ToArray()).ToArray();
 	}
 
+	public static int[][] GetIntMap(this byte[] input)
+	{
+		var width = input.Index().First(b => b.Value == '\n').Key;
+		return input.Batch(width + 1).Select(x => x.Take(..^1).Select(y => y - '0').ToArray()).ToArray();
+	}
+
 	private static readonly string[] _segmentSplitChars = new[] { "\r\n\r\n", "\n\n", };
 	public static string[][] GetSegments(this byte[] input) =>
 		GetString(input)
@@ -230,16 +236,29 @@ public static class Helpers
 			.SelectMany(y => Enumerable.Range(0, map[y].Count)
 				.Select(x => ((x, y), map[y][x])));
 
-	private static readonly (int x, int y)[] Directions = 
+	private static readonly (int x, int y)[] Neighbors =
 		new (int x, int y)[] { (0, 1), (0, -1), (1, 0), (-1, 0), };
 	public static IEnumerable<(int x, int y)> GetCartesianNeighbors(this (int x, int y) p) =>
-		Directions.Select(d => (p.x + d.x, p.y + d.y));
+		Neighbors.Select(d => (p.x + d.x, p.y + d.y));
 
 	public static IEnumerable<(int x, int y)> GetCartesianNeighbors<T>(
 			this (int x, int y) p,
 			IReadOnlyList<IReadOnlyList<T>> map) =>
 		p.GetCartesianNeighbors()
-			.Where(q => 
+			.Where(q =>
+				q.y >= 0 && q.y < map.Count
+				&& q.x >= 0 && q.x < map[q.y].Count);
+
+	private static readonly (int x, int y)[] Adjacent =
+		new (int x, int y)[] { (-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1), };
+	public static IEnumerable<(int x, int y)> GetCartesianAdjacent(this (int x, int y) p) =>
+		Adjacent.Select(d => (p.x + d.x, p.y + d.y));
+
+	public static IEnumerable<(int x, int y)> GetCartesianAdjacent<T>(
+			this (int x, int y) p,
+			IReadOnlyList<IReadOnlyList<T>> map) =>
+		p.GetCartesianAdjacent()
+			.Where(q =>
 				q.y >= 0 && q.y < map.Count
 				&& q.x >= 0 && q.x < map[q.y].Count);
 
