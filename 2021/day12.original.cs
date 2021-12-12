@@ -21,29 +21,31 @@ public class Day_2021_12_Original : Day
 			.ToLookup(x => x.Item1, x => x.Item2);
 
 		var paths = MoreEnumerable
-			.TraverseBreadthFirst(
-				ImmutableList<string>.Empty.Add("start"),
-				l => edges[l.Last()]
+			.TraverseDepthFirst(
+				(cur: "start", visited: ImmutableHashSet<string>.Empty),
+				l => edges[l.cur]
 					.Where(e => e == "end"
 						|| char.IsUpper(e[0])
-						|| !l.Contains(e))
-					.Select(e => l.Add(e)))
-			.Where(e => e.Last() == "end")
+						|| !l.visited.Contains(e))
+					.Select(e => (e, char.IsLower(e[0]) ? l.visited.Add(e) : l.visited)))
+			.Where(e => e.cur == "end")
 			.Count();
 
 		PartA = paths.ToString();
 
-
 		paths = MoreEnumerable
-			.TraverseBreadthFirst(
-				(path: ImmutableList<string>.Empty.Add("start"), visitedTwice: false),
-				l => edges[l.path.Last()]
+			.TraverseDepthFirst(
+				(cur: "start", visitedTwice: false, visited: ImmutableHashSet<string>.Empty),
+				l => edges[l.cur]
 					.Where(e => e == "end"
 						|| !l.visitedTwice
 						|| char.IsUpper(e[0])
-						|| !l.path.Contains(e))
-					.Select(e => (l.path.Add(e), l.visitedTwice || (char.IsLower(e[0]) && l.path.Contains(e)))))
-			.Where(e => e.path.Last() == "end")
+						|| !l.visited.Contains(e))
+					.Select(e => (
+						e,
+						l.visitedTwice || (char.IsLower(e[0]) && l.visited.Contains(e)), 
+						char.IsLower(e[0]) ? l.visited.Add(e) : l.visited)))
+			.Where(e => e.cur == "end")
 			.Count();
 
 		PartB = paths.ToString();
