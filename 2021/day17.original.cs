@@ -16,34 +16,60 @@ public class Day_2021_17_Original : Day
 		var y1 = Convert.ToInt32(match.Groups[3].Value);
 		var y2 = Convert.ToInt32(match.Groups[4].Value);
 
-		IEnumerable<(int y, int t)> GetCandidatesForY(int y) =>
+		IEnumerable<int> GetCandidatesForY(int y) =>
+			// start at t = 0
 			Enumerable.Range(0, 1000)
-				.Select(t => (t, vy: y - t))
-				.Scan((py: 0, t: 0), (py, t) => (py.py + t.vy, py.t + 1))
+				// what is the velocity at time t?
+				.Select(t => y - t)
+				// start with y = 0, t = 0
+				// return every position y and time t
+				// using the velocity to adjust y
+				.Scan((py: 0, t: 0), (py, vy) => (py.py + vy, py.t + 1))
+				// stop when we get past y1
 				.TakeWhile(x => x.py >= y1)
-				.Where(x => x.py <= y2);
+				// and exclude points before we get to y2
+				.Where(x => x.py <= y2)
+				// we only care about the original vy and
+				// which times are valid for that vy
+				.Select(x => x.t);
 
+		// search every possible y1
 		var yCandidates = Enumerable.Range(y1, -y1 * 2 + 2)
-			.SelectMany(GetCandidatesForY)
-			.ToLookup(x => x.t, x => x.y);
+			// get valid times for this vy
+			.SelectMany(vy => GetCandidatesForY(vy).Select(t => (vy, t)))
+			// group by the times
+			.ToLookup(x => x.t, x => x.vy);
 
+		// min vx is root of quadratic n * (n + 1) / 2
 		var minVX = (int)Math.Ceiling(-0.5 + Math.Sqrt(0.25 + 2 * x1));
 		var maxVX = x2 + 1;
 
+		// for each valid time
 		var velocities = yCandidates
+			// search the vx space for any vx
+			// that lands in the box for the time t
 			.SelectMany(g => Enumerable.Range(minVX, maxVX - minVX + 1)
+				// start at time 0 and go to time t
 				.Where(vx => Enumerable.Range(0, g.Key)
+					// vx is decreasing to 0
+					// sum all the vx
 					.Sum(t => Math.Max(vx - t, 0))
+					// is the sum between x1 and x2
 					.Between(x1, x2))
+				// we have valid vx and vy, pair them up
 				.SelectMany(vx => g, (vx, vy) => (vx, vy)))
+			// in case we accidentally match the vx/vy
+			// more than once...
 			.Distinct()
 			.ToList();
 
+		// how high can we get?
 		var maxVY = velocities
 			.Select(x => x.vy)
 			.Max();
 		PartA = (maxVY * (maxVY + 1) / 2).ToString();
 
+		// how many pairs did we get?
 		PartB = velocities.Count.ToString();
 	}
 }
