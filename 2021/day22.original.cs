@@ -26,6 +26,7 @@ public class Day_2021_22_Original : Day
 			.ToList();
 
 		DoPartA(instructions);
+		DoPartB(instructions);
 	}
 
 	private void DoPartA(List<(bool b, (int lo, int hi) x, (int lo, int hi) y, (int lo, int hi) z)> instructions)
@@ -50,4 +51,40 @@ public class Day_2021_22_Original : Day
 			.ToString();
 	}
 
+	private void DoPartB(List<(bool b, (int lo, int hi) x, (int lo, int hi) y, (int lo, int hi) z)> instructions)
+	{
+		var boxes = new List<(bool b, (int lo, int hi) x, (int lo, int hi) y, (int lo, int hi) z)>();
+		foreach (var b1 in instructions)
+		{
+			boxes.AddRange(
+				boxes
+					.Select(b2 => Overlap(b1, b2))
+					.Where(o => o.x.lo <= o.x.hi
+						&& o.y.lo <= o.y.hi
+						&& o.z.lo <= o.z.hi)
+					.ToList());
+
+			if (b1.b)
+				boxes.Add(b1);
+		}
+
+		PartB = boxes.Sum(b => BoxSize(b.x, b.y, b.z) * (b.b ? 1 : -1)).ToString();
+	}
+
+	private static long BoxSize(
+		(int lo, int hi) x,
+		(int lo, int hi) y,
+		(int lo, int hi) z) =>
+			(x.hi - x.lo + 1L)
+			* (y.hi - y.lo + 1)
+			* (z.hi - z.lo + 1);
+
+	private static (bool b, (int lo, int hi) x, (int lo, int hi) y, (int lo, int hi) z) Overlap(
+			(bool b, (int lo, int hi) x, (int lo, int hi) y, (int lo, int hi) z) b1,
+			(bool b, (int lo, int hi) x, (int lo, int hi) y, (int lo, int hi) z) b2) =>
+		(
+			!b2.b,
+			(lo: Math.Max(b1.x.lo, b2.x.lo), hi: Math.Min(b1.x.hi, b2.x.hi)),
+			(lo: Math.Max(b1.y.lo, b2.y.lo), hi: Math.Min(b1.y.hi, b2.y.hi)),
+			(lo: Math.Max(b1.z.lo, b2.z.lo), hi: Math.Min(b1.z.hi, b2.z.hi)));
 }
