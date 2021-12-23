@@ -10,6 +10,7 @@ public class Day_2021_22_Original : Day
 	{
 		if (input == null) return;
 
+		// parse out the instructions
 		var instructions = input.GetLines()
 			.Select(l => (b: l[..2] == "on", m: Regex.Matches(l, @"-?\d+").ToList()))
 			.Select(m => (
@@ -31,20 +32,28 @@ public class Day_2021_22_Original : Day
 
 	private void DoPartA(List<(bool b, (int lo, int hi) x, (int lo, int hi) y, (int lo, int hi) z)> instructions)
 	{
-		var map = new Dictionary<(int x, int y, int z), bool>();
+		// shortcut for getting every int between lo and hi
 		static IEnumerable<int> GetDimension((int lo, int hi) dim) =>
 			Enumerable.Range(dim.lo, dim.hi - dim.lo + 1);
+
+		// keep track of which cubes are lit or not
+		var map = new Dictionary<(int x, int y, int z), bool>();
 		foreach (var (v, x, y, z) in instructions
+				// only process inside defined small region
 				.Where(a => a.x.lo >= -50 && a.x.hi <= 50
 					&& a.y.lo >= -50 && a.y.hi <= 50
 					&& a.z.lo >= -50 && a.z.hi <= 50))
 			(
+				// get every cell from all three dimensions
 				from a in GetDimension(x)
 				from b in GetDimension(y)
 				from c in GetDimension(z)
+				// 3d location
 				select (a, b, c))
+				// set the cell to the instruction
 				.ForEach(p => map[p] = v);
 
+		// how many do we have turned on now?
 		PartA = map
 			.Where(kvp => kvp.Value)
 			.Count()
@@ -53,21 +62,34 @@ public class Day_2021_22_Original : Day
 
 	private void DoPartB(List<(bool b, (int lo, int hi) x, (int lo, int hi) y, (int lo, int hi) z)> instructions)
 	{
+		// keep track of all of the boxes
 		var boxes = new List<(bool b, (int lo, int hi) x, (int lo, int hi) y, (int lo, int hi) z)>();
+		// for each instruction
 		foreach (var b1 in instructions)
 		{
+			// if any existing boxes overlap
+			// then we need to add negating overlaps
+			// this is true regardless of if the existing
+			// box is lit or unlit.
+			// unlit boxes in this list will only be from
+			// previous overlaps, and so are valid for
+			// negating.
 			boxes.AddRange(
 				boxes
+					// get the overlap
 					.Select(b2 => Overlap(b1, b2))
+					// is it a valid overlap?
 					.Where(o => o.x.lo <= o.x.hi
 						&& o.y.lo <= o.y.hi
 						&& o.z.lo <= o.z.hi)
 					.ToList());
 
+			// iff this box is lit, we add it to the list
 			if (b1.b)
 				boxes.Add(b1);
 		}
 
+		// add pos and neg sum of all boxes in the list
 		PartB = boxes.Sum(b => BoxSize(b.x, b.y, b.z) * (b.b ? 1 : -1)).ToString();
 	}
 
