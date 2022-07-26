@@ -8,6 +8,8 @@ public class Day_2017_22_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var map = new Dictionary<(int x, int y), char>();
 		var lines = input.GetLines();
 		var n = lines.Length / 2;

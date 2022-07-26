@@ -11,6 +11,8 @@ public class Day_2018_15_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		map = input.GetLines();
 		Dump('A', RunGame(true, 3));
 

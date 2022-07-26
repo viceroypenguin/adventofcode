@@ -8,6 +8,8 @@ public class Day_2015_13_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var edges = input.GetLines()
 			.Select(x =>
 			{

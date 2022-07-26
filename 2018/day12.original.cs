@@ -10,6 +10,8 @@ public class Day_2018_12_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var numGenerations = 150;
 
 		var lines = input.GetLines();

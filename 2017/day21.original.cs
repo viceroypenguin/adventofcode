@@ -10,6 +10,8 @@ public class Day_2017_21_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		// [ 0, 1 ]
 		// [ 2, 3 ]
 		var rotateSize2 = new[] { 2, 0, 3, 1, };

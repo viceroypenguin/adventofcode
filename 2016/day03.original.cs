@@ -8,6 +8,8 @@ public class Day_2016_03_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var lines = input.GetLines();
 		Dump('A', lines
 			.Select(line => line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))

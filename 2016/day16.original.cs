@@ -8,6 +8,8 @@ public class Day_2016_16_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		ExecutePart(input, 272, 'A');
 		ExecutePart(input, 35651584, 'B');
 	}

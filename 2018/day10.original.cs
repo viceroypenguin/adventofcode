@@ -8,6 +8,8 @@ public class Day_2018_10_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var regex = new Regex(
 			@"position=<(?<posx>(\s*|-)\d+),(?<posy>(\s|-)*\d+)> velocity=<(?<velx>(\s*|-)\d+),(?<vely>(\s|-)*\d+)>",
 			RegexOptions.Compiled);

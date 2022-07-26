@@ -34,6 +34,8 @@ public class Day_2015_04_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var inp = input.GetString();
 		Dump('A', GetPassword(inp, 5));
 		Dump('B', GetPassword(inp, 6));

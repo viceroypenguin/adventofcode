@@ -8,6 +8,8 @@ public class Day_2018_25_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var stars = input.GetLines()
 			.Select(l => l.Split(','))
 			.Select(l => (

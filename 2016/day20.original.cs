@@ -8,6 +8,8 @@ public class Day_2016_20_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var max = uint.MaxValue;
 		var regex = new Regex(@"(?<from>\d+)-(?<to>\d+)", RegexOptions.Compiled);
 

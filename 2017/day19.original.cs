@@ -16,6 +16,8 @@ public class Day_2017_19_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		map = input.GetLines()
 			.Select(s => s.ToArray())
 			.ToArray();

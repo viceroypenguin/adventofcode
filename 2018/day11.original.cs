@@ -8,6 +8,8 @@ public class Day_2018_11_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var serialNumber = Convert.ToInt32(input.GetString());
 		var cells = new int[301, 301];
 

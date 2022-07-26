@@ -8,6 +8,8 @@ public class Day_2015_23_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var instructions = input
 			.GetLines()
 			.Select(i => Instruction.ParseInstruction(i))

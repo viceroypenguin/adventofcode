@@ -8,6 +8,8 @@ public class Day_2016_25_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var regex = new Regex(@"(?<i>\w{3}) (?<x>-?\d+|a|b|c|d)(?: (?<y>-?\d+|a|b|c|d))?", RegexOptions.Compiled);
 
 		var instructions =

@@ -8,6 +8,8 @@ public class Day_2015_07_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var regex = new Regex(
 			@"^\s*(
 		            (?<assign>\w+) |

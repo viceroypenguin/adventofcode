@@ -8,6 +8,8 @@ public class Day_2015_03_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var current = (x: 0, y: 0);
 		var santaHouses = input
 			.Select(c =>

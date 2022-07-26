@@ -8,6 +8,8 @@ public class Day_2015_02_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var regex = new Regex(@"(?<l>\d+)x(?<w>\d+)x(?<h>\d+)", RegexOptions.Compiled);
 		var boxes = input.GetLines()
 			.Select(l => regex.Match(l))

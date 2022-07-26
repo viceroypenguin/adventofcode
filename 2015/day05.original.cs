@@ -66,6 +66,8 @@ public class Day_2015_05_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var lines = input.GetLines();
 
 		Dump('A',

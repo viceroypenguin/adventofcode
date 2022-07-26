@@ -8,6 +8,8 @@ public class Day_2016_19_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		Func<int, int> nextPowerOfTwo = (n) =>
 		{
 			n |= n >> 1;

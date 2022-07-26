@@ -17,6 +17,8 @@ public class Day_2018_23_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var regex = new Regex(@"pos=\<(?<x>\-?\d+),(?<y>\-?\d+),(?<z>\-?\d+)\>, r=(?<p>\d+)");
 
 		bots = input.GetLines()

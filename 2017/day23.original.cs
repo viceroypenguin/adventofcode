@@ -15,6 +15,8 @@ public class Day_2017_23_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var regex = new Regex(@"^(?<inst>set|sub|mul|jnz) (?<dst>\w|-?\d+)( (?<src>\w|-?\d+))?$", RegexOptions.Compiled);
 		var instructions = input.GetLines()
 			.Select(inst => regex.Match(inst))

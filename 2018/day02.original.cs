@@ -8,6 +8,8 @@ public class Day_2018_02_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var ids = input.GetLines();
 
 		var counts = ids

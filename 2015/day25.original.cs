@@ -8,7 +8,7 @@ public class Day_2015_25_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
-		var start = (ulong)Convert.ToInt64(input.GetString());
+		if (input == null) return;
 
 		Func<ulong, ulong> step = x => (x * 252533) % 33554393;
 
@@ -19,7 +19,7 @@ public class Day_2015_25_Original : Day
 
 		var stepCount = totalNums(row + col) - (row - 1);
 
-		var num = start;
+		var num = 20151125UL;
 		foreach (var x in Enumerable.Range(0, stepCount - 1))
 			num = step(num);
 

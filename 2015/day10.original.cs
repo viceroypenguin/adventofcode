@@ -8,6 +8,8 @@ public class Day_2015_10_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		foreach (var _ in Enumerable.Range(1, 50))
 		{
 			var curLength = 1;

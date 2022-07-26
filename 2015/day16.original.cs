@@ -8,6 +8,8 @@ public class Day_2015_16_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var giftInput =
 @"children: 3
 cats: 7

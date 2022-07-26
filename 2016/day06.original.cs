@@ -8,6 +8,8 @@ public class Day_2016_06_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var words = input.GetLines();
 
 		Func<IEnumerable<char>, int, char> processLetter = (characters, multiplier) =>

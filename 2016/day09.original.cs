@@ -8,6 +8,8 @@ public class Day_2016_09_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var txt = input.GetString();
 		DoPartA(txt);
 		DoPartB(txt);

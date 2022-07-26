@@ -24,6 +24,8 @@ public class Day_2015_06_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var regex = new Regex(
 			@"((?<on>turn on)|(?<off>turn off)|(?<toggle>toggle)) (?<startX>\d+),(?<startY>\d+) through (?<endX>\d+),(?<endY>\d+)",
 			RegexOptions.Compiled | RegexOptions.ExplicitCapture);

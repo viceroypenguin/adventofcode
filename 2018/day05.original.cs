@@ -8,6 +8,8 @@ public class Day_2018_05_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var poly = input.GetString();
 
 		int GetReducedPolymerLength(string polymer)

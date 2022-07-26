@@ -8,6 +8,8 @@ public class Day_2018_04_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		const int BeginShift = 1;
 		const int FallsAsleep = 2;
 		const int WakesUp = 3;

@@ -8,6 +8,8 @@ public class Day_2016_08_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var regex = new Regex(@"(?:(?<rect>rect (?<rect_rows>\d+)x(?<rect_cols>\d+))|(?<rotate_column>rotate column x=(?<col_num>\d+) by (?<col_amt>\d+))|(?<rotate_row>rotate row y=(?<row_num>\d+) by (?<row_amt>\d+)))", RegexOptions.Compiled);
 
 		var instructions =

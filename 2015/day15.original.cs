@@ -8,6 +8,8 @@ public class Day_2015_15_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var totalIngredients = 100;
 		var totalCalories = 500;
 

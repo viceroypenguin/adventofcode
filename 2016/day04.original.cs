@@ -8,6 +8,8 @@ public class Day_2016_04_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var regex = new Regex(@"(?<name>[a-z-]+)-(?<id>\d+)[[](?<checksum>\w{5})[]]", RegexOptions.Compiled);
 
 		var validNames =

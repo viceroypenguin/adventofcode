@@ -8,6 +8,8 @@ public class Day_2015_14_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var time = 2503;
 
 		var reindeer = input

@@ -8,6 +8,8 @@ public class Day_2015_21_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var weapons = ParseItems(
 @"Dagger        8     4       0
 Shortsword   10     5       0

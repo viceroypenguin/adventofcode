@@ -10,6 +10,8 @@ public class Day_2015_19_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var regex = new Regex(@"^(((\w+) => (\w+))|(\w+))$");
 
 		var matches = input.GetLines()

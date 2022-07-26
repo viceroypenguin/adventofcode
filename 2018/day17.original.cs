@@ -8,6 +8,8 @@ public class Day_2018_17_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		(int start, int end) ParseDesc(string str)
 		{
 			var split = str.Split(new[] { "..", }, StringSplitOptions.None);

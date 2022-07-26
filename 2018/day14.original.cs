@@ -8,6 +8,8 @@ public class Day_2018_14_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var marbles = new LinkedList<int>();
 		LinkedListNode<int> prevNode(LinkedListNode<int> node) =>
 			node.Previous ?? marbles.Last;

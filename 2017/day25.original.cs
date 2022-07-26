@@ -8,6 +8,8 @@ public class Day_2017_25_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var instructions = input.GetLines();
 		var initialState = instructions[0][15];
 		var steps = Convert.ToInt32(instructions[1].Split()[5]);

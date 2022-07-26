@@ -19,6 +19,8 @@ public class Day_2015_08_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var lines = input.GetLines();
 		var inputLength = lines.Select(s => s.Length).Sum();
 

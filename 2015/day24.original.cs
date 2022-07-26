@@ -10,6 +10,8 @@ public class Day_2015_24_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var weights = input.GetLines()
 			.Select(i => Convert.ToInt32(i))
 			.OrderByDescending(i => i)

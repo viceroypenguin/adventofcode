@@ -8,6 +8,8 @@ public class Day_2016_22_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var regex = new Regex(@"/dev/grid/node-x(?<x>\d+)-y(?<y>\d+)\s+(?<total>\d+)T\s+(?<used>\d+)T\s+(?<avail>\d+)T\s+\d+%", RegexOptions.Compiled);
 
 		var nodes =

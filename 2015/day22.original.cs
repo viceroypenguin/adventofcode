@@ -10,6 +10,8 @@ public class Day_2015_22_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var stats = input.GetLines();
 
 		var hitPoints = Convert.ToInt32(stats[0].Split().Last());

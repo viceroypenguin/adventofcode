@@ -104,6 +104,8 @@ public class Day_2016_11_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var partAFirstFloor = Devices.StrontiumGenerator | Devices.StrontiumMicrochip | Devices.PlutoniumGenerator | Devices.PlutoniumMicrochip;
 		var partBFirstFloor = Devices.StrontiumGenerator | Devices.StrontiumMicrochip | Devices.PlutoniumGenerator | Devices.PlutoniumMicrochip | Devices.EleriumGenerator | Devices.EleriumMicrochip | Devices.DilithiumGenerator | Devices.DilithiumMicrochip;
 

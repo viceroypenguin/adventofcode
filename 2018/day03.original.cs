@@ -8,6 +8,8 @@ public class Day_2018_03_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var regex = new Regex(@"^#(?<id>\d+)\s+@\s+(?<el>\d+),(?<et>\d+): (?<wide>\d+)x(?<tall>\d+)$", RegexOptions.Compiled);
 
 		List<int> dGetOrAdd(Dictionary<(int x, int y), List<int>> d, (int x, int y) key)

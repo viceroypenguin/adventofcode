@@ -8,6 +8,8 @@ public class Day_2016_07_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		Func<string, bool> isABBA = (str) =>
 		{
 			for (int i = 0; i < str.Length - 3; i++)

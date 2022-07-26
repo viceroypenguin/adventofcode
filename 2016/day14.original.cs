@@ -10,6 +10,8 @@ public class Day_2016_14_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var tmp = input.GetString();
 		ExecutePart(tmp, true);
 		ExecutePart(tmp, false);

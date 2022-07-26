@@ -8,6 +8,8 @@ public class Day_2016_15_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var regex = new Regex(@"Disc #(?<disc_num>\d+) has (?<num_positions>\d+) positions; at time=0, it is at position (?<initial_position>\d+).", RegexOptions.Compiled);
 
 		var discs =

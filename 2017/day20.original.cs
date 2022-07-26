@@ -8,6 +8,8 @@ public class Day_2017_20_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var regex = new Regex(@"^p=<(-?\d+),(-?\d+),(-?\d+)>,\s*v=<(-?\d+),(-?\d+),(-?\d+)>,\s*a=<(-?\d+),(-?\d+),(-?\d+)>$", RegexOptions.Compiled);
 		var particles = input.GetLines()
 			.Select(s => regex.Match(s))

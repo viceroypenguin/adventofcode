@@ -10,6 +10,8 @@ public class Day_2017_14_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		byte[] KnotHash(string str)
 		{
 			const int ArrayLength = 256;

@@ -11,6 +11,8 @@ public class Day_2016_12_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var regex = new Regex(@"(?<instruction>\w{3}) (?<x>-?\d+|a|b|c|d)(?: (?<y>-?\d+|a|b|c|d))?", RegexOptions.Compiled);
 
 		instructions =
@@ -32,7 +34,7 @@ public class Day_2016_12_Original : Day
 			{
 				{ "a", 0 },
 				{ "b", 0 },
-				{ "c", 0 },
+				{ "c", 1 },
 				{ "d", 0 },
 			};
 

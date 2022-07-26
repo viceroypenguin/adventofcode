@@ -8,6 +8,8 @@ public class Day_2016_10_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var regex = new Regex(@"(?:(?<give_away>bot (?<bot>\d+) gives low to (?<low_type>bot|output) (?<low_num>\d+) and high to (?<high_type>bot|output) (?<high_num>\d+))|(?<receive_value>value (?<value>\d+) goes to bot (?<bot>\d+)))", RegexOptions.Compiled);
 		var magic = new { low = 17, high = 61 };
 

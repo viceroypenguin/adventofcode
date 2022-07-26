@@ -10,6 +10,8 @@ public class Day_2015_17_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var total = 150;
 
 		var containers = input.GetLines()

@@ -72,6 +72,8 @@ public class Day_2015_11_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var stack = ImmutableStack<int>.Empty;
 		foreach (var c in input)
 			stack = stack.Push((int)c - (int)'a');

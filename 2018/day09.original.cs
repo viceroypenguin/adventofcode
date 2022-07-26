@@ -8,6 +8,8 @@ public class Day_2018_09_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var data = input.GetString().Split();
 		var numPlayers = Convert.ToInt32(data[0]);
 		var maxPoints = Convert.ToInt32(data[6]);

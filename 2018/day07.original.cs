@@ -8,6 +8,8 @@ public class Day_2018_07_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var steps = input.GetLines()
 			.Select(l => l.Split())
 			.Select(l => (before: l[1], after: l[7]))

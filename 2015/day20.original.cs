@@ -8,6 +8,8 @@ public class Day_2015_20_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var number = Convert.ToUInt32(input.GetString());
 
 		DoPartA(number);

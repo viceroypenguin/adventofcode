@@ -28,6 +28,8 @@ public class Day_2018_24_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var data = input.GetLines()
 			.Segment(l => l.EndsWith(":"));
 

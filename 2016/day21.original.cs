@@ -8,6 +8,8 @@ public class Day_2016_21_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var regex = new Regex(@"
 swap\ (
 	(?<swap_position>position\ (?<position_x>\d+)\ with\ position\ (?<position_y>\d+)) |

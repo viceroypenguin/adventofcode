@@ -8,6 +8,8 @@ public class Day_2018_06_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var coordinates = input.GetLines()
 			.Select(s => s.Split(new[] { ", " }, StringSplitOptions.None))
 			.Select(s => s.Select(i => Convert.ToInt32(i)).ToArray())

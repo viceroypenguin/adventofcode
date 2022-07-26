@@ -8,6 +8,8 @@ public class Day_2018_01_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var changes = input.GetLines()
 			.Select(l => Convert.ToInt32(l))
 			.ToList();

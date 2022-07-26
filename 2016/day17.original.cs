@@ -41,7 +41,9 @@ public class Day_2016_17_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
-		passcode = input.GetString();
+		if (input == null) return;
+
+		passcode = input[..^1].GetString();
 
 		var initialPosition = new Position { x = 0, y = 0, Path = "", Steps = 0, };
 
@@ -59,7 +61,7 @@ public class Day_2016_17_Original : Day
 				if (p.x == destination.x && p.y == destination.y)
 				{
 					if (successfulPaths.Count == 0)
-						Dump('A', p.Steps);
+						Dump('A', p.Path);
 					successfulPaths.Add(p);
 				}
 				else

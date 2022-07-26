@@ -8,6 +8,8 @@ public class Day_2015_09_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		var edges = input.GetLines()
 			.Select(x => x.Split(new[] { " to ", " = " }, StringSplitOptions.None))
 			.Select(x => new { Start = x[0], End = x[1], Distance = Convert.ToInt32(x[2]) })

@@ -69,6 +69,8 @@ public class Day_2016_13_Original : Day
 
 	protected override void ExecuteDay(byte[] input)
 	{
+		if (input == null) return;
+
 		number = Convert.ToInt32(input.GetString());
 
 		var initialPosition = new Position { x = 1, y = 1, Steps = 0 };
