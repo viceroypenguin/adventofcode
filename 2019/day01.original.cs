@@ -11,7 +11,7 @@ public class Day_2019_01_Original : Day
 		if (input == null) return;
 
 		static IEnumerable<int> fuelValues(int start) =>
-			MoreEnumerable.Generate(start, s => Math.Max(s / 3 - 2, 0))
+			SuperEnumerable.Generate(start, s => Math.Max(s / 3 - 2, 0))
 				.Skip(1)
 				.TakeWhile(s => s != 0);
 

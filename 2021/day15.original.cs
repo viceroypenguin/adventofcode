@@ -13,11 +13,11 @@ public class Day_2021_15_Original : Day
 		var map = input.GetIntMap();
 		var sideLength = map.Length;
 		var destination = (x: sideLength - 1, y: sideLength - 1);
-		var (_, _, risk) = Helpers.Dijkstra(
+		var risk = SuperEnumerable.GetShortestPathCost<(int, int), int>(
 			(0, 0),
-			p => p.GetCartesianNeighbors(map)
-				.Select(q => (q, map[q.y][q.x])),
-			(_, p) => p == destination);
+			(p, c) => p.GetCartesianNeighbors(map)
+				.Select(q => (q, c + map[q.y][q.x])),
+			destination);
 		PartA = risk.ToString();
 
 		destination = (sideLength * 5 - 1, sideLength * 5 - 1);
@@ -28,13 +28,13 @@ public class Day_2021_15_Original : Day
 			return (((map[y][x] - 1) + increase) % 9) + 1;
 		}
 
-		(_, _, risk) = Helpers.Dijkstra(
+		risk = SuperEnumerable.GetShortestPathCost<(int, int), int>(
 			(0, 0),
-			p => p.GetCartesianNeighbors()
+			(p, c) => p.GetCartesianNeighbors()
 				.Where(q => q.y >= 0 && q.y <= destination.y
 					&& q.x >= 0 && q.x <= destination.x)
-				.Select(q => (q, getRisk(q.x, q.y))),
-			(_, p) => p == destination);
+				.Select(q => (q, c + getRisk(q.x, q.y))),
+			destination);
 		PartB = risk.ToString();
 	}
 }

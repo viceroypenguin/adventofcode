@@ -18,8 +18,8 @@ public class Day_2018_01_Original : Day
 
 		var seen = new HashSet<int>();
 		Dump('B',
-			MoreEnumerable.Repeat(changes)
-				.Scan((acc, next) => acc + next)
+			changes.Repeat()
+				.ScanEx((acc, next) => acc + next)
 				.First(f =>
 				{
 					if (seen.Contains(f))

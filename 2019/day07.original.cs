@@ -22,7 +22,7 @@ public class Day_2019_07_Original : Day
 	}
 
 	private static string DoPart(long[] instructions, int start) =>
-		MoreEnumerable.Permutations(Enumerable.Range(start, 5))
+		SuperEnumerable.Permutations(Enumerable.Range(start, 5))
 			.Select(arr =>
 			{
 				var computers = Enumerable.Range(0, 5)

@@ -14,7 +14,7 @@ public class Day_2019_03_Original : Day
 			.GetLines()
 			.Select(w => w
 				.Split(',')
-				.Scan(
+				.ScanEx(
 					new[] { (x: 0, y: 0, steps: 0), },
 					(pos, dir) =>
 					{

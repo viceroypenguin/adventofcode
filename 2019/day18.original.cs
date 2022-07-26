@@ -11,7 +11,7 @@ public class Day_2019_18_Original : Day
 		if (input == null) return;
 
 		var map = input
-			.Batch(input.Index().First(kvp => kvp.Value == '\n').Key + 1)
+			.Batch(input.Index().First(kvp => kvp.item == '\n').index + 1)
 			.Select(arr => arr.ToArray())
 			.ToArray();
 
@@ -29,12 +29,17 @@ public class Day_2019_18_Original : Day
 				.Where(k => k != '@')
 				.Aggregate(0UL, (a, i) => a | (1UL << (i - (byte)'a')));
 
-		var (_, _, distance) = Helpers.Dijkstra(
+		var comparer = ProjectionEqualityComparer.Create<(ulong keys, byte pos)>(
+			(a, b) => (a.keys == allKeys && b.keys == allKeys)
+				|| EqualityComparer<(ulong, byte)>.Default.Equals(a, b));
+		var distance = SuperEnumerable.GetShortestPathCost<(ulong keys, byte pos), int>(
 			(keys: 0UL, pos: (byte)'@'),
 			getNeighbors,
-			(d, s) => s.keys == allKeys);
+			(allKeys, pos: (byte)0),
+			stateComparer: comparer,
+			costComparer: null);
 
-		IEnumerable<((ulong, byte), int)> getNeighbors((ulong keys, byte pos) state)
+		IEnumerable<((ulong, byte), int)> getNeighbors((ulong keys, byte pos) state, int cost)
 		{
 			foreach (var (_key, steps, requiredKeys) in importantItems[state.pos])
 			{
@@ -46,7 +51,7 @@ public class Day_2019_18_Original : Day
 
 				yield return (
 					(state.keys | key, _key),
-					steps);
+					cost + steps);
 			}
 		}
 
@@ -70,7 +75,7 @@ public class Day_2019_18_Original : Day
 				{
 					var visited = new HashSet<(int x, int y)>();
 					var destinations = new List<(byte key, int steps, ulong requiredKeys)>();
-					MoreEnumerable.TraverseBreadthFirst(
+					SuperEnumerable.TraverseBreadthFirst(
 						(pos: (p.x, p.y), type: p.c, requiredKeys: 0UL, steps: 0),
 						state =>
 						{
@@ -134,12 +139,17 @@ public class Day_2019_18_Original : Day
 				.Where(k => k >= 'a')
 				.Aggregate(0UL, (a, i) => a | (1UL << (i - (byte)'a')));
 
-		var (_, _, distance) = Helpers.Dijkstra(
+		var comparer = ProjectionEqualityComparer.Create<(ulong keys, uint pos)>(
+			(a, b) => (a.keys == allKeys && b.keys == allKeys)
+				|| EqualityComparer<(ulong, uint)>.Default.Equals(a, b));
+		var distance = SuperEnumerable.GetShortestPathCost<(ulong keys, uint pos), int>(
 			(keys: 0UL, pos: 0x24_25_26_27u),
 			getNeighbors,
-			(_, s) => s.keys == allKeys);
+			(allKeys, 0),
+			stateComparer: comparer,
+			costComparer: null);
 
-		IEnumerable<((ulong, uint), int)> getNeighbors((ulong keys, uint pos) state)
+		IEnumerable<((ulong, uint), int)> getNeighbors((ulong keys, uint pos) state, int cost)
 		{
 			var positions = BitConverter.GetBytes(state.pos);
 			for (int i = 0; i < positions.Length; i++)
@@ -156,7 +166,7 @@ public class Day_2019_18_Original : Day
 					positions[i] = _key;
 					yield return (
 						(state.keys | key, BitConverter.ToUInt32(positions)),
-						steps);
+						cost + steps);
 				}
 
 				positions[i] = basePos;

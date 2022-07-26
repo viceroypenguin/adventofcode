@@ -19,7 +19,7 @@ public class Day_2021_12_Original : Day
 			.Where(x => x.Item1 != "end")
 			.ToLookup(x => x.Item1, x => x.Item2);
 
-		var paths = MoreEnumerable
+		var paths = SuperEnumerable
 			.TraverseDepthFirst(
 				(cur: "start", visited: ImmutableHashSet<string>.Empty),
 				l => edges[l.cur]
@@ -32,7 +32,7 @@ public class Day_2021_12_Original : Day
 
 		PartA = paths.ToString();
 
-		paths = MoreEnumerable
+		paths = SuperEnumerable
 			.TraverseDepthFirst(
 				(cur: "start", visitedTwice: false, visited: ImmutableHashSet<string>.Empty),
 				l => edges[l.cur]

@@ -72,7 +72,7 @@ public class Day_2020_14_Original : Day
 				static IEnumerable<ulong> getValues(ulong baseValue, ulong fl)
 				{
 					var lowest = Bmi1.X64.ExtractLowestSetBit(fl);
-					if (lowest == 0) return MoreEnumerable.Return(baseValue);
+					if (lowest == 0) return SuperEnumerable.Return(baseValue);
 					fl &= ~lowest;
 					return getValues(baseValue, fl).Concat(
 						getValues(baseValue | lowest, fl));

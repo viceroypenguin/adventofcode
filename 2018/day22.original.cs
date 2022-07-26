@@ -51,17 +51,17 @@ public class Day_2018_22_Original : Day
 		const int torch = 1;
 		const int gear = 2;
 
-		IEnumerable<((int, int, int), int)> getNeighbors((int x, int y, int equip) pos)
+		IEnumerable<((int, int, int), int)> getNeighbors((int x, int y, int equip) pos, int cost)
 		{
 			var states = new List<((int, int, int), int)>();
 
-			addNeighbor(pos.x + 1, pos.y, pos.equip, 1);
-			addNeighbor(pos.x, pos.y + 1, pos.equip, 1);
-			addNeighbor(pos.x - 1, pos.y, pos.equip, 1);
-			addNeighbor(pos.x, pos.y - 1, pos.equip, 1);
-			if (pos.equip != neither) addNeighbor(pos.x, pos.y, neither, 7);
-			if (pos.equip != torch) addNeighbor(pos.x, pos.y, torch, 7);
-			if (pos.equip != gear) addNeighbor(pos.x, pos.y, gear, 7);
+			addNeighbor(pos.x + 1, pos.y, pos.equip, cost + 1);
+			addNeighbor(pos.x, pos.y + 1, pos.equip, cost + 1);
+			addNeighbor(pos.x - 1, pos.y, pos.equip, cost + 1);
+			addNeighbor(pos.x, pos.y - 1, pos.equip, cost + 1);
+			if (pos.equip != neither) addNeighbor(pos.x, pos.y, neither, cost + 7);
+			if (pos.equip != torch) addNeighbor(pos.x, pos.y, torch, cost + 7);
+			if (pos.equip != gear) addNeighbor(pos.x, pos.y, gear, cost + 7);
 
 			return states;
 
@@ -97,10 +97,10 @@ public class Day_2018_22_Original : Day
 			}
 		}
 
-		var (_, _, cost) = Helpers.Dijkstra(
+		var cost = SuperEnumerable.GetShortestPathCost<(int, int, int), int>(
 			(0, 0, torch),
 			getNeighbors,
-			(d, s) => s == (destination.x, destination.y, torch));
+			(destination.x, destination.y, torch));
 
 		PartB = cost.ToString();
 	}

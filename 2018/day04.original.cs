@@ -59,13 +59,13 @@ public class Day_2018_04_Original : Day
 				var x = g
 					.SelectMany(s => Enumerable.Range(s.start.Minute, (int)(s.end - s.start).TotalMinutes))
 					.CountBy(i => i)
-					.OrderByDescending(i => i.Value)
+					.OrderByDescending(i => i.count)
 					.First();
 				return new
 				{
 					id = g.Key,
-					minute = x.Key,
-					times = x.Value,
+					minute = x.key,
+					times = x.count,
 				};
 			})
 			.ToList();

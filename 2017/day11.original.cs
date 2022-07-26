@@ -79,7 +79,7 @@ public class Day_2017_11_Original : Day
 		}
 
 		var positions = dirs
-			.Scan((nw: 0, n: 0, ne: 0), Move)
+			.ScanEx((nw: 0, n: 0, ne: 0), Move)
 			.Select(x => Math.Abs(x.nw) + Math.Abs(x.n) + Math.Abs(x.ne))
 			.ToList();
 

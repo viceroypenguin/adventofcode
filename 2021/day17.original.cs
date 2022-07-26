@@ -24,7 +24,7 @@ public class Day_2021_17_Original : Day
 				// start with y = 0, t = 0
 				// return every position y and time t
 				// using the velocity to adjust y
-				.Scan((py: 0, t: 0), (py, vy) => (py.py + vy, py.t + 1))
+				.ScanEx((py: 0, t: 0), (py, vy) => (py.py + vy, py.t + 1))
 				// stop when we get past y1
 				.TakeWhile(x => x.py >= y1)
 				// and exclude points before we get to y2

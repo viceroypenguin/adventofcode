@@ -24,7 +24,7 @@ public class Day_2018_14_Original : Day
 
 		void AddNumber(int number)
 		{
-			foreach (var n in MoreEnumerable
+			foreach (var n in SuperEnumerable
 				.Generate(
 					number,
 					n => n / 10)
@@ -57,7 +57,7 @@ public class Day_2018_14_Original : Day
 		Dump('A',
 			string.Join(
 				"",
-				MoreEnumerable
+				SuperEnumerable
 					.Generate(
 						marbles.First,
 						n => nextNode(n))
@@ -78,7 +78,7 @@ public class Day_2018_14_Original : Day
 		{
 			DoTick();
 
-			if (MoreEnumerable
+			if (SuperEnumerable
 				.Generate(
 					marbles.Last,
 					n => prevNode(n))
@@ -90,7 +90,7 @@ public class Day_2018_14_Original : Day
 				return;
 			}
 
-			if (MoreEnumerable
+			if (SuperEnumerable
 				.Generate(
 					marbles.Last,
 					n => prevNode(n))

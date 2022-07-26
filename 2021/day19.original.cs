@@ -30,11 +30,11 @@ public class Day_2021_19_Original : Day
 				distances: s.points.Index()
 					.Subsets(2)
 					.Select(p => (
-						i: p[0].Key,
-						j: p[1].Key,
-						x: p[0].Value.x - p[1].Value.x,
-						y: p[0].Value.y - p[1].Value.y,
-						z: p[0].Value.z - p[1].Value.z))
+						i: p[0].index,
+						j: p[1].index,
+						x: p[0].item.x - p[1].item.x,
+						y: p[0].item.y - p[1].item.y,
+						z: p[0].item.z - p[1].item.z))
 					.Select(p => (p.i, p.j, dst: Math.Sqrt(p.x * p.x + p.y * p.y + p.z * p.z)))
 					.ToList()))
 			// transform - we want the raw list of distances

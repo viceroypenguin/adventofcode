@@ -45,13 +45,13 @@ public static class Program
 
 		if (args.Contains("-y"))
 		{
-			var year = Convert.ToInt32(args[args.Index().Single(a => a.Value == "-y").Key + 1]);
+			var year = Convert.ToInt32(args[args.Index().Single(a => a.item == "-y").index + 1]);
 			days = days.Where(d => d.Year == year);
 		}
 
 		if (args.Contains("-d"))
 		{
-			var day = Convert.ToInt32(args[args.Index().Single(a => a.Value == "-d").Key + 1]);
+			var day = Convert.ToInt32(args[args.Index().Single(a => a.item == "-d").index + 1]);
 			days = days.Where(d => d.DayNumber == day);
 		}
 

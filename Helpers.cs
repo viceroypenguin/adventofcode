@@ -14,17 +14,22 @@ public static class Helpers
 		GetString(input)
 			.Split(_splitChars, options);
 
-	public static byte[][] GetMap(this byte[] input)
-	{
-		var width = input.Index().First(b => b.Value == '\n').Key;
-		return input.Batch(width + 1).Select(x => x.Take(..^1).ToArray()).ToArray();
-	}
+	public static byte[][] GetMap(this byte[] input) =>
+		input.Segment(b => b == '\n')
+			.Select(l => l
+				.SkipWhile(b => b == '\n')
+				.ToArray())
+			.Where(l => l.Length > 0)
+			.ToArray();
 
-	public static int[][] GetIntMap(this byte[] input)
-	{
-		var width = input.Index().First(b => b.Value == '\n').Key;
-		return input.Batch(width + 1).Select(x => x.Take(..^1).Select(y => y - '0').ToArray()).ToArray();
-	}
+	public static int[][] GetIntMap(this byte[] input) =>
+		input.Segment(b => b == '\n')
+			.Select(l => l
+				.SkipWhile(b => b == '\n')
+				.Select(b => b - '0')
+				.ToArray())
+			.Where(l => l.Length > 0)
+			.ToArray();
 
 	private static readonly string[] _segmentSplitChars = new[] { "\r\n\r\n", "\n\n", };
 	public static string[][] GetSegments(this byte[] input) =>
@@ -201,42 +206,13 @@ public static class Helpers
 	public static long lcm(long a, long b) =>
 		a * b / gcd(a, b);
 
-	[MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
-	public static (Dictionary<TState, int>, TState, int) Dijkstra<TState>(
-		TState start,
-		Func<TState, IEnumerable<(TState state, int cost)>> getNextStates,
-		Func<Dictionary<TState, int>, TState, bool> endingCondition)
-	{
-		var totalCost = new Dictionary<TState, int>();
-		var pq = new UpdateablePriorityQueue<TState>();
-		pq.Enqueue(start, 0);
-
-		(TState p, int cost) = (default, default);
-		while (pq.Count != 0)
-		{
-			pq.TryDequeue(out p, out cost);
-
-			while (pq.Count != 0 && totalCost.ContainsKey(p))
-				pq.TryDequeue(out p, out cost);
-
-			totalCost[p] = cost;
-			if (endingCondition(totalCost, p))
-				break;
-
-			pq.EnqueueRange(getNextStates(p)
-				.Select(s => (s.state, cost + s.cost)));
-		}
-
-		return (totalCost, p, cost);
-	}
-
 	public static IEnumerable<((int x, int y) p, T item)> GetMapPoints<T>(
 			this IReadOnlyList<IReadOnlyList<T>> map) =>
 		 Enumerable.Range(0, map.Count)
 			.SelectMany(y => Enumerable.Range(0, map[y].Count)
 				.Select(x => ((x, y), map[y][x])));
 
-	private static readonly (int x, int y)[] Neighbors =
+	public static readonly IReadOnlyList<(int x, int y)> Neighbors =
 		new (int x, int y)[] { (0, 1), (0, -1), (1, 0), (-1, 0), };
 	public static IEnumerable<(int x, int y)> GetCartesianNeighbors(this (int x, int y) p) =>
 		Neighbors.Select(d => (p.x + d.x, p.y + d.y));
@@ -249,7 +225,7 @@ public static class Helpers
 				q.y >= 0 && q.y < map.Count
 				&& q.x >= 0 && q.x < map[q.y].Count);
 
-	private static readonly (int x, int y)[] Adjacent =
+	public static readonly IReadOnlyList<(int x, int y)> Adjacent =
 		new (int x, int y)[] { (-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1), };
 	public static IEnumerable<(int x, int y)> GetCartesianAdjacent(this (int x, int y) p) =>
 		Adjacent.Select(d => (p.x + d.x, p.y + d.y));
@@ -296,7 +272,7 @@ public static class Helpers
 		}
 
 		// execute a BFS based on traverse method
-		MoreEnumerable
+		SuperEnumerable
 			.TraverseBreadthFirst(
 				startingPoint,
 				Traverse)

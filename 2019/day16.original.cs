@@ -32,7 +32,7 @@ public class Day_2019_16_Original : Day
 
 		// https://math.stackexchange.com/questions/234304/sum-of-the-sum-of-the-sum-of-the-first-n-natural-numbers
 		var factors = Enumerable.Range(1, remainder - 1)
-			.Scan(new BigInteger(1), (factor, i) => factor * (i + (phases - 1)) / i)
+			.ScanEx(new BigInteger(1), (factor, i) => factor * (i + (phases - 1)) / i)
 			.Select(i => (int)(i % 10))
 			.ToList();
 

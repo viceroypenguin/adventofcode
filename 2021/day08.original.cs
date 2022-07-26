@@ -102,13 +102,13 @@ public class Day_2021_08_Original : Day
 				// keep track of where in the array
 				.Index()
 				// filter to exact out of order match
-				.Where(n => n.Value.Length == x.Length
-					&& !n.Value.Except(x).Any()
-					&& !x.Except(n.Value).Any())
+				.Where(n => n.item.Length == x.Length
+					&& !n.item.Except(x).Any()
+					&& !x.Except(n.item).Any())
 				// only one, right??
 				.Single()
 				// which one was it?
-				.Key)
+				.index)
 			// start with zero.
 			// for each number n, i = i * 10 + n
 			// return i

@@ -34,7 +34,7 @@ public class Day_2019_06_Original : Day
 			.ToString();
 
 		var visited = new Dictionary<string, int>();
-		var (_, steps) = MoreEnumerable.TraverseBreadthFirst(
+		var (_, steps) = SuperEnumerable.TraverseBreadthFirst(
 				(orbiter: lookup1["YOU"].orbited, steps: -1),
 				o =>
 				{
@@ -46,7 +46,7 @@ public class Day_2019_06_Original : Day
 					var tmp = lookup2[o.orbiter]
 						.Select(r => (r.orbiter, o.steps + 1));
 					if (lookup1.TryGetValue(o.orbiter, out var x))
-						tmp = MoreEnumerable.Append(tmp, (x.orbited, o.steps + 1));
+						tmp = tmp.Append((x.orbited, o.steps + 1));
 					return tmp;
 				})
 			.FirstOrDefault(x => x.orbiter == "SAN");
