@@ -38,8 +38,11 @@ public static class Helpers
 			.Select(s => s.Split(_splitChars, StringSplitOptions.None))
 			.ToArray();
 
-	public static bool Between<T>(this T value, T min, T max) where T : IComparable<T> =>
-		min.CompareTo(value) <= 0 && value.CompareTo(max) <= 0;
+	public static bool Between<T>(this T value, T min, T max) where T : IComparable<T>
+	{
+		if (min.CompareTo(max) > 0) (min, max) = (max, min);
+		return min.CompareTo(value) <= 0 && value.CompareTo(max) <= 0;
+	}
 
 	// copied from: https://stackoverflow.com/questions/35127060/how-to-implement-atoi-using-simd
 	[MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
