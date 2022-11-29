@@ -1,4 +1,8 @@
-﻿namespace AdventOfCode;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Intrinsics;
+using System.Threading.Tasks.Sources;
+
+namespace AdventOfCode;
 
 public class Day_2021_23_Original : Day
 {
@@ -11,173 +15,257 @@ public class Day_2021_23_Original : Day
 		if (input == null) return;
 
 		var map = input.GetMap();
-		var tokens = Enumerable.Range(0, map.Length)
-			.SelectMany(y => Enumerable.Range(0, map[y].Length)
-				.Select(x => (x, y, token: map[y][x]))
-				.Where(t => t.token >= 'A'))
-			.ToDictionary(t => (t.x, t.y), t => t.token);
 
-		var wellDepth = map.Length - 2;
-		var holdingSpots = new (int x, int y)[]
+		var start = new Board();
+		for (var i = 0; i < 4; i++)
 		{
-			(1, 1), (2, 1), (4, 1), (6, 1), (8, 1), (10, 1), (11, 1),
+			var room = start.Rooms.Span()[i].Span();
+			room[0] = map[2][i * 2 + 3];
+			room[1] = map[3][i * 2 + 3];
+		}
+
+		var goal = new Board();
+		for (var i = 0; i < 4; i++)
+		{
+			var room = goal.Rooms.Span()[i].Span();
+			room[0] = (byte)('A' + i);
+			room[1] = (byte)('A' + i);
+		}
+
+		PartA = SuperEnumerable.GetShortestPathCost<Board, int>(
+			start,
+			GetPossibleMovesA,
+			goal).ToString();
+
+		var insert = new[]
+		{
+			new[] { D, D, },
+			new[] { C, B, },
+			new[] { B, A, },
+			new[] { A, C, },
 		};
 
-		static Dictionary<(int, int), byte> MoveToken(Dictionary<(int, int), byte> tokens, (int x, int y) from, (int x, int y) to)
+		for (var i = 0; i < 4; i++)
 		{
-			var newTokens = new Dictionary<(int, int), byte>(tokens)
-			{
-				[to] = tokens[from],
-			};
-			newTokens.Remove(from);
-			return newTokens;
+			var room = start.Rooms.Span()[i].Span();
+			room[3] = room[1];
+			room[1] = insert[i][0];
+			room[2] = insert[i][1];
+
+			room = goal.Rooms.Span()[i].Span();
+			room[2] = (byte)('A' + i);
+			room[3] = (byte)('A' + i);
 		}
 
-		IEnumerable<(Dictionary<(int x, int y), byte>, int)> MoveTokens(Dictionary<(int x, int y), byte> tokens, int cost)
+		PartB = SuperEnumerable.GetShortestPathCost<Board, int>(
+			start,
+			GetPossibleMovesB,
+			goal).ToString();
+	}
+
+	private static (Board, int) MoveTokenToHallway(Board board, int cost, int room, int i, int hallway)
+	{
+		var roomSpan = board.Rooms.Span()[room].Span();
+		var hallwaySpan = board.Hallway.Span();
+
+		var moveCost = roomSpan[i] switch { A => 1, B => 10, C => 100, D => 1000, };
+		var steps = GetSteps(room, hallway) + i + 1;
+
+		(roomSpan[i], hallwaySpan[hallway]) =
+			(Empty, roomSpan[i]);
+		return (board, cost + moveCost * steps);
+	}
+
+	private static (Board, int) MoveTokenToRoom(Board board, int cost, int room, int i, int hallway)
+	{
+		var roomSpan = board.Rooms.Span()[room].Span();
+		var hallwaySpan = board.Hallway.Span();
+
+		var moveCost = hallwaySpan[hallway] switch { A => 1, B => 10, C => 100, D => 1000, };
+		var steps = GetSteps(room, hallway) + i + 1;
+
+		(hallwaySpan[hallway], roomSpan[i]) =
+			(Empty, hallwaySpan[hallway]);
+		return (board, cost + moveCost * steps);
+	}
+
+	private static (Board, int) MoveTokenToRoom(Board board, int cost, int from, int i, int to, int j)
+	{
+		var fromSpan = board.Rooms.Span()[from].Span();
+		var toSpan = board.Rooms.Span()[to].Span();
+
+		var moveCost = fromSpan[i] switch { A => 1, B => 10, C => 100, D => 1000, };
+		var steps = Math.Abs(from - to) * 2 + i + 1 + j + 1;
+
+		(fromSpan[i], toSpan[j]) =
+			(Empty, fromSpan[i]);
+		return (board, cost + moveCost * steps);
+	}
+
+	private static int GetSteps(int room, int hallway) =>
+		(room, hallway) switch
 		{
-			// for each token, where can we go?
-			var positions = tokens.SelectMany(_ =>
-			{
-				var ((x, y), t) = _;
+			(0, 0) => 2,
+			(0, 1) => 1,
+			(0, 2) => 1,
+			(0, 3) => 3,
+			(0, 4) => 5,
+			(0, 5) => 7,
+			(0, 6) => 8,
+			(1, 0) => 4,
+			(1, 1) => 3,
+			(1, 2) => 1,
+			(1, 3) => 1,
+			(1, 4) => 3,
+			(1, 5) => 5,
+			(1, 6) => 6,
+			(2, 0) => 6,
+			(2, 1) => 5,
+			(2, 2) => 3,
+			(2, 3) => 1,
+			(2, 4) => 1,
+			(2, 5) => 3,
+			(2, 6) => 4,
+			(3, 0) => 8,
+			(3, 1) => 7,
+			(3, 2) => 5,
+			(3, 3) => 3,
+			(3, 4) => 1,
+			(3, 5) => 1,
+			(3, 6) => 2,
+		};
 
-				// how much does it cost per tile?
-				// and where are we trying to get to?
-				var (tileEnergy, destColumn) =
-					t switch
-					{
-						(byte)'A' => (1, 3),
-						(byte)'B' => (10, 5),
-						(byte)'C' => (100, 7),
-						(byte)'D' => (1000, 9),
-						_ => default,
-					};
+	private static IEnumerable<(Board, int)> GetPossibleMovesA(Board board, int cost) =>
+		GetPossibleMoves(board, cost, 2);
 
-				// are we in our final position?
-				if (x == destColumn && !Enumerable.Range(y + 1, wellDepth - y).Any(y => tokens.TryGetValue((x, y), out var tmp) && tmp != t))
-					// no need to process further
-					return Array.Empty<(Dictionary<(int, int), byte>, int)>();
+	private static IEnumerable<(Board, int)> GetPossibleMovesB(Board board, int cost) =>
+		GetPossibleMoves(board, cost, 4);
 
-				// is there's someone between us and main hallway?
-				if (y > 2 && tokens.ContainsKey((x, y - 1)))
-					// we can't go anywhere anyway
-					return Array.Empty<(Dictionary<(int, int), byte>, int)>();
+	private static IEnumerable<(Board, int)> GetPossibleMoves(Board board, int cost, int depth) =>
+		GetHallToRoomMoves(board, cost, depth)
+			.FallbackIfEmpty(GetRoomToRoomMoves(board, cost, depth))
+			.FallbackIfEmpty(GetRoomToHallMoves(board, cost));
 
-				// can we get to the destination column from here?
-				if (!holdingSpots
-						.Where(p => x != p.x && p.x.Between(x, destColumn))
-						.Any(p => tokens.ContainsKey(p)))
+	private static IEnumerable<(Board, int)> GetHallToRoomMoves(Board board, int cost, int depth)
+	{
+		for (int i = 0; i < 7; i++)
+		{
+			// do we have a token to play with?
+			if (board.Hallway[i] == Empty) continue;
+
+			// where are we trying to go?
+			var dest = board.Hallway[i] - 'A';
+
+			// look for any blocking tokens
+			var flag = false;
+			for (int x = i + 1; !flag && x <= dest + 1; x++)
+				if (board.Hallway[x] != Empty)
+					flag = true;
+			for (int x = i - 1; !flag && x > dest + 1; x--)
+				if (board.Hallway[x] != Empty)
+					flag = true;
+			if (flag) continue;
+
+			// are there any blocking tokens in the room?
+			for (int x = 0; !flag && x < depth; x++)
+				if (board.Rooms[dest][x] != Empty
+					&& board.Rooms[dest][x] != board.Hallway[i])
+					flag = true;
+			if (flag) continue;
+
+			// ok, we can move to room
+			for (int x = depth - 1; !flag && x >= 0; x--)
+				if (board.Rooms[dest][x] == Empty)
 				{
-					// check destination column from bottom up
-					for (int i = wellDepth; i >= 2; i--)
-						if (tokens.TryGetValue((destColumn, i), out var tmp))
-						{
-							// somebody else where we need to go?
-							if (tmp != t)
-								// not allowed to move into column
-								break;
-						}
-						else
-						{
-							// empty space
-							// always cheapest solution to go direct if we can
-							return new[]
-							{
-								(
-									// move here
-									MoveToken(tokens, (x, y), (destColumn, i)),
-									// tiles = horizontal distance
-									//       + vertical distance to 1
-									//       + vertical distance to dest from 1
-									// cost = tiles * tileEnergy
-									cost + (Math.Abs(x - destColumn) + Math.Abs(y - 1) + (i - 1)) * tileEnergy),
-							};
-						}
+					yield return MoveTokenToRoom(board, cost, dest, x, i);
+					flag = true;
+				}
+		}
+	}
+
+	private static IEnumerable<(Board, int)> GetRoomToRoomMoves(Board board, int cost, int depth)
+	{
+		for (int from = 0; from < 4; from++)
+		{
+			for (int i = 0; i < depth; i++)
+			{
+				if (board.Rooms[from][i] == Empty)
+					continue;
+
+				// where are we trying to go?
+				var dest = board.Rooms[from][i] - 'A';
+				if (dest == from) break;
+
+				// look for any blocking tokens in hallway
+				var flag = false;
+				for (int x = from + 2; !flag && x <= dest + 1; x++)
+					if (board.Hallway[x] != Empty)
+						flag = true;
+				for (int x = from + 1; !flag && x > dest + 1; x--)
+					if (board.Hallway[x] != Empty)
+						flag = true;
+				if (flag) break;
+
+				// are there any blocking tokens in the room?
+				for (int x = 0; !flag && x < depth; x++)
+					if (board.Rooms[dest][x] != Empty
+						&& board.Rooms[dest][x] != board.Rooms[from][i])
+						flag = true;
+				if (flag) break;
+
+				// ok, we can move to room
+				for (int x = depth - 1; !flag && x >= 0; x--)
+					if (board.Rooms[dest][x] == Empty)
+					{
+						yield return MoveTokenToRoom(board, cost, from, i, dest, x);
+						flag = true;
+					}
+
+				break;
+			}
+		}
+	}
+
+	private static IEnumerable<(Board, int)> GetRoomToHallMoves(Board board, int cost)
+	{
+		for (int from = 0; from < 4; from++)
+		{
+			for (int i = 0; i < 4; i++)
+			{
+				if (board.Rooms[from][i] == Empty)
+					continue;
+
+				for (int hallway = 0; hallway < 7; hallway++)
+				{
+					// look for any blocking tokens in hallway
+					var flag = false;
+					for (int x = from + 2; !flag && x <= hallway; x++)
+						if (board.Hallway[x] != Empty)
+							flag = true;
+					for (int x = from + 1; !flag && x >= hallway; x--)
+						if (board.Hallway[x] != Empty)
+							flag = true;
+
+					// ok, we can move to hallway
+					if (!flag)
+						yield return MoveTokenToHallway(board, cost, from, i, hallway);
 				}
 
-				// are we in a holding spot or a column?
-				if (y == 1)
-					// we're in a holding spot
-					// no path to destination
-					return Array.Empty<(Dictionary<(int, int), byte>, int)>();
-
-				// which holding spots can we access?
-				return holdingSpots
-					.Where(d => !holdingSpots
-						.Where(p => p.x.Between(x, d.x))
-						.Any(p => tokens.ContainsKey(p)))
-					// we know where we can go
-					.Select(q => (
-						// move here
-						MoveToken(tokens, (x, y), q),
-						// tiles = horizontal distance
-						//       + vertical distance to 1
-						//       + vertical distance to dest from 1
-						// cost = tiles * tileEnergy
-						cost + (Math.Abs(x - q.x) + Math.Abs(y - 1) + (q.y - 1)) * tileEnergy));
-			}).ToList();
-			return positions;
+				break;
+			}
 		}
+	}
 
-		var energy = SuperEnumerable.GetShortestPathCost<Dictionary<(int x, int y), byte>, int>(
-			tokens,
-			MoveTokens,
-			new Dictionary<(int x, int y), byte>
-			{
-				[(3, 3)] = (byte)'A',
-				[(3, 2)] = (byte)'A',
-				[(5, 3)] = (byte)'B',
-				[(5, 2)] = (byte)'B',
-				[(7, 3)] = (byte)'C',
-				[(7, 2)] = (byte)'C',
-				[(9, 3)] = (byte)'D',
-				[(9, 2)] = (byte)'D',
-			},
-			stateComparer: ProjectionEqualityComparer.Create<Dictionary<(int x, int y), byte>>(
-				(a, b) => a.Count == b.Count && a.All(x => b.GetValueOrDefault(x.Key) == x.Value),
-				a => a
-					.OrderBy(kvp => kvp.Key.x)
-					.ThenBy(kvp => kvp.Key.y)
-					.Aggregate(0, (x, y) => HashCode.Combine(x, y.GetHashCode()))),
-			costComparer: default);
-		PartA = energy.ToString();
+	private const byte A = (byte)'A';
+	private const byte B = (byte)'B';
+	private const byte C = (byte)'C';
+	private const byte D = (byte)'D';
+	private const byte Empty = (byte)0;
 
-		wellDepth += 2;
-		foreach (var ((x, y), t) in tokens.ToList())
-			tokens[(x, y + 2)] = t;
-		tokens[(3, 3)] = (byte)'D'; tokens[(3, 4)] = (byte)'D';
-		tokens[(5, 3)] = (byte)'C'; tokens[(5, 4)] = (byte)'B';
-		tokens[(7, 3)] = (byte)'B'; tokens[(7, 4)] = (byte)'A';
-		tokens[(9, 3)] = (byte)'A'; tokens[(9, 4)] = (byte)'C';
-
-		energy = SuperEnumerable.GetShortestPathCost<Dictionary<(int x, int y), byte>, int>(
-			tokens,
-			MoveTokens,
-			new Dictionary<(int x, int y), byte>
-			{
-				[(3, 5)] = (byte)'A',
-				[(3, 4)] = (byte)'A',
-				[(3, 3)] = (byte)'A',
-				[(3, 2)] = (byte)'A',
-				[(5, 5)] = (byte)'B',
-				[(5, 4)] = (byte)'B',
-				[(5, 3)] = (byte)'B',
-				[(5, 2)] = (byte)'B',
-				[(7, 5)] = (byte)'C',
-				[(7, 4)] = (byte)'C',
-				[(7, 3)] = (byte)'C',
-				[(7, 2)] = (byte)'C',
-				[(9, 5)] = (byte)'D',
-				[(9, 4)] = (byte)'D',
-				[(9, 3)] = (byte)'D',
-				[(9, 2)] = (byte)'D',
-			},
-			stateComparer: ProjectionEqualityComparer.Create<Dictionary<(int x, int y), byte>>(
-				(a, b) => a.Count == b.Count && a.All(x => b.GetValueOrDefault(x.Key) == x.Value),
-				a => a
-					.OrderBy(kvp => kvp.Key.x)
-					.ThenBy(kvp => kvp.Key.y)
-					.Aggregate(0, (x, y) => HashCode.Combine(x, y.GetHashCode()))),
-			costComparer: default);
-		PartB = energy.ToString();
+	private record struct Board
+	{
+		public ValueArray4<ValueArray4<byte>> Rooms;
+		public ValueArray8<byte> Hallway;
+		public ulong Padding;
 	}
 }
