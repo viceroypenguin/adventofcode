@@ -34,7 +34,7 @@ public static class Program
 			BaseAddress = baseAddress,
 			DefaultRequestHeaders =
 			{
-				{ "User-Agent", "https://github.com/viceroypenguin/adventofcode by stuart@turner-isageek.com" },
+				{ "User-Agent", ".NET/7.0 (https://github.com/viceroypenguin/adventofcode by stuart@turner-isageek.com)" },
 			},
 		};
 
