@@ -12,14 +12,12 @@ public class Day_2022_01_Original : Day
 	{
 		if (input == null) return;
 
-		PartA = input.GetLines(StringSplitOptions.None)
+		var elves = input.GetLines(StringSplitOptions.None)
 			.Split(string.Empty)
-			.Select(g => g.Select(int.Parse).Sum())
-			.Max().ToString();
+			.Select(g => g.Select(int.Parse).Sum());
 
-		PartB = input.GetLines(StringSplitOptions.None)
-			.Split(string.Empty)
-			.Select(g => g.Select(int.Parse).Sum())
+		PartA = elves.Max().ToString();
+		PartB = elves
 			.PartialSort(3, OrderByDirection.Descending)
 			.Sum()
 			.ToString();
