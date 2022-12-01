@@ -2,10 +2,6 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-		<ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
 	<ItemGroup>
@@ -18,7 +14,6 @@
 	<ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.*" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.*" />
-    <PackageReference Include="superlinq" Version="4.5.0" />
   </ItemGroup>
 
   <ItemGroup>
