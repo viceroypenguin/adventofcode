@@ -32,6 +32,10 @@ public static class Program
 			})
 		{
 			BaseAddress = baseAddress,
+			DefaultRequestHeaders =
+			{
+				{ "User-Agent", "https://github.com/viceroypenguin/adventofcode by stuart@turner-isageek.com" },
+			},
 		};
 
 		// Pre-JIT Day and Stopwatch
