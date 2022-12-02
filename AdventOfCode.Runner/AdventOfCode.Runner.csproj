@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<ItemGroup>
+		<Using Include="AdventOfCode.Common.Attributes"/>
+		<Using Include="AdventOfCode.Common.Interfaces"/>
+		<Using Include="AdventOfCode.Common.Models"/>
+		<Using Include="SuperLinq"/>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="BenchmarkDotNet" Version="0.13.2" />
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\AdventOfCode.Common\AdventOfCode.Common.csproj" />
+		<ProjectReference Include="..\AdventOfCode.Puzzles\2022\AdventOfCode.Puzzles.2022.csproj" />
+	</ItemGroup>
+
+</Project>
