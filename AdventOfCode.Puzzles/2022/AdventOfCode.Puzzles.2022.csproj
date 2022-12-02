@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<RootNamespace>AdventOfCode.Puzzles._2022</RootNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Using Include="AdventOfCode.Common.Attributes"/>
+		<Using Include="AdventOfCode.Common.Interfaces"/>
+		<Using Include="AdventOfCode.Common.Models"/>
+		<Using Include="SuperLinq"/>
+	</ItemGroup>
+	
+  <ItemGroup>
+    <ProjectReference Include="..\..\AdventOfCode.Common\AdventOfCode.Common.csproj" />
+  </ItemGroup>
+</Project>
