@@ -8,6 +8,8 @@
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 
 		<AnalysisLevel>latest-recommended</AnalysisLevel>
+
+		<TieredPGO>true</TieredPGO>
 	</PropertyGroup>
 
 	<ItemGroup>
