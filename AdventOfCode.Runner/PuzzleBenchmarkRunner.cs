@@ -3,7 +3,6 @@ using BenchmarkDotNet.Attributes;
 
 namespace AdventOfCode.Runner;
 
-[HtmlExporter, MarkdownExporter]
 [MemoryDiagnoser(false)]
 public class PuzzleBenchmarkRunner<TPuzzle, TParsed>
 	where TPuzzle : IPuzzle<TParsed>, new()
@@ -16,17 +15,16 @@ public class PuzzleBenchmarkRunner<TPuzzle, TParsed>
 	public void Setup()
 	{
 		var attribute = typeof(TPuzzle).GetCustomAttribute<PuzzleAttribute>()!;
-		_rawInput = PuzzleInputProvider.Instance
-			.GetRawInput(attribute.Year, attribute.Day);
+		_rawInput = BenchmarkInputProvider.GetRawInput(attribute.Year, attribute.Day);
 		_parsed = _puzzle.Parse(_rawInput);
 	}
 
-	[Benchmark, BenchmarkCategory("Parse")]
+	[Benchmark]
 	public TParsed Parse() => _puzzle.Parse(_rawInput!);
 
-	[Benchmark, BenchmarkCategory("Part1")]
+	[Benchmark]
 	public string Part1() => _puzzle.Part1(_parsed!);
 
-	[Benchmark, BenchmarkCategory("Part2")]
+	[Benchmark]
 	public string Part2() => _puzzle.Part2(_parsed!);
 }

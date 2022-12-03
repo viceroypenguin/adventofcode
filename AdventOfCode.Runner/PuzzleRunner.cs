@@ -1,5 +1,10 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Reflection;
+using AdventOfCode.Common.Interfaces;
+using BenchmarkDotNet.Configs;
+using BenchmarkDotNet.Order;
+using BenchmarkDotNet.Reports;
 using BenchmarkDotNet.Running;
 
 namespace AdventOfCode.Runner;
@@ -8,7 +13,7 @@ public class PuzzleRunner
 {
 	private readonly IReadOnlyList<PuzzleModel> _puzzles;
 	private readonly MethodInfo _runMethod;
-	private readonly MethodInfo _benchmarkMethod;
+	private readonly Type _benchmarkClass;
 
 	private static readonly Assembly[] assemblies =
 	{
@@ -19,7 +24,37 @@ public class PuzzleRunner
 	{
 		_puzzles = GetAllPuzzles();
 		_runMethod = GetType().GetMethod(nameof(RunPuzzle), BindingFlags.Static | BindingFlags.NonPublic)!;
-		_benchmarkMethod = GetType().GetMethod(nameof(RunBenchmark), BindingFlags.Static | BindingFlags.NonPublic)!;
+		_benchmarkClass = typeof(PuzzleBenchmarkRunner<,>);
+	}
+
+	public IReadOnlyCollection<PuzzleModel> GetPuzzles() => _puzzles;
+
+	public IEnumerable<PuzzleResult> RunPuzzles(IEnumerable<PuzzleModel> puzzles) =>
+		puzzles
+			.Select(puzzle =>
+			{
+				var method = _runMethod.MakeGenericMethod(puzzle.PuzzleType, puzzle.ParsedType);
+				return (PuzzleResult)method.Invoke(null, new object[] { puzzle })!;
+			});
+
+	public Summary BenchmarkPuzzles(IEnumerable<PuzzleModel> puzzles)
+	{
+		var types = puzzles
+			.Select(p => _benchmarkClass.MakeGenericType(p.PuzzleType, p.ParsedType))
+			.ToArray();
+
+		return BenchmarkSwitcher.FromTypes(types)
+			.RunAllJoined(
+				DefaultConfig.Instance
+					.WithOrderer(new TypeOrderer()));
+	}
+
+	private class TypeOrderer : DefaultOrderer, IOrderer
+	{
+		public override IEnumerable<BenchmarkCase> GetSummaryOrder(ImmutableArray<BenchmarkCase> benchmarksCases, Summary summary) =>
+			benchmarksCases
+				.OrderBy(c => c.Descriptor.Type.FullName)
+				.ThenBy(c => c.Descriptor.MethodIndex);
 	}
 
 	private static IReadOnlyList<PuzzleModel> GetAllPuzzles()
@@ -68,12 +103,5 @@ public class PuzzleRunner
 		var elapsedPart2 = sw.Elapsed;
 
 		return new PuzzleResult(puzzleInfo, part1, part2, elapsedParse, elapsedPart1, elapsedPart2);
-	}
-
-	private static void RunBenchmark<TPuzzle, TParsed>()
-		where TPuzzle : IPuzzle<TParsed>, new()
-	{
-		var summary = BenchmarkRunner.Run<PuzzleBenchmarkRunner<TPuzzle, TParsed>>();
-		Console.WriteLine(summary.ToString());
 	}
 }

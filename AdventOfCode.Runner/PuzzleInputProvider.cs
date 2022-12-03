@@ -40,8 +40,8 @@ public class PuzzleInputProvider
 
 	public PuzzleInput GetRawInput(int year, int day)
 	{
-		var inputFile = $"{year}\\day{day:00}.input.txt";
-		Directory.CreateDirectory(year.ToString());
+		var inputFile = @$"Inputs\{year}\day{day:00}.input.txt";
+		Directory.CreateDirectory(Path.GetDirectoryName(inputFile)!);
 		if (!File.Exists(inputFile))
 		{
 			var response = _httpClient.GetAsync($"{year}/day/{day}/input")
