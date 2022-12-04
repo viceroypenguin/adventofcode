@@ -1,0 +1,16 @@
+﻿Advent of Code Runner.
+
+Usage:
+  AdventOfCode.Runner.exe 
+       [-o | -f]
+       [--year=YEAR [--day=DAY]]
+       [-b]
+  AdventOfCode.Runner.exe (-h | --help)
+
+Options:
+  -h --help                                   Show this screen.
+  -o --original                               Run Original code solution
+  -f --fastest                                Run Fastest code solution
+  -y YEAR, --year=YEAR                        Run a specific year
+  -d DAY, --day=DAY                           Run a specific day
+  -b --benchmark                              Benchmark selected puzzles

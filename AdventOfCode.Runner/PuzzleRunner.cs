@@ -74,6 +74,7 @@ public class PuzzleRunner
 				x.PuzzleAttribute.Name,
 				x.PuzzleAttribute.Year,
 				x.PuzzleAttribute.Day,
+				x.PuzzleAttribute.CodeType,
 				x.Type,
 				x.Type.GetInterfaces()[0].GenericTypeArguments[0]))
 			.ToList();

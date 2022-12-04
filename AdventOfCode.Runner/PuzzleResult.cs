@@ -4,6 +4,6 @@ public record PuzzleResult(
 	PuzzleModel Puzzle,
 	string Part1,
 	string Part2,
-	TimeSpan ElapsedMsParse,
-	TimeSpan ElapsedMsPart1,
-	TimeSpan ElapsedMsPart2);
+	TimeSpan ElapsedParse,
+	TimeSpan ElapsedPart1,
+	TimeSpan ElapsedPart2);
