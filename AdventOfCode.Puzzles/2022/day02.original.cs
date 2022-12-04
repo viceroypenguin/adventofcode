@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2022;
 
 [Puzzle(2022, 2, CodeType.Original)]
 public class Day_02_Original : IPuzzle

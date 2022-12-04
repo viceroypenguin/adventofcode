@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2022;
 
 [Puzzle(2022, 4, CodeType.Fastest)]
 public partial class Day_04_Fastest : IPuzzle
