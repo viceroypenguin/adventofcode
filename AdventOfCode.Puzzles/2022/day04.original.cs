@@ -20,7 +20,8 @@ public partial class Day_04_Original : IPuzzle
 				int.Parse(m.Groups[4].Value)))
 			.Select(x => (
 				Enumerable.Range(x.Item1, x.Item2 - x.Item1 + 1).ToList(),
-				Enumerable.Range(x.Item3, x.Item4 - x.Item3 + 1).ToList()));
+				Enumerable.Range(x.Item3, x.Item4 - x.Item3 + 1).ToList()))
+			.ToList();
 
 		var part1 = ranges
 			.Where(x =>
