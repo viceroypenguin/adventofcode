@@ -1,7 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Reflection;
-using AdventOfCode.Common.Interfaces;
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Order;
 using BenchmarkDotNet.Reports;
@@ -61,7 +60,7 @@ public class PuzzleRunner
 	{
 		var c = assemblies
 			.SelectMany(
-				assembly => assembly!.GetTypes(),
+				assembly => assembly.GetTypes(),
 				(assembly, type) => new
 				{
 					Type = type,
@@ -86,6 +85,9 @@ public class PuzzleRunner
 
 		var rawInput = PuzzleInputProvider.Instance
 			.GetRawInput(puzzleInfo.Year, puzzleInfo.Day);
+
+		// run twice to get better timings
+		puzzle.Solve(rawInput);
 
 		var sw = Stopwatch.StartNew();
 		var (part1, part2) = puzzle.Solve(rawInput);
