@@ -16,7 +16,7 @@ public static class Helpers
 		var n = 0;
 		foreach (var t in bytes)
 		{
-			if (t == '\n')
+			if (t is < (byte)'0' or > (byte)'9')
 				break;
 
 			value = value * 10 + (t - '0');
@@ -38,7 +38,7 @@ public static class Helpers
 		var n = 0;
 		foreach (var t in bytes)
 		{
-			if (t == '\n')
+			if (t is < (byte)'0' or > (byte)'9')
 				break;
 
 			value = value * 10 + (t - '0');
