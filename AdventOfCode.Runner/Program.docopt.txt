@@ -3,7 +3,7 @@
 Usage:
   AdventOfCode.Runner.exe 
        [-o | -f]
-       [--year=YEAR [--day=DAY]]
+       --year=YEAR [--day=DAY]
        [-b]
   AdventOfCode.Runner.exe (-h | --help)
 
