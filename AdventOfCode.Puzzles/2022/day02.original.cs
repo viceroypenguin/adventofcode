@@ -1,9 +1,20 @@
 ﻿namespace AdventOfCode;
 
 [Puzzle(2022, 2, CodeType.Original)]
-public class Day_02_Original : IPuzzle<string[]>
+public class Day_02_Original : IPuzzle
 {
-	public string[] Parse(PuzzleInput input) => input.Lines;
+	public (string, string) Solve(PuzzleInput input)
+	{
+		var part1 = input.Lines
+			.Select(l => part1Map[l])
+			.Sum()
+			.ToString();
+		var part2 = input.Lines
+			.Select(l => part2Map[l])
+			.Sum()
+			.ToString();
+		return (part1, part2);
+	}
 
 	private readonly Dictionary<string, int> part1Map = new()
 	{
@@ -17,10 +28,6 @@ public class Day_02_Original : IPuzzle<string[]>
 		["C Y"] = 2 + 0,
 		["C Z"] = 3 + 3,
 	};
-	public string Part1(string[] input) =>
-		input.Select(l => part1Map[l])
-			.Sum()
-			.ToString();
 
 	private readonly Dictionary<string, int> part2Map = new()
 	{
@@ -34,8 +41,4 @@ public class Day_02_Original : IPuzzle<string[]>
 		["C Y"] = 3 + 3,
 		["C Z"] = 1 + 6,
 	};
-	public string Part2(string[] input) =>
-		input.Select(l => part2Map[l])
-			.Sum()
-			.ToString();
 }

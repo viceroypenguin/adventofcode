@@ -2,10 +2,7 @@
 
 using Models;
 
-public interface IPuzzle<TParsed>
+public interface IPuzzle
 {
-	TParsed Parse(PuzzleInput input);
-
-	string Part1(TParsed input);
-	string Part2(TParsed input);
+	(string part1, string part2) Solve(PuzzleInput input);
 }

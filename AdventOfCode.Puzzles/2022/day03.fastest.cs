@@ -1,14 +1,19 @@
 ﻿namespace AdventOfCode;
 
 [Puzzle(2022, 3, CodeType.Fastest)]
-public class Day_03_Fastest : IPuzzle<string[]>
+public class Day_03_Fastest : IPuzzle
 {
-	public string[] Parse(PuzzleInput input) => input.Lines;
+	public (string, string) Solve(PuzzleInput input)
+	{
+		var part1 = Part1(input.Lines);
+		var part2 = Part2(input.Lines);
+		return (part1, part2);
+	}
 
 	private static int GetValue(char c) =>
 		c > 'Z' ? c - 'a' + 1 : c - 'A' + 27;
 
-	public string Part1(string[] input)
+	private static string Part1(string[] input)
 	{
 		var sum = 0;
 		foreach (var l in input)
@@ -29,7 +34,7 @@ public class Day_03_Fastest : IPuzzle<string[]>
 		return sum.ToString();
 	}
 
-	public string Part2(string[] input)
+	private static string Part2(string[] input)
 	{
 		var sum = 0;
 		for (int i = 0; i < input.Length; i += 3)

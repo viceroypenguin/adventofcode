@@ -1,9 +1,9 @@
 ﻿namespace AdventOfCode.Puzzles._2022;
 
 [Puzzle(2022, 01, CodeType.Fastest)]
-public class Day_01_Fastest : IPuzzle<(int, int, int)>
+public class Day_01_Fastest : IPuzzle
 {
-	public (int, int, int) Parse(PuzzleInput input)
+	public (string, string) Solve(PuzzleInput input)
 	{
 		Span<int> numbers = stackalloc int[3];
 		var elf = 0;
@@ -32,12 +32,8 @@ public class Day_01_Fastest : IPuzzle<(int, int, int)>
 			elf += value;
 		}
 
-		return (numbers[0], numbers[1], numbers[2]);
+		return (
+			numbers[0].ToString(),
+			(numbers[0] + numbers[1] + numbers[2]).ToString());
 	}
-
-	public string Part1((int, int, int) input) =>
-		input.Item1.ToString();
-	public string Part2((int, int, int) input) =>
-		(input.Item1 + input.Item2 + input.Item3)
-			.ToString();
 }

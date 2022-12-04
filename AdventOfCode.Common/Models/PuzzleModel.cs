@@ -7,5 +7,4 @@ public readonly record struct PuzzleModel(
 	int Year,
 	int Day,
 	CodeType CodeType,
-	Type PuzzleType,
-	Type ParsedType);
+	Type PuzzleType);

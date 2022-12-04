@@ -148,9 +148,7 @@ void RunPuzzles(IReadOnlyCollection<PuzzleModel> puzzles)
 	var performanceTable = new Table().Expand()
 		.HorizontalBorder()
 		.AddColumn("Problem")
-		.AddColumn("Parsing", tc => tc.RightAligned())
-		.AddColumn("Part 1", tc => tc.RightAligned())
-		.AddColumn("Part 2", tc => tc.RightAligned())
+		.AddColumn("Solve Time", tc => tc.RightAligned())
 		.ShowFooters();
 
 	rootTable.AddRow(outputTable);
@@ -159,9 +157,7 @@ void RunPuzzles(IReadOnlyCollection<PuzzleModel> puzzles)
 	console.Live(rootTable)
 		.Start(ctx =>
 		{
-			var totalParsing = TimeSpan.Zero;
-			var totalPart1 = TimeSpan.Zero;
-			var totalPart2 = TimeSpan.Zero;
+			var totalSolve = TimeSpan.Zero;
 			foreach (var r in runner.RunPuzzles(puzzles))
 			{
 				outputTable.AddRow(
@@ -171,18 +167,10 @@ void RunPuzzles(IReadOnlyCollection<PuzzleModel> puzzles)
 
 				performanceTable.AddRow(
 					new Markup($"{r.Puzzle.Year} - {r.Puzzle.Day} - {r.Puzzle.CodeType}"),
-					new Markup($"[blue]{r.ElapsedParse.TotalMicroseconds:N0}[/]μs"),
-					new Markup($"[blue]{r.ElapsedPart1.TotalMicroseconds:N0}[/]μs"),
-					new Markup($"[blue]{r.ElapsedPart2.TotalMicroseconds:N0}[/]μs"));
+					new Markup($"[blue]{r.Elapsed.TotalMicroseconds:N0}[/]μs"));
 
-				totalParsing += r.ElapsedParse;
-				performanceTable.Columns[1].Footer = new Markup($"[blue]{totalParsing.TotalMicroseconds:N0}[/]μs");
-
-				totalPart1 += r.ElapsedPart1;
-				performanceTable.Columns[2].Footer = new Markup($"[blue]{totalPart1.TotalMicroseconds:N0}[/]μs");
-
-				totalPart2 += r.ElapsedPart2;
-				performanceTable.Columns[3].Footer = new Markup($"[blue]{totalPart2.TotalMicroseconds:N0}[/]μs");
+				totalSolve += r.Elapsed;
+				performanceTable.Columns[1].Footer = new Markup($"[blue]{totalSolve.TotalMicroseconds:N0}[/]μs");
 
 				ctx.Refresh();
 			}

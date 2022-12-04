@@ -24,7 +24,7 @@ public class PuzzleRunner
 	{
 		_puzzles = GetAllPuzzles();
 		_runMethod = GetType().GetMethod(nameof(RunPuzzle), BindingFlags.Static | BindingFlags.NonPublic)!;
-		_benchmarkClass = typeof(PuzzleBenchmarkRunner<,>);
+		_benchmarkClass = typeof(PuzzleBenchmarkRunner<>);
 	}
 
 	public IReadOnlyCollection<PuzzleModel> GetPuzzles() => _puzzles;
@@ -33,14 +33,14 @@ public class PuzzleRunner
 		puzzles
 			.Select(puzzle =>
 			{
-				var method = _runMethod.MakeGenericMethod(puzzle.PuzzleType, puzzle.ParsedType);
+				var method = _runMethod.MakeGenericMethod(puzzle.PuzzleType);
 				return (PuzzleResult)method.Invoke(null, new object[] { puzzle })!;
 			});
 
 	public Summary BenchmarkPuzzles(IEnumerable<PuzzleModel> puzzles)
 	{
 		var types = puzzles
-			.Select(p => _benchmarkClass.MakeGenericType(p.PuzzleType, p.ParsedType))
+			.Select(p => _benchmarkClass.MakeGenericType(p.PuzzleType))
 			.ToArray();
 
 		return BenchmarkSwitcher.FromTypes(types)
@@ -75,13 +75,12 @@ public class PuzzleRunner
 				x.PuzzleAttribute.Year,
 				x.PuzzleAttribute.Day,
 				x.PuzzleAttribute.CodeType,
-				x.Type,
-				x.Type.GetInterfaces()[0].GenericTypeArguments[0]))
+				x.Type))
 			.ToList();
 	}
 
-	private static PuzzleResult RunPuzzle<TPuzzle, TParsed>(PuzzleModel puzzleInfo)
-		where TPuzzle : IPuzzle<TParsed>, new()
+	private static PuzzleResult RunPuzzle<TPuzzle>(PuzzleModel puzzleInfo)
+		where TPuzzle : IPuzzle, new()
 	{
 		var puzzle = new TPuzzle();
 
@@ -89,20 +88,10 @@ public class PuzzleRunner
 			.GetRawInput(puzzleInfo.Year, puzzleInfo.Day);
 
 		var sw = Stopwatch.StartNew();
-		var parsed = puzzle.Parse(rawInput);
+		var (part1, part2) = puzzle.Solve(rawInput);
 		sw.Stop();
-		var elapsedParse = sw.Elapsed;
+		var elapsed = sw.Elapsed;
 
-		sw.Restart();
-		var part1 = puzzle.Part1(parsed);
-		sw.Stop();
-		var elapsedPart1 = sw.Elapsed;
-
-		sw.Restart();
-		var part2 = puzzle.Part2(parsed);
-		sw.Stop();
-		var elapsedPart2 = sw.Elapsed;
-
-		return new PuzzleResult(puzzleInfo, part1, part2, elapsedParse, elapsedPart1, elapsedPart2);
+		return new PuzzleResult(puzzleInfo, part1, part2, elapsed);
 	}
 }
