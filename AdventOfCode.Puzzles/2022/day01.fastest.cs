@@ -32,7 +32,7 @@ public class Day_01_Fastest : IPuzzle<(int, int, int)>
 			elf += value;
 		}
 
-		return (span[0], span[1], span[2]);
+		return (numbers[0], numbers[1], numbers[2]);
 	}
 
 	public string Part1((int, int, int) input) =>
