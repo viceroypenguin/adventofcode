@@ -86,13 +86,19 @@ public class PuzzleRunner
 		var rawInput = PuzzleInputProvider.Instance
 			.GetRawInput(puzzleInfo.Year, puzzleInfo.Day);
 
-		// run twice to get better timings
-		puzzle.Solve(rawInput);
-
 		var sw = Stopwatch.StartNew();
 		var (part1, part2) = puzzle.Solve(rawInput);
 		sw.Stop();
 		var elapsed = sw.Elapsed;
+
+		// run twice to get better timings
+		if (elapsed < TimeSpan.FromMilliseconds(100))
+		{
+			sw.Restart();
+			puzzle.Solve(rawInput);
+			sw.Stop();
+			elapsed = sw.Elapsed;
+		}
 
 		return new PuzzleResult(puzzleInfo, part1, part2, elapsed);
 	}
