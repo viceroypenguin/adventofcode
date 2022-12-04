@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Numerics;
+using System.Runtime.CompilerServices;
 
 namespace AdventOfCode.Common;
 
@@ -46,5 +47,11 @@ public static class Helpers
 		}
 
 		return (isNegSign ? -value : value, n);
+	}
+
+	public static bool Between<T>(this T value, T min, T max) where T : IBinaryNumber<T>
+	{
+		if (min > max) (min, max) = (max, min);
+		return min <= value && value <= max;
 	}
 }
