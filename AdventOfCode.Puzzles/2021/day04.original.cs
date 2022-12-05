@@ -1,25 +1,18 @@
-﻿using System.Collections;
+﻿namespace AdventOfCode.Puzzles._2021;
 
-namespace AdventOfCode;
-
-public class Day_2021_04_Original : Day
+[Puzzle(2021, 4, CodeType.Original)]
+public class Day_04_Original : IPuzzle
 {
-	public override int Year => 2021;
-	public override int DayNumber => 4;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
 		// split by double-newline, and break int lines within each segment
-		var segments = input.GetSegments();
+		var segments = input.Lines.Split(string.Empty).ToList();
 
 		// numbers are in first line of first segment
-		var numbers = segments[0][0].Split(',').Select(x => Convert.ToInt32(x)).ToList();
+		var numbers = segments[0].First().Split(',').Select(x => Convert.ToInt32(x)).ToList();
 
 		// segments 1 to end are each one bingo board
-		var boards = segments[1..]
+		var boards = segments.Skip(1)
 			.Select(b =>
 			{
 				return b
@@ -42,7 +35,7 @@ public class Day_2021_04_Original : Day
 			Dictionary<int, (int x, int y)> board)
 		{
 			var matched = new bool[5, 5];
-			
+
 			// keep track of both number, and index of that number in the list
 			foreach (var (i, n) in numbers.Index())
 			{
@@ -66,18 +59,14 @@ public class Day_2021_04_Original : Day
 			.ToList();
 
 		// get first completed board
-		var mostSuccessful = bingos
-			.OrderBy(b => b.bingo.count)
-			.First();
-
-		PartA = GetBingoValue(mostSuccessful).ToString();
+		var part1 = GetBingoValue(bingos
+			.MinBy(b => b.bingo.count)).ToString();
 
 		// get last completed board
-		var leastSuccessful = bingos
-			.OrderByDescending(b => b.bingo.count)
-			.First();
+		var part2 = GetBingoValue(bingos
+			.MaxBy(b => b.bingo.count)).ToString();
 
-		PartB = GetBingoValue(leastSuccessful).ToString();
+		return (part1, part2);
 	}
 
 	static bool IsBingo(bool[,] board, int x, int y) =>

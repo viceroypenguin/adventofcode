@@ -1,18 +1,11 @@
-﻿using System.Collections;
+﻿namespace AdventOfCode.Puzzles._2021;
 
-namespace AdventOfCode;
-
-public class Day_2021_10_Original : Day
+[Puzzle(2021, 10, CodeType.Original)]
+public class Day_10_Original : IPuzzle
 {
-	public override int Year => 2021;
-	public override int DayNumber => 10;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string part1, string part2) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var lines = input.GetLines()
+		var lines = input.Lines
 			// for each line
 			.Select(static l =>
 			{
@@ -67,7 +60,7 @@ public class Day_2021_10_Original : Day
 			})
 			.ToList();
 
-		PartA = lines
+		var part1 = lines
 			// get corrupted lines
 			.Where(x => x.corrupted)
 			// sum their values
@@ -82,6 +75,8 @@ public class Day_2021_10_Original : Day
 			.ToList();
 
 		// get the median value
-		PartB = scores[scores.Count / 2].ToString();
+		var part2 = scores[scores.Count / 2].ToString();
+
+		return (part1, part2);
 	}
 }

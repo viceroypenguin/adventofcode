@@ -1,18 +1,13 @@
 ﻿using System.Collections.Immutable;
 
-namespace AdventOfCode;
+namespace AdventOfCode.Puzzles._2021;
 
-public class Day_2021_12_Original : Day
+[Puzzle(2021, 12, CodeType.Original)]
+public class Day_12_Original : IPuzzle
 {
-	public override int Year => 2021;
-	public override int DayNumber => 12;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string part1, string part2) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var edges = input.GetLines()
+		var edges = input.Lines
 			.Select(l => l.Split('-'))
 			.SelectMany(l => (new[] { (l[0], l[1]), (l[1], l[0]), }))
 			.Where(x => x.Item2 != "start")
@@ -30,7 +25,7 @@ public class Day_2021_12_Original : Day
 			.Where(e => e.cur == "end")
 			.Count();
 
-		PartA = paths.ToString();
+		var part1 = paths.ToString();
 
 		paths = SuperEnumerable
 			.TraverseDepthFirst(
@@ -47,6 +42,8 @@ public class Day_2021_12_Original : Day
 			.Where(e => e.cur == "end")
 			.Count();
 
-		PartB = paths.ToString();
+		var part2 = paths.ToString();
+
+		return (part1, part2);
 	}
 }

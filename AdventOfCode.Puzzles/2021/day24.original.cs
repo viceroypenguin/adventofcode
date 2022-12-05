@@ -1,16 +1,12 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2021;
 
-public class Day_2021_24_Original : Day
+[Puzzle(2021, 24, CodeType.Original)]
+public class Day_24_Original : IPuzzle
 {
-	public override int Year => 2021;
-	public override int DayNumber => 24;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string part1, string part2) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var groups = input.GetLines()
+		var groups = input.Lines
+			.Where(x => !string.IsNullOrWhiteSpace(x))
 			.Batch(18)
 			.Select(g =>
 			{
@@ -51,7 +47,8 @@ public class Day_2021_24_Original : Day
 				stack.Push((i, c));
 		}
 
-		PartA = string.Join("", highDigits);
-		PartB = string.Join("", lowDigits);
+		var part1 = string.Join("", highDigits);
+		var part2 = string.Join("", lowDigits);
+		return (part1, part2);
 	}
 }

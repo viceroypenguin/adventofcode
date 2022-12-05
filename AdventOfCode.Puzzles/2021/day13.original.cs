@@ -1,28 +1,21 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2021;
 
-public class Day_2021_13_Original : Day
+[Puzzle(2021, 13, CodeType.Original)]
+public class Day_13_Original : IPuzzle
 {
-	public override int Year => 2021;
-	public override int DayNumber => 13;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string part1, string part2) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var lines = input.GetLines();
-
 		// get the initial dots
-		var dots = lines
+		var dots = input.Lines
 			// don't include the fold instructions
-			.TakeWhile(l => !l.StartsWith("fold"))
+			.TakeWhile(l => !string.IsNullOrWhiteSpace(l))
 			// parse (x,y)
 			.Select(x => x.Split(','))
 			.Select(x => (x: Convert.ToInt32(x[0]), y: Convert.ToInt32(x[1])))
 			.ToList();
 
 		// get the fold instructinos
-		var folds = lines
+		var folds = input.Lines
 			// has to start with fold
 			.Where(l => l.StartsWith("fold"))
 			// don't care about "fold along "
@@ -50,7 +43,7 @@ public class Day_2021_13_Original : Day
 					.ToList();
 
 		// fold once, count the distinct points, and dump it
-		Dump('A', fold(dots, folds[0].dir, folds[0].coord).Count.ToString());
+		var part1 = fold(dots, folds[0].dir, folds[0].coord).Count.ToString();
 
 		// follow every fold instruction
 		foreach (var (dir, coord) in folds)
@@ -66,6 +59,9 @@ public class Day_2021_13_Original : Day
 			map[y][x] = '█';
 
 		// dump it out - no need to OCR this
-		DumpScreen('B', map);
+		var part2 = string.Join(Environment.NewLine,
+			map.Select(y => string.Join(string.Empty, y)));
+
+		return (part1, part2);
 	}
 }

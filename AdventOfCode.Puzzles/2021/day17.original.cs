@@ -1,16 +1,16 @@
-﻿namespace AdventOfCode;
+﻿using System.Text.RegularExpressions;
 
-public class Day_2021_17_Original : Day
+namespace AdventOfCode.Puzzles._2021;
+
+[Puzzle(2021, 17, CodeType.Original)]
+public partial class Day_17_Original : IPuzzle
 {
-	public override int Year => 2021;
-	public override int DayNumber => 17;
-	public override CodeType CodeType => CodeType.Original;
+	[GeneratedRegex(@"target area: x=(\d+)..(\d+), y=(-\d+)..(-\d+)")]
+	private static partial Regex TargetRegex();
 
-	protected override void ExecuteDay(byte[] input)
+	public (string part1, string part2) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var match = Regex.Match(input.GetString(), @"target area: x=(\d+)..(\d+), y=(-\d+)..(-\d+)");
+		var match = TargetRegex().Match(input.Text);
 		var x1 = Convert.ToInt32(match.Groups[1].Value);
 		var x2 = Convert.ToInt32(match.Groups[2].Value);
 		var y1 = Convert.ToInt32(match.Groups[3].Value);
@@ -67,9 +67,11 @@ public class Day_2021_17_Original : Day
 		var maxVY = velocities
 			.Select(x => x.vy)
 			.Max();
-		PartA = (maxVY * (maxVY + 1) / 2).ToString();
+		var part1 = (maxVY * (maxVY + 1) / 2).ToString();
 
 		// how many pairs did we get?
-		PartB = velocities.Count.ToString();
+		var part2 = velocities.Count.ToString();
+
+		return (part1, part2);
 	}
 }

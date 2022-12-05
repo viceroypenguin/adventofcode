@@ -1,16 +1,11 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2021;
 
-public class Day_2021_15_Original : Day
+[Puzzle(2021, 15, CodeType.Original)]
+public class Day_15_Original : IPuzzle
 {
-	public override int Year => 2021;
-	public override int DayNumber => 15;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string part1, string part2) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var map = input.GetIntMap();
+		var map = input.Bytes.GetIntMap();
 		var sideLength = map.Length;
 		var destination = (x: sideLength - 1, y: sideLength - 1);
 		var risk = SuperEnumerable.GetShortestPathCost<(int, int), int>(
@@ -18,7 +13,7 @@ public class Day_2021_15_Original : Day
 			(p, c) => p.GetCartesianNeighbors(map)
 				.Select(q => (q, c + map[q.y][q.x])),
 			destination);
-		PartA = risk.ToString();
+		var part1 = risk.ToString();
 
 		destination = (sideLength * 5 - 1, sideLength * 5 - 1);
 		int getRisk(int x, int y)
@@ -35,6 +30,8 @@ public class Day_2021_15_Original : Day
 					&& q.x >= 0 && q.x <= destination.x)
 				.Select(q => (q, c + getRisk(q.x, q.y))),
 			destination);
-		PartB = risk.ToString();
+		var part2 = risk.ToString();
+
+		return (part1, part2);
 	}
 }

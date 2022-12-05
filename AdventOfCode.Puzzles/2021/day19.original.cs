@@ -1,16 +1,14 @@
-﻿namespace AdventOfCode;
+﻿using System.Text.RegularExpressions;
 
-public class Day_2021_19_Original : Day
+namespace AdventOfCode.Puzzles._2021;
+
+[Puzzle(2021, 19, CodeType.Original)]
+public class Day_19_Original : IPuzzle
 {
-	public override int Year => 2021;
-	public override int DayNumber => 19;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string part1, string part2) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var scanners = input.GetLines()
+		var scanners = input.Lines
+			.Where(x => !string.IsNullOrWhiteSpace(x))
 			// each line that says "scanner" is a new block
 			.Segment(x => x.Contains("scanner"))
 			// each for each block, parse scanner id and points
@@ -132,13 +130,20 @@ public class Day_2021_19_Original : Day
 		}
 
 		// how many *distinct* points are there?
-		PartA = map.SelectMany(m => m.points).Distinct().Count().ToString();
+		var part1 = map
+			.SelectMany(m => m.points)
+			.Distinct()
+			.Count()
+			.ToString();
+
 		// calculate manhattan distance between all pairs
 		// and take the max
-		PartB = map.Subsets(2)
+		var part2 = map.Subsets(2)
 			.Max(x => Math.Abs(x[0].origin.x - x[1].origin.x)
 				+ Math.Abs(x[0].origin.y - x[1].origin.y)
 				+ Math.Abs(x[0].origin.z - x[1].origin.z))
 			.ToString();
+
+		return (part1, part2);
 	}
 }

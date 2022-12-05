@@ -1,19 +1,16 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2021;
 
-public class Day_2021_18_Original : Day
+[Puzzle(2021, 18, CodeType.Original)]
+public class Day_18_Original : IPuzzle
 {
-	public override int Year => 2021;
-	public override int DayNumber => 18;
-	public override CodeType CodeType => CodeType.Original;
-
 	private class SnailfishNode
 	{
 		public int? Number { get; set; }
-		public SnailfishNode LeftChild { get; set; }
-		public SnailfishNode RightChild { get; set; }
+		public SnailfishNode? LeftChild { get; set; }
+		public SnailfishNode? RightChild { get; set; }
 
-		public SnailfishNode LeftNode { get; set; }
-		public SnailfishNode RightNode { get; set; }
+		public SnailfishNode? LeftNode { get; set; }
+		public SnailfishNode? RightNode { get; set; }
 
 		public long GetMagnitude() =>
 			Number ?? (LeftChild.GetMagnitude() * 3 + RightChild.GetMagnitude() * 2);
@@ -59,25 +56,25 @@ public class Day_2021_18_Original : Day
 		}
 	}
 
-	protected override void ExecuteDay(byte[] input)
+	public (string part1, string part2) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var numbers = input.GetLines()
+		var numbers = input.Lines
 			.Select(ParseLine)
 			.ToList();
 
-		PartA = numbers
+		var part1 = numbers
 			.Aggregate(Add)
 			.GetMagnitude()
 			.ToString();
 
-		PartB = (
+		var part2 = (
 			from a in numbers
 			from b in numbers
 			where a != b
 			select Add(a, b).GetMagnitude())
 			.Max().ToString();
+
+		return (part1, part2);
 	}
 
 	private static SnailfishNode ParseLine(string l) =>

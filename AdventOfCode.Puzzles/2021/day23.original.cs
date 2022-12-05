@@ -1,20 +1,11 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Runtime.Intrinsics;
-using System.Threading.Tasks.Sources;
+﻿namespace AdventOfCode.Puzzles._2021;
 
-namespace AdventOfCode;
-
-public class Day_2021_23_Original : Day
+[Puzzle(2021, 23, CodeType.Original)]
+public class Day_23_Original : IPuzzle
 {
-	public override int Year => 2021;
-	public override int DayNumber => 23;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string part1, string part2) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var map = input.GetMap();
+		var map = input.Bytes.GetMap();
 
 		var start = new Board();
 		for (var i = 0; i < 4; i++)
@@ -32,7 +23,7 @@ public class Day_2021_23_Original : Day
 			room[1] = (byte)('A' + i);
 		}
 
-		PartA = SuperEnumerable.GetShortestPathCost<Board, int>(
+		var part1 = SuperEnumerable.GetShortestPathCost<Board, int>(
 			start,
 			GetPossibleMovesA,
 			goal).ToString();
@@ -57,10 +48,12 @@ public class Day_2021_23_Original : Day
 			room[3] = (byte)('A' + i);
 		}
 
-		PartB = SuperEnumerable.GetShortestPathCost<Board, int>(
+		var part2 = SuperEnumerable.GetShortestPathCost<Board, int>(
 			start,
 			GetPossibleMovesB,
 			goal).ToString();
+
+		return (part1, part2);
 	}
 
 	private static (Board, int) MoveTokenToHallway(Board board, int cost, int room, int i, int hallway)

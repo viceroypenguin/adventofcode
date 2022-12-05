@@ -1,17 +1,10 @@
-﻿using System.Collections;
+﻿namespace AdventOfCode.Puzzles._2021;
 
-namespace AdventOfCode;
-
-public class Day_2021_11_Original : Day
+[Puzzle(2021, 11, CodeType.Original)]
+public class Day_11_Original : IPuzzle
 {
-	public override int Year => 2021;
-	public override int DayNumber => 11;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string part1, string part2) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
 		// handle one step
 		int step(int[][] map)
 		{
@@ -57,17 +50,17 @@ public class Day_2021_11_Original : Day
 		}
 
 		// get initial state
-		var map = input.GetIntMap();
+		var map = input.Bytes.GetIntMap();
 		
 		// keep track of flashes over 100 steps
 		var flashes = 0;
 		for (int i = 0; i < 100; i++)
 			flashes += step(map);
 
-		PartA = flashes.ToString();
+		var part1 = flashes.ToString();
 
 		// reset to initial state
-		map = input.GetIntMap();
+		map = input.Bytes.GetIntMap();
 		// how many cells are on map
 		// i.e. how many flashes == entire map flashed
 		var mapSize = map.Length * map[0].Length;
@@ -79,8 +72,8 @@ public class Day_2021_11_Original : Day
 			if (flashes == mapSize)
 			{
 				// print and we're done.
-				PartB = i.ToString();
-				return;
+				var part2 = i.ToString();
+				return (part1, part2);
 			}
 		}
 	}

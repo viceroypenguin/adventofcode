@@ -16,6 +16,7 @@ public class PuzzleRunner
 
 	private static readonly Assembly[] assemblies =
 	{
+		Assembly.GetAssembly(typeof(Puzzles._2021.Day_01_Original))!,
 		Assembly.GetAssembly(typeof(Puzzles._2022.Day_01_Original))!,
 	};
 

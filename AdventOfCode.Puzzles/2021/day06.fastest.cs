@@ -1,20 +1,13 @@
-﻿using System.Collections;
+﻿namespace AdventOfCode.Puzzles._2021;
 
-namespace AdventOfCode;
-
-public class Day_2021_06_Fastest : Day
+[Puzzle(2021, 6, CodeType.Fastest)]
+public class Day_06_Fastest : IPuzzle
 {
-	public override int Year => 2021;
-	public override int DayNumber => 6;
-	public override CodeType CodeType => CodeType.Fastest;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
 		Span<long> fish = stackalloc long[9];
 
-		var span = new ReadOnlySpan<byte>(input);
+		var span = new ReadOnlySpan<byte>(input.Bytes);
 		for (int i = 0; i < span.Length;)
 		{
 			var (value, numChars) = span[i..].AtoI();
@@ -34,8 +27,7 @@ public class Day_2021_06_Fastest : Day
 		var totalFish = 0L;
 		foreach (var f in fish)
 			totalFish += f;
-		PartA = totalFish.ToString();
-
+		var part1 = totalFish.ToString();
 
 		for (int i = 80; i < 256; i++)
 			fish[(i + 7) % 9] += fish[i % 9];
@@ -43,6 +35,8 @@ public class Day_2021_06_Fastest : Day
 		totalFish = 0L;
 		foreach (var f in fish)
 			totalFish += f;
-		PartB = totalFish.ToString();
+		var part2 = totalFish.ToString();
+
+		return (part1, part2);
 	}
 }

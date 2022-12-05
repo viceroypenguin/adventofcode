@@ -1,22 +1,16 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2021;
 
-public class Day_2021_21_Original : Day
+[Puzzle(2021, 21, CodeType.Original)]
+public class Day_21_Original : IPuzzle
 {
-	public override int Year => 2021;
-	public override int DayNumber => 21;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string part1, string part2) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var lines = input.GetLines();
-
-		DoPartA(lines);
-		DoPartB(lines);
+		var part1 = DoPartA(input.Lines);
+		var part2 = DoPartB(input.Lines);
+		return (part1, part2);
 	}
 
-	private void DoPartA(string[] lines)
+	private static string DoPartA(string[] lines)
 	{
 		// one-char position at end of string
 		// easy parsing of current position
@@ -48,8 +42,7 @@ public class Day_2021_21_Original : Day
 			{
 				// 3-dice rolls per turn
 				// report loser score value
-				PartA = (score2 * cnt * 3).ToString();
-				break;
+				return (score2 * cnt * 3).ToString();
 			}
 
 			// vice-versa
@@ -58,13 +51,12 @@ public class Day_2021_21_Original : Day
 			score2 += (pos2 + 1);
 			if (score2 >= 1000)
 			{
-				PartA = (score1 * cnt * 3).ToString();
-				break;
+				return (score1 * cnt * 3).ToString();
 			}
 		}
 	}
 
-	private void DoPartB(string[] lines)
+	private static string DoPartB(string[] lines)
 	{
 		// calculate all potential outcomes
 		// of 3 dirac dice
@@ -125,6 +117,6 @@ public class Day_2021_21_Original : Day
 			.GroupBy(s => s.state.score1 >= 21, (b, g) => (b, cnt: g.Sum(x => x.count)))
 			// only care about the max num of wins
 			.Max(x => x.cnt);
-		PartB = wins.ToString();
+		return wins.ToString();
 	}
 }

@@ -1,26 +1,21 @@
-﻿using System.Collections;
+﻿using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics;
 using System.Runtime.Intrinsics.X86;
 
-namespace AdventOfCode;
+namespace AdventOfCode.Puzzles._2021;
 
-public class Day_2021_07_Fastest : Day
+[Puzzle(2021, 7, CodeType.Fastest)]
+public class Day_2021_07_Fastest : IPuzzle
 {
-	public override int Year => 2021;
-	public override int DayNumber => 7;
-	public override CodeType CodeType => CodeType.Fastest;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string part1, string part2) Solve(PuzzleInput input) 
 	{
-		if (input == null) return;
-
 		// keep track of how many crabs at each position 0..2048
 		// 2048 appears max based on data
 		Span<int> crabs = stackalloc int[2048];
 
 		// read data from input
-		var span = new ReadOnlySpan<byte>(input);
+		var span = new ReadOnlySpan<byte>(input.Bytes);
 		int i = 0, cnt = 0, max = 0;
 		while (i < span.Length)
 		{
@@ -43,7 +38,7 @@ public class Day_2021_07_Fastest : Day
 		for (i = 0; sum < half; i++)
 			sum += crabs[i];
 		var median = (i - 1);
-		PartA = PartAFuelTotal(crabs, median).ToString();
+		var part1 = PartAFuelTotal(crabs, median).ToString();
 
 		sum = IndexSum(crabs);
 		var avg = sum / cnt;
@@ -52,7 +47,9 @@ public class Day_2021_07_Fastest : Day
 		var n2 = PartBFuelTotal(crabs, avg);
 		var n3 = PartBFuelTotal(crabs, avg + 1);
 
-		PartB = Math.Min(Math.Min(n1, n2), n3).ToString();
+		var part2 = Math.Min(Math.Min(n1, n2), n3).ToString();
+
+		return (part1, part2);
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]

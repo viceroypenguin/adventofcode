@@ -1,18 +1,19 @@
-﻿namespace AdventOfCode;
+﻿using System.Text.RegularExpressions;
 
-public class Day_2021_22_Original : Day
+namespace AdventOfCode.Puzzles._2021;
+
+[Puzzle(2021, 22, CodeType.Original)]
+public partial class Day_22_Original : IPuzzle
 {
-	public override int Year => 2021;
-	public override int DayNumber => 22;
-	public override CodeType CodeType => CodeType.Original;
+	[GeneratedRegex("-?\\d+")]
+	private static partial Regex NumberRegex();
 
-	protected override void ExecuteDay(byte[] input)
+	public (string part1, string part2) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
 		// parse out the instructions
-		var instructions = input.GetLines()
-			.Select(l => (b: l[..2] == "on", m: Regex.Matches(l, @"-?\d+").ToList()))
+		var instructions = input.Lines
+			.Where(x => !string.IsNullOrWhiteSpace(x))
+			.Select(l => (b: l[..2] == "on", m: NumberRegex().Matches(l).ToList()))
 			.Select(m => (
 				m.b,
 				x: (
@@ -26,11 +27,13 @@ public class Day_2021_22_Original : Day
 					hi: Convert.ToInt32(m.m[5].Value))))
 			.ToList();
 
-		DoPartA(instructions);
-		DoPartB(instructions);
+		var part1 = DoPartA(instructions);
+		var part2 = DoPartB(instructions);
+
+		return (part1, part2);
 	}
 
-	private void DoPartA(List<(bool b, (int lo, int hi) x, (int lo, int hi) y, (int lo, int hi) z)> instructions)
+	private string DoPartA(List<(bool b, (int lo, int hi) x, (int lo, int hi) y, (int lo, int hi) z)> instructions)
 	{
 		// shortcut for getting every int between lo and hi
 		static IEnumerable<int> GetDimension((int lo, int hi) dim) =>
@@ -54,13 +57,13 @@ public class Day_2021_22_Original : Day
 				.ForEach(p => map[p] = v);
 
 		// how many do we have turned on now?
-		PartA = map
+		return map
 			.Where(kvp => kvp.Value)
 			.Count()
 			.ToString();
 	}
 
-	private void DoPartB(List<(bool b, (int lo, int hi) x, (int lo, int hi) y, (int lo, int hi) z)> instructions)
+	private string DoPartB(List<(bool b, (int lo, int hi) x, (int lo, int hi) y, (int lo, int hi) z)> instructions)
 	{
 		// keep track of all of the boxes
 		var boxes = new List<(bool b, (int lo, int hi) x, (int lo, int hi) y, (int lo, int hi) z)>();
@@ -90,7 +93,7 @@ public class Day_2021_22_Original : Day
 		}
 
 		// add pos and neg sum of all boxes in the list
-		PartB = boxes.Sum(b => BoxSize(b.x, b.y, b.z) * (b.b ? 1 : -1)).ToString();
+		return boxes.Sum(b => BoxSize(b.x, b.y, b.z) * (b.b ? 1 : -1)).ToString();
 	}
 
 	private static long BoxSize(

@@ -1,16 +1,11 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2021;
 
-public class Day_2021_16_Original : Day
+[Puzzle(2021, 16, CodeType.Original)]
+public class Day_16_Original : IPuzzle
 {
-	public override int Year => 2021;
-	public override int DayNumber => 16;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string part1, string part2) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var bits = input
+		var bits = input.Bytes
 			.Select(b => b >= 'A' ? b - 'A' + 10 : b - '0')
 			.Batch(16)
 			.Select(g => g.Pad(16)
@@ -95,8 +90,9 @@ public class Day_2021_16_Original : Day
 		}
 
 		var (packet, _) = ParsePackets(0);
-		PartA = packet.GetVersionSum().ToString();
-		PartB = packet.GetValue().ToString();
+		var part1 = packet.GetVersionSum().ToString();
+		var part2 = packet.GetValue().ToString();
+		return (part1, part2);
 	}
 
 	public enum PacketType : uint

@@ -1,28 +1,13 @@
-﻿using System.Collections;
+﻿namespace AdventOfCode.Puzzles._2021;
 
-namespace AdventOfCode;
-
-public class Day_2021_03_Original : Day
+[Puzzle(2021, 3, CodeType.Original)]
+public class Day_03_Original : IPuzzle
 {
-	public override int Year => 2021;
-	public override int DayNumber => 3;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var lines = input.GetLines();
-
-		DoPartA(lines);
-		DoPartB(lines);
-	}
-
-	private void DoPartA(string[] lines)
-	{
-		var (epsilon, gamma) = lines
+		var (epsilon, gamma) = input.Lines
 			// start w/ array of zeros for each column
-			.Aggregate(new int[lines[0].Length], (x, p) =>
+			.Aggregate(new int[input.Lines[0].Length], (x, p) =>
 				// for each line in input
 				// match pair-wise each character to count in column
 				// then increment count in column if char is '1'
@@ -31,22 +16,19 @@ public class Day_2021_03_Original : Day
 			// build up epsilon and gamma from the completed column counts
 			.Aggregate((epsilon: 0, gamma: 0), (x, cnt) =>
 				// in both cases, shift left, to get the new bit
-				cnt < (lines.Length / 2)
+				cnt < (input.Lines.Length / 2)
 					// if column count < half, then epsilon gets a 1
 					? ((x.epsilon << 1) + 1, x.gamma << 1)
 					// otherwise, gamma gets a 1
 					: (x.epsilon << 1, (x.gamma << 1) + 1));
 
-		PartA = (epsilon * gamma).ToString();
-	}
+		var part1 = (epsilon * gamma).ToString();
 
-	private void DoPartB(string[] lines)
-	{
 		// technically O(n^2) algorithm;
 		// not enough data to justify improving further
 		
 		// start with full list
-		var tmp = lines.ToList();
+		var tmp = input.Lines.ToList();
 		// we're narrowing down to single element
 		for (int i = 0; tmp.Count != 1; i++)
 		{
@@ -64,7 +46,7 @@ public class Day_2021_03_Original : Day
 		var oxygenCount = Convert.ToInt32(tmp[0], 2);
 
 		// start with full list
-		tmp = lines.ToList();
+		tmp = input.Lines.ToList();
 		// we're narrowing down to single element
 		for (int i = 0; tmp.Count != 1; i++)
 		{
@@ -82,6 +64,8 @@ public class Day_2021_03_Original : Day
 		// convert number to integer
 		var coScrub = Convert.ToInt32(tmp[0], 2);
 
-		PartB = (oxygenCount * coScrub).ToString();
+		var part2 = (oxygenCount * coScrub).ToString();
+
+		return (part1, part2);
 	}
 }

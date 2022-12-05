@@ -1,18 +1,11 @@
-﻿using System.Collections;
+﻿namespace AdventOfCode.Puzzles._2021;
 
-namespace AdventOfCode;
-
-public class Day_2021_09_Original : Day
+[Puzzle(2021, 9, CodeType.Original)]
+public class Day_2021_09_Original : IPuzzle
 {
-	public override int Year => 2021;
-	public override int DayNumber => 9;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string part1, string part2) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var map = input.GetMap();
+		var map = input.Bytes.GetMap();
 
 		// visit every point
 		var lowPoints = map.GetMapPoints()
@@ -23,12 +16,12 @@ public class Day_2021_09_Original : Day
 			.ToList();
 
 		// take the value at each point, add one, and sum them
-		PartA = lowPoints
+		var part1 = lowPoints
 			.Select(p => (p.item - (byte)'0') + 1)
 			.Sum()
 			.ToString();
 
-		PartB = lowPoints
+		var part2 = lowPoints
 			// for each point, do a BFS search to flood-fill the basin
 			.Select(p =>
 			{
@@ -52,5 +45,7 @@ public class Day_2021_09_Original : Day
 			// calculate the product of these numbers
 			.Aggregate(1L, (a, b) => a * b)
 			.ToString();
+
+		return (part1, part2);
 	}
 }

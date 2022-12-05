@@ -1,16 +1,11 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2021;
 
-public class Day_2021_25_Original : Day
+[Puzzle(2021, 25, CodeType.Original)]
+public class Day_25_Original : IPuzzle
 {
-	public override int Year => 2021;
-	public override int DayNumber => 25;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string part1, string part2) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var map = input.GetMap();
+		var map = input.Bytes.GetMap();
 
 		var yLength = map.Length;
 		var xLength = map[0].Length;
@@ -50,6 +45,6 @@ public class Day_2021_25_Original : Day
 		while (Step(map))
 			cnt++;
 
-		PartA = cnt.ToString();
+		return (cnt.ToString(), string.Empty);
 	}
 }

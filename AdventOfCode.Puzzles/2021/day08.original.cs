@@ -1,18 +1,11 @@
-﻿using System.Collections;
+﻿namespace AdventOfCode.Puzzles._2021;
 
-namespace AdventOfCode;
-
-public class Day_2021_08_Original : Day
+[Puzzle(2021, 8, CodeType.Original)]
+public class Day_08_Original : IPuzzle
 {
-	public override int Year => 2021;
-	public override int DayNumber => 8;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		PartA = input.GetLines()
+		var part1 = input.Lines
 			// only care about after the bar
 			.Select(l => l.Split(" | ")[1])
 			// break up the displays
@@ -24,12 +17,14 @@ public class Day_2021_08_Original : Day
 			.Count()
 			.ToString();
 
-		PartB = input.GetLines()
+		var part2 = input.Lines
 			// get the numbers
 			.Select(ParseNumber)
 			// sum them up
 			.Sum()
 			.ToString();
+
+		return (part1, part2);
 	}
 
 	private static int ParseNumber(string line)

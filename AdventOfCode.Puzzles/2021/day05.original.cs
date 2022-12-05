@@ -1,20 +1,18 @@
-﻿using System.Collections;
+﻿using System.Text.RegularExpressions;
 
-namespace AdventOfCode;
+namespace AdventOfCode.Puzzles._2021;
 
-public class Day_2021_05_Original : Day
+[Puzzle(2021, 5, CodeType.Original)]
+public partial class Day_05_Original : IPuzzle
 {
-	public override int Year => 2021;
-	public override int DayNumber => 5;
-	public override CodeType CodeType => CodeType.Original;
+	[GeneratedRegex("(\\d+),(\\d+) -> (\\d+),(\\d+)")]
+	private static partial Regex CoordinateRegex();
 
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var lines = input.GetLines()
+		var coordinates = input.Lines
 			// Parse numbers
-			.Select(l => Regex.Match(l, @"(\d+),(\d+) -> (\d+),(\d+)"))
+			.Select(l => CoordinateRegex().Match(l))
 			// convert to integers, identify them
 			.Select(m => (
 				x1: Convert.ToInt32(m.Groups[1].Value),
@@ -23,12 +21,10 @@ public class Day_2021_05_Original : Day
 				y2: Convert.ToInt32(m.Groups[4].Value)))
 			.ToList();
 
-		// All the hard work is done in DoPart()
-		// only difference is counting the diagonals
-		PartA = DoPart(lines, skipDiagonals: true).ToString();
-		PartB = DoPart(lines, skipDiagonals: false).ToString();
+		var part1 = DoPart(coordinates, skipDiagonals: true).ToString();
+		var part2 = DoPart(coordinates, skipDiagonals: false).ToString();
+		return (part1, part2);
 	}
-
 	private static int DoPart(
 			List<(int x1, int y1, int x2, int y2)> lines,
 			bool skipDiagonals) =>
@@ -59,7 +55,7 @@ public class Day_2021_05_Original : Day
 			// are we at the end of the line?
 			// + xDir is so we include the final point of the line
 			// in return
-			x != (x2 + xDir) || y != (y2 + yDir);
+			x != x2 + xDir || y != y2 + yDir;
 			// advance x/y by direction
 			x += xDir, y += yDir)
 		{

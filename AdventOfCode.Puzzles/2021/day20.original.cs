@@ -1,28 +1,25 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2021;
 
-public class Day_2021_20_Original : Day
+[Puzzle(2021, 20, CodeType.Original)]
+public class Day_20_Original : IPuzzle
 {
-	public override int Year => 2021;
-	public override int DayNumber => 20;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string part1, string part2) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var tmp = input.GetLines();
 		// algorithm is in first line
-		var algorithm = tmp[0].Select(b => b == '#').ToList();
+		var algorithm = input.Lines[0].Select(b => b == '#').ToList();
 		// image is in remainder of text
-		var image = tmp.Skip(1)
+		var image = input.Lines.Skip(1)
+			.Where(x => !string.IsNullOrWhiteSpace(x))
 			.SelectMany((l, y) =>
 				l.Select((b, x) => (x, y, b)))
 			.ToDictionary(v => (v.x, v.y), v => v.b == '#');
 
 		// do it 2 times
-		PartA = DoPart(algorithm, image, 2).ToString();
+		var part1 = DoPart(algorithm, image, 2).ToString();
 		// do it 50 times
-		PartB = DoPart(algorithm, image, 50).ToString();
+		var part2 = DoPart(algorithm, image, 50).ToString();
+
+		return (part1, part2);
 	}
 
 	private static Dictionary<(int x, int y), bool> ImageProcessingStep(
