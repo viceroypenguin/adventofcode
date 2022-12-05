@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace AdventOfCode.Puzzles._2022;
+﻿namespace AdventOfCode.Puzzles._2022;
 
 [Puzzle(2022, 4, CodeType.Original)]
 public partial class Day_04_Original : IPuzzle
