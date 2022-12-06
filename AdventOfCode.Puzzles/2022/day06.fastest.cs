@@ -13,13 +13,14 @@ public partial class Day_06_Fastest : IPuzzle
 	[MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
 	private static int GetIndex(ReadOnlySpan<byte> bytes, int numDistinct)
 	{
-		for (int i = numDistinct - 1; i < bytes.Length; i++)
+		for (int i = numDistinct - 1; ; i++)
 		{
 			for (int j = i - numDistinct + 1; j <= i; j++)
 			{
+				var c = bytes[j];
 				for (int k = j + 1; k <= i; k++)
 				{
-					if (bytes[j] == bytes[k])
+					if (c == bytes[k])
 						goto next;
 				}
 			}
@@ -30,7 +31,5 @@ public partial class Day_06_Fastest : IPuzzle
 next:
 			;
 		}
-
-		return bytes.Length;
 	}
 }
