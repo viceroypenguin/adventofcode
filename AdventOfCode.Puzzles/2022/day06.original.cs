@@ -3,21 +3,14 @@
 [Puzzle(2022, 6, CodeType.Original)]
 public partial class Day_06_Original : IPuzzle
 {
-	public (string, string) Solve(PuzzleInput input)
-	{
-		var firstWindow = input.Text
-			.Window(4)
-			.Index()
-			.First(x => x.item.Distinct().Count() == 4)
-			.index;
-		var part1 = (firstWindow + 4).ToString();
+	public (string, string) Solve(PuzzleInput input) =>
+		(
+			GetIndex(input.Text, 4).ToString(), 
+			GetIndex(input.Text, 14).ToString());
 
-		firstWindow = input.Text
-			.Window(14)
+	private static int GetIndex(string text, int numDistinct) =>
+		text.Window(numDistinct)
 			.Index()
-			.First(x => x.item.Distinct().Count() == 14)
-			.index;
-		var part2 = (firstWindow + 14).ToString();
-		return (part1, part2);
-	}
+			.First(x => x.item.Distinct().Count() == numDistinct)
+			.index + numDistinct;
 }
