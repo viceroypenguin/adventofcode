@@ -1,16 +1,11 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2020;
 
-public class Day_2020_25_Original : Day
+[Puzzle(2020, 25, CodeType.Original)]
+public class Day_25_Original : IPuzzle
 {
-	public override int Year => 2020;
-	public override int DayNumber => 25;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var span = new ReadOnlySpan<byte>(input);
+		var span = new ReadOnlySpan<byte>(input.Bytes);
 		var x = span.AtoI();
 		var key1 = x.value;
 
@@ -21,7 +16,9 @@ public class Day_2020_25_Original : Day
 		var loopSize = GetLoopSize(key1);
 		var eKey = GetKey(key2, loopSize);
 
-		PartA = eKey.ToString();
+		var part1 = eKey.ToString();
+
+		return (part1, string.Empty);
 	}
 
 	private static int GetLoopSize(int publicKey)

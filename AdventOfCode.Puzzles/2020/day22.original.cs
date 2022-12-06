@@ -1,34 +1,30 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2020;
 
-public class Day_2020_22_Original : Day
+[Puzzle(2020, 22, CodeType.Original)]
+public class Day_22_Original : IPuzzle
 {
-	public override int Year => 2020;
-	public override int DayNumber => 22;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var decks = input.GetLines()
-			.Segment(s => s.StartsWith("Player"))
+		var decks = input.Lines
+			.Split(string.Empty)
 			.Select(p => p.Skip(1).Select(int.Parse).ToList())
 			.ToList();
 
-
-		PartA = playGame(decks[0], decks[1], static (c1, c2, _, _) => c1 > c2)
+		var part1 = playGame(decks[0], decks[1], static (c1, c2, _, _) => c1 > c2)
 			.winningDeck
 			.Reverse()
 			.Select((x, i) => x * (i + 1))
 			.Sum()
 			.ToString();
 
-		PartB = playGame(decks[0], decks[1], recursiveGame)
+		var part2 = playGame(decks[0], decks[1], recursiveGame)
 			.winningDeck
 			.Reverse()
 			.Select((x, i) => x * (i + 1))
 			.Sum()
 			.ToString();
+
+		return (part1, part2);
 	}
 
 	private static (bool captainWon, Queue<int> winningDeck) playGame(

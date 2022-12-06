@@ -1,19 +1,14 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2020;
 
-public class Day_2020_24_Original : Day
+[Puzzle(2020, 24, CodeType.Original)]
+public class Day_24_Original : IPuzzle
 {
-	public override int Year => 2020;
-	public override int DayNumber => 24;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
 		var tiles = new Dictionary<(int e, int ne, int se), bool>();
 
 		int dir = 0, e = 0, ne = 0, se = 0;
-		foreach (var c in input)
+		foreach (var c in input.Bytes)
 		{
 			switch (c)
 			{
@@ -38,11 +33,13 @@ public class Day_2020_24_Original : Day
 			dir = 0;
 		}
 
-		PartA = tiles.Values.Count(x => x).ToString();
+		var part1 = tiles.Values.Count(x => x).ToString();
 
 		for (int i = 0; i < 100; i++)
 			tiles = Step(tiles);
-		PartB = tiles.Values.Count(x => x).ToString();
+		var part2 = tiles.Values.Count(x => x).ToString();
+
+		return (part1, part2);
 	}
 
 	private static (int e, int ne, int se) Move(int e, int ne, int se, int dir)

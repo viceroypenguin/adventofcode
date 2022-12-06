@@ -1,16 +1,11 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2020;
 
-public class Day_2020_16_Original : Day
+[Puzzle(2020, 16, CodeType.Original)]
+public class Day_16_Original : IPuzzle
 {
-	public override int Year => 2020;
-	public override int DayNumber => 16;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var segments = input.GetLines(StringSplitOptions.None)
+		var segments = input.Lines
 			.Segment(s => string.IsNullOrWhiteSpace(s))
 			.ToArray();
 
@@ -27,7 +22,7 @@ public class Day_2020_16_Original : Day
 			.ToArray();
 
 		var validNumbers = rules.SelectMany(x => x.values).ToArray();
-		PartA = otherTickets
+		var part1 = otherTickets
 			.SelectMany(t => t)
 			.Where(n => !validNumbers.Any(x => n.Between(x.lo, x.hi)))
 			.Sum()
@@ -56,10 +51,12 @@ public class Day_2020_16_Original : Day
 				indexes.Remove(index);
 		}
 
-		PartB = map
+		var part2 = map
 			.Where(r => r.name.StartsWith("departure"))
 			.Select(r => myTicket[r.index])
 			.Aggregate(1L, (l, r) => l * r)
 			.ToString();
+
+		return (part1, part2);
 	}
 }

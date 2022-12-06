@@ -1,16 +1,11 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2020;
 
-public class Day_2020_03_Original : Day
+[Puzzle(2020, 3, CodeType.Original)]
+public class Day_03_Original : IPuzzle
 {
-	public override int Year => 2020;
-	public override int DayNumber => 3;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var map = input.GetLines()
+		var map = input.Lines
 			.Select(s => s.Select(c => c == '#').ToArray())
 			.ToArray();
 
@@ -23,13 +18,15 @@ public class Day_2020_03_Original : Day
 			return count;
 		}
 
-		PartA = GetTreesOnSlope(1, 3).ToString();
+		var part1 = GetTreesOnSlope(1, 3).ToString();
 
-		PartB = (
+		var part2 = (
 			GetTreesOnSlope(1, 1) *
 			GetTreesOnSlope(1, 3) *
 			GetTreesOnSlope(1, 5) *
 			GetTreesOnSlope(1, 7) *
 			GetTreesOnSlope(2, 1)).ToString();
+
+		return (part1, part2);
 	}
 }

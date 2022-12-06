@@ -1,21 +1,17 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2020;
 
-public class Day_2020_09_Original : Day
+[Puzzle(2020, 9, CodeType.Original)]
+public class Day_09_Original : IPuzzle
 {
-	public override int Year => 2020;
-	public override int DayNumber => 9;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var numbers = input.GetLines()
+		var numbers = input.Lines
 			.Select(long.Parse)
 			.ToArray();
 
 		var invalidNumber = 0L;
 		var queue = new Queue<long>(numbers.Take(25));
+		var part1 = string.Empty;
 		foreach (var n in numbers.Skip(25))
 		{
 			if (queue.Subsets(2)
@@ -27,13 +23,13 @@ public class Day_2020_09_Original : Day
 			}
 			else
 			{
-				PartA = (invalidNumber = n).ToString();
+				part1 = (invalidNumber = n).ToString();
 				break;
 			}
 		}
 
 		Array.Reverse(numbers);
-		for (int i = 0; i < numbers.Length; i++)
+		for (int i = 0; ; i++)
 		{
 			if (numbers[i] > invalidNumber)
 				continue;
@@ -47,8 +43,8 @@ public class Day_2020_09_Original : Day
 				max = Math.Max(max, numbers[j]);
 				if (sum == invalidNumber)
 				{
-					PartB = (min + max).ToString();
-					return;
+					var part2 = (min + max).ToString();
+					return (part1, part2);
 				}
 
 				if (sum > invalidNumber)

@@ -1,27 +1,26 @@
 ﻿using System.Runtime.Intrinsics.X86;
 
-namespace AdventOfCode;
+namespace AdventOfCode.Puzzles._2020;
 
-public class Day_2020_14_Original : Day
+[Puzzle(2020, 14, CodeType.Original)]
+public partial class Day_14_Original : IPuzzle
 {
-	public override int Year => 2020;
-	public override int DayNumber => 14;
-	public override CodeType CodeType => CodeType.Original;
+	[GeneratedRegex("^(mask = (?<mask>[01X]{36}))|(mem\\[(?<memloc>\\d+)\\] = (?<memval>\\d+))$")]
+	private static partial Regex InstructionRegex();
 
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var regex = new Regex(@"^(mask = (?<mask>[01X]{36}))|(mem\[(?<memloc>\d+)\] = (?<memval>\d+))$");
-		var matches = input.GetLines()
+		var regex = InstructionRegex();
+		var matches = input.Lines
 			.Select(x => regex.Match(x))
 			.ToArray();
 
-		DoPartA(matches);
-		DoPartB(matches);
+		var part1 = DoPartA(matches);
+		var part2 = DoPartB(matches);
+		return (part1, part2);
 	}
 
-	private void DoPartA(Match[] matches)
+	private string DoPartA(Match[] matches)
 	{
 		var memory = new Dictionary<int, ulong>();
 		var mask = (and: ulong.MaxValue, or: ulong.MinValue);
@@ -31,25 +30,25 @@ public class Day_2020_14_Original : Day
 			{
 				var s = m.Groups["mask"].Value;
 				mask = (ulong.MaxValue, ulong.MinValue);
-				for (int i = 0; i < s.Length; i++)
+				for (var i = 0; i < s.Length; i++)
 				{
 					if (s[i] == '0')
-						mask.and &= ~(1ul << (35 - i));
+						mask.and &= ~(1ul << 35 - i);
 					else if (s[i] == '1')
-						mask.or |= 1ul << (35 - i);
+						mask.or |= 1ul << 35 - i;
 				}
 			}
 			else
 			{
 				memory[int.Parse(m.Groups["memloc"].Value)] =
-					(ulong.Parse(m.Groups["memval"].Value) & mask.and) | mask.or;
+					ulong.Parse(m.Groups["memval"].Value) & mask.and | mask.or;
 			}
 		}
 
-		PartA = memory.Sum(kvp => (long)kvp.Value).ToString();
+		return memory.Sum(kvp => (long)kvp.Value).ToString();
 	}
 
-	private void DoPartB(Match[] matches)
+	private string DoPartB(Match[] matches)
 	{
 		var memory = new Dictionary<ulong, ulong>();
 		var mask = (fl: ulong.MinValue, or: ulong.MinValue);
@@ -59,12 +58,12 @@ public class Day_2020_14_Original : Day
 			{
 				var s = m.Groups["mask"].Value;
 				mask = (ulong.MinValue, ulong.MinValue);
-				for (int i = 0; i < s.Length; i++)
+				for (var i = 0; i < s.Length; i++)
 				{
 					if (s[i] == 'X')
-						mask.fl |= 1ul << (35 - i);
+						mask.fl |= 1ul << 35 - i;
 					else if (s[i] == '1')
-						mask.or |= 1ul << (35 - i);
+						mask.or |= 1ul << 35 - i;
 				}
 			}
 			else
@@ -85,6 +84,6 @@ public class Day_2020_14_Original : Day
 			}
 		}
 
-		PartB = memory.Sum(kvp => (long)kvp.Value).ToString();
+		return memory.Sum(kvp => (long)kvp.Value).ToString();
 	}
 }

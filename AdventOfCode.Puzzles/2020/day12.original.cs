@@ -1,22 +1,16 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2020;
 
-public class Day_2020_12_Original : Day
+[Puzzle(2020, 12, CodeType.Original)]
+public class Day_12_Original : IPuzzle
 {
-	public override int Year => 2020;
-	public override int DayNumber => 12;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var lines = input.GetLines();
-
-		DoPartA(lines);
-		DoPartB(lines);
+		var part1 = DoPartA(input.Lines);
+		var part2 = DoPartB(input.Lines);
+		return (part1, part2);
 	}
 
-	private void DoPartA(string[] lines)
+	private string DoPartA(string[] lines)
 	{
 		(int x, int y, int d) Move(int x, int y, int d, int dir, int amount) =>
 			(x, y, d) = dir switch
@@ -47,10 +41,10 @@ public class Day_2020_12_Original : Day
 			};
 		}
 
-		PartA = (Math.Abs(x) + Math.Abs(y)).ToString();
+		return (Math.Abs(x) + Math.Abs(y)).ToString();
 	}
 
-	private void DoPartB(string[] lines)
+	private string DoPartB(string[] lines)
 	{
 		(int x, int y, int wayx, int wayy) RotateWaypoint(int x, int y, int wayx, int wayy, int a) =>
 			a switch
@@ -79,6 +73,6 @@ public class Day_2020_12_Original : Day
 			};
 		}
 
-		PartB = (Math.Abs(x) + Math.Abs(y)).ToString();
+		return (Math.Abs(x) + Math.Abs(y)).ToString();
 	}
 }

@@ -1,16 +1,12 @@
-﻿namespace AdventOfCode;
+﻿using System.Runtime.CompilerServices;
 
-public class Day_2020_18_Original : Day
+namespace AdventOfCode.Puzzles._2020;
+
+[Puzzle(2020, 18, CodeType.Original)]
+public class Day_18_Original : IPuzzle
 {
-	public override int Year => 2020;
-	public override int DayNumber => 18;
-	public override CodeType CodeType => CodeType.Original;
-
-	[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
 		Span<long> stack = stackalloc long[64];
 		int stackLevel = -1;
 
@@ -50,7 +46,7 @@ public class Day_2020_18_Original : Day
 				Operate(stack, val);
 		}
 
-		foreach (var c in input)
+		foreach (var c in input.Bytes)
 		{
 			switch (c)
 			{
@@ -74,27 +70,27 @@ public class Day_2020_18_Original : Day
 					break;
 
 				case (byte)')':
-					{
-						var val = Pop(stack);
-						Pop(stack);
-						ProcessNumber(stack, val);
-						break;
-					}
+				{
+					var val = Pop(stack);
+					Pop(stack);
+					ProcessNumber(stack, val);
+					break;
+				}
 
 				default:
-					{
-						// since all ints in problem are 1-char long...
-						int val = c - (byte)'0';
-						ProcessNumber(stack, val);
-						break;
-					}
+				{
+					// since all ints in problem are 1-char long...
+					int val = c - (byte)'0';
+					ProcessNumber(stack, val);
+					break;
+				}
 			}
 		}
 
-		PartA = grandSum.ToString();
+		var part1 = grandSum.ToString();
 
 		grandSum = 0;
-		foreach (var c in input)
+		foreach (var c in input.Bytes)
 		{
 			switch (c)
 			{
@@ -102,14 +98,14 @@ public class Day_2020_18_Original : Day
 					break;
 
 				case (byte)'\n':
-					{
-						var val = Pop(stack);
-						while (stackLevel > 0 && Pop(stack) == -2)
-							val *= Pop(stack);
-						Push(stack, val);
-						NextLine(stack);
-						break;
-					}
+				{
+					var val = Pop(stack);
+					while (stackLevel > 0 && Pop(stack) == -2)
+						val *= Pop(stack);
+					Push(stack, val);
+					NextLine(stack);
+					break;
+				}
 
 				case (byte)'+':
 					Push(stack, -1);
@@ -124,31 +120,33 @@ public class Day_2020_18_Original : Day
 					break;
 
 				case (byte)')':
-					{
-						var val = Pop(stack);
-						while (Pop(stack) == -2)
-							val *= Pop(stack);
-						if (stackLevel > 0 && stack[stackLevel] == -1)
-							Operate(stack, val);
-						else
-							Push(stack, val);
+				{
+					var val = Pop(stack);
+					while (Pop(stack) == -2)
+						val *= Pop(stack);
+					if (stackLevel > 0 && stack[stackLevel] == -1)
+						Operate(stack, val);
+					else
+						Push(stack, val);
 
-						break;
-					}
+					break;
+				}
 
 				default:
-					{
-						// since all ints in problem are 1-char long...
-						int val = c - (byte)'0';
-						if (stackLevel > 0 && stack[stackLevel] == -1)
-							Operate(stack, val);
-						else
-							Push(stack, val);
-						break;
-					}
+				{
+					// since all ints in problem are 1-char long...
+					int val = c - (byte)'0';
+					if (stackLevel > 0 && stack[stackLevel] == -1)
+						Operate(stack, val);
+					else
+						Push(stack, val);
+					break;
+				}
 			}
 		}
 
-		PartB = grandSum.ToString();
+		var part2 = grandSum.ToString();
+
+		return (part1, part2);
 	}
 }

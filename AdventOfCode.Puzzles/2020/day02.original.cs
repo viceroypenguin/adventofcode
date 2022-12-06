@@ -1,17 +1,15 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2020;
 
-public class Day_2020_02_Original : Day
+[Puzzle(2020, 2, CodeType.Original)]
+public partial class Day_02_Original : IPuzzle
 {
-	public override int Year => 2020;
-	public override int DayNumber => 2;
-	public override CodeType CodeType => CodeType.Original;
+	[GeneratedRegex("(?<min>\\d+)-(?<max>\\d+) (?<char>\\w): (?<pass>\\w+)")]
+	private static partial Regex PasswordRegex();
 
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var regex = new Regex(@"(?<min>\d+)-(?<max>\d+) (?<char>\w): (?<pass>\w+)");
-		var matches = input.GetLines()
+		var regex = PasswordRegex();
+		var matches = input.Lines
 			.Select(l => regex.Match(l))
 			.Select(m => new
 			{
@@ -22,14 +20,16 @@ public class Day_2020_02_Original : Day
 			})
 			.ToArray();
 
-		PartA = matches
+		var part1 = matches
 			.Where(x => x.pass.Where(c => c == x.chr).CountBetween(x.min, x.max))
 			.Count()
 			.ToString();
 
-		PartB = matches
+		var part2 = matches
 			.Where(x => x.pass[x.min - 1] == x.chr ^ x.pass[x.max - 1] == x.chr)
 			.Count()
 			.ToString();
+
+		return (part1, part2);
 	}
 }

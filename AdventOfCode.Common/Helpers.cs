@@ -13,6 +13,17 @@ public static class Helpers
 		return min <= value && value <= max;
 	}
 
+	[MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
+	public static long gcd(long a, long b)
+	{
+		while (b != 0) b = a % (a = b);
+		return a;
+	}
+
+	[MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
+	public static long lcm(long a, long b) =>
+		a * b / gcd(a, b);
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
 	public static (int value, int numChars) AtoI(this ReadOnlySpan<byte> bytes)
 	{

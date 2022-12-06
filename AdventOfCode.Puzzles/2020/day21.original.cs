@@ -1,17 +1,15 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2020;
 
-public class Day_2020_21_Original : Day
+[Puzzle(2020, 21, CodeType.Original)]
+public partial class Day_21_Original : IPuzzle
 {
-	public override int Year => 2020;
-	public override int DayNumber => 21;
-	public override CodeType CodeType => CodeType.Original;
+	[GeneratedRegex("^((?<ingredient>\\w+) )+\\(contains ((?<allergen>\\w+)(, )?)+\\)$", RegexOptions.ExplicitCapture)]
+	private static partial Regex IngredientRegex();
 
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var regex = new Regex(@"^((?<ingredient>\w+) )+\(contains ((?<allergen>\w+)(, )?)+\)$", RegexOptions.ExplicitCapture);
-		var recipes = input.GetLines()
+		var regex = IngredientRegex();
+		var recipes = input.Lines
 			.Select(l => regex.Match(l))
 			.Select(m => (
 				ingredients: m.Groups["ingredient"].Captures.Select(c => c.Value).ToList(),
@@ -37,7 +35,9 @@ public class Day_2020_21_Original : Day
 			}
 		} while (allergens.Count != 0);
 
-		PartA = recipes.SelectMany(r => r.ingredients).Count().ToString();
-		PartB = string.Join(",", allergenMap.OrderBy(kvp => kvp.Key).Select(kvp => kvp.Value));
+		var part1 = recipes.SelectMany(r => r.ingredients).Count().ToString();
+		var part2 = string.Join(",", allergenMap.OrderBy(kvp => kvp.Key).Select(kvp => kvp.Value));
+
+		return (part1, part2);
 	}
 }

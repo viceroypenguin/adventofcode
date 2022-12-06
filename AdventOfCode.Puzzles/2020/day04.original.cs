@@ -1,18 +1,13 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2020;
 
-public class Day_2020_04_Original : Day
+[Puzzle(2020, 4, CodeType.Original)]
+public class Day_04_Original : IPuzzle
 {
-	public override int Year => 2020;
-	public override int DayNumber => 4;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
 		var required = new[] { "byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid", };
 
-		var passports = input.GetLines(StringSplitOptions.TrimEntries)
+		var passports = input.Lines
 			.Segment(l => string.IsNullOrWhiteSpace(l))
 			.Select(l => l.SelectMany(s => s.Split())
 				.Where(s => !string.IsNullOrWhiteSpace(s))
@@ -21,7 +16,7 @@ public class Day_2020_04_Original : Day
 					a => a[0],
 					a => a[1]));
 
-		PartA = passports
+		var part1 = passports
 			.Where(p => required.All(r => p.ContainsKey(r)))
 			.Count()
 			.ToString();
@@ -40,7 +35,7 @@ public class Day_2020_04_Original : Day
 					&& Regex.IsMatch(p["pid"], "^\\d{9}$")))
 			.ToArray();
 
-		PartB = isValidPassports.Where(x => x.isValid).Count().ToString();
+		var part2 = isValidPassports.Where(x => x.isValid).Count().ToString();
 
 		static bool IsValidHeight(string s) =>
 			s.Length >= 4
@@ -50,5 +45,7 @@ public class Day_2020_04_Original : Day
 				"cm" => Convert.ToInt32(s[..^2]).Between(150, 193),
 				_ => false,
 			});
+
+		return (part1, part2);
 	}
 }

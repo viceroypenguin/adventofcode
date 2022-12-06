@@ -1,13 +1,8 @@
-﻿using System.Collections.Immutable;
+﻿namespace AdventOfCode.Puzzles._2020;
 
-namespace AdventOfCode;
-
-public class Day_2020_20_Original : Day
+[Puzzle(2020, 20, CodeType.Original)]
+public class Day_20_Original : IPuzzle
 {
-	public override int Year => 2020;
-	public override int DayNumber => 20;
-	public override CodeType CodeType => CodeType.Original;
-
 	private record ModularArray<T>(IReadOnlyList<T> Items)
 	{
 		public T this[int index] =>
@@ -51,11 +46,9 @@ public class Day_2020_20_Original : Day
 	private int _sideLength;
 	private List<(int tileId, int orientation)> _stack;
 
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var segments = input.GetLines(StringSplitOptions.None)
+		var segments = input.Lines
 			.Where(s => !string.IsNullOrWhiteSpace(s))
 			.Segment(s => s.StartsWith("Tile"))
 			.ToList();
@@ -78,7 +71,7 @@ public class Day_2020_20_Original : Day
 			(ulong)_stack[(_sideLength - 1) * _sideLength].tileId *
 			(ulong)_stack[_sideLength * _sideLength - 1].tileId;
 
-		PartA = prod.ToString();
+		var part1 = prod.ToString();
 
 		var map = _stack.Batch(_sideLength)
 			.SelectMany(r => r.Select(x => GetRotatedMap(_tiles[x.tileId].InnerMap, x.orientation))
@@ -86,7 +79,7 @@ public class Day_2020_20_Original : Day
 			.Select(x => x.ToList())
 			.ToList();
 
-		for (int i = 0; i < 8; i++)
+		for (int i = 0; ; i++)
 		{
 			var nessie = GetRotatedMap(Nessie.Select(s => s.ToList()).ToList(), i)
 				.Select(x => x.ToList()).ToList();
@@ -99,8 +92,8 @@ public class Day_2020_20_Original : Day
 				loc = FindNessie(map, nessie, loc.Value);
 			}
 
-			PartB = map.SelectMany(x => x).Count(x => x == '#').ToString();
-			return;
+			var part2 = map.SelectMany(x => x).Count(x => x == '#').ToString();
+			return (part1, part2);
 		}
 	}
 

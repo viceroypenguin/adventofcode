@@ -1,26 +1,24 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2020;
 
-public class Day_2020_08_Original : Day
+[Puzzle(2020, 8, CodeType.Original)]
+public partial class Day_08_Original : IPuzzle
 {
-	public override int Year => 2020;
-	public override int DayNumber => 8;
-	public override CodeType CodeType => CodeType.Original;
+	[GeneratedRegex("^(?<inst>\\w+) (?<val>(\\+|-)?\\d+)$")]
+	private static partial Regex InstructionsRegex();
 
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var regex = new Regex(@"^(?<inst>\w+) (?<val>(\+|-)?\d+)$");
-		var instructions = input.GetLines()
+		var regex = InstructionsRegex();
+		var instructions = input.Lines
 			.Select(l => regex.Match(l))
 			.Select(m => (
 				opcode: m.Groups["inst"].Value,
 				value: Convert.ToInt32(m.Groups["val"].Value)))
 			.ToArray();
 
-		PartA = RunProgram(instructions).acc.ToString();
+		var part1 = RunProgram(instructions).acc.ToString();
 
-		for (int i = 0; i < instructions.Length; i++)
+		for (var i = 0; ; i++)
 		{
 			var orig = instructions[i];
 			if (orig.opcode == "acc") continue;
@@ -34,8 +32,8 @@ public class Day_2020_08_Original : Day
 			var (looped, acc) = RunProgram(instructions);
 			if (!looped)
 			{
-				PartB = acc.ToString();
-				return;
+				var part2 = acc.ToString();
+				return (part1, part2);
 			}
 			else
 				instructions[i] = orig;

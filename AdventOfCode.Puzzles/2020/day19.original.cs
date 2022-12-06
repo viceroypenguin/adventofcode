@@ -1,17 +1,11 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2020;
 
-public class Day_2020_19_Original : Day
+[Puzzle(2020, 19, CodeType.Original)]
+public class Day_19_Original : IPuzzle
 {
-	public override int Year => 2020;
-	public override int DayNumber => 19;
-	public override CodeType CodeType => CodeType.Original;
-
-	[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var segments = input.GetLines(StringSplitOptions.None)
+		var segments = input.Lines
 			.Segment(string.IsNullOrWhiteSpace)
 			.ToArray();
 
@@ -39,9 +33,11 @@ public class Day_2020_19_Original : Day
 		}
 
 		var regex = new Regex("^" + BuildRegex("0") + "$");
-		PartA = segments[1].Count(regex.IsMatch).ToString();
+		var part1 = segments[1].Count(regex.IsMatch).ToString();
 
 		regex = new Regex($@"^({BuildRegex("42")})+(?<open>{BuildRegex("42")})+(?<close-open>{BuildRegex("31")})+(?(open)(?!))$");
-		PartB = segments[1].Count(regex.IsMatch).ToString();
+		var part2 = segments[1].Count(regex.IsMatch).ToString();
+
+		return (part1, part2);
 	}
 }

@@ -1,27 +1,22 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics;
 using System.Runtime.Intrinsics.X86;
 
-namespace AdventOfCode;
+namespace AdventOfCode.Puzzles._2020;
 
-public class Day_2020_11_Fastest : Day
+[Puzzle(2020, 11, CodeType.Fastest)]
+public class Day_11_Fastest : IPuzzle
 {
-	public override int Year => 2020;
-	public override int DayNumber => 11;
-	public override CodeType CodeType => CodeType.Fastest;
-
 	private const byte Floor = 16;
 	private const byte Occupied = 1;
 	private const byte Empty = 0;
 
-	[MethodImpl(MethodImplOptions.AggressiveOptimization)]
 	[SkipLocalsInit]
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var width = FindWidth(input);
-		var height = input.Length / (width + 1);
+		var width = FindWidth(input.Bytes);
+		var height = input.Bytes.Length / (width + 1);
 
 		var lanes = (width + 31) / 32 * 32;
 		var simdMapWidth = lanes + 4;
@@ -31,15 +26,17 @@ public class Day_2020_11_Fastest : Day
 		Span<byte> counts = stackalloc byte[simdMapWidth * (height + 4)];
 		Span<(int i, int j)> gaps = stackalloc (int, int)[2048];
 
-		CopyMap(input, map1, width, simdMapWidth);
+		CopyMap(input.Bytes, map1, width, simdMapWidth);
 		map2.Fill(Floor);
 
-		PartA = DoPartA(map1, map2, counts, lanes, simdMapWidth, height).ToString();
+		var part1 = DoPartA(map1, map2, counts, lanes, simdMapWidth, height).ToString();
 
-		CopyMap(input, map1, width, simdMapWidth);
+		CopyMap(input.Bytes, map1, width, simdMapWidth);
 		map2.Fill(Floor);
 
-		PartB = DoPartB(map1, map2, counts, gaps, lanes, simdMapWidth, height).ToString();
+		var part2 = DoPartB(map1, map2, counts, gaps, lanes, simdMapWidth, height).ToString();
+
+		return (part1, part2);
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]

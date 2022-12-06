@@ -1,25 +1,24 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2020;
 
-public class Day_2020_07_Original : Day
+[Puzzle(2020, 7, CodeType.Original)]
+public partial class Day_07_Original : IPuzzle
 {
-	public override int Year => 2020;
-	public override int DayNumber => 7;
-	public override CodeType CodeType => CodeType.Original;
+	[GeneratedRegex("^(?<container>[\\w ]+?) bags contain ((?<none>no other bags)|((?<contained>[\\w ]+) bags?,? ?)+).$", RegexOptions.ExplicitCapture)]
+	private static partial Regex BagsRegex();
 
-	protected override void ExecuteDay(byte[] input)
+	[GeneratedRegex("^(\\d+) (.*)$")]
+	private static partial Regex ContainedRegex();
+
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
+		var regex = BagsRegex();
 
-		var regex = new Regex(
-			@"^(?<container>[\w ]+?) bags contain ((?<none>no other bags)|((?<contained>[\w ]+) bags?,? ?)+).$",
-			RegexOptions.ExplicitCapture);
-
-		var bagRules = input.GetLines()
+		var bagRules = input.Lines
 			.Select(l => regex.Match(l))
 			.ToDictionary(
 				m => m.Groups["container"].Value,
 				m => m.Groups["contained"].Captures
-					.Select(c => Regex.Match(c.Value, @"^(\d+) (.*)$"))
+					.Select(c => ContainedRegex().Match(c.Value))
 					.Select(m => (
 						count: Convert.ToInt32(m.Groups[1].Value),
 						color: m.Groups[2].Value))
@@ -42,10 +41,12 @@ public class Day_2020_07_Original : Day
 		}
 
 		visitReverse("shiny gold");
-		PartA = (visited.Count - 1).ToString();
+		var part1 = (visited.Count - 1).ToString();
 
 		int bagTotal(string color) =>
 			1 + bagRules[color].Sum(x => x.count * bagTotal(x.color));
-		PartB = (bagTotal("shiny gold") - 1).ToString();
+		var part2 = (bagTotal("shiny gold") - 1).ToString();
+
+		return (part1, part2);
 	}
 }

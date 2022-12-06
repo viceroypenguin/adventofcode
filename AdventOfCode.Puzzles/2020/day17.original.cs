@@ -1,22 +1,18 @@
 ﻿using System.Collections.Immutable;
 
-namespace AdventOfCode;
+namespace AdventOfCode.Puzzles._2020;
 
-public class Day_2020_17_Original : Day
+[Puzzle(2020, 17, CodeType.Original)]
+public class Day_17_Original : IPuzzle
 {
-	public override int Year => 2020;
-	public override int DayNumber => 17;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		DoPartA(input);
-		DoPartB(input);
+		var part1 = DoPartA(input.Bytes);
+		var part2 = DoPartB(input.Bytes);
+		return (part1, part2);
 	}
 
-	private void DoPartA(byte[] input)
+	private string DoPartA(byte[] input)
 	{
 		var state = new Dictionary<(int x, int y, int z), bool>(1024);
 		int _x = 0, _y = 0;
@@ -55,10 +51,10 @@ public class Day_2020_17_Original : Day
 				};
 		}
 
-		PartA = state.Where(kvp => kvp.Value).Count().ToString();
+		return state.Where(kvp => kvp.Value).Count().ToString();
 	}
 
-	private void DoPartB(byte[] input)
+	private string DoPartB(byte[] input)
 	{
 		var state = new Dictionary<(int x, int y, int z, int w), bool>(8192);
 		int _x = 0, _y = 0;
@@ -98,6 +94,6 @@ public class Day_2020_17_Original : Day
 				};
 		}
 
-		PartB = state.Where(kvp => kvp.Value).Count().ToString();
+		return state.Where(kvp => kvp.Value).Count().ToString();
 	}
 }

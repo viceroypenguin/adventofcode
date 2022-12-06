@@ -16,6 +16,7 @@ public class PuzzleRunner
 
 	private static readonly Assembly[] assemblies =
 	{
+		Assembly.GetAssembly(typeof(Puzzles._2020.Day_01_Original))!,
 		Assembly.GetAssembly(typeof(Puzzles._2021.Day_01_Original))!,
 		Assembly.GetAssembly(typeof(Puzzles._2022.Day_01_Original))!,
 	};
@@ -93,7 +94,7 @@ public class PuzzleRunner
 		var elapsed = sw.Elapsed;
 
 		// run twice to get better timings
-		if (elapsed < TimeSpan.FromMilliseconds(100))
+		if (elapsed < TimeSpan.FromMilliseconds(500))
 		{
 			sw.Restart();
 			puzzle.Solve(rawInput);

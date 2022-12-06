@@ -1,19 +1,13 @@
-﻿using static AdventOfCode.Helpers;
+﻿using static AdventOfCode.Common.Helpers;
 
-namespace AdventOfCode;
+namespace AdventOfCode.Puzzles._2020;
 
-public class Day_2020_13_Fastest : Day
+[Puzzle(2020, 13, CodeType.Fastest)]
+public class Day_13_Fastest : IPuzzle
 {
-	public override int Year => 2020;
-	public override int DayNumber => 13;
-	public override CodeType CodeType => CodeType.Fastest;
-
-	[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var span = new ReadOnlySpan<byte>(input);
+		var span = new ReadOnlySpan<byte>(input.Bytes);
 		var (myTime, i) = span.AtoI();
 		i++;
 
@@ -48,7 +42,8 @@ public class Day_2020_13_Fastest : Day
 			increment = lcm(increment, id);
 		}
 
-		PartA = (minTimeAfter.id * minTimeAfter.timeAfter).ToString();
-		PartB = time.ToString();
+		var part1 = (minTimeAfter.id * minTimeAfter.timeAfter).ToString();
+		var part2 = time.ToString();
+		return (part1, part2);
 	}
 }

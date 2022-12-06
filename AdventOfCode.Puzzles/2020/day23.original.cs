@@ -1,21 +1,18 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2020;
 
-public class Day_2020_23_Original : Day
+[Puzzle(2020, 23, CodeType.Original)]
+public class Day_23_Original : IPuzzle
 {
-	public override int Year => 2020;
-	public override int DayNumber => 23;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
+		var bytes = input.Bytes;
 
 		var list = new int[10];
-		list[input[8] - 0x30] = input[0] - 0x30;
+		list[bytes[8] - 0x30] = bytes[0] - 0x30;
 		for (int i = 0; i < 8; i++)
-			list[input[i] - 0x30] = input[i + 1] - 0x30;
+			list[bytes[i] - 0x30] = bytes[i + 1] - 0x30;
 
-		var idx = input[0] - 0x30;
+		var idx = bytes[0] - 0x30;
 		for (int i = 0; i < 100; i++)
 			idx = Step(list, idx, 9);
 
@@ -29,25 +26,27 @@ public class Day_2020_23_Original : Day
 			idx = list[idx];
 		} while (idx != 1);
 
-		PartA = new string(output);
+		var part1 = new string(output);
 
 		// so list[1_000_000] is valid
 		list = new int[1_000_001];
 		for (int i = 0; i < 8; i++)
-			list[input[i] - 0x30] = input[i + 1] - 0x30;
-		list[input[8] - 0x30] = 10;
+			list[bytes[i] - 0x30] = bytes[i + 1] - 0x30;
+		list[bytes[8] - 0x30] = 10;
 
 		for (int i = 10; i < 1_000_000; i++)
 			list[i] = i + 1;
-		list[1_000_000] = input[0] - 0x30;
+		list[1_000_000] = bytes[0] - 0x30;
 
-		idx = input[0] - 0x30;
+		idx = bytes[0] - 0x30;
 		for (int i = 0; i < 10_000_000; i++)
 			idx = Step(list, idx, 1_000_000);
 
 		var v1 = (ulong)list[1];
 		var v2 = (ulong)list[v1];
-		PartB = (v1 * v2).ToString();
+		var part2 = (v1 * v2).ToString();
+
+		return (part1, part2);
 	}
 
 	private static int Step(int[] list, int idx, int maxValue)

@@ -1,16 +1,11 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2020;
 
-public class Day_2020_15_Original : Day
+[Puzzle(2020, 15, CodeType.Original)]
+public class Day_15_Original : IPuzzle
 {
-	public override int Year => 2020;
-	public override int DayNumber => 15;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var numbers = input.GetString()
+		var numbers = input.Text
 			.Split(',')
 			.Select(int.Parse)
 			.ToArray();
@@ -30,7 +25,7 @@ public class Day_2020_15_Original : Day
 			curNumber = prevTime != -1 ? i - prevTime : 0;
 		}
 
-		PartA = curNumber.ToString();
+		var part1 = curNumber.ToString();
 
 		for (; i < 30_000_000; i++)
 		{
@@ -39,6 +34,8 @@ public class Day_2020_15_Original : Day
 			curNumber = prevTime != -1 ? i - prevTime : 0;
 		}
 
-		PartB = curNumber.ToString();
+		var part2 = curNumber.ToString();
+
+		return (part1, part2);
 	}
 }

@@ -1,22 +1,17 @@
-﻿using static AdventOfCode.Helpers;
+﻿using static AdventOfCode.Common.Helpers;
 
-namespace AdventOfCode;
+namespace AdventOfCode.Puzzles._2020;
 
-public class Day_2020_13_Original : Day
+[Puzzle(2020, 13, CodeType.Original)]
+public class Day_13_Original : IPuzzle
 {
-	public override int Year => 2020;
-	public override int DayNumber => 13;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var lines = input.GetLines();
+		var lines = input.Lines;
 		var times = lines[1].Split(',');
 
 		var myEarliestTime = int.Parse(lines[0]);
-		PartA = times
+		var part1 = times
 			.Where(s => s != "x")
 			.Select(int.Parse)
 			.Select(b => (bus: b, firstTimeAfter: (myEarliestTime / b + 1) * b - myEarliestTime))
@@ -38,6 +33,8 @@ public class Day_2020_13_Original : Day
 			increment = lcm(increment, curTime);
 		}
 
-		PartB = earliestTime.ToString();
+		var part2 = earliestTime.ToString();
+
+		return (part1, part2);
 	}
 }

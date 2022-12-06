@@ -1,17 +1,12 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2020;
 
-public class Day_2020_09_Fastest : Day
+[Puzzle(2020, 9, CodeType.Fastest)]
+public class Day_09_Fastest : IPuzzle
 {
-	public override int Year => 2020;
-	public override int DayNumber => 9;
-	public override CodeType CodeType => CodeType.Fastest;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var span = new ReadOnlySpan<byte>(input);
-		Span<long> arr = stackalloc long[input.Length / 8];
+		var span = new ReadOnlySpan<byte>(input.Bytes);
+		Span<long> arr = stackalloc long[input.Bytes.Length / 8];
 		int maxIndex = 0;
 
 		for (int i = 0; i < span.Length;)
@@ -22,6 +17,7 @@ public class Day_2020_09_Fastest : Day
 		}
 
 		var invalidNumber = 0L;
+		var part1 = string.Empty;
 		for (int i = 25; i < maxIndex; i++)
 		{
 			for (int j = i - 25; j < i; j++)
@@ -29,7 +25,7 @@ public class Day_2020_09_Fastest : Day
 					if (arr[j] + arr[k] == arr[i])
 						goto found_match;
 
-			PartA = (invalidNumber = arr[i]).ToString();
+			part1 = (invalidNumber = arr[i]).ToString();
 			break;
 
 found_match:
@@ -54,6 +50,8 @@ found_match:
 				Math.Min(min, arr[i]),
 				Math.Max(max, arr[i]));
 
-		PartB = (min + max).ToString();
+		var part2 = (min + max).ToString();
+
+		return (part1, part2);
 	}
 }
