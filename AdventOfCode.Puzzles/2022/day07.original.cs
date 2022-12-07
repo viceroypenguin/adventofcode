@@ -6,7 +6,7 @@ public partial class Day_07_Original : IPuzzle
 	public (string, string) Solve(PuzzleInput input)
 	{
 		var cwd = string.Empty;
-		var dirs = new Dictionary<string, List<(string name, int size)>>();
+		var dirs = new Dictionary<string, Dictionary<string, int>>();
 
 		foreach (var l in input.Lines)
 		{
@@ -16,8 +16,7 @@ public partial class Day_07_Original : IPuzzle
 				var name = cwd[previousSlash..^1];
 				var parent = cwd[..previousSlash];
 
-				var idx = dirs[parent].FindIndex(x => x.name == name);
-				dirs[parent][idx] = (name, dirs[cwd].Sum(x => x.size));
+				dirs[parent][name] = dirs[cwd].Values.Sum();
 
 				cwd = parent;
 			}
@@ -28,16 +27,14 @@ public partial class Day_07_Original : IPuzzle
 			}
 			else if (l.StartsWith("dir"))
 			{
-				dirs.GetOrAdd(cwd, _ => new())
-					.Add((name: l[4..], size: 0));
+				dirs.GetOrAdd(cwd, _ => new())[l[4..]] = 0;
 			}
 			else if (!l.StartsWith("$ ls"))
 			{
 				var size = int.Parse(l.Split()[0]);
 				var name = l.Split()[1];
 
-				dirs.GetOrAdd(cwd, _ => new())
-					.Add((name, size));
+				dirs.GetOrAdd(cwd, _ => new())[name] = size;
 			}
 		}
 
@@ -47,21 +44,20 @@ public partial class Day_07_Original : IPuzzle
 			var name = cwd[previousSlash..^1];
 			var parent = cwd[..previousSlash];
 
-			var idx = dirs[parent].FindIndex(x => x.name == name);
-			dirs[parent][idx] = (name, dirs[cwd].Sum(x => x.size));
+			dirs[parent][name] = dirs[cwd].Values.Sum();
 
 			cwd = parent;
 		}
 
-		var part1 = dirs.Values.Select(v => v.Sum(x => x.size))
+		var part1 = dirs.Values.Select(v => v.Values.Sum())
 			.Where(x => x <= 100_000)
 			.Sum()
 			.ToString();
 
-		var unused = 70_000_000 - dirs["/"].Sum(x => x.size);
+		var unused = 70_000_000 - dirs["/"].Values.Sum();
 		var needed = 30_000_000 - unused;
 
-		var part2 = dirs.Values.Select(v => v.Sum(x => x.size))
+		var part2 = dirs.Values.Select(v => v.Values.Sum())
 			.Where(x => x >= needed)
 			.Min()
 			.ToString();
