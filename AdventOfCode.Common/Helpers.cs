@@ -182,4 +182,14 @@ public static class Helpers
 			.Consume();
 	}
 	#endregion
+
+	#region Dictionary
+	public static TValue GetOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, Func<TKey, TValue> func)
+		where TKey : notnull
+	{
+		if (dict.TryGetValue(key, out var value))
+			return value;
+		return dict[key] = func(key);
+	}
+	#endregion
 }
