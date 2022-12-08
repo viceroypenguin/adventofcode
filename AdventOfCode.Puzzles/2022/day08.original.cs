@@ -61,12 +61,12 @@ public partial class Day_08_Original : IPuzzle
 				}
 			}
 
-		var part2 = 0L;
+		var part2 = 0;
 		for (int y = 0; y < map.Length; y++)
 			for (int x = 0; x < map[y].Length; x++)
 			{
 				var height = map[y][x];
-				var product = 1L;
+				var product = 1;
 
 				// w
 				var cnt = 0;
