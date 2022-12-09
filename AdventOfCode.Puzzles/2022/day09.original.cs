@@ -3,37 +3,24 @@
 [Puzzle(2022, 9, CodeType.Original)]
 public partial class Day_09_Original : IPuzzle
 {
-	public (string, string) Solve(PuzzleInput input)
+	public (string part1, string part2) Solve(PuzzleInput input) =>
+		(
+			part1: RunInstructions(input.Lines, 2).ToString(),
+			part2: RunInstructions(input.Lines, 10).ToString());
+
+	static int RunInstructions(string[] instructions, int snakeLength)
 	{
-		var head = (x: 0, y: 0);
-		var tail = (x: 0, y: 0);
+		Span<(int x, int y)> snake = new (int x, int y)[snakeLength];
 		var tailVisited = new HashSet<(int, int)>() { (0, 0), };
 
-		foreach (var l in input.Lines)
-		{
-			var cnt = int.Parse(l.AsSpan()[2..]);
-			for (int i = 0; i < cnt; i++)
-			{
-				head = MoveHead(head, l[0]);
-				tail = MoveFollower(head, tail);
-
-				tailVisited.Add(tail);
-			}
-		}
-
-		var part1 = tailVisited.Count.ToString();
-
-		var snake = new (int x, int y)[10];
-		tailVisited = new HashSet<(int, int)>() { (0, 0), };
-
-		foreach (var l in input.Lines)
+		foreach (var l in instructions)
 		{
 			var cnt = int.Parse(l.AsSpan()[2..]);
 			for (int i = 0; i < cnt; i++)
 			{
 				snake[0] = MoveHead(snake[0], l[0]);
 
-				for (int j = 1; j < 10; j++)
+				for (int j = 1; j < snakeLength; j++)
 				{
 					var newTail = MoveFollower(snake[j - 1], snake[j]);
 
@@ -47,9 +34,7 @@ public partial class Day_09_Original : IPuzzle
 			}
 		}
 
-		var part2 = tailVisited.Count.ToString();
-
-		return (part1, part2);
+		return tailVisited.Count;
 	}
 
 	static (int x, int y) MoveHead((int x, int y) head, char dir) =>
