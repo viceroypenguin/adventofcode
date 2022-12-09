@@ -15,7 +15,7 @@ public partial class Day_09_Original : IPuzzle
 
 		foreach (var l in instructions)
 		{
-			var cnt = int.Parse(l.AsSpan()[2..]);
+			var (cnt, _) = l.AsSpan()[2..].AtoI();
 			for (int i = 0; i < cnt; i++)
 			{
 				snake[0] = MoveHead(snake[0], l[0]);
