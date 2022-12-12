@@ -23,33 +23,22 @@ public partial class Day_12_Original : IPuzzle
 		map[start.y][start.x] = (byte)'a';
 		map[end.y][end.x] = (byte)'z';
 
-		var cost = SuperEnumerable.GetShortestPathCost<(int x, int y), int>(
-			start,
+		var costs = SuperEnumerable.GetShortestPaths<(int x, int y), int>(
+			end,
 			(p, c) => p.GetCartesianNeighbors(map)
-				.Where(q => map[q.y][q.x] - map[p.y][p.x] <= 1)
-				.Select(q => (q, c + 1)),
-			end);
+				.Where(q => map[p.y][p.x] - map[q.y][q.x] <= 1)
+				.Select(q => (q, c + 1)));
 
-		var part1 = cost.ToString();
+		var part1 = costs[start].cost.ToString();
 
 		var part2 = int.MaxValue;
 		for (int y = 0; y < map.Length; y++)
 			for (int x = 0; x < map[y].Length; x++)
-				if (map[y][x] == (byte)'a')
+				if (map[y][x] == (byte)'a'
+					&& costs.TryGetValue((x, y), out var c)
+					&& c.cost < part2)
 				{
-					try
-					{
-						var curCost = SuperEnumerable.GetShortestPathCost<(int x, int y), int>(
-							(x, y),
-							(p, c) => p.GetCartesianNeighbors(map)
-								.Where(q => map[q.y][q.x] - map[p.y][p.x] <= 1)
-								.Select(q => (q, c + 1)),
-							end);
-						if (curCost < part2)
-							part2 = curCost;
-					}
-					// don't care if we can't reach end
-					catch { }
+					part2 = costs[(x, y)].cost;
 				}
 
 		return (part1, part2.ToString());
