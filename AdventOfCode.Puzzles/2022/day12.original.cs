@@ -31,16 +31,12 @@ public partial class Day_12_Original : IPuzzle
 
 		var part1 = costs[start].cost.ToString();
 
-		var part2 = int.MaxValue;
-		for (int y = 0; y < map.Length; y++)
-			for (int x = 0; x < map[y].Length; x++)
-				if (map[y][x] == (byte)'a'
-					&& costs.TryGetValue((x, y), out var c)
-					&& c.cost < part2)
-				{
-					part2 = costs[(x, y)].cost;
-				}
+		var part2 = map.GetMapPoints()
+			.Where(x => x.item == (byte)'a')
+			.Select(x => costs.TryGetValue(x.p, out var cost) ? cost.cost : int.MaxValue)
+			.Min()
+			.ToString();
 
-		return (part1, part2.ToString());
+		return (part1, part2);
 	}
 }
