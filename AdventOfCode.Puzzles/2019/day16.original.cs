@@ -43,7 +43,7 @@ public class Day_16_Original : IPuzzle
 	}
 
 	private static readonly int[] BasePattern = { 0, 1, 0, -1 };
-	private int[][] BuildTransforms(int count) =>
+	private static int[][] BuildTransforms(int count) =>
 		Enumerable.Range(1, count)
 			.Select(i => Enumerable.Range(0, count)
 				.Select(j => BasePattern[((j + 1) / i) % 4])

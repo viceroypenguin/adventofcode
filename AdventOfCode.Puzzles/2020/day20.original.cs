@@ -254,7 +254,7 @@ public class Day_20_Original : IPuzzle
 		return default;
 	}
 
-	private bool IsNessieHere(IReadOnlyList<IReadOnlyList<char>> map, IReadOnlyList<IReadOnlyList<char>> nessie, (int x, int y) loc)
+	private static bool IsNessieHere(IReadOnlyList<IReadOnlyList<char>> map, IReadOnlyList<IReadOnlyList<char>> nessie, (int x, int y) loc)
 	{
 		for (int y = 0; y < nessie.Count; y++)
 			for (int x = 0; x < nessie[y].Count; x++)
@@ -263,7 +263,7 @@ public class Day_20_Original : IPuzzle
 		return true;
 	}
 
-	private void ClearNessie(List<List<char>> map, IReadOnlyList<IReadOnlyList<char>> nessie, (int x, int y) loc)
+	private static void ClearNessie(List<List<char>> map, IReadOnlyList<IReadOnlyList<char>> nessie, (int x, int y) loc)
 	{
 		for (int y = 0; y < nessie.Count; y++)
 			for (int x = 0; x < nessie[y].Count; x++)

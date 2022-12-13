@@ -12,7 +12,7 @@ public class Day_17_Original : IPuzzle
 		return (part1, part2);
 	}
 
-	private string DoPartA(byte[] input)
+	private static string DoPartA(byte[] input)
 	{
 		var state = new Dictionary<(int x, int y, int z), bool>(1024);
 		int _x = 0, _y = 0;
@@ -54,7 +54,7 @@ public class Day_17_Original : IPuzzle
 		return state.Where(kvp => kvp.Value).Count().ToString();
 	}
 
-	private string DoPartB(byte[] input)
+	private static string DoPartB(byte[] input)
 	{
 		var state = new Dictionary<(int x, int y, int z, int w), bool>(8192);
 		int _x = 0, _y = 0;

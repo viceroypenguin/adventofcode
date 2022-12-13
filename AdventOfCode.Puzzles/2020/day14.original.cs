@@ -20,7 +20,7 @@ public partial class Day_14_Original : IPuzzle
 		return (part1, part2);
 	}
 
-	private string DoPartA(Match[] matches)
+	private static string DoPartA(Match[] matches)
 	{
 		var memory = new Dictionary<int, ulong>();
 		var mask = (and: ulong.MaxValue, or: ulong.MinValue);
@@ -48,7 +48,7 @@ public partial class Day_14_Original : IPuzzle
 		return memory.Sum(kvp => (long)kvp.Value).ToString();
 	}
 
-	private string DoPartB(Match[] matches)
+	private static string DoPartB(Match[] matches)
 	{
 		var memory = new Dictionary<ulong, ulong>();
 		var mask = (fl: ulong.MinValue, or: ulong.MinValue);

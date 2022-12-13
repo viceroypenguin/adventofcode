@@ -15,7 +15,7 @@ public class Day_23_Original : IPuzzle
 			DoPartB(instructions));
 	}
 
-	private string DoPartA(long[] instructions)
+	private static string DoPartA(long[] instructions)
 	{
 		var computers = Enumerable.Range(0, 50)
 			.Select(i =>
@@ -52,7 +52,7 @@ public class Day_23_Original : IPuzzle
 		}
 	}
 
-	private string DoPartB(long[] instructions)
+	private static string DoPartB(long[] instructions)
 	{
 		var computers = Enumerable.Range(0, 50)
 			.Select(i =>

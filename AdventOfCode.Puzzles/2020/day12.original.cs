@@ -10,7 +10,7 @@ public class Day_12_Original : IPuzzle
 		return (part1, part2);
 	}
 
-	private string DoPartA(string[] lines)
+	private static string DoPartA(string[] lines)
 	{
 		(int x, int y, int d) Move(int x, int y, int d, int dir, int amount) =>
 			(x, y, d) = dir switch
@@ -44,7 +44,7 @@ public class Day_12_Original : IPuzzle
 		return (Math.Abs(x) + Math.Abs(y)).ToString();
 	}
 
-	private string DoPartB(string[] lines)
+	private static string DoPartB(string[] lines)
 	{
 		(int x, int y, int wayx, int wayy) RotateWaypoint(int x, int y, int wayx, int wayy, int a) =>
 			a switch

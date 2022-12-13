@@ -8,7 +8,7 @@ public class Day_24_Original : IPuzzle
 			DoPartA(input.Bytes),
 			DoPartB(input.Bytes));
 
-	private string DoPartA(byte[] input)
+	private static string DoPartA(byte[] input)
 	{
 		var state = 0;
 		for (int i = 0, b = 1; i < input.Length; i++)
@@ -45,7 +45,7 @@ public class Day_24_Original : IPuzzle
 		}
 	}
 
-	private string DoPartB(byte[] input)
+	private static string DoPartB(byte[] input)
 	{
 		var state = new HashSet<(int x, int y, int z)>();
 		{

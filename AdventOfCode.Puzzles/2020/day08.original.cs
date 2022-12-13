@@ -40,7 +40,7 @@ public partial class Day_08_Original : IPuzzle
 		}
 	}
 
-	private (bool looped, int acc) RunProgram((string opcode, int value)[] program)
+	private static (bool looped, int acc) RunProgram((string opcode, int value)[] program)
 	{
 		var executed = new List<int>();
 		int acc = 0, ip = 0;

@@ -11,7 +11,7 @@ public class Day_14_Original : IPuzzle
 		return (part1, part2);
 	}
 
-	private string DoPartA(string[] lines)
+	private static string DoPartA(string[] lines)
 	{
 		// starting polymer
 		var polymer = lines[0].ToList();
@@ -63,7 +63,7 @@ public class Day_14_Original : IPuzzle
 		return (elements[^1].cnt - elements[0].cnt).ToString();
 	}
 
-	private string DoPartB(string[] lines)
+	private static string DoPartB(string[] lines)
 	{
 		// starting polymer
 		// polymer is now a list of two char keys, and a count of how many instances

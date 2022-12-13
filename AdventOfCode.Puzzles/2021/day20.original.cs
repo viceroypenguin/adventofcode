@@ -60,7 +60,7 @@ public class Day_20_Original : IPuzzle
 			.ToDictionary(x => (x.x, x.y), x => x.b);
 	}
 
-	private void DumpImage(Dictionary<(int x, int y), bool> image, int step)
+	private static void DumpImage(Dictionary<(int x, int y), bool> image, int step)
 	{
 		var minX = image.Min(kvp => kvp.Key.x) - 1;
 		var maxX = image.Max(kvp => kvp.Key.x) + 1;

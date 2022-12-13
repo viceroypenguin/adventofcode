@@ -33,7 +33,7 @@ public partial class Day_22_Original : IPuzzle
 		return (part1, part2);
 	}
 
-	private string DoPartA(List<(bool b, (int lo, int hi) x, (int lo, int hi) y, (int lo, int hi) z)> instructions)
+	private static string DoPartA(List<(bool b, (int lo, int hi) x, (int lo, int hi) y, (int lo, int hi) z)> instructions)
 	{
 		// shortcut for getting every int between lo and hi
 		static IEnumerable<int> GetDimension((int lo, int hi) dim) =>
@@ -63,7 +63,7 @@ public partial class Day_22_Original : IPuzzle
 			.ToString();
 	}
 
-	private string DoPartB(List<(bool b, (int lo, int hi) x, (int lo, int hi) y, (int lo, int hi) z)> instructions)
+	private static string DoPartB(List<(bool b, (int lo, int hi) x, (int lo, int hi) y, (int lo, int hi) z)> instructions)
 	{
 		// keep track of all of the boxes
 		var boxes = new List<(bool b, (int lo, int hi) x, (int lo, int hi) y, (int lo, int hi) z)>();

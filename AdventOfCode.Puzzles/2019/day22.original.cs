@@ -37,7 +37,7 @@ public partial class Day_22_Original : IPuzzle
 			DoPartB(instructions));
 	}
 
-	private string DoPartA(List<(Instruction, int)> instructions)
+	private static string DoPartA(List<(Instruction, int)> instructions)
 	{
 		const long DeckSize = 10007;
 		const long InitialCard = 2019;
@@ -52,7 +52,7 @@ public partial class Day_22_Original : IPuzzle
 			.ToString();
 	}
 
-	private string DoPartB(List<(Instruction, int)> instructions)
+	private static string DoPartB(List<(Instruction, int)> instructions)
 	{
 		const long Shuffles = 101741582076661L;
 		const long DeckSize = 119315717514047L;
