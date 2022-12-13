@@ -12,8 +12,8 @@ public static class ProjectionEqualityComparer
 	/// depending on how the <paramref name="equalityFunction"/> relates to the
 	/// default hashcode for <typeparamref name="T"/>.
 	/// </remarks>
-	public static IEqualityComparer<T> Create<T>(Func<T, T, bool> equalityFunction) =>
-		new ProjectionEqualityComparerImpl<T>(equalityFunction, EqualityComparer<T>.Default.GetHashCode);
+	public static IEqualityComparer<T> Create<T>(Func<T?, T?, bool> equalityFunction) =>
+		new ProjectionEqualityComparerImpl<T>(equalityFunction, EqualityComparer<T>.Default.GetHashCode!);
 
 	/// <summary>
 	/// Creates an equality comparer using the provided functions
@@ -21,7 +21,7 @@ public static class ProjectionEqualityComparer
 	/// <param name="equalityFunction">The equality function</param>
 	/// <param name="hashFunction">The hash function</param>
 	/// <returns>The new comparer</returns>
-	public static IEqualityComparer<T> Create<T>(Func<T, T, bool> equalityFunction, Func<T, int> hashFunction) =>
+	public static IEqualityComparer<T> Create<T>(Func<T?, T?, bool> equalityFunction, Func<T, int> hashFunction) =>
 		new ProjectionEqualityComparerImpl<T>(equalityFunction, hashFunction);
 
 	private class ProjectionEqualityComparerImpl<T> : EqualityComparer<T>
@@ -29,7 +29,7 @@ public static class ProjectionEqualityComparer
 		/// <summary>
 		/// Type specific equality function
 		/// </summary>
-		private readonly Func<T, T, bool> equalityFunction;
+		private readonly Func<T?, T?, bool> equalityFunction;
 
 		/// <summary>
 		/// Type specific hash function
@@ -41,14 +41,14 @@ public static class ProjectionEqualityComparer
 		/// </summary>
 		/// <param name="equalityFunction">The equality function</param>
 		/// <param name="hashFunction">The hash function</param>
-		public ProjectionEqualityComparerImpl(Func<T, T, bool> equalityFunction, Func<T, int> hashFunction)
+		public ProjectionEqualityComparerImpl(Func<T?, T?, bool> equalityFunction, Func<T, int> hashFunction)
 		{
 			this.equalityFunction = equalityFunction ?? throw new ArgumentNullException(nameof(equalityFunction));
 			this.hashFunction = hashFunction ?? throw new ArgumentNullException(nameof(hashFunction));
 		}
 
 		/// <inheritdoc/>
-		public override bool Equals(T x, T y) => this.equalityFunction(x, y);
+		public override bool Equals(T? x, T? y) => this.equalityFunction(x, y);
 
 		/// <inheritdoc/>
 		public override int GetHashCode(T obj) => this.hashFunction(obj);
