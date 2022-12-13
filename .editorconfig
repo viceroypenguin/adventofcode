@@ -126,3 +126,10 @@ csharp_preserve_single_line_blocks = true
 csharp_style_namespace_declarations = file_scoped
 dotnet_diagnostic.IDE0161.severity = error
 csharp_indent_case_contents_when_block=false
+
+dotnet_diagnostic.CA1001.severity = none
+dotnet_diagnostic.CA1305.severity = none
+dotnet_diagnostic.CA1310.severity = none
+dotnet_diagnostic.CA1707.severity = none
+dotnet_diagnostic.CA1852.severity = none
+dotnet_diagnostic.CS8509.severity = none
