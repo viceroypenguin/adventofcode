@@ -19,16 +19,17 @@ public partial class Day_13_Original : IPuzzle
 			.Sum()
 			.ToString();
 
-		var p1 = Parse("[[2]]");
-		var p2 = Parse("[[6]]");
+		var sentinels = new[] { Parse("[[2]]"), Parse("[[6]]"), };
 
 		var ordered = packets
-			.Append(p1)
-			.Append(p2)
+			.Concat(sentinels)
 			.Order(Comparer<Packet>.Create(CompareItem))
 			.ToList();
 
-		var part2 = ((ordered.IndexOf(p1) + 1) * (ordered.IndexOf(p2) + 1)).ToString();
+		var part2 = sentinels
+			.Select(s => ordered.IndexOf(s) + 1)
+			.Aggregate(1, (a, b) => a * b)
+			.ToString();
 
 		return (part1, part2);
 	}
