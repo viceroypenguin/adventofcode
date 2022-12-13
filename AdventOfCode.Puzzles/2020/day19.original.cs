@@ -23,7 +23,7 @@ public class Day_19_Original : IPuzzle
 			if (orig.StartsWith('\"'))
 				return processed[input] = orig.Replace("\"", "");
 
-			if (!orig.Contains("|"))
+			if (!orig.Contains('|'))
 				return processed[input] = string.Join("", orig.Split().Select(BuildRegex));
 
 			return processed[input] =

@@ -11,10 +11,10 @@ public class Day_20_Original : IPuzzle
 
 	private record Tile
 	{
-		public int TileId { get; init; }
-		public int[] ForwardSides { get; init; }
-		public int[] ReverseSides { get; init; }
-		public IReadOnlyList<IReadOnlyList<char>> InnerMap { get; init; }
+		public required int TileId { get; init; }
+		public required int[] ForwardSides { get; init; }
+		public required int[] ReverseSides { get; init; }
+		public required IReadOnlyList<IReadOnlyList<char>> InnerMap { get; init; }
 	}
 
 	private static IEnumerable<IEnumerable<char>> GetRotatedMap(IReadOnlyList<IReadOnlyList<char>> map, int orientation) =>
@@ -86,7 +86,7 @@ public class Day_20_Original : IPuzzle
 			var loc = FindNessie(map, nessie, (0, 0));
 			if (loc == default) continue;
 
-			while (loc != default)
+			while (loc != null)
 			{
 				ClearNessie(map, nessie, loc.Value);
 				loc = FindNessie(map, nessie, loc.Value);
@@ -238,7 +238,7 @@ public class Day_20_Original : IPuzzle
 		}
 	}
 
-	private (int x, int y)? FindNessie(IReadOnlyList<IReadOnlyList<char>> map, IReadOnlyList<IReadOnlyList<char>> nessie, (int x, int y) loc)
+	private static (int x, int y)? FindNessie(IReadOnlyList<IReadOnlyList<char>> map, IReadOnlyList<IReadOnlyList<char>> nessie, (int x, int y) loc)
 	{
 		for (int y = loc.y; y < map.Count - nessie.Count; y++)
 		{

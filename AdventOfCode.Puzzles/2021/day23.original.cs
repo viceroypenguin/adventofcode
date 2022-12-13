@@ -7,7 +7,7 @@ public class Day_23_Original : IPuzzle
 	{
 		var map = input.Bytes.GetMap();
 
-		var start = new Board();
+		var start = new Board() { Padding = 0, };
 		for (var i = 0; i < 4; i++)
 		{
 			var room = start.Rooms.Span()[i].Span();
@@ -253,7 +253,7 @@ public class Day_23_Original : IPuzzle
 	private const byte B = (byte)'B';
 	private const byte C = (byte)'C';
 	private const byte D = (byte)'D';
-	private const byte Empty = (byte)0;
+	private const byte Empty = 0;
 
 	private record struct Board
 	{

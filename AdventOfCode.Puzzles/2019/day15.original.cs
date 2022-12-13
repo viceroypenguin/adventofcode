@@ -44,7 +44,7 @@ public class Day_15_Original : IPuzzle
 	private IntCodeComputer pc;
 	private readonly Dictionary<(int x, int y), (int type, int distance)> map =
 		new() { [(0, 0)] = (0, 0), };
-	(int x, int y) oxygenLocation = default;
+	(int x, int y) oxygenLocation;
 
 	private void HandleDirection((int x, int y) position, int direction, int distance)
 	{

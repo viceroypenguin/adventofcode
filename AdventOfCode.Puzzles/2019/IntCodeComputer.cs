@@ -31,8 +31,8 @@ internal sealed class IntCodeComputer
 
 	public IntCodeComputer(
 		long[] instructions,
-		Queue<long>? inputs = default,
-		Queue<long>? outputs = default,
+		Queue<long> inputs = default,
+		Queue<long> outputs = default,
 		int size = 64 * 1024)
 	{
 		memory = new long[size];

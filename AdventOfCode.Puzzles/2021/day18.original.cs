@@ -6,11 +6,11 @@ public class Day_18_Original : IPuzzle
 	private class SnailfishNode
 	{
 		public int? Number { get; set; }
-		public SnailfishNode? LeftChild { get; set; }
-		public SnailfishNode? RightChild { get; set; }
+		public SnailfishNode LeftChild { get; set; }
+		public SnailfishNode RightChild { get; set; }
 
-		public SnailfishNode? LeftNode { get; set; }
-		public SnailfishNode? RightNode { get; set; }
+		public SnailfishNode LeftNode { get; set; }
+		public SnailfishNode RightNode { get; set; }
 
 		public long GetMagnitude() =>
 			Number ?? (LeftChild.GetMagnitude() * 3 + RightChild.GetMagnitude() * 2);
@@ -24,7 +24,7 @@ public class Day_18_Original : IPuzzle
 
 		private class Cloner
 		{
-			private SnailfishNode clonerCurrent = null;
+			private SnailfishNode clonerCurrent;
 			public SnailfishNode Clone(SnailfishNode node)
 			{
 				if (node == null)
@@ -82,7 +82,7 @@ public class Day_18_Original : IPuzzle
 
 	private class SnailfishParser
 	{
-		private SnailfishNode parserCurrent = null;
+		private SnailfishNode parserCurrent;
 		public (SnailfishNode node, int idx) ParseNode(ReadOnlySpan<char> txt, SnailfishNode parent)
 		{
 			var node = new SnailfishNode();

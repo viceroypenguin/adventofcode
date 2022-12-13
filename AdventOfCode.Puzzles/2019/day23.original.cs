@@ -92,11 +92,11 @@ public class Day_23_Original : IPuzzle
 				}
 			}
 
-			if (natPacket != default
+			if (natPacket != null
 				&& computers.All(c => c.Inputs.Count == 0))
 			{
 				var (x, y) = natPacket.Value;
-				if (prevNatPacket != default
+				if (prevNatPacket != null
 					&& y == prevNatPacket.Value.y)
 				{
 					return y.ToString();
