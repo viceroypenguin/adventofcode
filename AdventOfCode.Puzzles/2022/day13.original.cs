@@ -21,15 +21,8 @@ public partial class Day_13_Original : IPuzzle
 			.Sum()
 			.ToString();
 
-		var sentinels = new[] { (JsonValue)2, (JsonValue)6, };
-
-		var ordered = packets
-			.Concat(sentinels)
-			.Order(Comparer<JsonNode?>.Create(CompareItem))
-			.ToList();
-
-		var part2 = sentinels
-			.Select(s => ordered.IndexOf(s) + 1)
+		var part2 = new[] { (JsonValue)2, (JsonValue)6, }
+			.Select((s, i) => packets.Count(p => CompareItem(p, s) < 0) + 1 + i)
 			.Aggregate(1, (a, b) => a * b)
 			.ToString();
 
