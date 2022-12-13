@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace AdventOfCode.Puzzles._2022;
 
@@ -9,21 +10,22 @@ public partial class Day_13_Original : IPuzzle
 	{
 		var packets = input.Lines
 			.Where(x => x != string.Empty)
-			.Select(Parse)
+			.Select(l => JsonSerializer.Deserialize<JsonNode>(l))
 			.ToList();
 
-		var part1 = packets.Batch(2)
+		var part1 = packets
+			.Batch(2)
 			.Index()
 			.Where(x => CompareItem(x.item[0], x.item[1]) < 0)
 			.Select(x => x.index + 1)
 			.Sum()
 			.ToString();
 
-		var sentinels = new[] { Parse("[[2]]"), Parse("[[6]]"), };
+		var sentinels = new[] { (JsonValue)2, (JsonValue)6, };
 
 		var ordered = packets
 			.Concat(sentinels)
-			.Order(Comparer<Packet>.Create(CompareItem))
+			.Order(Comparer<JsonNode?>.Create(CompareItem))
 			.ToList();
 
 		var part2 = sentinels
@@ -34,34 +36,19 @@ public partial class Day_13_Original : IPuzzle
 		return (part1, part2);
 	}
 
-	private abstract record Packet;
-
-	private record IntPacket(int Value) : Packet;
-	private record ListPacket(List<Packet> Packets) : Packet;
-
-	private static Packet Parse(string value) =>
-		Parse(JsonSerializer.Deserialize<JsonElement>(value));
-
-	private static Packet Parse(JsonElement element) =>
-		element.ValueKind == JsonValueKind.Number
-			? new IntPacket(element.GetInt32())
-			: new ListPacket(element.EnumerateArray()
-				.Select(Parse)
-				.ToList());
-
-	private int CompareItem(Packet left, Packet right) =>
+	private int CompareItem(JsonNode? left, JsonNode? right) =>
 		(left, right) switch
 		{
-			(Packet l, null) => +1,
-			(null, Packet r) => -1,
-			(IntPacket l, IntPacket r) =>
-				Comparer<int>.Default.Compare(l.Value, r.Value),
-			(IntPacket l, ListPacket r) =>
-				CompareItem(new ListPacket(new() { l }), r),
-			(ListPacket l, IntPacket r) =>
-				CompareItem(l, new ListPacket(new() { r })),
-			(ListPacket l, ListPacket r) =>
-				l.Packets.ZipLongest(r.Packets, CompareItem)
+			(JsonNode l, null) => +1,
+			(null, JsonNode r) => -1,
+			(JsonValue l, JsonValue r) =>
+				Comparer<int>.Default.Compare(l.GetValue<int>(), r.GetValue<int>()),
+			(JsonValue l, JsonArray r) =>
+				CompareItem(new JsonArray(l.GetValue<int>()), r),
+			(JsonArray l, JsonValue r) =>
+				CompareItem(l, new JsonArray(r.GetValue<int>())),
+			(JsonArray l, JsonArray r) =>
+				l.ZipLongest(r, CompareItem)
 					.SkipWhile(x => x == 0)
 					.FirstOrDefault(),
 		};
