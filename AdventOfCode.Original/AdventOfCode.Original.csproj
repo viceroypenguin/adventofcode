@@ -2,7 +2,8 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-  </PropertyGroup>
+		<Nullable>disable</Nullable>
+	</PropertyGroup>
 
 	<ItemGroup>
 		<Using Include="System.Runtime.CompilerServices" />

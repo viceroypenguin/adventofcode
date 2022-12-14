@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<RootNamespace>AdventOfCode.Puzzles._2022</RootNamespace>
-		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
 	<ItemGroup>
