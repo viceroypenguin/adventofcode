@@ -3,7 +3,6 @@
 [Puzzle(2022, 14, CodeType.Original)]
 public partial class Day_14_Original : IPuzzle
 {
-	private enum Cell { Cave, Sand, }
 	public (string part1, string part2) Solve(PuzzleInput input) =>
 		(
 			RunSand(input.Lines, false).ToString(),
@@ -11,7 +10,7 @@ public partial class Day_14_Original : IPuzzle
 
 	private static int RunSand(IEnumerable<string> lines, bool p2)
 	{
-		var map = new Dictionary<(int x, int y), Cell>();
+		var map = new HashSet<(int x, int y)>();
 		foreach (var l in lines)
 		{
 			foreach (var (start, end) in l.Split(" -> ")
@@ -26,7 +25,7 @@ public partial class Day_14_Original : IPuzzle
 					var max = int.Max(start.y, end.y);
 
 					for (int j = min; j <= max; j++)
-						map[(start.x, j)] = Cell.Cave;
+						map.Add((start.x, j));
 				}
 				else
 				{
@@ -34,17 +33,17 @@ public partial class Day_14_Original : IPuzzle
 					var max = int.Max(start.x, end.x);
 
 					for (int j = min; j <= max; j++)
-						map[(j, start.y)] = Cell.Cave;
+						map.Add((j, start.y));
 				}
 			}
 		}
 
-		var maxY = map.Keys.Select(k => k.y).Max();
+		var maxY = map.Select(k => k.y).Max();
 		if (p2)
 		{
 			maxY += 2;
 			for (int x = 490 - maxY; x < 510 + maxY; x++)
-				map[(x, maxY)] = Cell.Cave;
+				map.Add((x, maxY));
 			maxY++;
 		}
 
@@ -53,7 +52,7 @@ public partial class Day_14_Original : IPuzzle
 		{
 			var pos = (x: 500, y: 0);
 
-			if (map.ContainsKey(pos))
+			if (map.Contains(pos))
 				return n;
 
 			while (true)
@@ -62,21 +61,21 @@ public partial class Day_14_Original : IPuzzle
 				if (newPos.y > maxY)
 					return n;
 
-				if (!map.ContainsKey(newPos))
+				if (!map.Contains(newPos))
 				{
 					pos = newPos;
 					continue;
 				}
 
 				newPos = (pos.x - 1, pos.y + 1);
-				if (!map.ContainsKey(newPos))
+				if (!map.Contains(newPos))
 				{
 					pos = newPos;
 					continue;
 				}
 
 				newPos = (pos.x + 1, pos.y + 1);
-				if (!map.ContainsKey(newPos))
+				if (!map.Contains(newPos))
 				{
 					pos = newPos;
 					continue;
@@ -85,7 +84,7 @@ public partial class Day_14_Original : IPuzzle
 				break;
 			}
 
-			map[pos] = Cell.Sand;
+			map.Add(pos);
 			n++;
 		}
 	}
