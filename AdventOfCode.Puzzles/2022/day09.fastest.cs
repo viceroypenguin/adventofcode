@@ -8,8 +8,8 @@ public partial class Day_09_Fastest : IPuzzle
 	public (string part1, string part2) Solve(PuzzleInput input)
 	{
 		Span<Vector2> snake = new Vector2[10];
-		var part1 = new HashSet<Vector2>() { new(0, 0), };
-		var part2 = new HashSet<Vector2>() { new(0, 0), };
+		var part1 = new HashSet<Vector2>(input.Bytes.Length / 4) { new(0, 0), };
+		var part2 = new HashSet<Vector2>(input.Bytes.Length / 4) { new(0, 0), };
 
 		foreach (var l in input.Lines)
 		{
