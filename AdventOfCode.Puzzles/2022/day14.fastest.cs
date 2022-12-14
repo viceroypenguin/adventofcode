@@ -7,33 +7,49 @@ public partial class Day_14_Fastest : IPuzzle
 
 	public (string part1, string part2) Solve(PuzzleInput input)
 	{
-		var (lines, maxX, maxY) = ParseLines(input.Lines);
+		Span<Line> lines = stackalloc Line[input.Bytes.Length / 8];
+		var maxY = ParseLines(input.Bytes, ref lines);
 
 		return (
-			RunSand(lines, maxX, maxY, false).ToString(),
-			RunSand(lines, maxX, maxY, true).ToString());
+			RunSand(lines, maxY, false).ToString(),
+			RunSand(lines, maxY, true).ToString());
 	}
 
-	private static (List<Line> lines, int maxX, int maxY) ParseLines(string[] lines)
+	private static int ParseLines(ReadOnlySpan<byte> input, ref Span<Line> lines)
 	{
-		var maxX = 0;
 		var maxY = 0;
 
-		return (
-			lines
-				.SelectMany(l => l.Split(" -> ")
-					.Select(ParseCoordinates)
-					.Do(x =>
-					{
-						if (x.x > maxX) maxX = x.x;
-						if (x.y > maxY) maxY = x.y;
-					})
-					.Window(2)
-					.Select(w => new Line(w[0].x, w[0].y, w[1].x, w[1].y))
-					.Distinct())
-				.ToList(),
-			maxX,
-			maxY);
+		var lineCount = 0;
+		while (input.Length > 0)
+		{
+			var (x, i) = input.AtoI();
+			input = input[(i + 1)..];
+			(var y, i) = input.AtoI();
+			input = input[i..];
+			if (y > maxY) maxY = y;
+
+			while (true)
+			{
+				if (input[0] == '\n')
+				{
+					input = input[1..];
+					break;
+				}
+
+				input = input[4..];
+				(var x2, i) = input.AtoI();
+				input = input[(i + 1)..];
+				(var y2, i) = input.AtoI();
+				input = input[i..];
+				if (y2 > maxY) maxY = y2;
+
+				lines[lineCount++] = new(x, y, x2, y2);
+				(x, y) = (x2, y2);
+			}
+		}
+
+		lines = lines[..lineCount];
+		return maxY;
 	}
 
 	private static (int x, int y) ParseCoordinates(string p)
@@ -44,26 +60,24 @@ public partial class Day_14_Fastest : IPuzzle
 		return (x, y);
 	}
 
-	private static int RunSand(List<Line> lines, int maxX, int maxY, bool p2)
+	private static int RunSand(Span<Line> lines, int maxY, bool p2)
 	{
 		maxY += 2;
-		maxX = 510 + maxY;
+		var maxX = 510 + maxY;
 		var map = new byte[maxX, maxY + 1];
 
 		foreach (var (x1, y1, x2, y2) in lines)
 		{
 			if (x1 == x2)
 			{
-				var min = int.Min(y1, y2);
-				var max = int.Max(y1, y2);
+				var (min, max) = y1 < y2 ? (y1, y2) : (y2, y1);
 
 				for (int j = min; j <= max; j++)
 					map[x1, j] = (byte)'#';
 			}
 			else
 			{
-				var min = int.Min(x1, x2);
-				var max = int.Max(x1, x2);
+				var (min, max) = x1 < x2 ? (x1, x2) : (x2, x1);
 
 				for (int j = min; j <= max; j++)
 					map[j, y1] = (byte)'#';
@@ -77,7 +91,7 @@ public partial class Day_14_Fastest : IPuzzle
 			maxY++;
 		}
 
-		var path = new Stack<(int x, int y)>();
+		var path = new Stack<(int x, int y)>(maxY);
 		path.Push((500, 0));
 
 		var n = 0;
