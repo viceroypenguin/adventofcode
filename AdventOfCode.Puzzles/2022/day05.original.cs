@@ -44,7 +44,7 @@ public partial class Day_05_Original : IPuzzle
 	}
 
 	private static List<Stack<char>> BuildStacks(string[] lines) =>
-		lines.TakeWhile(l => l[0] == '[')
+		lines.TakeWhile(l => l[1] != '1')
 			.Transpose()
 			.Select(l => l.Reverse())
 			.Where(l => l.First() is >= 'A' and <= 'Z')
