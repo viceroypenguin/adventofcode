@@ -27,29 +27,13 @@ public partial class Day_15_Original : IPuzzle
 
 		var part1 = DoPart1(data).ToString();
 
-		const int MapSize = 4_000_000;
-		var point = Enumerable.Range(0, MapSize + 1)
-			.Select(x => (x, data: data
-				.Select(s => (s.sx, s.sy, distToX: s.dist - Math.Abs(x - s.sx)))
-				.Where(s => s.distToX >= 0)
-				.Select(s => (s.sx, s.sy, minY: s.sy - s.distToX, maxY: s.sy + s.distToX))
-				.OrderBy(s => s.minY)
-				.ToList()))
-			.SelectMany(x =>
-			{
-				var range = (min: 0, max: 0);
-				foreach (var (_, _, minY, maxY) in x.data)
-				{
-					if (minY <= range.max + 1)
-						range = (range.min, Math.Max(maxY, range.max));
-					else
-						return new[] { (x.x, y: range.max + 1), };
-				}
-				return Array.Empty<(int x, int y)>();
-			})
-			.First();
 
+		var l1 = new Line(new(0, 0), new(5, 5));
+		var l2 = new Line(new(5, 0), new(0, 5));
+
+		var point = DoPart2(data);
 		var part2 = (point.x * 4_000_000L + point.y).ToString();
+
 		return (part1, part2);
 	}
 
@@ -87,6 +71,70 @@ public partial class Day_15_Original : IPuzzle
 		return notPossible
 			.Select(r => (r.min, max: r.max - beacons.Count(b => b.Between(r.min, r.max))))
 			.Sum(r => r.max - r.min + 1);
+	}
+
+	const int MapSize = 4_000_000;
+	private static (int x, int y) DoPart2(List<Sensor> sensors)
+	{
+		var llines = sensors
+			// for each sensor, get the lines that describe the external border
+			.SelectMany(GetLLines)
+			.ToList();
+		var rlines = sensors
+			.SelectMany(GetRLines)
+			.ToList();
+
+		return llines.Cartesian(rlines, (l, r) => l.Intersects(r))
+			.Where(p => p != null)
+			.Select(p => p!.Value)
+			.Where(p => p.x.Between(0, MapSize) && p.y.Between(0, MapSize))
+			.Where(p => !sensors.Any(s => Math.Abs(s.sx - p.x) + Math.Abs(s.sy - p.y) <= s.dist))
+			.First();
+	}
+
+	private record struct Point(int x, int y);
+	private record struct Line(Point a, Point b)
+	{
+		public (int x, int y)? Intersects(Line o)
+		{
+			var xdiff = (a.x - b.x, o.a.x - o.b.x);
+			var ydiff = (a.y - b.y, o.a.y - o.b.y);
+
+			static long Determinant((long a, long b) x, (long a, long b) y) =>
+				x.a * y.b - x.b * y.a;
+
+			var div = Determinant(xdiff, ydiff);
+			// lines don't intersect
+			if (div == 0) return default;
+
+			var d = (
+				Determinant((a.x, b.x), (a.y, b.y)),
+				Determinant((o.a.x, o.b.x), (o.a.y, o.b.y)));
+			var x = Determinant(d, xdiff) / div;
+			var y = Determinant(d, ydiff) / div;
+
+			if (Math.Abs(x - a.x) != Math.Abs(y - a.y)
+				|| Math.Abs(x - o.a.x) != Math.Abs(y - o.a.y))
+				return default;
+
+			return ((int)x, (int)y);
+		}
+	}
+
+	private static IEnumerable<Line> GetLLines(Sensor s)
+	{
+		var (sx, sy, _, _, dist) = s;
+
+		yield return new(new(sx - (dist + 1), sy), new(sx, sy - (dist + 1)));
+		yield return new(new(sx, sy + dist + 1), new(sx + dist + 1, sy));
+	}
+
+	private static IEnumerable<Line> GetRLines(Sensor s)
+	{
+		var (sx, sy, _, _, dist) = s;
+
+		yield return new(new(sx - (dist + 1), sy), new(sx, sy + dist + 1));
+		yield return new(new(sx, sy - (dist + 1)), new(sx + dist + 1, sy));
 	}
 }
 
