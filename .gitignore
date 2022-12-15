@@ -15,9 +15,6 @@
 # Ignore app settings file, session id is secret and goes there
 appsettings.json
 
-# Ignore launch settings only because they change daily
-launchSettings.json
-
 # Ignore input files, they will be re-downloaded
 *.input.txt
 

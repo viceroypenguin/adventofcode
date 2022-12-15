@@ -1,0 +1,8 @@
+{
+  "profiles": {
+		"AdventOfCode.Runner": {
+			"commandName": "Project",
+			"workingDirectory": "$(ProjectDir)"
+		}
+  }
+}
