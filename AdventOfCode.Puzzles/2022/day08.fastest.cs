@@ -1,6 +1,4 @@
-﻿using CommunityToolkit.HighPerformance;
-
-namespace AdventOfCode.Puzzles._2022;
+﻿namespace AdventOfCode.Puzzles._2022;
 
 [Puzzle(2022, 8, CodeType.Fastest)]
 public partial class Day_08_Fastest : IPuzzle
