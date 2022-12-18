@@ -1,7 +1,7 @@
 ﻿namespace AdventOfCode.Puzzles._2022;
 
 [Puzzle(2022, 18, CodeType.Original)]
-public partial class Day_18_Original : IPuzzle
+public class Day_18_Original : IPuzzle
 {
 	public (string part1, string part2) Solve(PuzzleInput input)
 	{
@@ -10,14 +10,7 @@ public partial class Day_18_Original : IPuzzle
 			.Select(l => (x: l[0], y: l[1], z: l[2]))
 			.ToHashSet();
 
-		var surfaceArea = 0;
-		foreach (var (x, y, z) in cubes)
-			surfaceArea += 6 - GetNeighbors(cubes, x, y, z);
-
-		var part1 = surfaceArea.ToString();
-
-		var water = new HashSet<(int x, int y, int z)>();
-
+		var water = new HashSet<(int x, int y, int z)>(22 * 22 * 22);
 		IEnumerable<(int, int, int)> GetCartesianNeighbors((int x, int y, int z) p)
 		{
 			if (water.Contains(p))
@@ -28,15 +21,15 @@ public partial class Day_18_Original : IPuzzle
 
 			if (x >= 0 && !cubes.Contains((x - 1, y, z)))
 				yield return (x - 1, y, z);
-			if (x <= 20 && !cubes.Contains((x + 1, y, z)))
+			if (x <= 21 && !cubes.Contains((x + 1, y, z)))
 				yield return (x + 1, y, z);
 			if (y >= 0 && !cubes.Contains((x, y - 1, z)))
 				yield return (x, y - 1, z);
-			if (y <= 20 && !cubes.Contains((x, y + 1, z)))
+			if (y <= 21 && !cubes.Contains((x, y + 1, z)))
 				yield return (x, y + 1, z);
 			if (z >= 0 && !cubes.Contains((x, y, z - 1)))
 				yield return (x, y, z - 1);
-			if (z <= 20 && !cubes.Contains((x, y, z + 1)))
+			if (z <= 21 && !cubes.Contains((x, y, z + 1)))
 				yield return (x, y, z + 1);
 		}
 
@@ -46,17 +39,15 @@ public partial class Day_18_Original : IPuzzle
 				GetCartesianNeighbors)
 			.Consume();
 
-		water.UnionWith(cubes);
-		for (int x = -1; x <= 21; x++)
-			for (int y = -1; y <= 21; y++)
-				for (int z = -1; z <= 21; z++)
-				{
-					if (!water.Contains((x, y, z)))
-						surfaceArea -= GetNeighbors(cubes, x, y, z);
-				}
+		var part1 = 0;
+		var part2 = 0;
+		foreach (var (x, y, z) in cubes)
+		{
+			part1 += 6 - GetNeighbors(cubes, x, y, z);
+			part2 += GetNeighbors(water, x, y, z);
+		}
 
-		var part2 = surfaceArea.ToString();
-		return (part1, part2);
+		return (part1.ToString(), part2.ToString());
 	}
 
 	private static int GetNeighbors(HashSet<(int x, int y, int z)> cubes, int x, int y, int z)
