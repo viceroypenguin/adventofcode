@@ -97,6 +97,7 @@ public partial class Day_19_Original : IPuzzle
 				yield break;
 			}
 
+			if (s.OreRobots < maxOreCost)
 			{
 				var time = 1 + (robots["ore"]["ore"] - s.OreCount).DivRoundUp(s.OreRobots);
 				if (time < s.Minute)
@@ -113,6 +114,7 @@ public partial class Day_19_Original : IPuzzle
 				}
 			}
 
+			if (s.ClayCount < maxClayCost)
 			{
 				var time = 1 + (robots["clay"]["ore"] - s.OreCount).DivRoundUp(s.OreRobots);
 				if (time < s.Minute)
@@ -129,7 +131,7 @@ public partial class Day_19_Original : IPuzzle
 				}
 			}
 
-			if (s.ClayRobots > 0)
+			if (s.ClayRobots > 0 && s.ObsidianRobots < maxObsidianCost)
 			{
 				var time = 1 + Math.Max(
 					(robots["obsidian"]["ore"] - s.OreCount).DivRoundUp(s.OreRobots),
