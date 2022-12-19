@@ -19,8 +19,8 @@ public class Day_05_Original : IPuzzle
 				while (j >= 0 && !characters[j].isActive)
 					j--;
 				if (j >= 0 &&
-					char.IsUpper(characters[i].c) != char.IsUpper(characters[j].c) &&
-					char.ToUpper(characters[i].c) == char.ToUpper(characters[j].c))
+					char.IsUpper(characters[i].c) != char.IsUpper(characters[j].c)
+					&& char.ToUpper(characters[i].c) == char.ToUpper(characters[j].c))
 				{
 					characters[i].isActive = false;
 					characters[j].isActive = false;
@@ -30,7 +30,7 @@ public class Day_05_Original : IPuzzle
 			return characters.Where(x => x.isActive).Count();
 		}
 
-		var part1 =  GetReducedPolymerLength(poly).ToString();
+		var part1 = GetReducedPolymerLength(poly).ToString();
 
 		var part2 = Enumerable.Range(0, 26)
 			.Select(i => (char)(i + (int)'a'))

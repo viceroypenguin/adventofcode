@@ -72,24 +72,20 @@ public class Day_18_Original : IPuzzle
 			group new { } by map[x2][y2])
 			.ToDictionary(c => c.Key, c => c.Count());
 
-		switch (map[x][y])
+		return map[x][y] switch
 		{
-			case '.':
-				return neighbors.ContainsKey('|') && neighbors['|'] >= 3
-					? '|' : '.';
-
-			case '|':
-				return neighbors.ContainsKey('#') && neighbors['#'] >= 3
-					? '#' : '|';
-
-			case '#':
-				return neighbors.ContainsKey('|') && neighbors['|'] >= 1 &&
-					neighbors.ContainsKey('#') && neighbors['#'] >= 1
-					? '#' : '.';
-
-			default:
-				throw new InvalidOperationException();
-		}
-
+			'.' => neighbors.TryGetValue('|', out var value) 
+					&& value >= 3
+					? '|' : '.',
+			'|' => neighbors.TryGetValue('#', out var value)
+					&& value >= 3
+					? '#' : '|',
+			'#' => neighbors.TryGetValue('|', out var value) 
+					&& value >= 1 
+					&& neighbors.TryGetValue('#', out var value2) 
+					&& value2 >= 1
+					? '#' : '.',
+			_ => throw new InvalidOperationException(),
+		};
 	}
 }

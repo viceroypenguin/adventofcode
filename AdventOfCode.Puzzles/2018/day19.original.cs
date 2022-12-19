@@ -8,7 +8,7 @@ public class Day_19_Original : IPuzzle
 	public (string, string) Solve(PuzzleInput input)
 	{
 		var data = input.Lines;
-		var ipRegister = Convert.ToInt32(data.First().Substring(4));
+		var ipRegister = Convert.ToInt32(data.First()[4..]);
 
 		var instructions = data.Skip(1)
 			.Select(l => l.Split())
@@ -126,13 +126,13 @@ public class Day_19_Original : IPuzzle
 						throw new InvalidOperationException("Dunno what to do here yet.");
 				}
 			}
-			else if (aluOpcodes.ContainsKey(inst.inst))
+			else if (aluOpcodes.TryGetValue(inst.inst, out var value))
 			{
 				expressions.Add(Expression.Label(labels[i]));
 				expressions.Add(
 					Expression.Assign(
 						registers[inst.c],
-						aluOpcodes[inst.inst](inst.a, inst.b, i)));
+						value(inst.a, inst.b, i)));
 			}
 		}
 

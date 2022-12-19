@@ -1,30 +1,24 @@
 ﻿namespace AdventOfCode.Puzzles._2018;
 
 [Puzzle(2018, 23, CodeType.Original)]
-public class Day_23_Original : IPuzzle
+public partial class Day_23_Original : IPuzzle
 {
-	public class Bot
-	{
-		public int x;
-		public int y;
-		public int z;
-		public int p;
-	}
-	IList<Bot> bots;
+	public record struct Bot(int x, int y, int z, int p);
+
+	[GeneratedRegex("pos=\\<(?<x>\\-?\\d+),(?<y>\\-?\\d+),(?<z>\\-?\\d+)\\>, r=(?<p>\\d+)")]
+	private static partial Regex PositionRegex();
 
 	public (string, string) Solve(PuzzleInput input)
 	{
-		var regex = new Regex(@"pos=\<(?<x>\-?\d+),(?<y>\-?\d+),(?<z>\-?\d+)\>, r=(?<p>\d+)");
+		var regex = PositionRegex();
 
-		bots = input.Lines
+		var bots = input.Lines
 			.Select(l => regex.Match(l))
-			.Select(m => new Bot
-			{
-				x = Convert.ToInt32(m.Groups["x"].Value),
-				y = Convert.ToInt32(m.Groups["y"].Value),
-				z = Convert.ToInt32(m.Groups["z"].Value),
-				p = Convert.ToInt32(m.Groups["p"].Value),
-			})
+			.Select(m => new Bot(
+				x: Convert.ToInt32(m.Groups["x"].Value),
+				y: Convert.ToInt32(m.Groups["y"].Value),
+				z: Convert.ToInt32(m.Groups["z"].Value),
+				p: Convert.ToInt32(m.Groups["p"].Value)))
 			.ToList();
 
 		var powerful = bots
@@ -51,9 +45,9 @@ public class Day_23_Original : IPuzzle
 				from y in Enumerable.Range(0, 11)
 				from z in Enumerable.Range(0, 11)
 				select new BoundingBox(
-					xmin + (xdiff * x / 10),
-					ymin + (ydiff * y / 10),
-					zmin + (zdiff * z / 10),
+					xmin + xdiff * x / 10,
+					ymin + ydiff * y / 10,
+					zmin + zdiff * z / 10,
 					length,
 					bots)
 			)
@@ -71,9 +65,9 @@ public class Day_23_Original : IPuzzle
 					from y in Enumerable.Range(0, 11)
 					from z in Enumerable.Range(0, 11)
 					select new BoundingBox(
-						b.x - length + (length * x / 5),
-						b.y - length + (length * y / 5),
-						b.z - length + (length * z / 5),
+						b.x - length + length * x / 5,
+						b.y - length + length * y / 5,
+						b.z - length + length * z / 5,
 						length,
 						b.Bots))
 				.OrderByDescending(b => b.Count)
@@ -110,7 +104,7 @@ public class Day_23_Original : IPuzzle
 		return (part1, part2);
 	}
 
-	class BoundingBox : IComparable<BoundingBox>
+	private class BoundingBox : IComparable<BoundingBox>
 	{
 		public BoundingBox(int x, int y, int z, int length, IList<Bot> bots)
 		{
@@ -123,7 +117,7 @@ public class Day_23_Original : IPuzzle
 				.Where(b =>
 					Math.Abs(b.x - this.x) +
 					Math.Abs(b.y - this.y) +
-					Math.Abs(b.z - this.z) <= (b.p + this.length))
+					Math.Abs(b.z - this.z) <= b.p + this.length)
 				.ToList();
 		}
 
@@ -136,6 +130,6 @@ public class Day_23_Original : IPuzzle
 		public int Count => Bots.Count;
 
 		public int CompareTo(BoundingBox other) =>
-			-this.Count.CompareTo(other.Count);
+			-Count.CompareTo(other.Count);
 	}
 }

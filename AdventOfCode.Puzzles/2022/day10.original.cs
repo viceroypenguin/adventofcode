@@ -58,7 +58,7 @@ public partial class Day_10_Original : IPuzzle
 			else
 			{
 				inAdd = false;
-				x += int.Parse(e.Current.ToString()[5..]);
+				x += int.Parse(e.Current.ToString()![5..]);
 				e.MoveNext();
 			}
 		}
