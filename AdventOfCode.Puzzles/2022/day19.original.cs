@@ -60,13 +60,13 @@ public partial class Day_19_Original : IPuzzle
 		var maxObsidianCost = robots.Values.Select(v => v.GetValueOrDefault("obsidian")).Max();
 
 		var seen = new HashSet<State>();
-		IEnumerable<State> GetChildren(State s)
+		void GetMaxYield(State s)
 		{
 			states++;
 
 			// if it's not even possible for us to beat yield in a perfect world...
 			if (s.GeodeCount + s.GeodeRobots * s.Minute + (s.Minute * (s.Minute + 1) / 2) < yield)
-				yield break;
+				return;
 
 			// reduce robots to increase state overlap
 			// can only produce one 1 robot per minute, so no need for more material production than we can consume in a minute
@@ -88,13 +88,13 @@ public partial class Day_19_Original : IPuzzle
 
 			// have we been here before?
 			if (!seen.Add(s))
-				yield break;
+				return;
 
 			// are we done? how many did we produce?
 			if (s.Minute == 0)
 			{
 				yield = Math.Max(yield, s.GeodeCount);
-				yield break;
+				return;
 			}
 
 			if (s.OreRobots < maxOreCost)
@@ -102,7 +102,7 @@ public partial class Day_19_Original : IPuzzle
 				var time = 1 + (robots["ore"]["ore"] - s.OreCount).DivRoundUp(s.OreRobots);
 				if (time < s.Minute)
 				{
-					yield return s with
+					GetMaxYield(s with
 					{
 						Minute = s.Minute - time,
 						OreCount = s.OreCount + s.OreRobots * time - robots["ore"]["ore"],
@@ -110,7 +110,7 @@ public partial class Day_19_Original : IPuzzle
 						ObsidianCount = s.ObsidianCount + s.ObsidianRobots * time,
 						GeodeCount = s.GeodeCount + s.GeodeRobots * time,
 						OreRobots = s.OreRobots + 1,
-					};
+					});
 				}
 			}
 
@@ -119,7 +119,7 @@ public partial class Day_19_Original : IPuzzle
 				var time = 1 + (robots["clay"]["ore"] - s.OreCount).DivRoundUp(s.OreRobots);
 				if (time < s.Minute)
 				{
-					yield return s with
+					GetMaxYield(s with
 					{
 						Minute = s.Minute - time,
 						OreCount = s.OreCount + s.OreRobots * time - robots["clay"]["ore"],
@@ -127,7 +127,7 @@ public partial class Day_19_Original : IPuzzle
 						ObsidianCount = s.ObsidianCount + s.ObsidianRobots * time,
 						GeodeCount = s.GeodeCount + s.GeodeRobots * time,
 						ClayRobots = s.ClayRobots + 1,
-					};
+					});
 				}
 			}
 
@@ -138,7 +138,7 @@ public partial class Day_19_Original : IPuzzle
 					(robots["obsidian"]["clay"] - s.ClayCount).DivRoundUp(s.ClayRobots));
 				if (time < s.Minute)
 				{
-					yield return s with
+					GetMaxYield(s with
 					{
 						Minute = s.Minute - time,
 						OreCount = s.OreCount + s.OreRobots * time - robots["obsidian"]["ore"],
@@ -146,7 +146,7 @@ public partial class Day_19_Original : IPuzzle
 						ObsidianCount = s.ObsidianCount + s.ObsidianRobots * time,
 						GeodeCount = s.GeodeCount + s.GeodeRobots * time,
 						ObsidianRobots = s.ObsidianRobots + 1,
-					};
+					});
 				}
 			}
 
@@ -157,7 +157,7 @@ public partial class Day_19_Original : IPuzzle
 					(robots["geode"]["obsidian"] - s.ObsidianCount).DivRoundUp(s.ObsidianRobots));
 				if (time < s.Minute)
 				{
-					yield return s with
+					GetMaxYield(s with
 					{
 						Minute = s.Minute - time,
 						OreCount = s.OreCount + s.OreRobots * time - robots["geode"]["ore"],
@@ -165,27 +165,21 @@ public partial class Day_19_Original : IPuzzle
 						ObsidianCount = s.ObsidianCount + s.ObsidianRobots * time - robots["geode"]["obsidian"],
 						GeodeCount = s.GeodeCount + s.GeodeRobots * time,
 						GeodeRobots = s.GeodeRobots + 1,
-					};
+					});
 				}
 			}
 
 			if (s.GeodeRobots > 0)
 			{
-				yield return s with
+				GetMaxYield(s with
 				{
 					Minute = 0,
 					GeodeCount = s.GeodeCount + s.GeodeRobots * s.Minute,
-				};
+				});
 			}
 		}
 
-		// BFS over the search space
-		SuperEnumerable
-			.TraverseBreadthFirst(
-				new State(minutes),
-				GetChildren)
-			.Consume();
-
+		GetMaxYield(new(minutes));
 		return yield;
 	}
 }
