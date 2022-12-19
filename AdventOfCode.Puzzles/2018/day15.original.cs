@@ -1,33 +1,28 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2018;
 
-public class Day_2018_15_Original : Day
+[Puzzle(2018, 15, CodeType.Original)]
+public class Day_15_Original : IPuzzle
 {
-	public override int Year => 2018;
-	public override int DayNumber => 15;
-	public override CodeType CodeType => CodeType.Original;
-
 	static string[] map;
 	static Square[][] space;
 
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		map = input.GetLines();
-		Dump('A', RunGame(true, 3));
+		map = input.Lines;
+		var part1 = RunGame(true, 3);
 
 		for (int i = 4; ; i++)
 		{
 			var value = RunGame(false, i);
 			if (value > 0)
 			{
-				Dump('B', value);
-				return;
+				var part2 = value;
+				return (part1.ToString(), part2.ToString());
 			}
 		}
 	}
 
-	private int RunGame(bool allowElfDeath, int elfStrength)
+	private static int RunGame(bool allowElfDeath, int elfStrength)
 	{
 		space = map
 			.Select((s, y) => s

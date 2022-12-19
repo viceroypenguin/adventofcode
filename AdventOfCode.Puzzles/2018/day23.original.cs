@@ -1,11 +1,8 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2018;
 
-public class Day_2018_23_Original : Day
+[Puzzle(2018, 23, CodeType.Original)]
+public class Day_23_Original : IPuzzle
 {
-	public override int Year => 2018;
-	public override int DayNumber => 23;
-	public override CodeType CodeType => CodeType.Original;
-
 	public class Bot
 	{
 		public int x;
@@ -15,13 +12,11 @@ public class Day_2018_23_Original : Day
 	}
 	IList<Bot> bots;
 
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
 		var regex = new Regex(@"pos=\<(?<x>\-?\d+),(?<y>\-?\d+),(?<z>\-?\d+)\>, r=(?<p>\d+)");
 
-		bots = input.GetLines()
+		bots = input.Lines
 			.Select(l => regex.Match(l))
 			.Select(m => new Bot
 			{
@@ -36,11 +31,12 @@ public class Day_2018_23_Original : Day
 			.OrderByDescending(x => x.p)
 			.First();
 
-		Dump('A', bots
+		var part1 = bots
 			.Count(x =>
 				Math.Abs(x.x - powerful.x) +
 				Math.Abs(x.y - powerful.y) +
-				Math.Abs(x.z - powerful.z) <= powerful.p));
+				Math.Abs(x.z - powerful.z) <= powerful.p)
+			.ToString();
 
 		var xmin = bots.Min(b => b.x);
 		var xdiff = bots.Max(b => b.x) - xmin;
@@ -106,10 +102,12 @@ public class Day_2018_23_Original : Day
 			.Take(5)
 			.ToList();
 
-		Dump('B',
-			boxes
-				.Select(b => Math.Abs(b.x) + Math.Abs(b.y) + Math.Abs(b.z))
-				.First());
+		var part2 = boxes
+			.Select(b => Math.Abs(b.x) + Math.Abs(b.y) + Math.Abs(b.z))
+			.First()
+			.ToString();
+
+		return (part1, part2);
 	}
 
 	class BoundingBox : IComparable<BoundingBox>

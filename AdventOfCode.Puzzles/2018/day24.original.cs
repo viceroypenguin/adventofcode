@@ -1,11 +1,8 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2018;
 
-public class Day_2018_24_Original : Day
+[Puzzle(2018, 24, CodeType.Original)]
+public class Day_24_Original : IPuzzle
 {
-	public override int Year => 2018;
-	public override int DayNumber => 24;
-	public override CodeType CodeType => CodeType.Original;
-
 	class Group
 	{
 		public int Id;
@@ -26,11 +23,9 @@ public class Day_2018_24_Original : Day
 		public List<Group> Groups;
 	}
 
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var data = input.GetLines()
+		var data = input.Lines
 			.Segment(l => l.EndsWith(":"));
 
 		var regex = new Regex(
@@ -66,16 +61,20 @@ public class Day_2018_24_Original : Day
 			})
 			.ToList();
 
-		Dump('A', DoBattle(armies, 0));
+		var part1 = DoBattle(armies, 0).units.ToString();
 
 		// start at 34... 33 has an infinite loop; should fix later...
-		Dump('B',
+		var part2 =
 			Enumerable.Range(34, 1_000_000)
 				.Select(i => DoBattle(armies, i))
-				.First(i => i.army == 0));
+				.First(i => i.army == 0)
+				.units
+				.ToString();
+
+		return (part1, part2);
 	}
 
-	(int army, int units) DoBattle(List<Army> armies, int boost)
+	private static (int army, int units) DoBattle(List<Army> armies, int boost)
 	{
 		armies = armies
 			.Select((a, i) => new Army

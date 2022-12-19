@@ -1,16 +1,11 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2018;
 
-public class Day_2018_25_Original : Day
+[Puzzle(2018, 25, CodeType.Original)]
+public class Day_25_Original : IPuzzle
 {
-	public override int Year => 2018;
-	public override int DayNumber => 25;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var stars = input.GetLines()
+		var stars = input.Lines
 			.Select(l => l.Split(','))
 			.Select(l => (
 				x: Convert.ToInt32(l[0]),
@@ -61,9 +56,11 @@ public class Day_2018_25_Original : Day
 			}
 		}
 
-		Dump('A',
+		return (
 			constellations
 				.Distinct()
-				.Count());
+				.Count()
+				.ToString(),
+			string.Empty);
 	}
 }

@@ -1,15 +1,10 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2018;
 
-public class Day_2018_17_Original : Day
+[Puzzle(2018, 17, CodeType.Original)]
+public class Day_17_Original : IPuzzle
 {
-	public override int Year => 2018;
-	public override int DayNumber => 17;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
 		(int start, int end) ParseDesc(string str)
 		{
 			var split = str.Split(new[] { "..", }, StringSplitOptions.None);
@@ -18,7 +13,7 @@ public class Day_2018_17_Original : Day
 			return (start, end);
 		}
 
-		var data = input.GetLines()
+		var data = input.Lines
 			.Select(l => l.Split(new[] { ", ", }, StringSplitOptions.None))
 			.Select(l =>
 			{
@@ -115,10 +110,12 @@ public class Day_2018_17_Original : Day
 		// DumpMap();
 
 		var tileTypes = ground.SelectMany(r => r)
-				.GroupBy(c => c)
-				.ToDictionary(c => c.Key, c => c.Count());
+			.GroupBy(c => c)
+			.ToDictionary(c => c.Key, c => c.Count());
 
-		Dump('A', (tileTypes['~'] + tileTypes['|']));
-		Dump('B', tileTypes['~']);
+		var part1 = tileTypes['~'] + tileTypes['|'];
+		var part2 = tileTypes['~'];
+
+		return (part1.ToString(), part2.ToString());
 	}
 }

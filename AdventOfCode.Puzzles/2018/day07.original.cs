@@ -1,16 +1,11 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2018;
 
-public class Day_2018_07_Original : Day
+[Puzzle(2018, 07, CodeType.Original)]
+public class Day_07_Original : IPuzzle
 {
-	public override int Year => 2018;
-	public override int DayNumber => 7;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var steps = input.GetLines()
+		var steps = input.Lines
 			.Select(l => l.Split())
 			.Select(l => (before: l[1], after: l[7]))
 			.ToList();
@@ -47,7 +42,7 @@ public class Day_2018_07_Original : Day
 					.ToList();
 		}
 
-		Dump('A', string.Join("", orderedSteps));
+		var part1 = string.Join("", orderedSteps);
 
 		var workers = 5;
 		var stepTime = 60;
@@ -68,7 +63,7 @@ public class Day_2018_07_Original : Day
 				var step = queue.First();
 				if (!visitedSteps.Contains(step.after))
 				{
-					timedSteps.Add(step.after, stepTime + ((int)step.after[0] - (int)'A' + 1));
+					timedSteps.Add(step.after, stepTime + (step.after[0] - 'A' + 1));
 					workers--;
 				}
 				queue.Remove(step);
@@ -97,6 +92,7 @@ public class Day_2018_07_Original : Day
 			}
 		}
 
-		Dump('B', time);
+		var part2 = time.ToString();
+		return (part1, part2);
 	}
 }

@@ -1,16 +1,11 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2018;
 
-public class Day_2018_22_Original : Day
+[Puzzle(2018, 22, CodeType.Original)]
+public class Day_22_Original : IPuzzle
 {
-	public override int Year => 2018;
-	public override int DayNumber => 22;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var data = input.GetLines();
+		var data = input.Lines;
 		var depth = Convert.ToInt32(data[0].Split()[1]);
 		var coordStr = data[1].Split()[1].Split(',');
 		var destination = (x: Convert.ToInt32(coordStr[0]), y: Convert.ToInt32(coordStr[1]));
@@ -41,7 +36,7 @@ public class Day_2018_22_Original : Day
 			}
 		}
 
-		PartA = ground.Take(destination.y + 1)
+		var part1 = ground.Take(destination.y + 1)
 			.SelectMany(y => y.Take(destination.x + 1))
 			.GroupBy(y => y % 3)
 			.Sum(g => g.Key * g.Count())
@@ -102,6 +97,8 @@ public class Day_2018_22_Original : Day
 			getNeighbors,
 			(destination.x, destination.y, torch));
 
-		PartB = cost.ToString();
+		var part2 = cost.ToString();
+
+		return (part1, part2);
 	}
 }

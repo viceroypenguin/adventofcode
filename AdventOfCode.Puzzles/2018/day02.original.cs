@@ -1,18 +1,11 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2018;
 
-public class Day_2018_02_Original : Day
+[Puzzle(2018, 02, CodeType.Original)]
+public class Day_02_Original : IPuzzle
 {
-	public override int Year => 2018;
-	public override int DayNumber => 2;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var ids = input.GetLines();
-
-		var counts = ids
+		var (twos, threes) = input.Lines
 			.Select(id =>
 			{
 				var chars = id
@@ -24,11 +17,11 @@ public class Day_2018_02_Original : Day
 			.Aggregate((twos: 0, threes: 0), (acc, next) =>
 				(acc.twos + (next.two ? 1 : 0), acc.threes + (next.three ? 1 : 0)));
 
-		Dump('A', counts.twos * counts.threes);
+		var part1 = (twos * threes).ToString();
 
-		Dump('B',
+		var part2 = 
 			new string(
-				ids
+				input.Lines
 					.OrderBy(x => x)
 					.Window(2)
 					.Select(pair => (
@@ -37,6 +30,8 @@ public class Day_2018_02_Original : Day
 					.Where(x => x.letters.Count(y => y.l != y.r) == 1)
 					.SelectMany(x => x.letters.Where(y => y.l == y.r))
 					.Select(x => x.l)
-					.ToArray()));
+					.ToArray());
+
+		return (part1, part2);
 	}
 }

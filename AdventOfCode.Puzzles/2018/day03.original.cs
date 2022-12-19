@@ -1,25 +1,19 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2018;
 
-public class Day_2018_03_Original : Day
+[Puzzle(2018, 03, CodeType.Original)]
+public partial class Day_03_Original : IPuzzle
 {
-	public override int Year => 2018;
-	public override int DayNumber => 3;
-	public override CodeType CodeType => CodeType.Original;
+	[GeneratedRegex("^#(?<id>\\d+)\\s+@\\s+(?<el>\\d+),(?<et>\\d+): (?<wide>\\d+)x(?<tall>\\d+)$", RegexOptions.Compiled)]
+	private static partial Regex ClaimsRegex();
 
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
+		var regex = ClaimsRegex();
 
-		var regex = new Regex(@"^#(?<id>\d+)\s+@\s+(?<el>\d+),(?<et>\d+): (?<wide>\d+)x(?<tall>\d+)$", RegexOptions.Compiled);
+		static List<int> dGetOrAdd(Dictionary<(int x, int y), List<int>> d, (int x, int y) key) => 
+			d.TryGetValue(key, out var l) ? l : (d[key] = new List<int>());
 
-		List<int> dGetOrAdd(Dictionary<(int x, int y), List<int>> d, (int x, int y) key)
-		{
-			if (d.TryGetValue(key, out var l))
-				return l;
-			return d[key] = new List<int>();
-		}
-
-		var claims = input.GetLines()
+		var claims = input.Lines
 			.Select(c => regex.Match(c))
 			.Select(m => new
 			{
@@ -37,7 +31,7 @@ public class Day_2018_03_Original : Day
 				foreach (var y in Enumerable.Range(c.et, c.tall))
 					dGetOrAdd(fabric, (x, y)).Add(c.id);
 
-		Dump('A', fabric.Count(kvp => kvp.Value.Count > 1));
+		var part1 = fabric.Count(kvp => kvp.Value.Count > 1).ToString();
 
 		var claimsCountById = claims
 			.ToDictionary(
@@ -50,9 +44,11 @@ public class Day_2018_03_Original : Day
 			.Select(g => (id: g.Key, count: g.Count()))
 			.ToList();
 
-		Dump('B',
-			soloFabrics
-				.Single(f => f.count == claimsCountById[f.id])
-				.id);
+		var part2 = soloFabrics
+			.Single(f => f.count == claimsCountById[f.id])
+			.id
+			.ToString();
+
+		return (part1, part2);
 	}
 }

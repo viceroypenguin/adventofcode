@@ -1,13 +1,11 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2018;
 
-public class Day_2018_20_Original : Day
+[Puzzle(2018, 20, CodeType.Original)]
+public class Day_20_Original : IPuzzle
 {
-	public override int Year => 2018;
-	public override int DayNumber => 20;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
+		return (string.Empty, string.Empty);
 		// Apparently, I checked in incomplete code?
 		//var data = input.GetString();
 

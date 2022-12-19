@@ -22,6 +22,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\AdventOfCode.Common\AdventOfCode.Common.csproj" />
+		<ProjectReference Include="..\AdventOfCode.Puzzles\2018\AdventOfCode.Puzzles.2018.csproj" />
 		<ProjectReference Include="..\AdventOfCode.Puzzles\2019\AdventOfCode.Puzzles.2019.csproj" />
 		<ProjectReference Include="..\AdventOfCode.Puzzles\2020\AdventOfCode.Puzzles.2020.csproj" />
 		<ProjectReference Include="..\AdventOfCode.Puzzles\2021\AdventOfCode.Puzzles.2021.csproj" />

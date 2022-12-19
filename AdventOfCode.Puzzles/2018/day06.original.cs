@@ -1,16 +1,11 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2018;
 
-public class Day_2018_06_Original : Day
+[Puzzle(2018, 06, CodeType.Original)]
+public class Day_06_Original : IPuzzle
 {
-	public override int Year => 2018;
-	public override int DayNumber => 6;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var coordinates = input.GetLines()
+		var coordinates = input.Lines
 			.Select(s => s.Split(new[] { ", " }, StringSplitOptions.None))
 			.Select(s => s.Select(i => Convert.ToInt32(i)).ToArray())
 			.Select(s => (x: s[0], y: s[1]))
@@ -53,13 +48,15 @@ public class Day_2018_06_Original : Day
 			}
 
 		excluded = excluded.Distinct().ToList();
-		Dump('A',
-			counts
-				.Where(kvp => !excluded.Contains(kvp.Key))
-				.OrderByDescending(kvp => kvp.Value)
-				.First()
-				.Value);
 
-		Dump('B', safeCount);
+		var part1 = counts
+			.Where(kvp => !excluded.Contains(kvp.Key))
+			.OrderByDescending(kvp => kvp.Value)
+			.First()
+			.Value
+			.ToString();
+
+		var part2 = safeCount.ToString();
+		return (part1, part2);
 	}
 }

@@ -1,15 +1,10 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2018;
 
-public class Day_2018_14_Original : Day
+[Puzzle(2018, 14, CodeType.Original)]
+public class Day_14_Original : IPuzzle
 {
-	public override int Year => 2018;
-	public override int DayNumber => 14;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
 		var marbles = new LinkedList<int>();
 		LinkedListNode<int> prevNode(LinkedListNode<int> node) =>
 			node.Previous ?? marbles.Last;
@@ -50,12 +45,11 @@ public class Day_2018_14_Original : Day
 			elf2 = nextNodeCount(elf2, elf2.Value + 1);
 		}
 
-		var numRecipes = Convert.ToInt32(input.GetString());
+		var numRecipes = Convert.ToInt32(input.Text);
 		while (marbles.Count < numRecipes + 10)
 			DoTick();
 
-		Dump('A',
-			string.Join(
+		var part1 = string.Join(
 				"",
 				SuperEnumerable
 					.Generate(
@@ -63,7 +57,7 @@ public class Day_2018_14_Original : Day
 						n => nextNode(n))
 					.Skip(numRecipes)
 					.Take(10)
-					.Select(n => n.Value)));
+					.Select(n => n.Value));
 
 		marbles.Clear();
 		AddNumber(numRecipes);
@@ -74,6 +68,7 @@ public class Day_2018_14_Original : Day
 		elf1 = marbles.First;
 		elf2 = nextNode(elf1);
 
+		var part2 = 0;
 		while (true)
 		{
 			DoTick();
@@ -86,8 +81,8 @@ public class Day_2018_14_Original : Day
 				.Select(n => n.Value)
 				.SequenceEqual(matchList))
 			{
-				Dump('B', marbles.Count - matchList.Count);
-				return;
+				part2 = marbles.Count - matchList.Count;
+				break;
 			}
 
 			if (SuperEnumerable
@@ -99,9 +94,11 @@ public class Day_2018_14_Original : Day
 				.Select(n => n.Value)
 				.SequenceEqual(matchList))
 			{
-				Dump('B', marbles.Count - matchList.Count - 1);
-				return;
+				part2 = marbles.Count - matchList.Count - 1;
+				break;
 			}
 		}
+
+		return (part1, part2.ToString());
 	}
 }

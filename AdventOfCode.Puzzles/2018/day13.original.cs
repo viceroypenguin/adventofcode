@@ -1,11 +1,8 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2018;
 
-public class Day_2018_13_Original : Day
+[Puzzle(2018, 13, CodeType.Original)]
+public class Day_13_Original : IPuzzle
 {
-	public override int Year => 2018;
-	public override int DayNumber => 13;
-	public override CodeType CodeType => CodeType.Original;
-
 	static Cart[] carts;
 	static char[][] map;
 
@@ -17,11 +14,9 @@ public class Day_2018_13_Original : Day
 		Down,
 	}
 
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		map = input.GetLines()
+		map = input.Lines
 			.Select(s => s.ToArray())
 			.ToArray();
 
@@ -48,6 +43,7 @@ public class Day_2018_13_Original : Day
 
 		var ticks = 0;
 		var firstCrash = false;
+		var part1 = string.Empty;
 		while (true)
 		{
 			ticks++;
@@ -61,7 +57,7 @@ public class Day_2018_13_Original : Day
 				if (!firstCrash)
 				{
 					var c = carts.First(x => x.IsCrashed);
-					Dump('A', $"{c.Y},{c.X}");
+					part1 = $"{c.Y},{c.X}";
 					firstCrash = true;
 				}
 				carts = carts
@@ -70,8 +66,8 @@ public class Day_2018_13_Original : Day
 
 				if (carts.Length == 1)
 				{
-					Dump('B', $"{carts[0].Y},{carts[0].X}");
-					return;
+					var part2 = $"{carts[0].Y},{carts[0].X}";
+					return (part1, part2);
 				}
 			}
 		}

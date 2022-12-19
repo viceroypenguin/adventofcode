@@ -1,19 +1,14 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2018;
 
-public class Day_2018_08_Original : Day
+[Puzzle(2018, 08, CodeType.Original)]
+public class Day_08_Original : IPuzzle
 {
-	public override int Year => 2018;
-	public override int DayNumber => 8;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var data = input.GetString()
+		var data = input.Text
 			.Trim()
 			.Split()
-			.Select(l => Convert.ToInt32(l))
+			.Select(int.Parse)
 			.ToList();
 
 		int index = 0;
@@ -29,7 +24,7 @@ public class Day_2018_08_Original : Day
 					.Sum(_ => data[index++]);
 		}
 
-		Dump('A', GetMetadataValue());
+		var part1 = GetMetadataValue().ToString();
 
 		index = 0;
 		int GetNodeValue()
@@ -52,6 +47,8 @@ public class Day_2018_08_Original : Day
 					: 0);
 		}
 
-		Dump('B', GetNodeValue());
+		var part2 = GetNodeValue().ToString();
+
+		return (part1, part2);
 	}
 }

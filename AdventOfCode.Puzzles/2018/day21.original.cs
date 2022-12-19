@@ -1,18 +1,13 @@
 ﻿using System.Linq.Expressions;
 
-namespace AdventOfCode;
+namespace AdventOfCode.Puzzles._2018;
 
-public class Day_2018_19_Original : Day
+[Puzzle(2018, 21, CodeType.Original)]
+public class Day_21_Original : IPuzzle
 {
-	public override int Year => 2018;
-	public override int DayNumber => 19;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var data = input.GetLines();
+		var data = input.Lines;
 		var ipRegister = Convert.ToInt32(data.First().Substring(4));
 
 		var instructions = data.Skip(1)
@@ -26,14 +21,8 @@ public class Day_2018_19_Original : Day
 			})
 			.ToList();
 
-		// specific optimization for algorithm in day19 code
-		instructions[9] = new { inst = "seti", a = 36, b = 5, c = 2, };
-		instructions[10] = new { inst = "addi", a = 1, b = 0, c = 1, };
-		instructions.Add(new { inst = "mulr", a = 4, b = 5, c = 1, });
-		instructions.Add(new { inst = "gtrr", a = 1, b = 3, c = 1, });
-		instructions.Add(new { inst = "addr", a = 2, b = 1, c = 2, });
-		instructions.Add(new { inst = "seti", a = 2, b = 0, c = 2, });
-		instructions.Add(new { inst = "seti", a = 11, b = 0, c = 2, });
+		// rewrite elf to signal w/ register value
+		instructions[28] = new { inst = "sigr", a = 4, b = 0, c = 2, };
 
 		var registers = new[]
 		{
@@ -44,6 +33,7 @@ public class Day_2018_19_Original : Day
 				Expression.Variable(typeof(int), "r4"),
 				Expression.Variable(typeof(int), "r5"),
 			};
+		var signalParam = Expression.Parameter(typeof(Func<int, bool>), "signal");
 
 		var labels = Enumerable.Range(0, instructions.Count + 1)
 			.Select(i => Expression.Label($"l{i}"))
@@ -77,6 +67,7 @@ public class Day_2018_19_Original : Day
 			["eqrr"] = (a, b, ip) => Expression.Equal(GetRegisterValue(a, ip), GetRegisterValue(b, ip)),
 			["eqri"] = (a, b, ip) => Expression.Equal(GetRegisterValue(a, ip), Expression.Constant(b)),
 			["eqir"] = (a, b, ip) => Expression.Equal(Expression.Constant(a), GetRegisterValue(b, ip)),
+			["sigr"] = (a, b, ip) => Expression.Invoke(signalParam, GetRegisterValue(a, ip)),
 		};
 
 		List<Expression> expressions = new List<Expression>();
@@ -144,15 +135,34 @@ public class Day_2018_19_Original : Day
 		expressions.Add(Expression.Label(labels.Last()));
 		expressions.Add(Expression.Label(returnLabel, registers[0]));
 
-		var lambda = Expression.Lambda<Func<int, int>>(
+		var lambda = Expression.Lambda<Func<int, Func<int, bool>, int>>(
 				Expression.Block(
 					registers.Skip(1),
 					expressions),
-				registers[0]);
+				registers[0],
+				signalParam);
 
 		var func = lambda.Compile();
 
-		Dump('A', func(0));
-		Dump('B', func(1));
+		var part1 = 0;
+		var part2 = 0;
+
+		var list = new List<int>();
+		bool HandleCall(int val)
+		{
+			if (list.Count == 0)
+				part1 = val;
+
+			if (list.Contains(val))
+			{
+				part2 = list.Last();
+				return true;
+			}
+			list.Add(val);
+			return false;
+		}
+
+		func(0, HandleCall);
+		return (part1.ToString(), part2.ToString());
 	}
 }

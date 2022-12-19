@@ -1,16 +1,11 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2018;
 
-public class Day_2018_16_Original : Day
+[Puzzle(2018, 16, CodeType.Original)]
+public class Day_16_Original : IPuzzle
 {
-	public override int Year => 2018;
-	public override int DayNumber => 16;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var data = input.GetLines(options: StringSplitOptions.None);
+		var data = input.Lines;
 
 		int[] ParseRegisters(string str) =>
 			str.Substring(9, 10)
@@ -71,7 +66,7 @@ public class Day_2018_16_Original : Day
 			})
 			.ToList();
 
-		Dump('A', key.Count(cnt => cnt >= 3));
+		var part1 = key.Count(cnt => cnt >= 3);
 
 		var knownOpcodes = operations
 			.Where(o => o.opcodes.Count == 1)
@@ -116,6 +111,8 @@ public class Day_2018_16_Original : Day
 		foreach (var i in program)
 			registers[i[3]] = opCodes[i[0]](registers, i[1], i[2]);
 
-		Dump('B', registers[0]);
+		var part2= registers[0];
+
+		return (part1.ToString(), part2.ToString());
 	}
 }

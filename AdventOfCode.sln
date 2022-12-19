@@ -24,6 +24,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCode.Puzzles.2020",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCode.Puzzles.2019", "AdventOfCode.Puzzles\2019\AdventOfCode.Puzzles.2019.csproj", "{13B4704D-6544-4A63-AF23-F2B71430E7B5}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCode.Puzzles.2018", "AdventOfCode.Puzzles\2018\AdventOfCode.Puzzles.2018.csproj", "{7204AE9C-01DA-452B-9842-B90747079721}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +60,10 @@ Global
 		{13B4704D-6544-4A63-AF23-F2B71430E7B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13B4704D-6544-4A63-AF23-F2B71430E7B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13B4704D-6544-4A63-AF23-F2B71430E7B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7204AE9C-01DA-452B-9842-B90747079721}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7204AE9C-01DA-452B-9842-B90747079721}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7204AE9C-01DA-452B-9842-B90747079721}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7204AE9C-01DA-452B-9842-B90747079721}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

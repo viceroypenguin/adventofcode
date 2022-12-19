@@ -1,20 +1,15 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2018;
 
-public class Day_2018_18_Original : Day
+[Puzzle(2018, 18, CodeType.Original)]
+public class Day_18_Original : IPuzzle
 {
-	public override int Year => 2018;
-	public override int DayNumber => 18;
-	public override CodeType CodeType => CodeType.Original;
-
 	char[][] map;
 	string GetmapState() =>
 		new string(map.SelectMany(l => l).ToArray());
 
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		map = input.GetLines()
+		map = input.Lines
 			.Select(s => s.ToArray())
 			.ToArray();
 
@@ -26,7 +21,7 @@ public class Day_2018_18_Original : Day
 		var cellTypes = map.SelectMany(l => l)
 			.GroupBy(c => c)
 			.ToDictionary(c => c.Key, c => c.Count());
-		Dump('A', cellTypes['|'] * cellTypes['#']);
+		var part1 = cellTypes['|'] * cellTypes['#'];
 
 		var maxIter = 1_000_000_000;
 		var flag = false;
@@ -38,9 +33,9 @@ public class Day_2018_18_Original : Day
 			if (!flag)
 			{
 				var state = GetmapState();
-				if (seenStates.ContainsKey(state))
+				if (seenStates.TryGetValue(state, out var value))
 				{
-					var cycleLength = i - seenStates[state];
+					var cycleLength = i - value;
 					i = maxIter - ((maxIter - i) % cycleLength);
 					flag = true;
 				}
@@ -52,7 +47,9 @@ public class Day_2018_18_Original : Day
 		cellTypes = map.SelectMany(l => l)
 			.GroupBy(c => c)
 			.ToDictionary(c => c.Key, c => c.Count());
-		Dump('B', cellTypes['|'] * cellTypes['#']);
+		var part2 = cellTypes['|'] * cellTypes['#'];
+
+		return (part1.ToString(), part2.ToString());
 	}
 
 	private void DoIteration()

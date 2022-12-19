@@ -1,16 +1,11 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2018;
 
-public class Day_2018_05_Original : Day
+[Puzzle(2018, 05, CodeType.Original)]
+public class Day_05_Original : IPuzzle
 {
-	public override int Year => 2018;
-	public override int DayNumber => 5;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var poly = input.GetString();
+		var poly = input.Text;
 
 		int GetReducedPolymerLength(string polymer)
 		{
@@ -35,12 +30,14 @@ public class Day_2018_05_Original : Day
 			return characters.Where(x => x.isActive).Count();
 		}
 
-		Dump('A', GetReducedPolymerLength(poly));
+		var part1 =  GetReducedPolymerLength(poly).ToString();
 
-		Dump('B',
-			Enumerable.Range(0, 26)
-				.Select(i => (char)(i + (int)'a'))
-				.Select(c => Regex.Replace(poly, c.ToString(), "", RegexOptions.IgnoreCase))
-				.Min(s => GetReducedPolymerLength(s)));
+		var part2 = Enumerable.Range(0, 26)
+			.Select(i => (char)(i + (int)'a'))
+			.Select(c => Regex.Replace(poly, c.ToString(), "", RegexOptions.IgnoreCase))
+			.Min(s => GetReducedPolymerLength(s))
+			.ToString();
+
+		return (part1, part2);
 	}
 }

@@ -1,15 +1,10 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2018;
 
-public class Day_2018_04_Original : Day
+[Puzzle(2018, 04, CodeType.Original)]
+public class Day_04_Original : IPuzzle
 {
-	public override int Year => 2018;
-	public override int DayNumber => 4;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
 		const int BeginShift = 1;
 		const int FallsAsleep = 2;
 		const int WakesUp = 3;
@@ -18,7 +13,7 @@ public class Day_2018_04_Original : Day
 			@"^\[(?<date>\d{4}-\d{2}-\d{2} \d{2}\:\d{2})\] ((Guard #(?<id>\d+) begins shift)|(?<asleep>falls asleep)|(?<awake>wakes up))",
 			RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 
-		var sleeps = input.GetLines()
+		var sleeps = input.Lines
 			.Select(l => l.Trim())
 			.Select(l => regex.Match(l))
 			.Select(m => new
@@ -70,13 +65,13 @@ public class Day_2018_04_Original : Day
 			})
 			.ToList();
 
-		Dump('A',
-			guardMostSleep * minutes.Single(g => g.id == guardMostSleep).minute);
+		var part1 = guardMostSleep * minutes.Single(g => g.id == guardMostSleep).minute;
 
-		Dump('B',
-			minutes
-				.OrderByDescending(g => g.times)
-				.Select(g => g.id * g.minute)
-				.First());
+		var part2 = minutes
+			.OrderByDescending(g => g.times)
+			.Select(g => g.id * g.minute)
+			.First();
+
+		return (part1.ToString(), part2.ToString());
 	}
 }

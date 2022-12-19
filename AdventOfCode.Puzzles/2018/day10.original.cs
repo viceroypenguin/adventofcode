@@ -1,20 +1,16 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2018;
 
-public class Day_2018_10_Original : Day
+[Puzzle(2018, 10, CodeType.Original)]
+public partial class Day_10_Original : IPuzzle
 {
-	public override int Year => 2018;
-	public override int DayNumber => 10;
-	public override CodeType CodeType => CodeType.Original;
+	[GeneratedRegex("position=<(?<posx>(\\s*|-)\\d+),(?<posy>(\\s|-)*\\d+)> velocity=<(?<velx>(\\s*|-)\\d+),(?<vely>(\\s|-)*\\d+)>", RegexOptions.Compiled)]
+	private static partial Regex PositionRegex();
 
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
+		var regex = PositionRegex();
 
-		var regex = new Regex(
-			@"position=<(?<posx>(\s*|-)\d+),(?<posy>(\s|-)*\d+)> velocity=<(?<velx>(\s*|-)\d+),(?<vely>(\s|-)*\d+)>",
-			RegexOptions.Compiled);
-
-		var points = input.GetLines()
+		var points = input.Lines
 			 .Select(l => regex.Match(l))
 			 .Select(m => (
 				  // transposing for visibility
@@ -46,12 +42,14 @@ public class Day_2018_10_Original : Day
 				.ToArray())
 			.ToArray();
 
-		for (int i = 0; i < points.Length; i++)
+		for (var i = 0; i < points.Length; i++)
 		{
 			pixels[atStep[i].x - minx][atStep[i].y - miny] = '#';
 		}
 
-		DumpScreen('A', pixels);
-		Dump('B', steps);
+		var part1 = string.Join(Environment.NewLine, pixels
+			.Select(l => string.Join("", l)));
+		var part2 = steps.ToString();
+		return (part1, part2);
 	}
 }

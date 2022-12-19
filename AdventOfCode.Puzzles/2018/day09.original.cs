@@ -1,16 +1,11 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2018;
 
-public class Day_2018_09_Original : Day
+[Puzzle(2018, 09, CodeType.Original)]
+public class Day_09_Original : IPuzzle
 {
-	public override int Year => 2018;
-	public override int DayNumber => 9;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var data = input.GetString().Split();
+		var data = input.Text.Split();
 		var numPlayers = Convert.ToInt32(data[0]);
 		var maxPoints = Convert.ToInt32(data[6]);
 
@@ -47,12 +42,14 @@ public class Day_2018_09_Original : Day
 		for (i = 1; i <= maxPoints; i++)
 			DoLoop();
 
-		Dump('A', players.Max());
+		var part1 = players.Max().ToString();
 
 		maxPoints *= 100;
 		for (; i <= maxPoints; i++)
 			DoLoop();
 
-		Dump('B', players.Max());
+		var part2 = players.Max().ToString();
+
+		return (part1, part2);
 	}
 }

@@ -1,20 +1,15 @@
 ﻿using System.Collections;
 
-namespace AdventOfCode;
+namespace AdventOfCode.Puzzles._2018;
 
-public class Day_2018_12_Original : Day
+[Puzzle(2018, 12, CodeType.Original)]
+public class Day_12_Original : IPuzzle
 {
-	public override int Year => 2018;
-	public override int DayNumber => 12;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
 		var numGenerations = 150;
 
-		var lines = input.GetLines();
+		var lines = input.Lines;
 		var initialStateStr = lines[0].Replace("initial state: ", "");
 
 		var bits = new BitArray(initialStateStr.Length + numGenerations * 2 + 8);
@@ -30,7 +25,7 @@ public class Day_2018_12_Original : Day
 		}
 
 		var map = lines
-			.Skip(1)
+			.Skip(2)
 			.Select(l => l.Split(new[] { " => " }, StringSplitOptions.None))
 			.ToDictionary(
 				l => BuildInt(l[0].Select(c => c == '#').ToList()),
@@ -39,9 +34,8 @@ public class Day_2018_12_Original : Day
 		bool GetValue(IList<bool> arr)
 		{
 			var key = BuildInt(arr);
-			if (!map.TryGetValue(key, out var ret))
-				return false;
-			return ret;
+			return map.TryGetValue(key, out var ret)
+				&& ret;
 		}
 
 		for (int gen = 1; gen <= 20; gen++)
@@ -58,11 +52,11 @@ public class Day_2018_12_Original : Day
 			bits = nextBits;
 		}
 
-		Dump('A',
-			Enumerable.Range(0, bits.Count)
-				.Select(i => (idx: i - (numGenerations + 2), val: bits[i]))
-				.Where(x => x.val)
-				.Sum(x => x.idx));
+		var part1 =Enumerable.Range(0, bits.Count)
+			.Select(i => (idx: i - (numGenerations + 2), val: bits[i]))
+			.Where(x => x.val)
+			.Sum(x => x.idx)
+			.ToString();
 
 		for (int gen = 20; gen <= numGenerations; gen++)
 		{
@@ -78,10 +72,12 @@ public class Day_2018_12_Original : Day
 			bits = nextBits;
 		}
 
-		Dump('B',
-			Enumerable.Range(0, bits.Count)
-				.Select(i => (idx: i - (numGenerations + 2), val: bits[i]))
-				.Where(x => x.val)
-				.Sum(x => x.idx + (50_000_000_000L - numGenerations - 1)));
+		var part2 = Enumerable.Range(0, bits.Count)
+			.Select(i => (idx: i - (numGenerations + 2), val: bits[i]))
+			.Where(x => x.val)
+			.Sum(x => x.idx + (50_000_000_000L - numGenerations - 1))
+			.ToString();
+
+		return (part1, part2);
 	}
 }
