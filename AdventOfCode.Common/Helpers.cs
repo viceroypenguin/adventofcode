@@ -24,6 +24,9 @@ public static class Helpers
 	public static long lcm(long a, long b) =>
 		a * b / gcd(a, b);
 
+	public static int DivRoundUp(this int a, int b) =>
+		(a + b - 1) / b;
+
 	[MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
 	public static (int value, int numChars) AtoI(this ReadOnlySpan<byte> bytes)
 	{

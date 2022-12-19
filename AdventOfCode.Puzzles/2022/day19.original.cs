@@ -53,6 +53,7 @@ public partial class Day_19_Original : IPuzzle
 	private static int GetMaxGeodes(Dictionary<string, Dictionary<string, int>> robots, int minutes)
 	{
 		var yield = 0;
+		var states = 0;
 
 		var maxOreCost = robots.Values.Select(v => v.GetValueOrDefault("ore")).Max();
 		var maxClayCost = robots.Values.Select(v => v.GetValueOrDefault("clay")).Max();
@@ -61,6 +62,12 @@ public partial class Day_19_Original : IPuzzle
 		var seen = new HashSet<State>();
 		IEnumerable<State> GetChildren(State s)
 		{
+			states++;
+
+			// if it's not even possible for us to beat yield in a perfect world...
+			if (s.GeodeCount + s.GeodeRobots * s.Minute + (s.Minute * (s.Minute + 1) / 2) < yield)
+				yield break;
+
 			// reduce robots to increase state overlap
 			// can only produce one 1 robot per minute, so no need for more material production than we can consume in a minute
 			s = s with
@@ -90,39 +97,84 @@ public partial class Day_19_Original : IPuzzle
 				yield break;
 			}
 
-			// tick time forward
-			var newState = s with
 			{
-				Minute = s.Minute - 1,
-				OreCount = s.OreCount + s.OreRobots,
-				ClayCount = s.ClayCount + s.ClayRobots,
-				ObsidianCount = s.ObsidianCount + s.ObsidianRobots,
-				GeodeCount = s.GeodeCount + s.GeodeRobots,
-			};
-
-			yield return newState;
-
-			if (s.OreCount >= robots["ore"]["ore"])
-				yield return newState with { OreCount = newState.OreCount - robots["ore"]["ore"], OreRobots = s.OreRobots + 1, };
-
-			if (s.OreCount >= robots["clay"]["ore"])
-				yield return newState with { OreCount = newState.OreCount - robots["clay"]["ore"], ClayRobots = s.ClayRobots + 1 };
-
-			if (s.OreCount >= robots["obsidian"]["ore"] && s.ClayCount >= robots["obsidian"]["clay"])
-				yield return newState with
+				var time = 1 + (robots["ore"]["ore"] - s.OreCount).DivRoundUp(s.OreRobots);
+				if (time < s.Minute)
 				{
-					OreCount = newState.OreCount - robots["obsidian"]["ore"],
-					ClayCount = newState.ClayCount - robots["obsidian"]["clay"],
-					ObsidianRobots = s.ObsidianRobots + 1,
-				};
+					yield return s with
+					{
+						Minute = s.Minute - time,
+						OreCount = s.OreCount + s.OreRobots * time - robots["ore"]["ore"],
+						ClayCount = s.ClayCount + s.ClayRobots * time,
+						ObsidianCount = s.ObsidianCount + s.ObsidianRobots * time,
+						GeodeCount = s.GeodeCount + s.GeodeRobots * time,
+						OreRobots = s.OreRobots + 1,
+					};
+				}
+			}
 
-			if (s.OreCount >= robots["geode"]["ore"] && s.ObsidianCount >= robots["geode"]["obsidian"])
-				yield return newState with
+			{
+				var time = 1 + (robots["clay"]["ore"] - s.OreCount).DivRoundUp(s.OreRobots);
+				if (time < s.Minute)
 				{
-					OreCount = newState.OreCount - robots["geode"]["ore"],
-					ObsidianCount = newState.ObsidianCount - robots["geode"]["obsidian"],
-					GeodeRobots = s.GeodeRobots + 1,
+					yield return s with
+					{
+						Minute = s.Minute - time,
+						OreCount = s.OreCount + s.OreRobots * time - robots["clay"]["ore"],
+						ClayCount = s.ClayCount + s.ClayRobots * time,
+						ObsidianCount = s.ObsidianCount + s.ObsidianRobots * time,
+						GeodeCount = s.GeodeCount + s.GeodeRobots * time,
+						ClayRobots = s.ClayRobots + 1,
+					};
+				}
+			}
+
+			if (s.ClayRobots > 0)
+			{
+				var time = 1 + Math.Max(
+					(robots["obsidian"]["ore"] - s.OreCount).DivRoundUp(s.OreRobots),
+					(robots["obsidian"]["clay"] - s.ClayCount).DivRoundUp(s.ClayRobots));
+				if (time < s.Minute)
+				{
+					yield return s with
+					{
+						Minute = s.Minute - time,
+						OreCount = s.OreCount + s.OreRobots * time - robots["obsidian"]["ore"],
+						ClayCount = s.ClayCount + s.ClayRobots * time - robots["obsidian"]["clay"],
+						ObsidianCount = s.ObsidianCount + s.ObsidianRobots * time,
+						GeodeCount = s.GeodeCount + s.GeodeRobots * time,
+						ObsidianRobots = s.ObsidianRobots + 1,
+					};
+				}
+			}
+
+			if (s.ObsidianRobots > 0)
+			{
+				var time = 1 + Math.Max(
+					(robots["geode"]["ore"] - s.OreCount).DivRoundUp(s.OreRobots),
+					(robots["geode"]["obsidian"] - s.ObsidianCount).DivRoundUp(s.ObsidianRobots));
+				if (time < s.Minute)
+				{
+					yield return s with
+					{
+						Minute = s.Minute - time,
+						OreCount = s.OreCount + s.OreRobots * time - robots["geode"]["ore"],
+						ClayCount = s.ClayCount + s.ClayRobots * time,
+						ObsidianCount = s.ObsidianCount + s.ObsidianRobots * time - robots["geode"]["obsidian"],
+						GeodeCount = s.GeodeCount + s.GeodeRobots * time,
+						GeodeRobots = s.GeodeRobots + 1,
+					};
+				}
+			}
+
+			if (s.GeodeRobots > 0)
+			{
+				yield return s with
+				{
+					Minute = 0,
+					GeodeCount = s.GeodeCount + s.GeodeRobots * s.Minute,
 				};
+			}
 		}
 
 		// BFS over the search space
