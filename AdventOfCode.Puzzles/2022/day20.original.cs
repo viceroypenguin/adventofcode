@@ -43,8 +43,17 @@ public partial class Day_20_Original : IPuzzle
 			if (n == 0)
 				continue;
 
-			for (int j = 0; j < n; j++)
-				nextNode = nextNode.NextNode;
+			if (n <= len / 2)
+			{
+				for (int j = 0; j < n; j++)
+					nextNode = nextNode.NextNode;
+			}
+			else
+			{
+				n = len - n;
+				for (int j = 0; j <= n; j++)
+					nextNode = nextNode.PrevNode;
+			}
 
 			node.NextNode.PrevNode = node.PrevNode;
 			node.PrevNode.NextNode = node.NextNode;
