@@ -3,79 +3,87 @@
 [Puzzle(2022, 21, CodeType.Original)]
 public partial class Day_21_Original : IPuzzle
 {
+	private enum Operation { Constant, Add, Subtract, Multiply, Divide, };
+	private readonly record struct Monkey(Operation Operation, decimal? Constant = null, string Left = "", string Right = "");
 	public (string part1, string part2) Solve(PuzzleInput input)
 	{
-		var values = new Dictionary<string, Func<decimal>>();
-		var l = string.Empty;
-		var r = string.Empty;
-
-		foreach (var (name, expr) in input.Lines
+		var values = input.Lines
 			.Select(l => l.Split(": "))
-			.Select(l => (name: l[0], expr: l[1])))
-		{
-			if (name == "root")
-			{
-				var s = expr.Split();
-				l = s[0];
-				r = s[^1];
-			}
+			.ToDictionary(
+				x => x[0],
+				x => x[1].Split() switch
+				{
+					[var number] => new Monkey(Operation.Constant, decimal.Parse(number)),
+					[var a, var o, var b] => new Monkey(
+						Operation: o switch
+						{
+							"+" => Operation.Add,
+							"-" => Operation.Subtract,
+							"*" => Operation.Multiply,
+							"/" => Operation.Divide,
+						},
+						Left: a,
+						Right: b),
+				});
 
-			values[name] = expr.Split() switch
+		var cache = new Dictionary<string, decimal?>(values.Count);
+		decimal? GetValue(string monkey) =>
+			cache[monkey] = values[monkey] switch
 			{
-				[var number] when decimal.TryParse(number, out var n) =>
-					() => n,
-
-				[var a, "+", var b] =>
-					() => values[a]() + values[b](),
-				[var a, "*", var b] =>
-					() => values[a]() * values[b](),
-				[var a, "-", var b] =>
-					() => values[a]() - values[b](),
-				[var a, "/", var b] =>
-					() => values[a]() / values[b](),
-				_ => throw new InvalidOperationException(),
+				(Operation.Constant, var c, _, _) => c,
+				(Operation.Add, _, var l, var r) => GetValue(l) + GetValue(r),
+				(Operation.Subtract, _, var l, var r) => GetValue(l) - GetValue(r),
+				(Operation.Multiply, _, var l, var r) => GetValue(l) * GetValue(r),
+				(Operation.Divide, _, var l, var r) => GetValue(l) / GetValue(r),
 			};
-		}
 
-		var part1 = values["root"]().ToString();
+		var part1 = GetValue("root")!.Value.ToString();
 
-		// value is constant relative to humn, so cache
-		var ri = values[r]();
+		values["humn"] = new Monkey(Operation.Constant);
+		values["root"] = values["root"] with { Operation = Operation.Subtract, };
+		// reset cache
+		_ = GetValue("root");
 
-		// starting point
-		var i = values["humn"]();
-
-		// build up scale
-		var lo = i;
-		var hi = i;
-		while (true)
+		decimal Solve()
 		{
-			values["humn"] = () => i;
-			if (values[l]() - ri < 0)
-				break;
-
-			lo = i;
-			hi = i *= 2;
-		}
-		
-		// binary search down
-		i = (hi + lo) / 2;
-		while (true)
-		{
-			values["humn"] = () => i;
-			var diff = values[l]() - ri;
-			if (diff == 0)
+			var (monkey, val) = ("root", 0m);
+			while (true)
 			{
-				var part2 = i.ToString();
-				return (part1, part2);
+				if (monkey == "humn")
+					return val;
+
+				var m = values[monkey];
+
+				if (cache[m.Left] != null)
+				{
+					var known = cache[m.Left]!.Value;
+					var v = m.Operation switch
+					{
+						Operation.Constant => throw new InvalidOperationException("Can't be unknown..."),
+						Operation.Add => val - known,
+						Operation.Subtract => known - val,
+						Operation.Multiply => val / known,
+						Operation.Divide => known / val,
+					};
+					(monkey, val) = (m.Right, v);
+				}
+				else
+				{
+					var known = cache[m.Right]!.Value;
+					var v = m.Operation switch
+					{
+						Operation.Constant => throw new InvalidOperationException("Can't be unknown..."),
+						Operation.Add => val - known,
+						Operation.Subtract => val + known,
+						Operation.Multiply => val / known,
+						Operation.Divide => val * known,
+					};
+					(monkey, val) = (m.Left, v);
+				}
 			}
-
-			if (diff < 0)
-				hi = i;
-			else
-				lo = i;
-
-			i = (hi + lo) / 2;
 		}
+
+		var part2 = Solve().ToString();
+		return (part1, part2);
 	}
 }
