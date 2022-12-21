@@ -54,32 +54,21 @@ public partial class Day_21_Original : IPuzzle
 
 				var m = values[monkey];
 
-				if (cache[m.Left] != null)
+				var (known, unknown, flag) = cache[m.Left] != null
+					? (cache[m.Left]!.Value, m.Right, false)
+					: (cache[m.Right]!.Value, m.Left, true);
+
+				var v = (m.Operation, flag) switch
 				{
-					var known = cache[m.Left]!.Value;
-					var v = m.Operation switch
-					{
-						Operation.Constant => throw new InvalidOperationException("Can't be unknown..."),
-						Operation.Add => val - known,
-						Operation.Subtract => known - val,
-						Operation.Multiply => val / known,
-						Operation.Divide => known / val,
-					};
-					(monkey, val) = (m.Right, v);
-				}
-				else
-				{
-					var known = cache[m.Right]!.Value;
-					var v = m.Operation switch
-					{
-						Operation.Constant => throw new InvalidOperationException("Can't be unknown..."),
-						Operation.Add => val - known,
-						Operation.Subtract => val + known,
-						Operation.Multiply => val / known,
-						Operation.Divide => val * known,
-					};
-					(monkey, val) = (m.Left, v);
-				}
+					(Operation.Constant, _) => throw new InvalidOperationException("Can't be unknown..."),
+					(Operation.Add, _) => val - known,
+					(Operation.Subtract, false) => known - val,
+					(Operation.Subtract, true) => val + known,
+					(Operation.Multiply, _) => val / known,
+					(Operation.Divide, false) => known / val,
+					(Operation.Divide, true) => val * known,
+				};
+				(monkey, val) = (unknown, v);
 			}
 		}
 
