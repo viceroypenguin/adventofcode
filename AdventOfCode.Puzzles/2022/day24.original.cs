@@ -21,21 +21,22 @@ public class Day_24_Original : IPuzzle
 			if (t < blizzards.Count)
 				return blizzards[t];
 
-			var next = new List<((int x, int y) p, byte dir)>();
-			foreach (var ((x, y), dir) in lastBlizzard)
-			{
-				var n = dir switch
+			lastBlizzard = lastBlizzard
+				.Select(_ =>
 				{
-					(byte)'>' => (x: x + 1 == map![0].Length - 1 ? 1 : x + 1, y),
-					(byte)'<' => (x: x - 1 == 0 ? map![0].Length - 2 : x - 1, y),
-					(byte)'^' => (x, y - 1 == 0 ? map!.Length - 2 : y - 1),
-					(byte)'v' => (x, y + 1 == map!.Length - 1 ? 1 : y + 1),
-				};
-				next.Add((n, dir));
-			}
+					var ((x, y), dir) = _;
+					var n = dir switch
+					{
+						(byte)'>' => (x: x + 1 == map[0].Length - 1 ? 1 : x + 1, y),
+						(byte)'<' => (x: x - 1 == 0 ? map[0].Length - 2 : x - 1, y),
+						(byte)'^' => (x, y - 1 == 0 ? map.Length - 2 : y - 1),
+						(byte)'v' => (x, y + 1 == map.Length - 1 ? 1 : y + 1),
+					};
+					return (n, dir);
+				})
+				.ToList();
 
-			lastBlizzard = next;
-			var ret = next.Select(x => x.p).ToHashSet();
+			var ret = lastBlizzard.Select(x => x.p).ToHashSet();
 			blizzards.Add(ret);
 			return ret;
 		}
