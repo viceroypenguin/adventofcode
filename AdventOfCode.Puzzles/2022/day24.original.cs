@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace AdventOfCode.Puzzles._2022;
+﻿namespace AdventOfCode.Puzzles._2022;
 
 [Puzzle(2022, 24, CodeType.Original)]
 public class Day_24_Original : IPuzzle
