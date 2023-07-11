@@ -13,6 +13,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="SuperLinq" Version="4.6.0" />
+		<PackageReference Include="SuperLinq" Version="5.2.0" />
 	</ItemGroup>
 </Project>
