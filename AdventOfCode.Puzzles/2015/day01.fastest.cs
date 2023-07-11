@@ -1,31 +1,25 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2015;
 
-public class Day_2015_01_Fastest : Day
+[Puzzle(2015, 01, CodeType.Fastest)]
+public class Day_01_Fastest : IPuzzle
 {
-	public override int Year => 2015;
-	public override int DayNumber => 1;
-	public override CodeType CodeType => CodeType.Fastest;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
 		var level = 0;
-		foreach (var c in input)
-			level += ((byte)'(' - c) * 2 + 1;
-
-		Dump('A', level);
+		foreach (var c in input.Bytes)
+			level += (('(' - c) * 2) + 1;
+		var partA = level;
 
 		level = 0;
-		int cnt = 0;
-		foreach (var c in input)
+		var cnt = 0;
+		foreach (var c in input.Bytes)
 		{
 			cnt++;
-			level += ((byte)'(' - c) * 2 + 1;
+			level += (('(' - c) * 2) + 1;
 			if (level < 0)
 				break;
 		}
 
-		Dump('B', cnt);
+		return (partA.ToString(), cnt.ToString());
 	}
 }

@@ -1,46 +1,33 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2015;
 
-public class Day_2015_10_Original : Day
+[Puzzle(2015, 10, CodeType.Original)]
+public class Day_10_Original : IPuzzle
 {
-	public override int Year => 2015;
-	public override int DayNumber => 10;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
+		var line = input.Lines[0];
 
-		foreach (var _ in Enumerable.Range(1, 50))
-		{
-			var curLength = 1;
-			var curChar = input[0];
-			var newInput = new List<byte>();
+		line = SuperEnumerable
+			.Generate(
+				line,
+				Transform)
+			.ElementAt(40);
+		var partA = line.Length;
 
-			var idx = 1;
-			while (idx < input.Length)
-			{
-				var c = input[idx];
-				idx++;
+		line = SuperEnumerable
+			.Generate(
+				line,
+				Transform)
+			.ElementAt(10);
+		var partB = line.Length;
 
-				if (c == curChar)
-					curLength++;
-				else
-				{
-					newInput.AddRange(curLength.ToString().ToCharArray().Select(x => (byte)x));
-					newInput.Add(curChar);
+		return (partA.ToString(), partB.ToString());
 
-					curLength = 1;
-					curChar = c;
-				}
-			}
-
-			newInput.AddRange(curLength.ToString().ToCharArray().Select(x => (byte)x));
-			newInput.Add(curChar);
-
-			input = newInput.ToArray();
-
-			if (_ == 40 || _ == 50)
-				Dump(_ == 40 ? 'A' : 'B', input.Length);
-		}
+		static string Transform(string str) =>
+			string.Join(
+				"",
+				str
+					.RunLengthEncode()
+					.Select(rle => $"{rle.count}{rle.value}"));
 	}
 }

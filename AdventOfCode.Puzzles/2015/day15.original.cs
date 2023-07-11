@@ -1,21 +1,19 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2015;
 
-public class Day_2015_15_Original : Day
+[Puzzle(2015, 15, CodeType.Original)]
+public partial class Day_15_Original : IPuzzle
 {
-	public override int Year => 2015;
-	public override int DayNumber => 15;
-	public override CodeType CodeType => CodeType.Original;
+	[GeneratedRegex("(\\w+): capacity (-?\\d+), durability (-?\\d+), flavor (-?\\d+), texture (-?\\d+), calories (-?\\d+)")]
+	private static partial Regex IngredientRegex();
 
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
 		var totalIngredients = 100;
 		var totalCalories = 500;
 
-		var regex = new Regex(@"(\w+): capacity (-?\d+), durability (-?\d+), flavor (-?\d+), texture (-?\d+), calories (-?\d+)");
+		var regex = IngredientRegex();
 
-		var ingredients = input.GetLines()
+		var ingredients = input.Lines
 			.Select(x => regex.Match(x))
 			.Select(x => new
 			{
@@ -28,16 +26,16 @@ public class Day_2015_15_Original : Day
 			})
 			.ToList();
 
-		Func<IEnumerable<int>, bool> validCalories = (qtys) => qtys
+		bool validCalories(IEnumerable<int> qtys) => qtys
 			.Zip(
 				ingredients,
 				(q, i) => new { q, i })
 			.Aggregate(
 				0,
-				(calories, _) => calories + _.q * _.i.calories,
+				(calories, _) => calories + (_.q * _.i.calories),
 				calories => calories == totalCalories);
 
-		Func<IEnumerable<int>, int> scoreFunc = (IEnumerable<int> qtys) => qtys
+		int scoreFunc(IEnumerable<int> qtys) => qtys
 			.Zip(
 				ingredients,
 				(q, i) => new { q, i })
@@ -45,11 +43,11 @@ public class Day_2015_15_Original : Day
 				new { capacity = 0, durability = 0, flavor = 0, texture = 0, calories = 0 },
 				(agg, _) => new
 				{
-					capacity = agg.capacity + _.q * _.i.capacity,
-					durability = agg.durability + _.q * _.i.durability,
-					flavor = agg.flavor + _.q * _.i.flavor,
-					texture = agg.texture + _.q * _.i.texture,
-					calories = agg.calories + _.q * _.i.calories,
+					capacity = agg.capacity + (_.q * _.i.capacity),
+					durability = agg.durability + (_.q * _.i.durability),
+					flavor = agg.flavor + (_.q * _.i.flavor),
+					texture = agg.texture + (_.q * _.i.texture),
+					calories = agg.calories + (_.q * _.i.calories),
 				},
 				agg => Math.Max(agg.capacity, 0) * Math.Max(agg.durability, 0) * Math.Max(agg.flavor, 0) * Math.Max(agg.texture, 0));
 
@@ -62,15 +60,20 @@ public class Day_2015_15_Original : Day
 		var max500Score = 0;
 		var maxRawScore = 0;
 
-		Func<bool> getNextValue = () =>
+		bool getNextValue()
 		{
 			var i = 0;
 			do
 			{
 				if (++currValue[i] == 101)
-				{ currValue[i] = 0; i++; }
+				{
+					currValue[i] = 0;
+					i++;
+				}
 				else
+				{
 					break;
+				}
 
 				if (i == numIngredients - 1)
 					return false;
@@ -80,7 +83,7 @@ public class Day_2015_15_Original : Day
 			currValue[numIngredients - 1] = totalIngredients - currValue.Sum();
 
 			return true;
-		};
+		}
 
 		// full space search.  terrible, but few parameters so brute force works
 		// don't want to write full optimizing engine
@@ -93,7 +96,8 @@ public class Day_2015_15_Original : Day
 				max500Score = Math.Max(max500Score, score);
 		}
 
-		Dump('A', maxRawScore);
-		Dump('B', max500Score);
+		return (
+			maxRawScore.ToString(),
+			max500Score.ToString());
 	}
 }

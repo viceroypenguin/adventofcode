@@ -1,34 +1,30 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2015;
 
-public class Day_2015_18_Original : Day
+[Puzzle(2015, 18, CodeType.Original)]
+public class Day_18_Original : IPuzzle
 {
-	public override int Year => 2015;
-	public override int DayNumber => 18;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		ExecutePart(false, input);
-		ExecutePart(true, input);
+		return (
+			ExecutePart(false, input.Lines).ToString(),
+			ExecutePart(true, input.Lines).ToString());
 	}
 
-	private void ExecutePart(bool part2, byte[] input)
+	private int ExecutePart(bool part2, string[] lines)
 	{
-		var lights = input.GetLines()
+		var lights = lines
 			.Select(s => s.ToCharArray().Select(c => c == '#').ToArray())
 			.ToArray();
 
 		if (part2)
 		{
 			lights[0][0] = true;
-			lights[0][lights[0].Length - 1] = true;
-			lights[lights.Length - 1][0] = true;
-			lights[lights.Length - 1][lights[0].Length - 1] = true;
+			lights[0][^1] = true;
+			lights[^1][0] = true;
+			lights[^1][^1] = true;
 		}
 
-		Func<int, int, int> getLight = (x, y) =>
+		int getLight(int x, int y)
 		{
 			if (x < 0) return 0;
 			if (y < 0) return 0;
@@ -36,7 +32,8 @@ public class Day_2015_18_Original : Day
 			if (y >= lights[0].Length) return 0;
 
 			return lights[x][y] ? 1 : 0;
-		};
+		}
+
 		foreach (var _ in Enumerable.Range(0, 100))
 		{
 			lights =
@@ -46,11 +43,13 @@ public class Day_2015_18_Original : Day
 							.Select((col, y) =>
 							{
 								if (part2 && (
-									x == 0 && y == 0 ||
-									x == lights.Length - 1 && y == 0 ||
-									x == 0 && y == lights[0].Length - 1 ||
-									x == lights.Length - 1 && y == lights[0].Length - 1))
+									(x == 0 && y == 0) ||
+									(x == lights.Length - 1 && y == 0) ||
+									(x == 0 && y == lights[0].Length - 1) ||
+									(x == lights.Length - 1 && y == lights[0].Length - 1)))
+								{
 									return true;
+								}
 
 								var numNeighbors =
 									getLight(x - 1, y - 1) +
@@ -67,9 +66,8 @@ public class Day_2015_18_Original : Day
 					.ToArray();
 		}
 
-		Dump(part2 ? 'B' : 'A',
-			lights.SelectMany(x => x)
-				.Where(b => b)
-				.Count());
+		return lights
+			.SelectMany(SuperEnumerable.Identity)
+			.Count(SuperEnumerable.Identity);
 	}
 }

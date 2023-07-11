@@ -1,38 +1,39 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2015;
 
-public class Day_2015_02_Original : Day
+[Puzzle(2015, 02, CodeType.Original)]
+public partial class Day_02_Original : IPuzzle
 {
-	public override int Year => 2015;
-	public override int DayNumber => 2;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var regex = new Regex(@"(?<l>\d+)x(?<w>\d+)x(?<h>\d+)", RegexOptions.Compiled);
-		var boxes = input.GetLines()
-			.Select(l => regex.Match(l))
-			.Select(m => new[]
-			{
+		var boxes = input.Lines
+			.Select(l => BoxRegex().Match(l))
+			.Select(m =>
+				new[]
+				{
 					Convert.ToInt32(m.Groups["l"].Value),
 					Convert.ToInt32(m.Groups["w"].Value),
 					Convert.ToInt32(m.Groups["h"].Value),
-			}.OrderBy(l => l).ToArray())
+				}
+				.OrderBy(l => l)
+				.ToList())
 			.ToList();
 
 		var totalWrappingPaper =
 			boxes
 				.Select(b => new[] { b[0] * b[1], b[0] * b[2], b[1] * b[2], }.OrderBy(a => a).ToArray())
-				.Select(a => 3 * a[0] + 2 * a[1] + 2 * a[2])
+				.Select(a => (3 * a[0]) + (2 * a[1]) + (2 * a[2]))
 				.Sum();
 
 		var totalRibbonLength =
 			boxes
-				.Select(b => b[0] * b[1] * b[2] + 2 * b[0] + 2 * b[1])
+				.Select(b => (b[0] * b[1] * b[2]) + (2 * b[0]) + (2 * b[1]))
 				.Sum();
 
-		Dump('A', totalWrappingPaper);
-		Dump('B', totalRibbonLength);
+		return (
+			totalWrappingPaper.ToString(),
+			totalRibbonLength.ToString());
 	}
+
+	[GeneratedRegex("(?<l>\\d+)x(?<w>\\d+)x(?<h>\\d+)", RegexOptions.Compiled)]
+	private static partial Regex BoxRegex();
 }

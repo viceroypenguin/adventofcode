@@ -1,16 +1,14 @@
 ﻿using System.Security.Cryptography;
+using System.Text;
 
-namespace AdventOfCode;
+namespace AdventOfCode.Puzzles._2015;
 
-public class Day_2015_04_Original : Day
+[Puzzle(2015, 04, CodeType.Original)]
+public class Day_04_Original : IPuzzle
 {
-	public override int Year => 2015;
-	public override int DayNumber => 4;
-	public override CodeType CodeType => CodeType.Original;
-
-	bool HasLeadingZeros(int numZeros, byte[] bytes)
+	private static bool HasLeadingZeros(int numZeros, byte[] bytes)
 	{
-		for (int i = 0; i < numZeros; i++)
+		for (var i = 0; i < numZeros; i++)
 		{
 			var mask = (i % 2 == 0) ? (byte)0xf0 : (byte)0x0f;
 			if ((bytes[i / 2] & mask) != 0x00)
@@ -19,25 +17,25 @@ public class Day_2015_04_Original : Day
 		return true;
 	}
 
-	int GetPassword(string input, int numZeros)
+#pragma warning disable CA5351 // Do Not Use Broken Cryptographic Algorithms
+	private static int GetPassword(string input, int numZeros)
 	{
-		using (var md5 = MD5.Create())
-			for (var i = 0; ; i++)
-			{
-				var hashSrc = input + i.ToString();
-				var hashSrcBytes = Encoding.ASCII.GetBytes(hashSrc);
-				var hash = md5.ComputeHash(hashSrcBytes);
-				if (HasLeadingZeros(numZeros, hash))
-					return i;
-			}
+		for (var i = 0; ; i++)
+		{
+			var hashSrc = input + i.ToString();
+			var hashSrcBytes = Encoding.ASCII.GetBytes(hashSrc);
+			var hash = MD5.HashData(hashSrcBytes);
+			if (HasLeadingZeros(numZeros, hash))
+				return i;
+		}
 	}
+#pragma warning restore CA5351 // Do Not Use Broken Cryptographic Algorithms
 
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var inp = input.GetString();
-		Dump('A', GetPassword(inp, 5));
-		Dump('B', GetPassword(inp, 6));
+		var inp = input.Lines[0];
+		return (
+			GetPassword(inp, 5).ToString(),
+			GetPassword(inp, 6).ToString());
 	}
 }

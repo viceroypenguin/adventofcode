@@ -1,27 +1,23 @@
 ﻿using System.Collections.Immutable;
 
-namespace AdventOfCode;
+namespace AdventOfCode.Puzzles._2015;
 
-public class Day_2015_22_Original : Day
+[Puzzle(2015, 22, CodeType.Original)]
+public class Day_22_Original : IPuzzle
 {
-	public override int Year => 2015;
-	public override int DayNumber => 22;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var stats = input.GetLines();
+		var stats = input.Lines;
 
 		var hitPoints = Convert.ToInt32(stats[0].Split().Last());
 		var damage = Convert.ToInt32(stats[1].Split().Last());
 
-		Dump('A', HandleTurn(false, new CharacterSet(hitPoints, damage)).Item1);
-		Dump('B', HandleTurn(true, new CharacterSet(hitPoints, damage)).Item1);
+		return (
+			HandleTurn(false, new CharacterSet(hitPoints, damage)).minMana.ToString(),
+			HandleTurn(true, new CharacterSet(hitPoints, damage)).minMana.ToString());
 	}
 
-	enum TurnAction
+	private enum TurnAction
 	{
 		BossAttack,
 		MagicMissile,
@@ -31,23 +27,21 @@ public class Day_2015_22_Original : Day
 		Recharge,
 	}
 
-	Tuple<int, ImmutableStack<TurnAction>> HandleTurn(bool partB, CharacterSet set)
-	{
-		return _HandleTurn(partB, set, Tuple.Create(int.MaxValue, ImmutableStack<TurnAction>.Empty), Tuple.Create(0, ImmutableStack<TurnAction>.Empty));
-	}
+	private static (int minMana, ImmutableStack<TurnAction> actions) HandleTurn(bool partB, CharacterSet set) =>
+		HandleTurn(partB, set, (int.MaxValue, ImmutableStack<TurnAction>.Empty), (0, ImmutableStack<TurnAction>.Empty));
 
-	Tuple<int, ImmutableStack<TurnAction>> _HandleTurn(bool partB, CharacterSet set, Tuple<int, ImmutableStack<TurnAction>> minActions, Tuple<int, ImmutableStack<TurnAction>> actionsSoFar)
+	private static (int minMana, ImmutableStack<TurnAction> actions) HandleTurn(bool partB, CharacterSet set, (int minMana, ImmutableStack<TurnAction> actions) minActions, (int minMana, ImmutableStack<TurnAction> actions) actionsSoFar)
 	{
 		set.DoNextTurn(partB);
 
 		if (!set.Player.IsAlive)
-			return Tuple.Create(int.MaxValue, ImmutableStack<TurnAction>.Empty);
+			return (int.MaxValue, ImmutableStack<TurnAction>.Empty);
 		if (!set.Boss.IsAlive)
 			return actionsSoFar;
 
 		set.ProcessEffects();
 		if (!set.Player.IsAlive)
-			return Tuple.Create(int.MaxValue, ImmutableStack<TurnAction>.Empty);
+			return (int.MaxValue, ImmutableStack<TurnAction>.Empty);
 		if (!set.Boss.IsAlive)
 			return actionsSoFar;
 
@@ -55,7 +49,7 @@ public class Day_2015_22_Original : Day
 		{
 			case WhoseTurn.BossTurn:
 				set.Boss.Attack(set.Player);
-				return _HandleTurn(partB, set, minActions, Tuple.Create(actionsSoFar.Item1, actionsSoFar.Item2.Push(TurnAction.BossAttack)));
+				return HandleTurn(partB, set, minActions, (actionsSoFar.minMana, actionsSoFar.actions.Push(TurnAction.BossAttack)));
 
 			case WhoseTurn.PlayerTurn:
 				foreach (var effect in _Effects)
@@ -68,11 +62,11 @@ public class Day_2015_22_Original : Day
 
 					var testSet = set.Clone();
 					testSet.Player.Cast(effect, testSet.Boss);
-					var testCost = actionsSoFar.Item1 + effect.Mana;
-					if (testCost > minActions.Item1)
+					var testCost = actionsSoFar.minMana + effect.Mana;
+					if (testCost > minActions.minMana)
 						continue;
-					var playCost = _HandleTurn(partB, testSet, minActions, Tuple.Create(testCost, actionsSoFar.Item2.Push(effect.TurnAction)));
-					if (playCost.Item1 < minActions.Item1)
+					var playCost = HandleTurn(partB, testSet, minActions, (testCost, actionsSoFar.actions.Push(effect.TurnAction)));
+					if (playCost.minMana < minActions.minMana)
 						minActions = playCost;
 				}
 				return minActions;
@@ -88,7 +82,7 @@ public class Day_2015_22_Original : Day
 		BossTurn,
 	}
 
-	class CharacterSet
+	private sealed class CharacterSet
 	{
 		public Character Boss { get; private set; }
 		public Character Player { get; private set; }
@@ -127,20 +121,20 @@ public class Day_2015_22_Original : Day
 				effect.Effect.DoEffect(Boss, Player);
 				effect.Timer--;
 			}
-			Player.Effects.RemoveAll(e => e.Timer <= 0);
+			_ = Player.Effects.RemoveAll(e => e.Timer <= 0);
 
 			foreach (var effect in Boss.Effects)
 			{
 				effect.Effect.DoEffect(Player, Boss);
 				effect.Timer--;
 			}
-			Boss.Effects.RemoveAll(e => e.Timer <= 0);
+			_ = Boss.Effects.RemoveAll(e => e.Timer <= 0);
 		}
 
-		public CharacterSet Clone() => new CharacterSet(this);
+		public CharacterSet Clone() => new(this);
 	}
 
-	class Character
+	private sealed class Character
 	{
 		public int HitPoints { get; set; }
 		public int Damage { get; set; }
@@ -169,30 +163,33 @@ public class Day_2015_22_Original : Day
 
 		public Character Clone()
 		{
-			var c = new Character();
-
-			c.HitPoints = this.HitPoints;
-			c.Damage = this.Damage;
-			c.BaseArmor = this.BaseArmor;
-			c.EffectArmor = this.EffectArmor;
-			c.Mana = this.Mana;
-			c.Effects = new List<ActiveEffect>(this.Effects.Select(e => new ActiveEffect()
+			var c = new Character
 			{
-				Effect = e.Effect,
-				Timer = e.Timer,
-			}));
+				HitPoints = HitPoints,
+				Damage = Damage,
+				BaseArmor = BaseArmor,
+				EffectArmor = EffectArmor,
+				Mana = Mana,
+				Effects = Effects
+					.Select(e => new ActiveEffect()
+					{
+						Effect = e.Effect,
+						Timer = e.Timer,
+					})
+					.ToList(),
+			};
 
 			return c;
 		}
 
 		public void ResetTurn()
 		{
-			this.EffectArmor = 0;
+			EffectArmor = 0;
 		}
 
 		public void Attack(Character defender)
 		{
-			var damage = Math.Max(this.Damage - defender.Armor, 1);
+			var damage = Math.Max(Damage - defender.Armor, 1);
 			defender.HitPoints -= damage;
 		}
 
@@ -202,23 +199,25 @@ public class Day_2015_22_Original : Day
 				effect.DoEffect(defender, this);
 
 			if (effect.Length > 0)
-				this.Effects.Add(new ActiveEffect()
+			{
+				Effects.Add(new ActiveEffect()
 				{
 					Effect = effect,
 					Timer = effect.Length,
 				});
+			}
 
-			this.Mana -= effect.Mana;
+			Mana -= effect.Mana;
 		}
 	}
 
-	class ActiveEffect
+	private sealed class ActiveEffect
 	{
 		public Effect Effect { get; set; }
 		public int Timer { get; set; }
 	}
 
-	abstract class Effect
+	private abstract class Effect
 	{
 		public abstract int Mana { get; }
 		public abstract int Length { get; }
@@ -228,16 +227,16 @@ public class Day_2015_22_Original : Day
 		public abstract void DoEffect(Character defender, Character attacker);
 	}
 
-	static List<Effect> _Effects = new List<Effect>()
-{
-	new MagicMissile(),
-	new Drain(),
-	new Shield(),
-	new Poison(),
-	new Recharge(),
-};
+	private static readonly IReadOnlyList<Effect> _Effects = new Effect[]
+	{
+		new MagicMissile(),
+		new Drain(),
+		new Shield(),
+		new Poison(),
+		new Recharge(),
+	};
 
-	class MagicMissile : Effect
+	private sealed class MagicMissile : Effect
 	{
 		public override int Mana => 53;
 		public override int Length => 0;
@@ -250,7 +249,7 @@ public class Day_2015_22_Original : Day
 		}
 	}
 
-	class Drain : Effect
+	private sealed class Drain : Effect
 	{
 		public override int Mana => 73;
 		public override int Length => 0;
@@ -264,7 +263,7 @@ public class Day_2015_22_Original : Day
 		}
 	}
 
-	class Shield : Effect
+	private sealed class Shield : Effect
 	{
 		public override int Mana => 113;
 		public override int Length => 6;
@@ -277,7 +276,7 @@ public class Day_2015_22_Original : Day
 		}
 	}
 
-	class Poison : Effect
+	private sealed class Poison : Effect
 	{
 		public override int Mana => 173;
 		public override int Length => 6;
@@ -290,7 +289,7 @@ public class Day_2015_22_Original : Day
 		}
 	}
 
-	class Recharge : Effect
+	private sealed class Recharge : Effect
 	{
 		public override int Mana => 229;
 		public override int Length => 5;

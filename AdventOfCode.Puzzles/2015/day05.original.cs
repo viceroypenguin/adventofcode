@@ -1,79 +1,45 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2015;
 
-public class Day_2015_05_Original : Day
+[Puzzle(2015, 05, CodeType.Original)]
+public class Day_05_Original : IPuzzle
 {
-	public override int Year => 2015;
-	public override int DayNumber => 5;
-	public override CodeType CodeType => CodeType.Original;
+	private static bool HasThreeVowels(string str) => str
+		.Where(c => c is 'a' or 'e' or 'i' or 'o' or 'u')
+		.Take(3)
+		.Count() == 3;
 
-	char[] vowels = new char[] { 'a', 'e', 'i', 'o', 'u', };
-	bool HasThreeVowels(string str)
+	private static bool HasPair(string str) =>
+		str.Lead(1, (f, s) => f == s).Any(b => b);
+
+	private static readonly string[] evilStrings = new string[] { "ab", "cd", "pq", "xy", };
+	private static bool HasEvilStrings(string str) =>
+		evilStrings.Any(str.Contains);
+
+	private static bool IsNicePartA(string str) =>
+		!HasEvilStrings(str)
+		&& HasPair(str)
+		&& HasThreeVowels(str);
+
+	private static bool HasRepeatLetter(string str) =>
+		str.Lead(2, (f, s) => f == s).Any(b => b);
+
+	private static bool HasDuplicatePair(string str) =>
+		Enumerable.Range(0, str.Length - 1)
+			.Select(i => new { index = i, pair = str.Substring(i, 2) })
+			.GroupBy(_ => _.pair)
+			.Where(g => g.Count() > 1)
+			.Any(g => g.Last().index - g.First().index > 1);
+
+	private static bool IsNicePartB(string str) =>
+		HasDuplicatePair(str)
+		&& HasRepeatLetter(str);
+
+	public (string, string) Solve(PuzzleInput input)
 	{
-		return str
-			.Where(c => vowels.Contains(c))
-			.Take(3)
-			.Count() == 3;
-	}
+		var lines = input.Lines;
 
-	bool HasPair(string str)
-	{
-		return str.Zip(
-				str.Skip(1),
-				(f, s) => f == s)
-			.Any(b => b);
-	}
-
-	string[] evilStrings = new string[] { "ab", "cd", "pq", "xy", };
-	bool HasEvilStrings(string str)
-	{
-		return evilStrings
-			.Any(s => str.Contains(s));
-	}
-
-	bool IsNicePartA(string str)
-	{
-		return
-			!HasEvilStrings(str) &&
-				HasPair(str) &&
-				HasThreeVowels(str);
-	}
-
-	bool HasRepeatLetter(string str)
-	{
-		return str.Zip(
-				str.Skip(2),
-				(f, s) => f == s)
-			.Any(b => b);
-	}
-
-	bool HasDuplicatePair(string str)
-	{
-		return
-			Enumerable.Range(0, str.Length - 1)
-				.Select(i => new { index = i, pair = str.Substring(i, 2) })
-				.GroupBy(_ => _.pair)
-				.Where(g => g.Count() > 1)
-				.Where(g => g.Last().index - g.First().index > 1)
-				.Any();
-	}
-
-	bool IsNicePartB(string str)
-	{
-		return
-			HasDuplicatePair(str) &&
-			HasRepeatLetter(str);
-	}
-
-	protected override void ExecuteDay(byte[] input)
-	{
-		if (input == null) return;
-
-		var lines = input.GetLines();
-
-		Dump('A',
-			lines.Count(s => IsNicePartA(s)));
-		Dump('B',
-			lines
-				.Count(s => IsNicePartB(s)));
+		return (
+			lines.Count(IsNicePartA).ToString(),
+			lines.Count(IsNicePartB).ToString());
 	}
 }

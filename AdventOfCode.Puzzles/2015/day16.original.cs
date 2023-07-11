@@ -1,15 +1,16 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2015;
 
-public class Day_2015_16_Original : Day
+[Puzzle(2015, 16, CodeType.Original)]
+public partial class Day_16_Original : IPuzzle
 {
-	public override int Year => 2015;
-	public override int DayNumber => 16;
-	public override CodeType CodeType => CodeType.Original;
+	[GeneratedRegex(@"Sue (\d+):( \w+: \d+,?)+")]
+	private static partial Regex SueIngredientRegex();
 
-	protected override void ExecuteDay(byte[] input)
+	[GeneratedRegex(@" ?(\w+): (\d+)")]
+	private static partial Regex IngredientRegex();
+
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
 		var giftInput =
 @"children: 3
 cats: 7
@@ -22,10 +23,10 @@ trees: 3
 cars: 2
 perfumes: 1";
 
-		var regex = new Regex(@"Sue (\d+):( \w+: \d+,?)+");
-		var detailRegex = new Regex(@" ?(\w+): (\d+)");
+		var regex = SueIngredientRegex();
+		var detailRegex = IngredientRegex();
 
-		var sues = input.GetLines()
+		var sues = input.Lines
 			.Select(x => regex.Match(x))
 			.Select(x => new
 			{
@@ -50,68 +51,56 @@ perfumes: 1";
 			})
 			.ToDictionary(x => x.detailType);
 
+		var partA = 0;
 		foreach (var s in sues)
 		{
-			var flag = true;
-			foreach (var d in s.details)
-				if (!giftDetails.ContainsKey(d.detailType) ||
-					giftDetails[d.detailType].detailValue != d.detailValue)
-				{
-					flag = false;
-					break;
-				}
+			var flag = !s.details
+				.Any(d =>
+					!giftDetails.ContainsKey(d.detailType)
+					|| giftDetails[d.detailType].detailValue != d.detailValue);
 
 			if (flag)
-			{
-				Dump('A', s.number);
-			}
+				partA = s.number;
 		}
 
+		var partB = 0;
 		foreach (var s in sues)
 		{
 			var flag = true;
-			foreach (var d in s.details)
-				if (giftDetails.ContainsKey(d.detailType))
+			foreach (var d in s.details.Where(d => giftDetails.ContainsKey(d.detailType)))
+			{
+				if (d.detailType is "cats" or "trees")
 				{
-					switch (d.detailType)
+					// gift detail is minimum value of aunt
+					if (giftDetails[d.detailType].detailValue >= d.detailValue)
 					{
-						case "cats":
-						case "trees":
-							// gift detail is minimum value of aunt
-							if (giftDetails[d.detailType].detailValue >= d.detailValue)
-							{
-								flag = false;
-								goto skipLoop;
-							}
-							break;
-
-						case "pomeranians":
-						case "goldfish":
-							// gift detail is maximum value of aunt
-							if (giftDetails[d.detailType].detailValue <= d.detailValue)
-							{
-								flag = false;
-								goto skipLoop;
-							}
-							break;
-
-						default:
-							if (giftDetails[d.detailType].detailValue != d.detailValue)
-							{
-								flag = false;
-								goto skipLoop;
-							}
-							break;
+						flag = false;
+						break;
 					}
 				}
-
-			if (flag)
-			{
-				Dump('B', s.number);
+				else if (d.detailType is "pomeranians" or "goldfish")
+				{
+					// gift detail is maximum value of aunt
+					if (giftDetails[d.detailType].detailValue <= d.detailValue)
+					{
+						flag = false;
+						break;
+					}
+				}
+				else
+				{
+					if (giftDetails[d.detailType].detailValue != d.detailValue)
+					{
+						flag = false;
+						break;
+					}
+				}
 			}
 
-skipLoop:
-			;
+			if (flag)
+				partB = s.number;
 		}
+
+		return (partA.ToString(), partB.ToString());
 	}
 }

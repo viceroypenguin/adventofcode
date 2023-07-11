@@ -1,18 +1,13 @@
 ﻿using System.Collections.Immutable;
 
-namespace AdventOfCode;
+namespace AdventOfCode.Puzzles._2015;
 
-public class Day_2015_24_Original : Day
+[Puzzle(2015, 24, CodeType.Original)]
+public class Day_24_Original : IPuzzle
 {
-	public override int Year => 2015;
-	public override int DayNumber => 24;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var weights = input.GetLines()
+		var weights = input.Lines
 			.Select(i => Convert.ToInt32(i))
 			.OrderByDescending(i => i)
 			.ToList();
@@ -21,7 +16,7 @@ public class Day_2015_24_Original : Day
 		groupWeight = totalWeight / 3;
 
 		GetSubsets(weights);
-		Dump('A',
+		var partA = 
 			Potentials
 				.Select(l => new
 				{
@@ -30,13 +25,13 @@ public class Day_2015_24_Original : Day
 				})
 				.OrderBy(l => l.QE)
 				.First()
-				.QE);
+				.QE;
 
 		groupWeight = totalWeight / 4;
 		Potentials = new List<IList<int>>();
 
 		GetSubsets(weights);
-		Dump('B',
+		var partB = 
 			Potentials
 				.Select(l => new
 				{
@@ -45,11 +40,13 @@ public class Day_2015_24_Original : Day
 				})
 				.OrderBy(l => l.QE)
 				.First()
-				.QE);
+				.QE;
+
+		return (partA.ToString(), partB.ToString());
 	}
 
-	int totalWeight;
-	int groupWeight;
+	private int totalWeight;
+	private int groupWeight;
 
 	IList<IList<int>> Potentials = new List<IList<int>>();
 

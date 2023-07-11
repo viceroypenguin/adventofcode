@@ -1,34 +1,28 @@
 ﻿using System.Collections.Immutable;
 
-namespace AdventOfCode;
+namespace AdventOfCode.Puzzles._2015;
 
-public class Day_2015_11_Original : Day
+[Puzzle(2015, 11, CodeType.Original)]
+public class Day_11_Original : IPuzzle
 {
-	public override int Year => 2015;
-	public override int DayNumber => 11;
-	public override CodeType CodeType => CodeType.Original;
-
-	int[] invalidChars =
+	private static readonly int[] invalidChars =
 	{
-			(int)'i' - (int)'a',
-			(int)'o' - (int)'a',
-			(int)'l' - (int)'a',
-		};
+		'i' - 'a',
+		'o' - 'a',
+		'l' - 'a',
+	};
 
-	ImmutableStack<int> IncrementPassword(ImmutableStack<int> password)
+	private static ImmutableStack<int> IncrementPassword(ImmutableStack<int> password)
 	{
 		var chr = password.Peek();
 		var tail = password.Pop();
 
-		if (chr == 25)
-			return IncrementPassword(tail).Push(0);
-		else if (invalidChars.Contains(chr + 1))
-			return tail.Push(chr + 2);
-		else
-			return tail.Push(chr + 1);
+		return chr == 25 ? IncrementPassword(tail).Push(0) :
+			invalidChars.Contains(chr + 1) ? tail.Push(chr + 2) :
+			tail.Push(chr + 1);
 	}
 
-	IEnumerable<ImmutableStack<int>> GetIncrementingPasswords(ImmutableStack<int> password)
+	private static IEnumerable<ImmutableStack<int>> GetIncrementingPasswords(ImmutableStack<int> password)
 	{
 		while (true)
 		{
@@ -37,53 +31,38 @@ public class Day_2015_11_Original : Day
 		}
 	}
 
-	bool ContainsStrictlyIncreasingTriplet(IEnumerable<int> password)
-	{
-		return password.Zip(password.Skip(1), (a, b) => new { a, b })
-			.Zip(password.Skip(2), (_, c) => new { _.a, _.b, c })
-			.Where(_ => _.a - 1 == _.b && _.b - 1 == _.c)
-			.Any();
-	}
+	private static bool ContainsStrictlyIncreasingTriplet(IEnumerable<int> password) =>
+		password.Window(3)
+			.Any(w => w[0] - 1 == w[1] && w[1] - 1 == w[2]);
 
-	bool ContainsTwoDuplicates(IEnumerable<int> password)
-	{
-		var duplicates = password
-			.Zip(
-				password.Skip(1),
-				(a, b) => new { a, b })
-			.Where(_ => _.a == _.b)
-			.ToList();
+	private static bool ContainsTwoDuplicates(IEnumerable<int> password) =>
+		password.Lead(1)
+			.Where(x => x.current == x.lead)
+			.Distinct()
+			.Count() > 1;
 
-		return duplicates.Distinct().Count() > 1;
-	}
-
-	IEnumerable<ImmutableStack<int>> GetPasswords(ImmutableStack<int> password)
-	{
-		return GetIncrementingPasswords(password)
+	private static IEnumerable<ImmutableStack<int>> GetPasswords(ImmutableStack<int> password) =>
+		GetIncrementingPasswords(password)
 			.Where(p =>
 				ContainsStrictlyIncreasingTriplet(p) &&
 				ContainsTwoDuplicates(p));
-	}
 
-	string PassAsString(IImmutableStack<int> password)
+	private static string PassAsString(IImmutableStack<int> password) =>
+		string.Join("", password.Reverse().Select(i => (char)(i + 'a')));
+
+	public (string, string) Solve(PuzzleInput input)
 	{
-		return string.Join("", password.Reverse().Select(i => (char)(i + (int)'a')));
-	}
-
-	protected override void ExecuteDay(byte[] input)
-	{
-		if (input == null) return;
-
 		var stack = ImmutableStack<int>.Empty;
-		foreach (var c in input)
-			stack = stack.Push((int)c - (int)'a');
+		foreach (var c in input.Bytes.AsSpan()[..^1])
+			stack = stack.Push(c - 'a');
 
 		var passwords = GetPasswords(stack)
 			.Take(2)
-			.Select(p => PassAsString(p))
-			.ToArray();
+			.Select(PassAsString)
+			.ToList();
 
-		Dump('A', passwords[0]);
-		Dump('B', passwords[1]);
+		return (
+			passwords[0],
+			passwords[1]);
 	}
 }

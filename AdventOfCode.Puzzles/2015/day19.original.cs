@@ -1,23 +1,21 @@
 ﻿using System.Collections.Immutable;
+using System;
 
-namespace AdventOfCode;
+namespace AdventOfCode.Puzzles._2015;
 
-public class Day_2015_19_Original : Day
+[Puzzle(2015, 19, CodeType.Original)]
+public partial class Day_19_Original : IPuzzle
 {
-	public override int Year => 2015;
-	public override int DayNumber => 19;
-	public override CodeType CodeType => CodeType.Original;
+	[GeneratedRegex(@"^(((\w+) => (\w+))|(\w+))$")]
+	private static partial Regex TransformationRegex();
 
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
+		var regex = TransformationRegex();
 
-		var regex = new Regex(@"^(((\w+) => (\w+))|(\w+))$");
-
-		var matches = input.GetLines()
+		var matches = input.Lines
 			.Select(s => regex.Match(s))
 			.ToList();
-
 
 		var transformations = matches
 			.Where(m => m.Groups[2].Success)
@@ -33,15 +31,15 @@ public class Day_2015_19_Original : Day
 			.Select(m => m.Groups[5].Value)
 			.Single();
 
-		Dump('A',
+		var partA =
 			transformations
 				.SelectMany(t => Regex.Matches(molecule, t.Source)
 					.OfType<Match>()
-					.Select(m => molecule.Substring(0, m.Index) + t.Result + molecule.Substring(m.Index + m.Length)))
+					.Select(m => string.Concat(molecule.AsSpan()[..m.Index], t.Result, molecule.AsSpan(m.Index + m.Length))))
 				.Distinct()
-				.Count());
+				.Count();
 
-		Dump('B',
+		var partB =
 			GetTransformations(
 				molecule,
 				transformations,
@@ -52,24 +50,25 @@ public class Day_2015_19_Original : Day
 						Result = "",
 						Molecule = molecule,
 					}))
-				.Count());
+				.Count() - 1;
 
+		return (partA.ToString(), partB.ToString());
 	}
 
-	class Transformation
+	private sealed class Transformation
 	{
 		public string Source { get; set; }
 		public string Result { get; set; }
 	}
 
-	class TransformationResult
+	private sealed class TransformationResult
 	{
 		public string Source { get; set; }
 		public string Result { get; set; }
 		public string Molecule { get; set; }
 	}
 
-	ImmutableStack<TransformationResult> GetTransformations(string molecule, List<Transformation> language, ImmutableStack<TransformationResult> stack)
+	private static ImmutableStack<TransformationResult> GetTransformations(string molecule, List<Transformation> language, ImmutableStack<TransformationResult> stack)
 	{
 		foreach (var opt in language)
 		{
@@ -77,7 +76,7 @@ public class Day_2015_19_Original : Day
 			if (idx < 0)
 				continue;
 
-			var newMolecule = molecule.Substring(0, idx) + opt.Source + molecule.Substring(idx + opt.Result.Length);
+			var newMolecule = string.Concat(molecule.AsSpan()[..idx], opt.Source, molecule.AsSpan(idx + opt.Result.Length));
 			var newStack = stack.Push(new TransformationResult
 			{
 				Source = opt.Source,

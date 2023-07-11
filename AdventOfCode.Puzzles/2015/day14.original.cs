@@ -1,19 +1,13 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2015;
 
-public class Day_2015_14_Original : Day
+[Puzzle(2015, 14, CodeType.Original)]
+public class Day_14_Original : IPuzzle
 {
-	public override int Year => 2015;
-	public override int DayNumber => 14;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
 		var time = 2503;
 
-		var reindeer = input
-			.GetLines()
+		var reindeer = input.Lines
 			.Select(x =>
 			{
 				var splits = x.Split();
@@ -46,7 +40,7 @@ public class Day_2015_14_Original : Day
 			.OrderByDescending(x => x.totalDistance)
 			.ToList();
 
-		Dump('A', reindeer.First().totalDistance);
+		var partA = reindeer.First().totalDistance;
 
 		var partB = Enumerable.Range(1, time)
 			.SelectMany(t =>
@@ -81,6 +75,6 @@ public class Day_2015_14_Original : Day
 			.First()
 			.count;
 
-		Dump('B', partB);
+		return (partA.ToString(), partB.ToString());
 	}
 }

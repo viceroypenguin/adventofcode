@@ -1,28 +1,27 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2015;
 
-public class Day_2015_25_Original : Day
+[Puzzle(2015, 25, CodeType.Original)]
+public partial class Day_25_Original : IPuzzle
 {
-	public override int Year => 2015;
-	public override int DayNumber => 25;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
+		static ulong Step(ulong x) => x * 252533 % 33554393;
 
-		Func<ulong, ulong> step = x => (x * 252533) % 33554393;
+		var matches = NumberRegex().Matches(input.Text);
+		var row = Convert.ToInt32(matches[0].Value);
+		var col = Convert.ToInt32(matches[1].Value);
 
-		var row = 2947;
-		var col = 3029;
+		static int TotalNums(int n) => n * (n - 1) / 2;
 
-		Func<int, int> totalNums = n => n * (n - 1) / 2;
-
-		var stepCount = totalNums(row + col) - (row - 1);
+		var stepCount = TotalNums(row + col) - (row - 1);
 
 		var num = 20151125UL;
 		foreach (var x in Enumerable.Range(0, stepCount - 1))
-			num = step(num);
+			num = Step(num);
 
-		Dump('A', num);
+		return (num.ToString(), string.Empty);
 	}
+
+	[GeneratedRegex("\\d+")]
+	private static partial Regex NumberRegex();
 }

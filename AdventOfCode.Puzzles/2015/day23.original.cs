@@ -1,37 +1,36 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2015;
 
-public class Day_2015_23_Original : Day
+[Puzzle(2015, 23, CodeType.Original)]
+public class Day_23_Original : IPuzzle
 {
-	public override int Year => 2015;
-	public override int DayNumber => 23;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
 		var instructions = input
-			.GetLines()
-			.Select(i => Instruction.ParseInstruction(i))
+			.Lines
+			.Select(Instruction.ParseInstruction)
 			.ToArray();
 
 		var cpu = new CPU();
 		while (cpu.IP < instructions.Length)
 			instructions[cpu.IP](cpu);
-		Dump('A', cpu.B);
+		var partA = cpu.B;
 
-		cpu = new CPU();
-		cpu.A = 1;
+		cpu = new CPU
+		{
+			A = 1
+		};
 		while (cpu.IP < instructions.Length)
 			instructions[cpu.IP](cpu);
-		Dump('B', cpu.B);
+		var partB = cpu.B;
+
+		return (partA.ToString(), partB.ToString());
 	}
 
 	public class CPU
 	{
-		public uint A { get; set; } = 0;
-		public uint B { get; set; } = 0;
-		public uint IP { get; set; } = 0;
+		public uint A { get; set; }
+		public uint B { get; set; }
+		public uint IP { get; set; }
 	}
 
 	public abstract class Instruction
@@ -53,12 +52,12 @@ public class Day_2015_23_Original : Day
 
 		private static Instruction[] _Instructions = new Instruction[]
 		{
-				new Half(),
-				new Third(),
-				new Increment(),
-				new Jump(),
-				new JumpEven(),
-				new JumpOne(),
+			new Half(),
+			new Third(),
+			new Increment(),
+			new Jump(),
+			new JumpEven(),
+			new JumpOne(),
 		};
 	}
 

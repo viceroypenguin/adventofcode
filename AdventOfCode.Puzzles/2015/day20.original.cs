@@ -1,48 +1,43 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2015;
 
-public class Day_2015_20_Original : Day
+[Puzzle(2015, 20, CodeType.Original)]
+public class Day_20_Original : IPuzzle
 {
-	public override int Year => 2015;
-	public override int DayNumber => 20;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
+		var number = Convert.ToUInt32(input.Text);
 
-		var number = Convert.ToUInt32(input.GetString());
-
-		DoPartA(number);
-		DoPartB(number);
+		return (
+			DoPartA(number).ToString(),
+			DoPartB(number).ToString());
 	}
 
-	private void DoPartA(uint number)
+	private static int DoPartA(uint number)
 	{
 		var numberToBeat = number / 10;
 
 		var numbers = new List<Tuple<int, Dictionary<int, int>>>()
-			{
-				Tuple.Create(0, new Dictionary<int, int>()             ),
-				Tuple.Create(1, new Dictionary<int, int>() { { 1, 1 } }),
-				Tuple.Create(3, new Dictionary<int, int>() { { 2, 1 } }),
-			};
+		{
+			Tuple.Create(0, new Dictionary<int, int>()             ),
+			Tuple.Create(1, new Dictionary<int, int>() { { 1, 1 } }),
+			Tuple.Create(3, new Dictionary<int, int>() { { 2, 1 } }),
+		};
 		for (var num = 3; ; num++)
 		{
 			var factors = new Dictionary<int, int>();
 
 			var numDiv = num;
 			for (var factor = (int)Math.Sqrt(num); factor > 1; factor--)
+			{
 				if (factor * (numDiv / factor) == numDiv)
 				{
 					foreach (var x in numbers[factor].Item2)
-						if (factors.ContainsKey(x.Key))
-							factors[x.Key] = factors[x.Key] + x.Value;
-						else
-							factors[x.Key] = x.Value;
+						factors[x.Key] = factors.GetValueOrDefault(x.Key) + x.Value;
 
 					numDiv /= factor;
 					factor = numDiv + 1;
 				}
+			}
 
 			if (!factors.Any())
 				factors.Add(num, 1);
@@ -57,16 +52,16 @@ public class Day_2015_20_Original : Day
 				break;
 		}
 
-		Dump('A', numbers.Count - 1);
+		return numbers.Count - 1;
 	}
 
-	private void DoPartB(uint numberToBeat)
+	private static int DoPartB(uint numberToBeat)
 	{
 		var numbers = new List<int>();
 
 		var candidateIdx = default(int?);
 
-		for (int factor = 1; !candidateIdx.HasValue || factor <= candidateIdx; factor++)
+		for (var factor = 1; !candidateIdx.HasValue || factor <= candidateIdx; factor++)
 		{
 			foreach (var mul in Enumerable.Range(1, 50).Reverse().Select(x => x * factor))
 			{
@@ -86,6 +81,6 @@ public class Day_2015_20_Original : Day
 			}
 		}
 
-		Dump('B', candidateIdx);
+		return candidateIdx!.Value;
 	}
 }

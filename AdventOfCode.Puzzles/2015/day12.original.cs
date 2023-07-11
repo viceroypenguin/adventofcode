@@ -1,35 +1,38 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2015;
 
-public class Day_2015_12_Original : Day
+[Puzzle(2015, 12, CodeType.Original)]
+public partial class Day_12_Original : IPuzzle
 {
-	public override int Year => 2015;
-	public override int DayNumber => 12;
-	public override CodeType CodeType => CodeType.Original;
+	[GeneratedRegex("[,:[](-?\\d+)")]
+	private static partial Regex NumbersRegex();
 
-	protected override void ExecuteDay(byte[] input)
+	[GeneratedRegex("{[^{}]*(((?<before>{)[^{}]*)+((?<-before>})[^{}]*)+)*(?(before)(?!))[^{}]*:\"red\"[^{}]*(((?<before>{)[^{}]*)+((?<-before>})[^{}]*)+)*(?(before)(?!))[^{}]*}")]
+	private static partial Regex JsonRegex();
+
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
+		var str = input.Text;
 
-		var str = input.GetString();
-
-		var regex = new Regex("[,:[](-?\\d+)");
-		Dump('A',
+		var regex = NumbersRegex();
+		var partA =
 			regex.Matches(str)
 				.OfType<Match>()
 				.Select(c => c.Groups[1])
 				.Select(c => c.Value)
 				.Select(c => Convert.ToInt32(c))
-				.Sum());
+				.Sum();
 
-		var redsRegex = new Regex("{[^{}]*(((?<before>{)[^{}]*)+((?<-before>})[^{}]*)+)*(?(before)(?!))[^{}]*:\"red\"[^{}]*(((?<before>{)[^{}]*)+((?<-before>})[^{}]*)+)*(?(before)(?!))[^{}]*}");
+		var redsRegex = JsonRegex();
 		str = redsRegex.Replace(str, "");
 
-		Dump('B',
+		var partB =
 			regex.Matches(str)
 				.OfType<Match>()
 				.Select(c => c.Groups[1])
 				.Select(c => c.Value)
 				.Select(c => Convert.ToInt32(c))
-				.Sum());
+				.Sum();
+
+		return (partA.ToString(), partB.ToString());
 	}
 }

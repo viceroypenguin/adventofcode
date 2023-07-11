@@ -1,25 +1,19 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2015;
 
-public class Day_2015_01_Original : Day
+[Puzzle(2015, 01, CodeType.Original)]
+public class Day_01_Original : IPuzzle
 {
-	public override int Year => 2015;
-	public override int DayNumber => 1;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
 		var level = 0;
 		var basement = 0;
-		foreach ((var c, var i) in input.Select((c, i) => (c, i + 1)))
+		foreach ((var i, var c) in input.Bytes.Index(1))
 		{
-			level += ((byte)'(' - c) * 2 + 1;
+			level += (('(' - c) * 2) + 1;
 			if (basement == 0 && level == -1)
 				basement = i;
 		}
 
-		Dump('A', level);
-		Dump('B', basement);
+		return (level.ToString(), basement.ToString());
 	}
 }

@@ -1,20 +1,15 @@
 ﻿using System.Collections;
 
-namespace AdventOfCode;
+namespace AdventOfCode.Puzzles._2015;
 
-public class Day_2015_17_Original : Day
+[Puzzle(2015, 17, CodeType.Original)]
+public class Day_17_Original : IPuzzle
 {
-	public override int Year => 2015;
-	public override int DayNumber => 17;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
 		var total = 150;
 
-		var containers = input.GetLines()
+		var containers = input.Lines
 			.Select(s => Convert.ToInt32(s))
 			.ToList();
 
@@ -36,21 +31,23 @@ public class Day_2015_17_Original : Day
 			{
 				numCombinations++;
 
-				var pop = bitstream.OfType<bool>().Where(b => b).Count();
+				var pop = bitstream.OfType<bool>().Count(b => b);
 				if (pop < minPop)
 				{
 					minPop = pop;
 					haveMinPop = 1;
 				}
 				else if (pop == minPop)
+				{
 					haveMinPop++;
-				//Convert.ToString(cnt, 2).PadLeft(containers.Count, '0').Dump();
+				}
 			}
 
 			cnt++;
 		}
 
-		Dump('A', numCombinations);
-		Dump('B', haveMinPop);
+		return (
+			numCombinations.ToString(),
+			haveMinPop.ToString());
 	}
 }

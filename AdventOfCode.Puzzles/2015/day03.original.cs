@@ -1,17 +1,12 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2015;
 
-public class Day_2015_03_Original : Day
+[Puzzle(2015, 03, CodeType.Original)]
+public class Day_03_Original : IPuzzle
 {
-	public override int Year => 2015;
-	public override int DayNumber => 3;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
 		var current = (x: 0, y: 0);
-		var santaHouses = input
+		var santaHouses = input.Bytes
 			.Select(c =>
 			{
 				if (c == '>') current = (current.x + 1, current.y);
@@ -23,11 +18,10 @@ public class Day_2015_03_Original : Day
 			.Concat(new[] { (0, 0) })
 			.Distinct()
 			.Count();
-		Dump('A', santaHouses);
 
 		current = (x: 0, y: 0);
 		var other = current;
-		var bothHouses = input
+		var bothHouses = input.Bytes
 			.Select(c =>
 			{
 				var t = other;
@@ -42,6 +36,8 @@ public class Day_2015_03_Original : Day
 			.Distinct()
 			.Count();
 
-		Dump('B', bothHouses);
+		return (
+			santaHouses.ToString(),
+			bothHouses.ToString());
 	}
 }

@@ -1,15 +1,10 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2015;
 
-public class Day_2015_21_Original : Day
+[Puzzle(2015, 21, CodeType.Original)]
+public partial class Day_21_Original : IPuzzle
 {
-	public override int Year => 2015;
-	public override int DayNumber => 21;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
 		var weapons = ParseItems(
 @"Dagger        8     4       0
 Shortsword   10     5       0
@@ -32,7 +27,7 @@ Defense +1   20     0       1
 Defense +2   40     0       2
 Defense +3   80     0       3").Concat(new Item[] { null });
 
-		var stats = input.GetLines();
+		var stats = input.Lines;
 
 		var boss = new Character
 		{
@@ -51,7 +46,7 @@ Defense +3   80     0       3").Concat(new Item[] { null });
 			where CanPlayerWin(player, boss)
 			orderby player.Cost
 			select player;
-		Dump('A', candidates.First().Cost);
+		var partA = candidates.First().Cost;
 
 		candidates =
 			from w in weapons
@@ -63,10 +58,12 @@ Defense +3   80     0       3").Concat(new Item[] { null });
 			where !CanPlayerWin(player, boss)
 			orderby player.Cost descending
 			select player;
-		Dump('B', candidates.First().Cost);
+		var partB = candidates.First().Cost;
+
+		return (partA.ToString(), partB.ToString());
 	}
 
-	class Character
+	private sealed class Character
 	{
 		public int HitPoints { get; set; }
 		public int Damage { get; set; }
@@ -79,7 +76,7 @@ Defense +3   80     0       3").Concat(new Item[] { null });
 		public Item Ring2Item { get; set; }
 	}
 
-	class Item
+	private sealed class Item
 	{
 		public string Name { get; set; }
 		public int Cost { get; set; }
@@ -87,24 +84,22 @@ Defense +3   80     0       3").Concat(new Item[] { null });
 		public int Armor { get; set; }
 	}
 
-	IList<Item> ParseItems(string input)
-	{
-		var regex = new Regex(@"(.+)\s+(\d+)\s+(\d+)\s+(\d+)");
+	[GeneratedRegex("(.+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)")]
+	private static partial Regex ParseRegex();
 
-		return
-			input.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
-				.Select(s => regex.Match(s))
-				.Select(m => new Item()
-				{
-					Name = m.Groups[1].Value,
-					Cost = Convert.ToInt32(m.Groups[2].Value),
-					Damage = Convert.ToInt32(m.Groups[3].Value),
-					Armor = Convert.ToInt32(m.Groups[4].Value),
-				})
-				.ToList();
-	}
+	private static IList<Item> ParseItems(string input) => 
+		input.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+			.Select(s => ParseRegex().Match(s))
+			.Select(m => new Item()
+			{
+				Name = m.Groups[1].Value,
+				Cost = Convert.ToInt32(m.Groups[2].Value),
+				Damage = Convert.ToInt32(m.Groups[3].Value),
+				Armor = Convert.ToInt32(m.Groups[4].Value),
+			})
+			.ToList();
 
-	bool CanPlayerWin(Character player, Character boss)
+	private static bool CanPlayerWin(Character player, Character boss)
 	{
 		var playerHitPointsPerTurn = Math.Max(boss.Damage - player.Armor, 1);
 		var bossHitPointsPerTurn = Math.Max(player.Damage - boss.Armor, 1);
@@ -115,9 +110,8 @@ Defense +3   80     0       3").Concat(new Item[] { null });
 		return bossTurns <= playerTurns;
 	}
 
-	Character BuildPlayerCharacter(Item weapon, Item armor, Item ring1, Item ring2)
-	{
-		return new Character
+	private static Character BuildPlayerCharacter(Item weapon, Item armor, Item ring1, Item ring2) =>
+		new()
 		{
 			HitPoints = 100,
 			Armor = weapon.Armor + (armor?.Armor ?? 0) + (ring1?.Armor ?? 0) + (ring2?.Armor ?? 0),
@@ -128,5 +122,4 @@ Defense +3   80     0       3").Concat(new Item[] { null });
 			Ring1Item = ring1,
 			Ring2Item = ring2,
 		};
-	}
 }

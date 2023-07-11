@@ -1,19 +1,18 @@
-﻿namespace AdventOfCode;
+﻿using System.Diagnostics;
 
-public class Day_2015_06_Original : Day
+namespace AdventOfCode.Puzzles._2015;
+
+[Puzzle(2015, 06, CodeType.Original)]
+public partial class Day_06_Original : IPuzzle
 {
-	public override int Year => 2015;
-	public override int DayNumber => 6;
-	public override CodeType CodeType => CodeType.Original;
-
-	enum Command
+	private enum Command
 	{
 		TurnOn,
 		TurnOff,
 		Toggle,
 	}
 
-	struct Action
+	private struct Action
 	{
 		public Command Command;
 		public int StartX;
@@ -22,15 +21,14 @@ public class Day_2015_06_Original : Day
 		public int EndY;
 	}
 
-	protected override void ExecuteDay(byte[] input)
+	[GeneratedRegex("((?<on>turn on)|(?<off>turn off)|(?<toggle>toggle)) (?<startX>\\d+),(?<startY>\\d+) through (?<endX>\\d+),(?<endY>\\d+)", RegexOptions.ExplicitCapture | RegexOptions.Compiled)]
+	private static partial Regex InstructionRegex();
+
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
+		var regex = InstructionRegex();
 
-		var regex = new Regex(
-			@"((?<on>turn on)|(?<off>turn off)|(?<toggle>toggle)) (?<startX>\d+),(?<startY>\d+) through (?<endX>\d+),(?<endY>\d+)",
-			RegexOptions.Compiled | RegexOptions.ExplicitCapture);
-
-		var actions = input.GetLines()
+		var actions = input.Lines
 			.Select(l => regex.Match(l))
 			.Select(m => new Action
 			{
@@ -46,40 +44,48 @@ public class Day_2015_06_Original : Day
 			})
 			.ToList();
 
-		Func<Func<Command, Func<int, int>>, int> ProcessActions =
-			(getLightProcessor) =>
+		int ProcessActions(Func<Command, Func<int, int>> getLightProcessor)
+		{
+			var lights = new int[1000, 1000];
+
+			foreach (var a in actions)
 			{
-				var lights = new int[1000, 1000];
+				var lightProcessor = getLightProcessor(a.Command);
 
-				foreach (var a in actions)
+				for (var x = a.StartX; x <= a.EndX; x++)
 				{
-					var lightProcessor = getLightProcessor(a.Command);
-
-					for (var x = a.StartX; x <= a.EndX; x++)
-						for (var y = a.StartY; y <= a.EndY; y++)
-							lights[x, y] = lightProcessor(lights[x, y]);
+					for (var y = a.StartY; y <= a.EndY; y++)
+						lights[x, y] = lightProcessor(lights[x, y]);
 				}
+			}
 
-				var cnt = 0;
-				for (var x = 0; x < 1000; x++)
-					for (var y = 0; y < 1000; y++)
-						cnt += lights[x, y];
+			var cnt = 0;
+			for (var x = 0; x < 1000; x++)
+			{
+				for (var y = 0; y < 1000; y++)
+					cnt += lights[x, y];
+			}
 
-				return cnt;
-			};
+			return cnt;
+		};
 
-		Dump('A',
-			ProcessActions(c =>
-				c == Command.TurnOn ? (Func<int, int>)(i => 1) :
-				c == Command.TurnOff ? (Func<int, int>)(i => 0) :
-				c == Command.Toggle ? (Func<int, int>)(i => 1 - i) :
-				throw new InvalidOperationException()));
+		var partA = ProcessActions(c =>
+			c switch
+			{
+				Command.TurnOn => i => 1,
+				Command.TurnOff => i => 0,
+				Command.Toggle => i => 1 - i,
+				_ => throw new UnreachableException(),
+			});
+		var partB = ProcessActions(c =>
+			c switch
+			{
+				Command.TurnOn => i => i + 1,
+				Command.TurnOff => i => Math.Max(i - 1, 0),
+				Command.Toggle => i => i + 2,
+				_ => throw new UnreachableException(),
+			});
 
-		Dump('B',
-			ProcessActions(c =>
-				c == Command.TurnOn ? (Func<int, int>)(i => i + 1) :
-				c == Command.TurnOff ? (Func<int, int>)(i => Math.Max(i - 1, 0)) :
-				c == Command.Toggle ? (Func<int, int>)(i => i + 2) :
-				throw new InvalidOperationException()));
+		return (partA.ToString(), partB.ToString());
 	}
 }
