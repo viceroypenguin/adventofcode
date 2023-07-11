@@ -1,39 +1,37 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2016;
 
-public class Day_2016_18_Original : Day
+[Puzzle(2016, 18, CodeType.Original)]
+public class Day_18_Original : IPuzzle
 {
-	public override int Year => 2016;
-	public override int DayNumber => 18;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		ExecutePart(input, 40, 'A');
-		ExecutePart(input, 400000, 'B');
+		return (
+			ExecutePart(input.Lines[0], 40).ToString(),
+			ExecutePart(input.Lines[0], 400000).ToString());
 	}
 
-	private void ExecutePart(byte[] input, int rows, char part)
+	private static int ExecutePart(string input, int rows)
 	{
-		var tiles = new List<IList<bool>>();
-		tiles.Add(input.Select(c => c == '^').ToArray());
+		var tiles = new List<IList<bool>>
+		{
+			input.Select(c => c == '^').ToArray(),
+		};
 
 		while (tiles.Count < rows)
 		{
-			var row = tiles[tiles.Count - 1];
+			var row = tiles[^1];
 			var newRow = new bool[row.Count];
 
-			for (int i = 0; i < row.Count; i++)
+			for (var i = 0; i < row.Count; i++)
 			{
-				var left = i > 0 ? row[i - 1] : false;
-				var right = i < row.Count - 1 ? row[i + 1] : false;
+				var left = i > 0 && row[i - 1];
+				var right = i < row.Count - 1 && row[i + 1];
 				newRow[i] = left ^ right;
 			}
 
 			tiles.Add(newRow);
 		}
 
-		Dump(part, tiles.SelectMany(x => x).Where(b => !b).Count());
+		return tiles.SelectMany(x => x).Count(b => !b);
 	}
 }

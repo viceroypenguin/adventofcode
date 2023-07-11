@@ -1,23 +1,19 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2016;
 
-public class Day_2016_08_Original : Day
+[Puzzle(2016, 08, CodeType.Original)]
+public partial class Day_08_Original : IPuzzle
 {
-	public override int Year => 2016;
-	public override int DayNumber => 8;
-	public override CodeType CodeType => CodeType.Original;
+	[GeneratedRegex("(?:(?<rect>rect (?<rect_rows>\\d+)x(?<rect_cols>\\d+))|(?<rotate_column>rotate column x=(?<col_num>\\d+) by (?<col_amt>\\d+))|(?<rotate_row>rotate row y=(?<row_num>\\d+) by (?<row_amt>\\d+)))", RegexOptions.Compiled)]
+	private static partial Regex InstructionRegex();
 
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var regex = new Regex(@"(?:(?<rect>rect (?<rect_rows>\d+)x(?<rect_cols>\d+))|(?<rotate_column>rotate column x=(?<col_num>\d+) by (?<col_amt>\d+))|(?<rotate_row>rotate row y=(?<row_num>\d+) by (?<row_amt>\d+)))", RegexOptions.Compiled);
+		var regex = InstructionRegex();
 
 		var instructions =
-			input.GetLines()
+			input.Lines
 				.Select(str => regex.Match(str))
 				.ToList();
-
-		//instructions.Dump();
 
 		var SCREEN_ROWS = 6;
 		var SCREEN_COLS = 50;
@@ -31,9 +27,11 @@ public class Day_2016_08_Original : Day
 				var rows = Convert.ToInt32(i.Groups["rect_rows"].Value);
 				var cols = Convert.ToInt32(i.Groups["rect_cols"].Value);
 
-				for (int x = 0; x < rows; x++)
-					for (int y = 0; y < cols; y++)
+				for (var x = 0; x < rows; x++)
+				{
+					for (var y = 0; y < cols; y++)
 						screen[x, y] = true;
+				}
 			}
 			else if (i.Groups["rotate_column"].Success)
 			{
@@ -41,9 +39,9 @@ public class Day_2016_08_Original : Day
 				var shift = Convert.ToInt32(i.Groups["col_amt"].Value);
 
 				var col = new bool[SCREEN_ROWS];
-				for (int y = 0; y < SCREEN_ROWS; y++)
+				for (var y = 0; y < SCREEN_ROWS; y++)
 					col[(y + shift) % SCREEN_ROWS] = screen[x, y];
-				for (int y = 0; y < SCREEN_ROWS; y++)
+				for (var y = 0; y < SCREEN_ROWS; y++)
 					screen[x, y] = col[y];
 			}
 			else if (i.Groups["rotate_row"].Success)
@@ -52,21 +50,25 @@ public class Day_2016_08_Original : Day
 				var shift = Convert.ToInt32(i.Groups["row_amt"].Value);
 
 				var row = new bool[SCREEN_COLS];
-				for (int x = 0; x < SCREEN_COLS; x++)
+				for (var x = 0; x < SCREEN_COLS; x++)
 					row[(x + shift) % SCREEN_COLS] = screen[x, y];
-				for (int x = 0; x < SCREEN_COLS; x++)
+				for (var x = 0; x < SCREEN_COLS; x++)
 					screen[x, y] = row[x];
 			}
 			else
+			{
 				throw new InvalidOperationException("Unknown command.");
+			}
 		}
 
-		Dump('A',
-			screen.OfType<bool>().Where(b => b).Count());
+		var partA = screen.OfType<bool>().Count(SuperEnumerable.Identity).ToString();
 
-		DumpScreen('B',
+		var partB = string.Join(
+			Environment.NewLine,
 			Enumerable.Range(0, SCREEN_ROWS).Select(y =>
-				Enumerable.Range(0, SCREEN_COLS).Select(x =>
-					screen[x, y] ? '#' : '_')));
+				string.Join("", Enumerable.Range(0, SCREEN_COLS).Select(x =>
+					screen[x, y] ? '#' : ' '))));
+
+		return (partA, partB);
 	}
 }

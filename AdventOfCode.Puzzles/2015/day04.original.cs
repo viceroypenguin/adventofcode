@@ -18,17 +18,20 @@ public class Day_04_Original : IPuzzle
 	}
 
 #pragma warning disable CA5351 // Do Not Use Broken Cryptographic Algorithms
+#pragma warning disable CA1850 // Prefer static 'HashData' method over 'ComputeHash'
 	private static int GetPassword(string input, int numZeros)
 	{
+		using var md5 = MD5.Create();
 		for (var i = 0; ; i++)
 		{
 			var hashSrc = input + i.ToString();
 			var hashSrcBytes = Encoding.ASCII.GetBytes(hashSrc);
-			var hash = MD5.HashData(hashSrcBytes);
+			var hash = md5.ComputeHash(hashSrcBytes);
 			if (HasLeadingZeros(numZeros, hash))
 				return i;
 		}
 	}
+#pragma warning restore CA1850 // Prefer static 'HashData' method over 'ComputeHash'
 #pragma warning restore CA5351 // Do Not Use Broken Cryptographic Algorithms
 
 	public (string, string) Solve(PuzzleInput input)

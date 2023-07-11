@@ -1,20 +1,18 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2016;
 
-public class Day_2016_10_Original : Day
+[Puzzle(2016, 10, CodeType.Original)]
+public partial class Day_10_Original : IPuzzle
 {
-	public override int Year => 2016;
-	public override int DayNumber => 10;
-	public override CodeType CodeType => CodeType.Original;
+	[GeneratedRegex("(?:(?<give_away>bot (?<bot>\\d+) gives low to (?<low_type>bot|output) (?<low_num>\\d+) and high to (?<high_type>bot|output) (?<high_num>\\d+))|(?<receive_value>value (?<value>\\d+) goes to bot (?<bot>\\d+)))", RegexOptions.Compiled)]
+	private static partial Regex InstructionRegex();
 
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var regex = new Regex(@"(?:(?<give_away>bot (?<bot>\d+) gives low to (?<low_type>bot|output) (?<low_num>\d+) and high to (?<high_type>bot|output) (?<high_num>\d+))|(?<receive_value>value (?<value>\d+) goes to bot (?<bot>\d+)))", RegexOptions.Compiled);
+		var regex = InstructionRegex();
 		var magic = new { low = 17, high = 61 };
 
 		var instructions =
-			input.GetLines()
+			input.Lines
 				.Select(str => regex.Match(str))
 				.ToList();
 
@@ -44,6 +42,7 @@ public class Day_2016_10_Original : Day
 
 		var outputs = new int[3];
 
+		var partA = 0;
 		while (destinations.Any())
 		{
 			foreach (var x in destinations.ToList())
@@ -53,9 +52,9 @@ public class Day_2016_10_Original : Day
 				{
 					var values = new { low = b.values.Min(), high = b.values.Max(), };
 					if (values.low == magic.low && values.high == magic.high)
-						Dump('A', b.from_bot);
+						partA = b.from_bot;
 
-					destinations.Remove(x.Key);
+					_ = destinations.Remove(x.Key);
 
 					if (b.low_bot_destination.HasValue)
 						destinations[b.low_bot_destination.Value].values.Add(values.low);
@@ -70,6 +69,7 @@ public class Day_2016_10_Original : Day
 			}
 		}
 
-		Dump('B', outputs[0] * outputs[1] * outputs[2]);
+		var partB = outputs[0] * outputs[1] * outputs[2];
+		return (partA.ToString(), partB.ToString());
 	}
 }

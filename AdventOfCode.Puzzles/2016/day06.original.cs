@@ -1,18 +1,13 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2016;
 
-public class Day_2016_06_Original : Day
+[Puzzle(2016, 06, CodeType.Original)]
+public class Day_06_Original : IPuzzle
 {
-	public override int Year => 2016;
-	public override int DayNumber => 6;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
+		var words = input.Lines;
 
-		var words = input.GetLines();
-
-		Func<IEnumerable<char>, int, char> processLetter = (characters, multiplier) =>
+		static char ProcessLetter(IEnumerable<char> characters, int multiplier) =>
 			characters
 				.GroupBy(
 					c => c,
@@ -21,16 +16,18 @@ public class Day_2016_06_Original : Day
 				.Select(c => c.c)
 				.First();
 
-		Dump('A',
+		var partA =
 			string.Join("",
 				Enumerable.Range(0, words[0].Length)
 					.Select(i => words.Select(w => w[i]))
-					.Select(characters => processLetter(characters, -1))));
+					.Select(characters => ProcessLetter(characters, -1)));
 
-		Dump('B',
+		var partB =
 			string.Join("",
 				Enumerable.Range(0, words[0].Length)
 					.Select(i => words.Select(w => w[i]))
-					.Select(characters => processLetter(characters, 1))));
+					.Select(characters => ProcessLetter(characters, 1)));
+
+		return (partA, partB);
 	}
 }

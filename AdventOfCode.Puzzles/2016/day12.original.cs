@@ -1,48 +1,38 @@
-﻿namespace AdventOfCode;
+﻿using System.Diagnostics;
 
-public class Day_2016_12_Original : Day
+namespace AdventOfCode.Puzzles._2016;
+
+[Puzzle(2016, 12, CodeType.Original)]
+public partial class Day_12_Original : IPuzzle
 {
-	public override int Year => 2016;
-	public override int DayNumber => 12;
-	public override CodeType CodeType => CodeType.Original;
+	[GeneratedRegex("(?<instruction>\\w{3}) (?<x>-?\\d+|a|b|c|d)(?: (?<y>-?\\d+|a|b|c|d))?", RegexOptions.Compiled)]
+	private static partial Regex InstructionRegex();
 
-	Match[] instructions;
-	Dictionary<string, int> registers;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
+		var regex = InstructionRegex();
 
-		var regex = new Regex(@"(?<instruction>\w{3}) (?<x>-?\d+|a|b|c|d)(?: (?<y>-?\d+|a|b|c|d))?", RegexOptions.Compiled);
-
-		instructions =
-			input.GetLines()
+		var instructions =
+			input.Lines
 				.Select(s => regex.Match(s))
 				.ToArray();
 
-		registers = new Dictionary<string, int>()
-			{
-				{ "a", 0 },
-				{ "b", 0 },
-				{ "c", 0 },
-				{ "d", 0 },
-			};
+		var partA = RunInstructions(instructions, 0);
+		var partB = RunInstructions(instructions, 1);
 
-		RunInstructions('A');
-
-		registers = new Dictionary<string, int>()
-			{
-				{ "a", 0 },
-				{ "b", 0 },
-				{ "c", 1 },
-				{ "d", 0 },
-			};
-
-		RunInstructions('B');
+		return (partA.ToString(), partB.ToString());
 	}
 
-	private void RunInstructions(char part)
+	private int RunInstructions(Match[] instructions, int c)
 	{
+		var registers = new Dictionary<string, int>()
+		{
+			["a"] = 0,
+			["b"] = 0,
+			["c"] = c,
+			["d"] = 0,
+		};
+
 		var ip = 0;
 		while (ip < instructions.Length)
 		{
@@ -50,43 +40,48 @@ public class Day_2016_12_Original : Day
 			switch (instruction.Groups["instruction"].Value)
 			{
 				case "cpy":
-					{
-						var dest = instruction.Groups["y"].Value;
-						var value = registers.ContainsKey(instruction.Groups["x"].Value) ? registers[instruction.Groups["x"].Value] : Convert.ToInt32(instruction.Groups["x"].Value);
-						registers[dest] = value;
-						break;
-					}
+				{
+					var dest = instruction.Groups["y"].Value;
+					var value = registers.ContainsKey(instruction.Groups["x"].Value) ? registers[instruction.Groups["x"].Value] : Convert.ToInt32(instruction.Groups["x"].Value);
+					registers[dest] = value;
+					break;
+				}
 
 				case "inc":
-					{
-						var dest = instruction.Groups["x"].Value;
-						registers[dest]++;
-						break;
-					}
+				{
+					var dest = instruction.Groups["x"].Value;
+					registers[dest]++;
+					break;
+				}
 
 				case "dec":
-					{
-						var dest = instruction.Groups["x"].Value;
-						registers[dest]--;
-						break;
-					}
+				{
+					var dest = instruction.Groups["x"].Value;
+					registers[dest]--;
+					break;
+				}
 
 				case "jnz":
+				{
+					var value = registers.ContainsKey(instruction.Groups["x"].Value) ? registers[instruction.Groups["x"].Value] : Convert.ToInt32(instruction.Groups["x"].Value);
+					if (value != 0)
 					{
-						var value = registers.ContainsKey(instruction.Groups["x"].Value) ? registers[instruction.Groups["x"].Value] : Convert.ToInt32(instruction.Groups["x"].Value);
-						if (value != 0)
-						{
-							var distance = Convert.ToInt32(instruction.Groups["y"].Value);
-							ip += distance;
-							continue;
-						}
-						else
-							break;
+						var distance = Convert.ToInt32(instruction.Groups["y"].Value);
+						ip += distance;
+						continue;
 					}
+					else
+					{
+						break;
+					}
+				}
+
+				default:
+					throw new UnreachableException();
 			}
 			ip++;
 		}
 
-		Dump(part, registers["a"]);
+		return registers["a"];
 	}
 }

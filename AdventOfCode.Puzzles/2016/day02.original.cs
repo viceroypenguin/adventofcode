@@ -1,114 +1,85 @@
-﻿namespace AdventOfCode;
+﻿using System.Diagnostics;
 
-public class Day_2016_02_Original : Day
+namespace AdventOfCode.Puzzles._2016;
+
+[Puzzle(2016, 02, CodeType.Original)]
+public class Day_02_Original : IPuzzle
 {
-	public override int Year => 2016;
-	public override int DayNumber => 2;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		DoPartA(input);
-		DoPartB(input);
+		return (
+			DoPartA(input.Lines),
+			DoPartB(input.Lines));
 	}
 
-	private void DoPartA(byte[] input)
+	private static string DoPartA(string[] lines)
 	{
 		var buttons = new[]
 		{
-				new [] { 1, 2, 3 },
-				new [] { 4, 5, 6 },
-				new [] { 7, 8, 9 },
-			};
+			new [] { 1, 2, 3 },
+			new [] { 4, 5, 6 },
+			new [] { 7, 8, 9 },
+		};
 
-		var x = 1;
-		var y = 1;
+		var p = (x: 1, y: 1);
 
 		var password = new List<int>();
 
-		foreach (var line in input.GetLines())
+		foreach (var line in lines)
 		{
 			foreach (var c in line.Trim())
 			{
-				switch (c)
+				p = c switch
 				{
-					case 'U':
-						y = Math.Max(y - 1, 0);
-						break;
-
-					case 'D':
-						y = Math.Min(y + 1, buttons.Length - 1);
-						break;
-
-					case 'L':
-						x = Math.Max(x - 1, 0);
-						break;
-
-					case 'R':
-						x = Math.Min(x + 1, buttons[0].Length - 1);
-						break;
-				}
+					'U' => (p.x, Math.Max(p.y - 1, 0)),
+					'D' => (p.x, Math.Min(p.y + 1, 2)),
+					'L' => (Math.Max(p.x - 1, 0), p.y),
+					'R' => (Math.Min(p.x + 1, 2), p.y),
+					_ => throw new UnreachableException(),
+				};
 			}
 
-			password.Add(buttons[y][x]);
+			password.Add(buttons[p.y][p.x]);
 		}
 
-		Dump('A', string.Join("", password));
+		return string.Join("", password);
 	}
 
-	private void DoPartB(byte[] input)
+	private static string DoPartB(string[] lines)
 	{
 		var buttons = new[]
 		{
-				new char? [] { null, null,  '1', null, null, },
-				new char? [] { null,  '2',  '3',  '4', null, },
-				new char? [] {  '5',  '6',  '7',  '8',  '9', },
-				new char? [] { null,  'A',  'B',  'C', null, },
-				new char? [] { null, null,  'D', null, null, },
-			};
+			new char? [] { null, null,  '1', null, null, },
+			new char? [] { null,  '2',  '3',  '4', null, },
+			new char? [] {  '5',  '6',  '7',  '8',  '9', },
+			new char? [] { null,  'A',  'B',  'C', null, },
+			new char? [] { null, null,  'D', null, null, },
+		};
 
-		var x = 0;
-		var y = 2;
+		var p = (x: 0, y: 2);
 
 		var password = new List<char>();
 
-		foreach (var line in input.GetLines())
+		foreach (var line in lines)
 		{
 			foreach (var c in line.Trim())
 			{
-				switch (c)
+				var pos = c switch
 				{
-					case 'U':
-						var newY = Math.Max(y - 1, 0);
-						if (buttons[newY][x].HasValue)
-							y = newY;
-						break;
+					'U' => (p.x, y: Math.Max(p.y - 1, 0)),
+					'D' => (p.x, y: Math.Min(p.y + 1, 4)),
+					'L' => (x: Math.Max(p.x - 1, 0), p.y),
+					'R' => (x: Math.Min(p.x + 1, 4), p.y),
+					_ => throw new UnreachableException(),
+				};
 
-					case 'D':
-						newY = Math.Min(y + 1, buttons.Length - 1);
-						if (buttons[newY][x].HasValue)
-							y = newY;
-						break;
-
-					case 'L':
-						var newX = Math.Max(x - 1, 0);
-						if (buttons[y][newX].HasValue)
-							x = newX;
-						break;
-
-					case 'R':
-						newX = Math.Min(x + 1, buttons[0].Length - 1);
-						if (buttons[y][newX].HasValue)
-							x = newX;
-						break;
-				}
+				if (buttons[pos.y][pos.x].HasValue)
+					p = pos;
 			}
 
-			password.Add(buttons[y][x].Value);
+			password.Add(buttons[p.y][p.x].Value);
 		}
 
-		Dump('B', string.Join("", password));
+		return string.Join("", password);
 	}
 }

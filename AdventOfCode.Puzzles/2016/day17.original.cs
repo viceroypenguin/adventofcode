@@ -1,86 +1,46 @@
 ﻿using System.Security.Cryptography;
+using System.Text;
 
-namespace AdventOfCode;
+namespace AdventOfCode.Puzzles._2016;
 
-public class Day_2016_17_Original : Day
+[Puzzle(2016, 17, CodeType.Original)]
+public class Day_17_Original : IPuzzle
 {
-	public override int Year => 2016;
-	public override int DayNumber => 17;
-	public override CodeType CodeType => CodeType.Original;
 
-	Position destination = new Position { x = 3, y = 3 };
-	string passcode;
-	MD5 md5 = MD5.Create();
-
-	public struct Position
+#pragma warning disable CA5351 // Do Not Use Broken Cryptographic Algorithms
+#pragma warning disable CA1850 // Prefer static 'HashData' method over 'ComputeHash'
+	public (string, string) Solve(PuzzleInput input)
 	{
-		public int x;
-		public int y;
-		public string Path;
-		public int Steps;
+		using var md5 = MD5.Create();
+		var passcode = input.Lines[0];
 
-		public override bool Equals(object other)
+		IEnumerable<(int x, int y, string path)> GetNextPositions(
+			(int x, int y, string path) state)
 		{
-			return Equals((Position)other);
+			if (state.x == 3 && state.y == 3)
+				yield break;
+
+			var hashSrc = passcode + state.path;
+			var bytes = Encoding.ASCII.GetBytes(hashSrc);
+			var hash = md5.ComputeHash(bytes);
+
+			if (state.x > 0 && (hash[0] >> 4) >= 0xb) yield return (state.x - 1, state.y, state.path + 'U');
+			if (state.x < 3 && (hash[0] & 0xf) >= 0xb) yield return (state.x + 1, state.y, state.path + 'D');
+			if (state.y > 0 && (hash[1] >> 4) >= 0xb) yield return (state.x, state.y - 1, state.path + 'L');
+			if (state.y < 3 && (hash[1] & 0xf) >= 0xb) yield return (state.x, state.y + 1, state.path + 'R');
 		}
 
-		public bool Equals(Position p2)
-		{
-			return
-				this.x == p2.x &&
-				this.y == p2.y;
-		}
+		var paths = SuperEnumerable
+			.TraverseBreadthFirst(
+				(x: 0, y: 0, path: string.Empty),
+				GetNextPositions)
+			.Where(p => p.x == 3 && p.y == 3)
+			.ToList();
 
-		public override int GetHashCode()
-		{
-			return Tuple.Create(
-				this.x,
-				this.y).GetHashCode();
-		}
+		return (
+			paths[0].path,
+			paths[^1].path.Length.ToString());
 	}
-
-	protected override void ExecuteDay(byte[] input)
-	{
-		if (input == null) return;
-
-		passcode = input[..^1].GetString();
-
-		var initialPosition = new Position { x = 0, y = 0, Path = "", Steps = 0, };
-
-		var successfulPaths = new List<Position>();
-
-		var queue = new Queue<Position>();
-		queue.Enqueue(initialPosition);
-
-		while (queue.Count != 0)
-		{
-			var position = queue.Dequeue();
-
-			foreach (var p in GetNextPositions(position))
-			{
-				if (p.x == destination.x && p.y == destination.y)
-				{
-					if (successfulPaths.Count == 0)
-						Dump('A', p.Path);
-					successfulPaths.Add(p);
-				}
-				else
-					queue.Enqueue(p);
-			}
-		}
-
-		Dump('B', successfulPaths.Max(p => p.Steps));
-	}
-
-	IEnumerable<Position> GetNextPositions(Position p)
-	{
-		var hashSrc = passcode + p.Path;
-		var bytes = Encoding.ASCII.GetBytes(hashSrc);
-		var hash = md5.ComputeHash(bytes);
-
-		if (p.x > 0 && (hash[0] >> 4) >= 0xb) yield return new Position { x = p.x - 1, y = p.y, Path = p.Path + 'U', Steps = p.Steps + 1 };
-		if (p.x < 3 && (hash[0] & 0xf) >= 0xb) yield return new Position { x = p.x + 1, y = p.y, Path = p.Path + 'D', Steps = p.Steps + 1 };
-		if (p.y > 0 && (hash[1] >> 4) >= 0xb) yield return new Position { x = p.x, y = p.y - 1, Path = p.Path + 'L', Steps = p.Steps + 1 };
-		if (p.y < 3 && (hash[1] & 0xf) >= 0xb) yield return new Position { x = p.x, y = p.y + 1, Path = p.Path + 'R', Steps = p.Steps + 1 };
-	}
+#pragma warning restore CA1850 // Prefer static 'HashData' method over 'ComputeHash'
+#pragma warning restore CA5351 // Do Not Use Broken Cryptographic Algorithms
 }

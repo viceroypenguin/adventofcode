@@ -1,46 +1,43 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2016;
 
-public class Day_2016_11_Original : Day
+[Puzzle(2016, 11, CodeType.Original)]
+public class Day_11_Original : IPuzzle
 {
-	public override int Year => 2016;
-	public override int DayNumber => 11;
-	public override CodeType CodeType => CodeType.Original;
-
 	[Flags]
 	public enum Devices
 	{
 		StrontiumGenerator = 1,
 		StrontiumMicrochip = 2,
-		StrontiumSet = (StrontiumGenerator | StrontiumMicrochip),
+		StrontiumSet = StrontiumGenerator | StrontiumMicrochip,
 
 		PlutoniumGenerator = 4,
 		PlutoniumMicrochip = 8,
-		PlutoniumSet = (PlutoniumGenerator | PlutoniumMicrochip),
+		PlutoniumSet = PlutoniumGenerator | PlutoniumMicrochip,
 
 		ThuliumGenerator = 16,
 		ThuliumMicrochip = 32,
-		ThuliumSet = (ThuliumGenerator | ThuliumMicrochip),
+		ThuliumSet = ThuliumGenerator | ThuliumMicrochip,
 
 		RutheniumGenerator = 64,
 		RutheniumMicrochip = 128,
-		RutheniumSet = (RutheniumGenerator | RutheniumMicrochip),
+		RutheniumSet = RutheniumGenerator | RutheniumMicrochip,
 
 		CuriumGenerator = 256,
 		CuriumMicrochip = 512,
-		CuriumSet = (CuriumGenerator | CuriumMicrochip),
+		CuriumSet = CuriumGenerator | CuriumMicrochip,
 
 		EleriumGenerator = 1024,
 		EleriumMicrochip = 2048,
-		EleriumSet = (EleriumGenerator | EleriumMicrochip),
+		EleriumSet = EleriumGenerator | EleriumMicrochip,
 
 		DilithiumGenerator = 4096,
 		DilithiumMicrochip = 8192,
-		DilithiumSet = (DilithiumGenerator | DilithiumMicrochip),
+		DilithiumSet = DilithiumGenerator | DilithiumMicrochip,
 
-		Generators = (StrontiumGenerator | PlutoniumGenerator | ThuliumGenerator | RutheniumGenerator | CuriumGenerator | EleriumGenerator | DilithiumGenerator),
+		Generators = StrontiumGenerator | PlutoniumGenerator | ThuliumGenerator | RutheniumGenerator | CuriumGenerator | EleriumGenerator | DilithiumGenerator,
 	}
 
-	public struct State
+	private struct State : IEquatable<State>
 	{
 		public Devices[] Floors;
 		public int ElevatorFloor;
@@ -51,128 +48,92 @@ public class Day_2016_11_Original : Day
 			return Equals((State)other);
 		}
 
-		public bool Equals(State s2)
-		{
-			return
-				this.Floors[0] == s2.Floors[0] &&
-				this.Floors[1] == s2.Floors[1] &&
-				this.Floors[2] == s2.Floors[2] &&
-				this.Floors[3] == s2.Floors[3] &&
-				this.ElevatorFloor == s2.ElevatorFloor;
-		}
+		public bool Equals(State s2) =>
+			Floors[0] == s2.Floors[0]
+			&& Floors[1] == s2.Floors[1]
+			&& Floors[2] == s2.Floors[2]
+			&& Floors[3] == s2.Floors[3]
+			&& ElevatorFloor == s2.ElevatorFloor;
 
-		public override int GetHashCode()
-		{
-			return Tuple.Create(
-				this.Floors[0],
-				this.Floors[1],
-				this.Floors[2],
-				this.Floors[3],
-				this.ElevatorFloor).GetHashCode();
-		}
+		public override int GetHashCode() =>
+			HashCode.Combine(
+				Floors[0],
+				Floors[1],
+				Floors[2],
+				Floors[3],
+				ElevatorFloor);
 	}
 
-	Dictionary<State, State> _VisitedStates = new Dictionary<State, State>();
-	public bool HasVisitedState(State state)
+	public static bool IsValidState(Devices d)
 	{
-		if (_VisitedStates.ContainsKey(state))
-		{
-			return true;
-		}
-		else
-		{
-			_VisitedStates.Add(state, state);
-			return false;
-		}
+		return (d & Devices.Generators) == 0
+			|| ((d & Devices.StrontiumSet) != Devices.StrontiumMicrochip
+				&& (d & Devices.PlutoniumSet) != Devices.PlutoniumMicrochip
+				&& (d & Devices.ThuliumSet) != Devices.ThuliumMicrochip
+				&& (d & Devices.RutheniumSet) != Devices.RutheniumMicrochip
+				&& (d & Devices.CuriumSet) != Devices.CuriumMicrochip
+				&& (d & Devices.EleriumSet) != Devices.EleriumMicrochip
+				&& (d & Devices.DilithiumSet) != Devices.DilithiumMicrochip);
 	}
 
-	public bool IsValidState(Devices d)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if ((d & Devices.StrontiumSet) == Devices.StrontiumMicrochip ||
-			(d & Devices.PlutoniumSet) == Devices.PlutoniumMicrochip ||
-			(d & Devices.ThuliumSet) == Devices.ThuliumMicrochip ||
-			(d & Devices.RutheniumSet) == Devices.RutheniumMicrochip ||
-			(d & Devices.CuriumSet) == Devices.CuriumMicrochip ||
-			(d & Devices.EleriumSet) == Devices.EleriumMicrochip ||
-			(d & Devices.DilithiumSet) == Devices.DilithiumMicrochip)
-		{
-			return (d & Devices.Generators) == 0;
-		}
-		else
-			return true;
-	}
-
-	protected override void ExecuteDay(byte[] input)
-	{
-		if (input == null) return;
-
 		var partAFirstFloor = Devices.StrontiumGenerator | Devices.StrontiumMicrochip | Devices.PlutoniumGenerator | Devices.PlutoniumMicrochip;
-		var partBFirstFloor = Devices.StrontiumGenerator | Devices.StrontiumMicrochip | Devices.PlutoniumGenerator | Devices.PlutoniumMicrochip | Devices.EleriumGenerator | Devices.EleriumMicrochip | Devices.DilithiumGenerator | Devices.DilithiumMicrochip;
+		var partBFirstFloor = partAFirstFloor | Devices.EleriumGenerator | Devices.EleriumMicrochip | Devices.DilithiumGenerator | Devices.DilithiumMicrochip;
 
-		ExecutePart(partAFirstFloor, 'A');
-		ExecutePart(partBFirstFloor, 'B');
+		return (
+			ExecutePart(partAFirstFloor).ToString(),
+			ExecutePart(partBFirstFloor).ToString());
 	}
 
-	private void ExecutePart(Devices firstFloor, char part)
+	private static int ExecutePart(Devices firstFloor)
 	{
 		var initialState = new State
 		{
 			Floors = new Devices[]
 			{
-					firstFloor,
-					Devices.ThuliumGenerator | Devices.RutheniumGenerator | Devices.RutheniumMicrochip | Devices.CuriumGenerator | Devices.CuriumMicrochip,
-					Devices.ThuliumMicrochip,
-					0,
+				firstFloor,
+				Devices.ThuliumGenerator | Devices.RutheniumGenerator | Devices.RutheniumMicrochip | Devices.CuriumGenerator | Devices.CuriumMicrochip,
+				Devices.ThuliumMicrochip,
+				0,
 			},
 			ElevatorFloor = 0,
 			StepCount = 0,
 		};
 
-		var queue = new Queue<State>();
-		queue.Enqueue(initialState);
-		while (queue.Count != 0)
-		{
-			var curState = queue.Dequeue();
-
-			foreach (var s in GetNextStates(curState))
-			{
-				if (s.Floors[0] == 0 &&
-					s.Floors[1] == 0 &&
-					s.Floors[2] == 0 &&
-					s.Floors[3] != 0)
-				{
-					Dump(part, s.StepCount);
-				}
-
-				queue.Enqueue(s);
-			}
-		}
+		return SuperEnumerable.GetShortestPathCost<State, int>(
+			initialState,
+			GetNextStates,
+			s => s.Floors[0] == 0
+				&& s.Floors[1] == 0
+				&& s.Floors[2] == 0
+				&& s.Floors[3] != 0);
 	}
 
-	Devices[] IndividualDevices = new[]
+	private static readonly Devices[] IndividualDevices = new[]
 	{
-			Devices.StrontiumGenerator,
-			Devices.StrontiumMicrochip,
-			Devices.PlutoniumGenerator,
-			Devices.PlutoniumMicrochip,
-			Devices.ThuliumGenerator,
-			Devices.ThuliumMicrochip,
-			Devices.RutheniumGenerator,
-			Devices.RutheniumMicrochip,
-			Devices.CuriumGenerator,
-			Devices.CuriumMicrochip,
-			Devices.EleriumGenerator,
-			Devices.EleriumMicrochip,
-			Devices.DilithiumGenerator,
-			Devices.DilithiumMicrochip,
-		};
+		Devices.StrontiumGenerator,
+		Devices.StrontiumMicrochip,
+		Devices.PlutoniumGenerator,
+		Devices.PlutoniumMicrochip,
+		Devices.ThuliumGenerator,
+		Devices.ThuliumMicrochip,
+		Devices.RutheniumGenerator,
+		Devices.RutheniumMicrochip,
+		Devices.CuriumGenerator,
+		Devices.CuriumMicrochip,
+		Devices.EleriumGenerator,
+		Devices.EleriumMicrochip,
+		Devices.DilithiumGenerator,
+		Devices.DilithiumMicrochip,
+	};
 
-	IEnumerable<State> GetNextStates(State s)
+	private static IEnumerable<(State s, int cost)> GetNextStates(State s, int cost)
 	{
 		var floor = s.ElevatorFloor;
 		var currentDevices = s.Floors[floor];
 
-		for (int deviceAidx = 0; deviceAidx < IndividualDevices.Length; deviceAidx++)
+		for (var deviceAidx = 0; deviceAidx < IndividualDevices.Length; deviceAidx++)
 		{
 			var deviceA = IndividualDevices[deviceAidx];
 			if ((currentDevices & deviceA) == deviceA)
@@ -194,8 +155,7 @@ public class Day_2016_11_Original : Day
 								};
 								newState.Floors[floor] = newCurrentFloor;
 								newState.Floors[floor + 1] = newHigherFloor;
-								if (!HasVisitedState(newState))
-									yield return newState;
+								yield return (newState, cost + 1);
 							}
 						}
 
@@ -212,14 +172,13 @@ public class Day_2016_11_Original : Day
 								};
 								newState.Floors[floor] = newCurrentFloor;
 								newState.Floors[floor - 1] = newLowerFloor;
-								if (!HasVisitedState(newState))
-									yield return newState;
+								yield return (newState, cost + 1);
 							}
 						}
 					}
 				}
 
-				for (int deviceBidx = deviceAidx + 1; deviceBidx < IndividualDevices.Length; deviceBidx++)
+				for (var deviceBidx = deviceAidx + 1; deviceBidx < IndividualDevices.Length; deviceBidx++)
 				{
 					var deviceB = IndividualDevices[deviceBidx];
 					if ((currentDevices & deviceB) == deviceB)
@@ -241,8 +200,7 @@ public class Day_2016_11_Original : Day
 								};
 								newState.Floors[floor] = newCurrentFloor;
 								newState.Floors[floor + 1] = newHigherFloor;
-								if (!HasVisitedState(newState))
-									yield return newState;
+								yield return (newState, cost + 1);
 							}
 						}
 
@@ -259,13 +217,11 @@ public class Day_2016_11_Original : Day
 								};
 								newState.Floors[floor] = newCurrentFloor;
 								newState.Floors[floor - 1] = newLowerFloor;
-								if (!HasVisitedState(newState))
-									yield return newState;
+								yield return (newState, cost + 1);
 							}
 						}
 					}
 				}
-
 			}
 		}
 	}

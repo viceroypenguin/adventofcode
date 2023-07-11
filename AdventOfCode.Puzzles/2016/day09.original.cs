@@ -1,21 +1,19 @@
-﻿namespace AdventOfCode;
+﻿using System.Diagnostics;
+using System.Text;
 
-public class Day_2016_09_Original : Day
+namespace AdventOfCode.Puzzles._2016;
+
+[Puzzle(2016, 09, CodeType.Original)]
+public class Day_09_Original : IPuzzle
 {
-	public override int Year => 2016;
-	public override int DayNumber => 9;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var txt = input.GetString();
-		DoPartA(txt);
-		DoPartB(txt);
+		return (
+			DoPartA(input.Lines[0]).ToString(),
+			DoPartB(input.Lines[0]).ToString());
 	}
 
-	private void DoPartA(string input)
+	private static int DoPartA(string input)
 	{
 		var state = "outside";
 		var index = 0;
@@ -33,7 +31,7 @@ public class Day_2016_09_Original : Day
 					if (input[index] == '(')
 						state = "num_chars";
 					else
-						output.Append(input[index]);
+						_ = output.Append(input[index]);
 					break;
 
 				case "num_chars":
@@ -41,41 +39,47 @@ public class Day_2016_09_Original : Day
 					{
 						numChars = Convert.ToInt32(tmp.ToString());
 						state = "repeats";
-						tmp.Clear();
+						_ = tmp.Clear();
 					}
 					else
-						tmp.Append(input[index]);
+					{
+						_ = tmp.Append(input[index]);
+					}
+
 					break;
 
 				case "repeats":
 					if (input[index] == ')')
 					{
 						var repeats = Convert.ToInt32(tmp.ToString());
-						tmp.Clear();
+						_ = tmp.Clear();
 
 						numChars = Math.Min(numChars, input.Length - (index + 1));
 						var charsToRepeat = input.Substring(index + 1, numChars);
-						output.Append(string.Join("", Enumerable.Range(0, repeats).Select(_ => charsToRepeat)));
+						_ = output.Append(string.Join("", Enumerable.Range(0, repeats).Select(_ => charsToRepeat)));
 
 						state = "outside";
 						index += numChars;
 					}
 					else
-						tmp.Append(input[index]);
+					{
+						_ = tmp.Append(input[index]);
+					}
+
 					break;
+
+				default:
+					throw new UnreachableException();
 			}
 
 			index++;
 		}
 
-		//output.ToString().Dump();
-		Dump('A', output.Length);
+		return output.Length;
 	}
 
-	private void DoPartB(string input)
-	{
-		Dump('B', GetStringLength(input));
-	}
+	private long DoPartB(string input) =>
+		GetStringLength(input);
 
 	private long GetStringLength(string str)
 	{
@@ -103,17 +107,20 @@ public class Day_2016_09_Original : Day
 					{
 						numChars = Convert.ToInt32(tmp.ToString());
 						state = "repeats";
-						tmp.Clear();
+						_ = tmp.Clear();
 					}
 					else
-						tmp.Append(str[index]);
+					{
+						_ = tmp.Append(str[index]);
+					}
+
 					break;
 
 				case "repeats":
 					if (str[index] == ')')
 					{
 						var repeats = Convert.ToInt32(tmp.ToString());
-						tmp.Clear();
+						_ = tmp.Clear();
 
 						numChars = Math.Min(numChars, str.Length - (index + 1));
 						var charsToRepeat = str.Substring(index + 1, numChars);
@@ -124,8 +131,14 @@ public class Day_2016_09_Original : Day
 						index += numChars;
 					}
 					else
-						tmp.Append(str[index]);
+					{
+						_ = tmp.Append(str[index]);
+					}
+
 					break;
+
+				default:
+					throw new UnreachableException();
 			}
 			index++;
 		}

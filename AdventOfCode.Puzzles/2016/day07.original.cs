@@ -1,25 +1,23 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2016;
 
-public class Day_2016_07_Original : Day
+[Puzzle(2016, 07, CodeType.Original)]
+public class Day_07_Original : IPuzzle
 {
-	public override int Year => 2016;
-	public override int DayNumber => 7;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		Func<string, bool> isABBA = (str) =>
+		static bool IsABBA(string str)
 		{
-			for (int i = 0; i < str.Length - 3; i++)
+			for (var i = 0; i < str.Length - 3; i++)
+			{
 				if (str[i] == str[i + 3] && str[i + 1] == str[i + 2] && str[i] != str[i + 1])
 					return true;
+			}
+
 			return false;
-		};
+		}
 
 		var splits =
-			input.GetLines()
+			input.Lines
 				.Select(str =>
 				{
 					var outside = new List<string>();
@@ -31,11 +29,11 @@ public class Day_2016_07_Original : Day
 						var newIdx = str.IndexOf('[', idx);
 						if (newIdx < 0)
 						{
-							outside.Add(str.Substring(idx));
+							outside.Add(str[idx..]);
 							break;
 						}
 
-						outside.Add(str.Substring(idx, newIdx - idx));
+						outside.Add(str[idx..newIdx]);
 						idx = newIdx;
 
 						newIdx = str.IndexOf(']', idx);
@@ -47,42 +45,48 @@ public class Day_2016_07_Original : Day
 				})
 				.ToList();
 
-		Dump('A',
+		var partA =
 			splits
-				.Where(x => x.outside.Any(isABBA) && !x.inside.Any(isABBA))
-				.Count());
+				.Where(x => x.outside.Any(IsABBA) && !x.inside.Any(IsABBA))
+				.Count();
 
-		Func<IList<string>, IList<string>> getABAs = (strs) =>
+		static IList<string> GetABAs(IList<string> strs)
 		{
 			var abas = new List<string>();
 			foreach (var str in strs)
-				for (int i = 0; i < str.Length - 2; i++)
+			{
+				for (var i = 0; i < str.Length - 2; i++)
+				{
 					if (str[i] == str[i + 2] && str[i] != str[i + 1])
 						abas.Add(str.Substring(i, 3));
-			return abas;
-		};
+				}
+			}
 
-		Func<IList<string>, IList<string>, bool> checkBABs = (strs, abas) =>
+			return abas;
+		}
+
+		bool CheckBABs(IList<string> strs, IList<string> abas)
 		{
 			foreach (var aba in abas)
 			{
 				var bab = string.Join("", new[] { aba[1], aba[0], aba[1] });
-				if (strs.Any(s => s.IndexOf(bab) >= 0))
+				if (strs.Any(s => s.Contains(bab)))
 					return true;
 			}
 			return false;
-		};
+		}
 
-		Dump('B',
+		var partB =
 			splits
 				.Select(x => new
 				{
 					x.str,
 					x.inside,
 					x.outside,
-					abas = getABAs(x.outside),
+					abas = GetABAs(x.outside),
 				})
-				.Where(x => checkBABs(x.inside, x.abas))
-				.Count());
+				.Count(x => CheckBABs(x.inside, x.abas));
+
+		return (partA.ToString(), partB.ToString());
 	}
 }

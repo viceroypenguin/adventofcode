@@ -1,19 +1,17 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2016;
 
-public class Day_2016_04_Original : Day
+[Puzzle(2016, 04, CodeType.Original)]
+public partial class Day_04_Original : IPuzzle
 {
-	public override int Year => 2016;
-	public override int DayNumber => 4;
-	public override CodeType CodeType => CodeType.Original;
+	[GeneratedRegex("(?<name>[a-z-]+)-(?<id>\\d+)[[](?<checksum>\\w{5})[]]", RegexOptions.Compiled)]
+	private static partial Regex RoomRegex();
 
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var regex = new Regex(@"(?<name>[a-z-]+)-(?<id>\d+)[[](?<checksum>\w{5})[]]", RegexOptions.Compiled);
+		var regex = RoomRegex();
 
 		var validNames =
-			input.GetLines()
+			input.Lines
 				.Select(x => regex.Match(x))
 				.Select(x => new
 				{
@@ -36,22 +34,19 @@ public class Day_2016_04_Original : Day
 				})
 				.ToList();
 
-		Dump('A', validNames
-			.Sum(x => x.id));
+		var partA = validNames.Sum(x => x.id);
 
-		Dump('B', validNames
+		var partB = validNames
 			.Select(x => new
 			{
 				x.name,
 				x.id,
 				newName = string.Join("", x.name
-					.Select(c =>
-					{
-						if (c == '-') return ' ';
-						return (char)((c - 'a' + x.id) % 26 + 'a');
-					})),
+					.Select(c => c == '-' ? ' ' : (char)(((c - 'a' + x.id) % 26) + 'a')))
 			})
 			.First(x => x.newName.StartsWith("north"))
-			.id);
+			.id;
+
+		return (partA.ToString(), partB.ToString());
 	}
 }

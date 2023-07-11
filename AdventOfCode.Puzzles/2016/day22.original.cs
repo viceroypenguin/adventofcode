@@ -1,19 +1,17 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2016;
 
-public class Day_2016_22_Original : Day
+[Puzzle(2016, 22, CodeType.Original)]
+public partial class Day_22_Original : IPuzzle
 {
-	public override int Year => 2016;
-	public override int DayNumber => 22;
-	public override CodeType CodeType => CodeType.Original;
+	[GeneratedRegex(@"/dev/grid/node-x(?<x>\d+)-y(?<y>\d+)\s+(?<total>\d+)T\s+(?<used>\d+)T\s+(?<avail>\d+)T\s+\d+%")]
+	private static partial Regex GridRegex();
 
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var regex = new Regex(@"/dev/grid/node-x(?<x>\d+)-y(?<y>\d+)\s+(?<total>\d+)T\s+(?<used>\d+)T\s+(?<avail>\d+)T\s+\d+%", RegexOptions.Compiled);
+		var regex = GridRegex();
 
 		var nodes =
-			input.GetLines()
+			input.Lines
 				.Skip(2)
 				.Select(s => regex.Match(s))
 				.Select(m => new
@@ -26,7 +24,7 @@ public class Day_2016_22_Original : Day
 				})
 				.ToList();
 
-		Dump('A',
+		var partA =
 			(
 				from a in nodes
 				where a.used != 0
@@ -34,6 +32,9 @@ public class Day_2016_22_Original : Day
 				where a.x != b.x || a.y != b.y
 				where a.used < b.avail
 				select new { a, b }
-			).Count());
+			).Count();
+
+		// Apparently, I completed part b by hand or something?
+		return (partA.ToString(), string.Empty);
 	}
 }

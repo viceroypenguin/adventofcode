@@ -1,16 +1,11 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2016;
 
-public class Day_2016_19_Original : Day
+[Puzzle(2016, 19, CodeType.Original)]
+public class Day_19_Original : IPuzzle
 {
-	public override int Year => 2016;
-	public override int DayNumber => 19;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		Func<int, int> nextPowerOfTwo = (n) =>
+		static int nextPowerOfTwo(int n)
 		{
 			n |= n >> 1;
 			n |= n >> 2;
@@ -19,31 +14,32 @@ public class Day_2016_19_Original : Day
 			n |= n >> 16;
 
 			return n + 1;
-		};
+		}
 
-		Func<int, int> partAElfHoldingPresents = (n) =>
-			(n * 2) % nextPowerOfTwo(n) + 1;
+		static int partAElfHoldingPresents(int n) =>
+			(n * 2 % nextPowerOfTwo(n)) + 1;
 
-		Func<int, int> nextPowerOfThree = (n) =>
+		static int nextPowerOfThree(int n)
 		{
-			int x = 3;
+			var x = 3;
 			for (; x < n; x *= 3)
 				;
 			return x;
-		};
+		}
 
-		Func<int, int> partBElfHoldingPresents = (n) =>
+		static int partBElfHoldingPresents(int n)
 		{
 			var roundUp = nextPowerOfThree(n);
 			var roundDown = roundUp / 3;
-			if (n <= roundDown * 2) return n - roundDown;
-			if (n == roundUp) return n;
-			return (n * 2) % roundUp;
-		};
+			return n <= roundDown * 2 ? n - roundDown :
+				n == roundUp ? n :
+				n * 2 % roundUp;
+		}
 
-		var num = Convert.ToInt32(input.GetString());
+		var num = Convert.ToInt32(input.Text);
 
-		Dump('A', partAElfHoldingPresents(num));
-		Dump('B', partBElfHoldingPresents(num));
+		return (
+			partAElfHoldingPresents(num).ToString(),
+			partBElfHoldingPresents(num).ToString());
 	}
 }

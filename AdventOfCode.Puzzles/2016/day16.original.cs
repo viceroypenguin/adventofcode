@@ -1,46 +1,39 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2016;
 
-public class Day_2016_16_Original : Day
+[Puzzle(2016, 16, CodeType.Original)]
+public class Day_16_Original : IPuzzle
 {
-	public override int Year => 2016;
-	public override int DayNumber => 16;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		ExecutePart(input, 272, 'A');
-		ExecutePart(input, 35651584, 'B');
+		return (
+			ExecutePart(input.Lines[0], 272),
+			ExecutePart(input.Lines[0], 35651584));
 	}
 
-	private void ExecutePart(byte[] input, int length, char part)
+	private static string ExecutePart(string input, int length)
 	{
 		var data = input.Select(c => c == '1').ToList();
 
-		Func<IList<bool>, List<bool>> curveStep = (bits) =>
-		{
-			return bits.Concat(new[] { false }).Concat(bits.Reverse().Select(b => !b)).ToList();
-		};
+		static List<bool> CurveStep(IList<bool> bits) =>
+			bits.Concat(new[] { false }).Concat(bits.Reverse().Select(b => !b)).ToList();
 
 		while (data.Count < length)
-			data = curveStep(data);
+			data = CurveStep(data);
 
 		data = data.Take(length).ToList();
 
-		Func<IList<bool>, List<bool>> generateChecksum = (_) => new List<bool>();
-		generateChecksum = (bits) =>
-		{
-			var checksum = new List<bool>();
-			for (int i = 0; i < bits.Count; i += 2)
-				checksum.Add(!(bits[i] ^ bits[i + 1]));
+		data = GenerateChecksum(data);
+		return string.Join("", data.Take(length).Select(b => b ? '1' : '0'));
+	}
 
-			if ((checksum.Count % 2) == 0) return generateChecksum(checksum);
-			return checksum;
-		};
+	private static List<bool> GenerateChecksum(List<bool> bits)
+	{
+		var checksum = new List<bool>();
+		for (var i = 0; i < bits.Count; i += 2)
+			checksum.Add(!(bits[i] ^ bits[i + 1]));
 
-		data = generateChecksum(data);
-		Dump(part,
-			string.Join("", data.Take(length).Select(b => b ? '1' : '0')));
+		return (checksum.Count % 2) == 0
+			? GenerateChecksum(checksum)
+			: checksum;
 	}
 }

@@ -1,35 +1,37 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2016;
 
-public class Day_2016_21_Original : Day
+[Puzzle(2016, 21, CodeType.Original)]
+public partial class Day_21_Original : IPuzzle
 {
-	public override int Year => 2016;
-	public override int DayNumber => 21;
-	public override CodeType CodeType => CodeType.Original;
+	[GeneratedRegex(
+		"""
+		swap\ (
+			(?<swap_position>position\ (?<position_x>\d+)\ with\ position\ (?<position_y>\d+)) |
+			(?<swap_letter>letter\ (?<letter_x>\w)\ with\ letter\ (?<letter_y>\w))  ) |
+		rotate\ (
+			(?<rotate_steps>(?<rotate_direction>left|right)\ (?<rotate_count>\d+)\ steps?) |
+			(?<rotate_position>based\ on\ position\ of\ letter\ (?<rotate_letter>\w))  ) |
+		(?<reverse>reverse\ positions\ (?<reverse_x>\d+)\ through\ (?<reverse_y>\d+)) |
+		(?<move>move\ position\ (?<move_x>\d+)\ to\ position\ (?<move_y>\d+))
+		""",
+		RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture)]
+	private static partial Regex InstructionRegex();
 
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var regex = new Regex(@"
-swap\ (
-	(?<swap_position>position\ (?<position_x>\d+)\ with\ position\ (?<position_y>\d+)) |
-	(?<swap_letter>letter\ (?<letter_x>\w)\ with\ letter\ (?<letter_y>\w))  ) |
-rotate\ (
-	(?<rotate_steps>(?<rotate_direction>left|right)\ (?<rotate_count>\d+)\ steps?) |
-	(?<rotate_position>based\ on\ position\ of\ letter\ (?<rotate_letter>\w))  ) |
-(?<reverse>reverse\ positions\ (?<reverse_x>\d+)\ through\ (?<reverse_y>\d+)) |
-(?<move>move\ position\ (?<move_x>\d+)\ to\ position\ (?<move_y>\d+))", RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture);
+		var regex = InstructionRegex();
 
 		var instructions =
-			input.GetLines()
+			input.Lines
 				.Select(s => regex.Match(s))
 				.ToList();
 
-		DoPartA(instructions);
-		DoPartB(instructions);
+		return (
+			DoPartA(instructions),
+			DoPartB(instructions));
 	}
 
-	private void DoPartA(List<Match> instructions)
+	private string DoPartA(List<Match> instructions)
 	{
 		var password = "abcdefgh";
 
@@ -41,9 +43,7 @@ rotate\ (
 				var x = Convert.ToInt32(i.Groups["position_x"].Value);
 				var y = Convert.ToInt32(i.Groups["position_y"].Value);
 
-				var chr = working[x];
-				working[x] = working[y];
-				working[y] = chr;
+				(working[y], working[x]) = (working[x], working[y]);
 			}
 			else if (i.Groups["swap_letter"].Success)
 			{
@@ -101,26 +101,24 @@ rotate\ (
 				working.RemoveAt(x);
 				working.Insert(y, chr);
 			}
-
 		}
-		Dump('A', string.Join("", working));
+
+		return string.Join("", working);
 	}
 
-	private void DoPartB(List<Match> instructions)
+	private string DoPartB(List<Match> instructions)
 	{
-		string scramble = "fbgdceah";
+		var scramble = "fbgdceah";
 
 		var working = scramble.ToList();
-		foreach (var i in instructions)
+		foreach (var i in instructions.AsEnumerable().Reverse())
 		{
 			if (i.Groups["swap_position"].Success)
 			{
 				var x = Convert.ToInt32(i.Groups["position_x"].Value);
 				var y = Convert.ToInt32(i.Groups["position_y"].Value);
 
-				var chr = working[x];
-				working[x] = working[y];
-				working[y] = chr;
+				(working[y], working[x]) = (working[x], working[y]);
 			}
 			else if (i.Groups["swap_letter"].Success)
 			{
@@ -195,6 +193,6 @@ rotate\ (
 			}
 		}
 
-		Dump('B', string.Join("", working));
+		return string.Join("", working);
 	}
 }
