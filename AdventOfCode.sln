@@ -14,8 +14,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCode.Common", "Adve
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCode.Puzzles.2022", "AdventOfCode.Puzzles\2022\AdventOfCode.Puzzles.2022.csproj", "{A4635E90-F238-45EC-B75E-A59C4490A575}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCode.Original", "AdventOfCode.Original\AdventOfCode.Original.csproj", "{B6243EBD-9A4D-4915-8565-7F8D06243137}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCode.Runner", "AdventOfCode.Runner\AdventOfCode.Runner.csproj", "{49A121B7-6E87-49E4-B47C-E657F42271B8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdventOfCode.Puzzles.2021", "AdventOfCode.Puzzles\2021\AdventOfCode.Puzzles.2021.csproj", "{95B73323-8318-4BC9-BA48-D2CD9EE45E14}"
@@ -44,10 +42,6 @@ Global
 		{A4635E90-F238-45EC-B75E-A59C4490A575}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4635E90-F238-45EC-B75E-A59C4490A575}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4635E90-F238-45EC-B75E-A59C4490A575}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B6243EBD-9A4D-4915-8565-7F8D06243137}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B6243EBD-9A4D-4915-8565-7F8D06243137}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B6243EBD-9A4D-4915-8565-7F8D06243137}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B6243EBD-9A4D-4915-8565-7F8D06243137}.Release|Any CPU.Build.0 = Release|Any CPU
 		{49A121B7-6E87-49E4-B47C-E657F42271B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{49A121B7-6E87-49E4-B47C-E657F42271B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49A121B7-6E87-49E4-B47C-E657F42271B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
