@@ -5,7 +5,7 @@ public class Day_25_Original : IPuzzle
 {
 	public (string, string) Solve(PuzzleInput input)
 	{
-		var span = input.GetSpan();
+		var span = input.Span;
 		var x = span.AtoI();
 		var key1 = x.value;
 

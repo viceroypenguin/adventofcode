@@ -5,7 +5,7 @@ public class Day_05_Fastest : IPuzzle
 {
 	public (string, string) Solve(PuzzleInput input)
 	{
-		var span = input.GetSpan();
+		var span = input.Span;
 
 		Span<int> nums1 = stackalloc int[span.Length / 4];
 		Span<int> nums2 = stackalloc int[span.Length / 4];

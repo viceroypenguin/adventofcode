@@ -9,7 +9,7 @@ public class Day_01_Fastest : IPuzzle
 		numbers[0] = numbers[1] = numbers[2] = numbers[3] = int.MaxValue;
 		int numA = 0, numB = 0;
 
-		var span = input.GetSpan();
+		var span = input.Span;
 		for (int i = 0; i < span.Length;)
 		{
 			var (value, numChars) = span[i..].AtoI();

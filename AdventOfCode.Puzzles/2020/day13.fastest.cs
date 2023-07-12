@@ -7,7 +7,7 @@ public class Day_13_Fastest : IPuzzle
 {
 	public (string, string) Solve(PuzzleInput input)
 	{
-		var span = input.GetSpan();
+		var span = input.Span;
 		var (myTime, i) = span.AtoI();
 		i++;
 
@@ -39,7 +39,7 @@ public class Day_13_Fastest : IPuzzle
 			var modValue = id - (busNumber % id);
 			while (time % id != modValue)
 				time += increment;
-			increment = lcm(increment, id);
+			increment = Lcm(increment, id);
 		}
 
 		var part1 = (minTimeAfter.id * minTimeAfter.timeAfter).ToString();

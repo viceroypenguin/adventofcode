@@ -7,7 +7,7 @@ public class Day_16_Fastest : IPuzzle
 {
 	public (string, string) Solve(PuzzleInput input)
 	{
-		var span = input.GetSpan();
+		var span = input.Span;
 
 		const ulong identity = 0xfedcba9876543210UL;
 		ulong swapRotate = identity, permute = identity;

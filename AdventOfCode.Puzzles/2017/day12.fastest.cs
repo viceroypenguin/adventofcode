@@ -6,7 +6,7 @@ public class Day_12_Fastest : IPuzzle
 	public (string, string) Solve(PuzzleInput input)
 	{
 		// borrowed liberally from https://github.com/Voltara/advent2017-fast/blob/master/src/day12.c
-		var span = input.GetSpan();
+		var span = input.Span;
 
 		Span<int> parents = stackalloc int[span.Length / 16];
 		Span<int> rowNumbers = stackalloc int[16];

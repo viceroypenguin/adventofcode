@@ -16,7 +16,7 @@ public class Day_06_Fastest : IPuzzle
 		var bytes = MemoryMarshal.Cast<Vector128<byte>, byte>(vector);
 		var ulongs = MemoryMarshal.Cast<byte, ulong>(bytes);
 
-		var span = input.GetSpan();
+		var span = input.Span;
 		var n = 0;
 		var ctr = 0;
 		for (var i = 0; i < span.Length && ctr < 16; i++)

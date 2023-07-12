@@ -20,7 +20,7 @@ public class Day_24_Fastest : IPuzzle
 	public (string, string) Solve(PuzzleInput input)
 	{
 		// borrowed liberally from https://github.com/Voltara/advent2017-fast/blob/master/src/day24.c
-		var span = input.GetSpan();
+		var span = input.Span;
 
 		var ports = new List<Component>(span.Length / 4);
 		{

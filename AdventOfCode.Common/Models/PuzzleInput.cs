@@ -2,5 +2,5 @@
 
 public record PuzzleInput(byte[] Bytes, string Text, string[] Lines)
 {
-	public ReadOnlySpan<byte> GetSpan() => Bytes;
+	public ReadOnlySpan<byte> Span => Bytes;
 }

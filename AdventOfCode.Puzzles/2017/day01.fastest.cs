@@ -5,7 +5,7 @@ public class Day_01_Fastest : IPuzzle
 {
 	public (string, string) Solve(PuzzleInput input)
 	{
-		var span = input.GetSpan()[..^1];
+		var span = input.Span[..^1];
 
 		var sum = 0;
 

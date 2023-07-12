@@ -24,7 +24,7 @@ public unsafe class Day_07_Fastest : IPuzzle
 		// borrowed liberally from https://github.com/Voltara/advent2017-fast/blob/master/src/day07.c
 		var hashTable = stackalloc HashEntry[HASH_SIZE];
 
-		var span = input.GetSpan();
+		var span = input.Span;
 		var data = stackalloc Line[span.Length / 16];
 		var d = &data[0];
 

@@ -8,7 +8,7 @@ public class Day_11_Fastest : IPuzzle
 	public (string, string) Solve(PuzzleInput input)
 	{
 		int dir = 0, nw = 0, n = 0, ne = 0, max = 0;
-		foreach (var c in input.GetSpan())
+		foreach (var c in input.Span)
 		{
 			if (c >= 'a')
 			{

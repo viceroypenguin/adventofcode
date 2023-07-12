@@ -15,7 +15,7 @@ public class Day_2017_13_Fastest : IPuzzle
 	public (string, string) Solve(PuzzleInput input)
 	{
 		// borrowed liberally from https://github.com/Voltara/advent2017-fast/blob/master/src/day13.c
-		var span = input.GetSpan();
+		var span = input.Span;
 
 		Span<ModMask> layers = stackalloc ModMask[span.Length / 4];
 		var idx = 0;

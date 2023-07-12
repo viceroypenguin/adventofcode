@@ -6,7 +6,7 @@ public class Day_09_Fastest : IPuzzle
 	public (string, string) Solve(PuzzleInput input)
 	{
 		// borrowed liberally from https://github.com/Voltara/advent2017-fast/blob/master/src/day09.c
-		var span = input.GetSpan();
+		var span = input.Span;
 
 		int score = 0, garbage = 0, depth = 0, g = 0;
 		for (var i = 0; i < span.Length; i++)

@@ -9,7 +9,7 @@ public class Day_10_Fastest : IPuzzle
 	public (string, string) Solve(PuzzleInput input)
 	{
 		// borrowed liberally from https://github.com/Voltara/advent2017-fast/blob/master/src/day10.c
-		var span = input.GetSpan();
+		var span = input.Span;
 
 		Span<byte> bytes = stackalloc byte[256];
 		for (var i = 0; i < 256; i++)

@@ -7,7 +7,7 @@ public class Day_08_Fastest : IPuzzle
 
 	public (string, string) Solve(PuzzleInput input)
 	{
-		var span = input.GetSpan();
+		var span = input.Span;
 
 		Span<int> registers = stackalloc int[REGISTER_COUNT];
 		var maxValue = 0;

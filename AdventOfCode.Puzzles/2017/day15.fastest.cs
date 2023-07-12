@@ -22,7 +22,7 @@ public class Day_15_Fastest : IPuzzle
 	public (string, string) Solve(PuzzleInput input)
 	{
 		// borrowed liberally from https://github.com/Voltara/advent2017-fast/blob/master/src/day15.c
-		var span = input.GetSpan();
+		var span = input.Span;
 
 		ulong aKey = 0, bKey = 0;
 		for (var i = 0; i < span.Length; i++)
