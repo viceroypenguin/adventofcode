@@ -1,69 +1,71 @@
-﻿namespace AdventOfCode;
+﻿using System.Runtime.CompilerServices;
 
-public class Day_2017_10_Fastest : Day
+namespace AdventOfCode.Puzzles._2017;
+
+[Puzzle(2017, 10, CodeType.Fastest)]
+public class Day_10_Fastest : IPuzzle
 {
-	public override int Year => 2017;
-	public override int DayNumber => 10;
-	public override CodeType CodeType => CodeType.Fastest;
-
-	[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-	protected unsafe override void ExecuteDay(byte[] input)
+	[SkipLocalsInit]
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
 		// borrowed liberally from https://github.com/Voltara/advent2017-fast/blob/master/src/day10.c
-		var bytes = stackalloc byte[256];
+		var span = input.GetSpan();
+
+		Span<byte> bytes = stackalloc byte[256];
 		for (var i = 0; i < 256; i++)
 			bytes[i] = (byte)i;
 
 		var n = 0;
 		byte position = 0, skip = 0;
-		foreach (var c in input)
+		foreach (var c in span)
 		{
 			if (c >= '0')
-				n = n * 10 + c - '0';
-			else if (c == ',' || c == '\n')
+			{
+				n = (n * 10) + c - '0';
+			}
+			else if (c is (byte)',' or (byte)'\n')
 			{
 				(position, skip) = DoRound(bytes, (byte)n, position, skip);
 				n = 0;
 			}
 		}
-		PartA = (bytes[0] * bytes[1]).ToString();
+		var partA = bytes[0] * bytes[1];
 
-		var newLength = input.Length - 2 + 5;
-		var seq = stackalloc byte[newLength];
-		for (int i = 0; i < input.Length - 2; i++)
-			seq[i] = input[i];
-		seq[newLength - 5] = 17;
-		seq[newLength - 4] = 31;
-		seq[newLength - 3] = 73;
-		seq[newLength - 2] = 47;
-		seq[newLength - 1] = 23;
+		var newLength = span.Length - 1 + 5;
+		Span<byte> seq = stackalloc byte[newLength];
+		span.CopyTo(seq);
+		seq[^5] = 17;
+		seq[^4] = 31;
+		seq[^3] = 73;
+		seq[^2] = 47;
+		seq[^1] = 23;
 
 		for (var i = 0; i < 256; i++)
 			bytes[i] = (byte)i;
+
 		position = skip = 0;
 		for (var i = 0; i < 64; i++)
 		{
-			for (int j = 0; j < newLength; j++)
+			for (var j = 0; j < newLength; j++)
 				(position, skip) = DoRound(bytes, seq[j], position, skip);
 		}
 
 		var str = new char[32];
-		for (int i = 0; i < 256; i += 16)
+		for (var i = 0; i < 256; i += 16)
 		{
 			var b = bytes[i];
-			for (int j = i + 1; j < i + 16; j++)
+			for (var j = i + 1; j < i + 16; j++)
 				b ^= bytes[j];
 
 			str[i >> 3] = ToHex(b >> 4);
 			str[(i >> 3) + 1] = ToHex(b & 0xf);
 		}
-		PartB = new string(str);
+		var partB = new string(str);
+
+		return (partA.ToString(), partB);
 	}
 
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	private unsafe (byte position, byte skip) DoRound(byte* bytes, byte length, byte position, byte skip)
+	private static (byte position, byte skip) DoRound(Span<byte> bytes, byte length, byte position, byte skip)
 	{
 		// start in the middle
 		byte i = (byte)(position + (length >> 1)),
@@ -74,16 +76,13 @@ public class Day_2017_10_Fastest : Day
 		while (i != position)
 		{
 			i--; j++;
-			var tmp = bytes[i];
-			bytes[i] = bytes[j];
-			bytes[j] = tmp;
+			(bytes[j], bytes[i]) = (bytes[i], bytes[j]);
 		}
 		skip++; position = (byte)(j + skip);
 		return (position, skip);
 	}
 
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	private char ToHex(int val) =>
+	private static char ToHex(int val) =>
 		val >= 10
 			? (char)(val - 10 + 'a')
 			: (char)(val + '0');

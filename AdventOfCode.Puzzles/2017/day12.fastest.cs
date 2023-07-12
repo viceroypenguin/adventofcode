@@ -1,26 +1,24 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2017;
 
-public class Day_2017_12_Fastest : Day
+[Puzzle(2017, 12, CodeType.Fastest)]
+public class Day_12_Fastest : IPuzzle
 {
-	public override int Year => 2017;
-	public override int DayNumber => 12;
-	public override CodeType CodeType => CodeType.Fastest;
-
-	[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-	protected override unsafe void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
 		// borrowed liberally from https://github.com/Voltara/advent2017-fast/blob/master/src/day12.c
-		var parents = stackalloc int[input.Length / 16];
-		var rowNumbers = stackalloc int[16];
+		var span = input.GetSpan();
+
+		Span<int> parents = stackalloc int[span.Length / 16];
+		Span<int> rowNumbers = stackalloc int[16];
 		int entryCount = 0, rowCount = 0, n = 0;
 
-		foreach (var c in input)
+		foreach (var c in span)
 		{
-			if (c >= '0' && c <= '9')
-				n = n * 10 + c - '0';
-			else if (c == ',' || c == '<')
+			if (c is >= (byte)'0' and <= (byte)'9')
+			{
+				n = (n * 10) + c - '0';
+			}
+			else if (c is (byte)',' or (byte)'<')
 			{
 				// 0 is our key value, so shift everything up one
 				rowNumbers[rowCount++] = n + 1;
@@ -33,13 +31,15 @@ public class Day_2017_12_Fastest : Day
 				n = 0;
 
 				var min = int.MaxValue;
-				for (int i = 0; i < rowCount; i++)
+				for (var i = 0; i < rowCount; i++)
+				{
 					if (rowNumbers[i] < min)
 						min = rowNumbers[i];
+				}
 
 				var parent = min;
 				var tmp = rowCount;
-				for (int i = 0; i < tmp; i++)
+				for (var i = 0; i < tmp; i++)
 				{
 					n = parents[rowNumbers[i]];
 					if (n != 0)
@@ -63,15 +63,17 @@ public class Day_2017_12_Fastest : Day
 		}
 
 		int numGroups = 0, zeroGroupSize = 1;
-		var zeroGroup = stackalloc int[entryCount];
+		Span<int> zeroGroup = stackalloc int[entryCount];
 		zeroGroup[0] = 1;
-		for (int i = 1; i < entryCount; i++)
+		for (var i = 1; i < entryCount; i++)
 		{
 			if (parents[i] == i)
+			{
 				numGroups++;
+			}
 			else
 			{
-				for (int j = zeroGroupSize - 1; j >= 0; j--)
+				for (var j = zeroGroupSize - 1; j >= 0; j--)
 				{
 					if (zeroGroup[j] == parents[i])
 					{
@@ -82,7 +84,8 @@ public class Day_2017_12_Fastest : Day
 			}
 		}
 
-		PartA = zeroGroupSize.ToString();
-		PartB = numGroups.ToString();
+		return (
+			zeroGroupSize.ToString(),
+			numGroups.ToString());
 	}
 }

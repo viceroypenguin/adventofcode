@@ -1,25 +1,20 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2017;
 
-public class Day_2017_06_Original : Day
+[Puzzle(2017, 06, CodeType.Original)]
+public class Day_06_Original : IPuzzle
 {
-	public override int Year => 2017;
-	public override int DayNumber => 6;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var nums = input.GetString()
+		var nums = input.Text
 			.Split()
 			.Where(x => !string.IsNullOrWhiteSpace(x))
 			.Select(x => Convert.ToInt32(x))
 			.ToList();
 
 		var history = new List<int[]>
-			{
-				nums.ToArray(),
-			};
+		{
+			nums.ToArray(),
+		};
 
 		while (true)
 		{
@@ -33,20 +28,20 @@ public class Day_2017_06_Original : Day
 			var extraInc = minElement.x % nums.Count;
 
 			nums[minElement.i] = 0;
-			for (int i = 1; i <= extraInc; i++)
+			for (var i = 1; i <= extraInc; i++)
 				nums[(minElement.i + i) % nums.Count] += allInc + 1;
-			for (int i = extraInc + 1; i <= nums.Count; i++)
+			for (var i = extraInc + 1; i <= nums.Count; i++)
 				nums[(minElement.i + i) % nums.Count] += allInc;
 
 			var oldInput = history
 				.Select((old, idx) => new { idx, isMatch = old.Zip(nums, (o, i) => o == i).All(b => b), })
-				.Where(x => x.isMatch)
-				.FirstOrDefault();
+				.FirstOrDefault(x => x.isMatch);
+
 			if (oldInput != null)
 			{
-				Dump('A', history.Count);
-				Dump('B', history.Count - oldInput.idx);
-				break;
+				return (
+					history.Count.ToString(),
+					(history.Count - oldInput.idx).ToString());
 			}
 
 			history.Add(nums.ToArray());

@@ -1,17 +1,13 @@
 ﻿using System.Collections.Specialized;
+using System.Diagnostics;
 
-namespace AdventOfCode;
+namespace AdventOfCode.Puzzles._2017;
 
-public class Day_2017_21_Original : Day
+[Puzzle(2017, 21, CodeType.Original)]
+public class Day_21_Original : IPuzzle
 {
-	public override int Year => 2017;
-	public override int DayNumber => 21;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
 		// [ 0, 1 ]
 		// [ 2, 3 ]
 		var rotateSize2 = new[] { 2, 0, 3, 1, };
@@ -76,7 +72,7 @@ public class Day_2017_21_Original : Day
 		IEnumerable<BitVector32> GetStates(BitVector32 initial)
 		{
 			yield return initial;
-			for (int i = 0; i < 3; i++)
+			for (var i = 0; i < 3; i++)
 			{
 				initial = RotateState(initial);
 				yield return initial;
@@ -90,7 +86,7 @@ public class Day_2017_21_Original : Day
 			}
 		}
 
-		var rules = input.GetLines()
+		var rules = input.Lines
 			.Select(s => s.Split(' '))
 			.ToDictionary(
 				x => ConvertArray(ParseString(x[0])),
@@ -100,18 +96,18 @@ public class Day_2017_21_Original : Day
 		{
 			var size = state[isSize3] ? 9 : 4;
 			return Enumerable.Range(0, size)
-				.Where(i => state[1 << i])
-				.Count();
+				.Count(i => state[1 << i]);
 		}
 
 		IList<BitVector32> TransitionState(BitVector32 state)
 		{
 			foreach (var s in GetStates(state))
-				if (rules.ContainsKey(s))
-				{
-					return rules[s];
-				}
-			throw new InvalidOperationException();
+			{
+				if (rules.TryGetValue(s, out var v))
+					return v;
+			}
+
+			throw new UnreachableException();
 		}
 
 		IEnumerable<BitVector32> DoConvert3To2(BitVector32[] bvs)
@@ -150,7 +146,7 @@ public class Day_2017_21_Original : Day
 			var x = bvs.AsEnumerable();
 			if (bvs.Count % 2 == 0 && bvs[0][isSize3])
 				x = Convert3To2(bvs);
-			return x.SelectMany(s => TransitionState(s)).ToList();
+			return x.SelectMany(TransitionState).ToList();
 		}
 
 		string Print(BitVector32 state)
@@ -181,8 +177,7 @@ public class Day_2017_21_Original : Day
 
 					var state3 = TransitionStates(state2)
 						.Select(x => GetStates(x)
-							.Where(rules.ContainsKey)
-							.First())
+							.First(rules.ContainsKey))
 						.GroupBy(x => x, (k, v) => (k, count: v.Count()))
 						.ToList();
 
@@ -197,20 +192,18 @@ public class Day_2017_21_Original : Day
 			.Single()
 			.state3;
 
-		Dump('A', gen3
+		var partA = gen3
 			.Select(x => map[x.k].state2Count * x.count)
-			.Sum());
+			.Sum();
 
 		List<(BitVector32 k, int count)> ProceedThreeGenerations(
-			List<(BitVector32 k, int count)> gen0)
-		{
-			return gen0
+			List<(BitVector32 k, int count)> gen0) =>
+			gen0
 				.SelectMany(x => map[x.k].state3.Select(s => (s.k, count: s.count * x.count)))
 				.GroupBy(
 					x => x.k,
 					(k, v) => (k, count: v.Sum(s => s.count)))
 				.ToList();
-		}
 
 		var nextGen = gen3;
 		var cnt = 3;
@@ -220,8 +213,10 @@ public class Day_2017_21_Original : Day
 			cnt += 3;
 		}
 
-		Dump('B', nextGen
+		var partB = nextGen
 			.Select(x => map[x.k].initialCount * x.count)
-			.Sum());
+			.Sum();
+
+		return (partA.ToString(), partB.ToString());
 	}
 }

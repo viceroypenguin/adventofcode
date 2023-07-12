@@ -1,24 +1,19 @@
 ﻿using System.Collections.Immutable;
 
-namespace AdventOfCode;
+namespace AdventOfCode.Puzzles._2017;
 
-public class Day_2017_24_Original : Day
+[Puzzle(2017, 24, CodeType.Original)]
+public class Day_24_Original : IPuzzle
 {
-	public override int Year => 2017;
-	public override int DayNumber => 24;
-	public override CodeType CodeType => CodeType.Original;
-
-	class Component
+	private struct Component
 	{
 		public int PortA { get; set; }
 		public int PortB { get; set; }
 	}
 
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var ports = input.GetLines()
+		var ports = input.Lines
 			.Select(x => x.Split('/'))
 			.Select(x => new Component { PortA = Convert.ToInt32(x[0]), PortB = Convert.ToInt32(x[1]), })
 			.ToList();
@@ -32,13 +27,14 @@ public class Day_2017_24_Original : Day
 					x => x.i,
 					x => x.x);
 
-		var strength = CalculateStrength(map, ImmutableList<Component>.Empty, 0, (0, 0, 0));
+		var (maxStrength, _, maxLongestPath) = CalculateStrength(map, ImmutableList<Component>.Empty, 0, (0, 0, 0));
 
-		Dump('A', strength.maxStrength);
-		Dump('B', strength.maxLongestPath);
+		return (
+			maxStrength.ToString(),
+			maxLongestPath.ToString());
 	}
 
-	(int maxStrength, int longestPath, int maxLongestPath)
+	private static (int maxStrength, int longestPath, int maxLongestPath)
 		CalculateStrength(ILookup<int, Component> map, ImmutableList<Component> path, int openConnection, (int maxStrength, int longestPath, int maxLongestPath) x)
 	{
 		var list = map[openConnection]

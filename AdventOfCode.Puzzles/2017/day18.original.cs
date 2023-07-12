@@ -1,49 +1,44 @@
-﻿using System.Collections.Concurrent;
+﻿using System.Diagnostics;
 
-namespace AdventOfCode;
+namespace AdventOfCode.Puzzles._2017;
 
-public class Day_2017_18_Original : Day
+[Puzzle(2017, 18, CodeType.Original)]
+public partial class Day_18_Original : IPuzzle
 {
-	public override int Year => 2017;
-	public override int DayNumber => 18;
-	public override CodeType CodeType => CodeType.Original;
+	[GeneratedRegex("^(?<inst>snd|set|add|mul|mod|rcv|jgz) (?<dst>\\w|-?\\d+)( (?<src>\\w|-?\\d+))?$", RegexOptions.Compiled)]
+	private static partial Regex InstructionRegex();
 
-	class Instruction
+	private sealed class Instruction
 	{
 		public string Operation { get; set; }
 		public string Source { get; set; }
 		public string Destination { get; set; }
 	}
 
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
+		var regex = InstructionRegex();
+		var instructions = input.Lines
+			.Select(inst => regex.Match(inst))
+			.Select(m => new Instruction
+			{
+				Operation = m.Groups["inst"].Value,
+				Source = m.Groups["src"].Value,
+				Destination = m.Groups["dst"].Value,
+			})
+			.ToList();
 
-		var regex = new Regex(@"^(?<inst>snd|set|add|mul|mod|rcv|jgz) (?<dst>\w|-?\d+)( (?<src>\w|-?\d+))?$", RegexOptions.Compiled);
-		var instructions = input.GetLines()
-				.Select(inst => regex.Match(inst))
-				.Select(m => new Instruction
-				{
-					Operation = m.Groups["inst"].Value,
-					Source = m.Groups["src"].Value,
-					Destination = m.Groups["dst"].Value,
-				})
-				.ToList();
-
-		PartA(instructions);
+		return (
+			DoPartA(instructions).ToString(),
+			string.Empty);
 		// inconsistent deadlock...
 		// PartB(instructions);
 	}
 
-	private new void PartA(IList<Instruction> input)
+	private static long DoPartA(IList<Instruction> input)
 	{
 		var registers = new Dictionary<string, long>();
-		long getRegister(string r) => registers.ContainsKey(r) ? registers[r] : 0;
-		long getValue(string src)
-		{
-			if (int.TryParse(src, out var x)) return x;
-			return getRegister(src);
-		}
+		long GetValue(string src) => int.TryParse(src, out var x) ? x : registers.GetValueOrDefault(src);
 
 		var ip = 0;
 		var sound = 0L;
@@ -54,70 +49,73 @@ public class Day_2017_18_Original : Day
 			switch (instruction.Operation)
 			{
 				case "set":
-					{
-						registers[instruction.Destination] =
-							getValue(instruction.Source);
-						break;
-					}
+				{
+					registers[instruction.Destination] =
+						GetValue(instruction.Source);
+					break;
+				}
 
 				case "snd":
-					{
-						sound = getValue(instruction.Destination);
-						break;
-					}
+				{
+					sound = GetValue(instruction.Destination);
+					break;
+				}
 
 				case "rcv":
-					{
-						var value = getValue(instruction.Destination);
-						if (value != 0)
-							goto @out;
-						break;
-					}
+				{
+					var value = GetValue(instruction.Destination);
+					if (value != 0)
+						return sound;
+					break;
+				}
 
 				case "add":
-					{
-						var register = getRegister(instruction.Destination);
-						register += getValue(instruction.Source);
-						registers[instruction.Destination] = register;
-						break;
-					}
+				{
+					var register = registers.GetValueOrDefault(instruction.Destination);
+					register += GetValue(instruction.Source);
+					registers[instruction.Destination] = register;
+					break;
+				}
 
 				case "mul":
-					{
-						var register = getRegister(instruction.Destination);
-						register *= getValue(instruction.Source);
-						registers[instruction.Destination] = register;
-						break;
-					}
+				{
+					var register = registers.GetValueOrDefault(instruction.Destination);
+					register *= GetValue(instruction.Source);
+					registers[instruction.Destination] = register;
+					break;
+				}
 
 				case "mod":
-					{
-						var register = getRegister(instruction.Destination);
-						register %= getValue(instruction.Source);
-						registers[instruction.Destination] = register;
-						break;
-					}
+				{
+					var register = registers.GetValueOrDefault(instruction.Destination);
+					register %= GetValue(instruction.Source);
+					registers[instruction.Destination] = register;
+					break;
+				}
 
 				case "jgz":
+				{
+					var value = GetValue(instruction.Destination);
+					if (value > 0)
 					{
-						var value = getValue(instruction.Destination);
-						if (value > 0)
-						{
-							ip += (int)getValue(instruction.Source);
-							continue;
-						}
-						break;
+						ip += (int)GetValue(instruction.Source);
+						continue;
 					}
+					break;
+				}
+
+				default:
+					throw new UnreachableException();
 			}
 
 			ip++;
 		}
 
-@out:
-		Dump('A', sound);
+		return -1;
 	}
 
-	private new void PartB(IList<Instruction> input)
+#if false // preserved for shameful posterity
+	private long DoPartB(IList<Instruction> input)
 	{
 		var queues = Enumerable.Repeat(0, 2).Select(_ => new BlockingCollection<long>()).ToList();
 		var sendCount = new int[2];
@@ -148,72 +146,73 @@ public class Day_2017_18_Original : Day
 				switch (instruction.Operation)
 				{
 					case "set":
-						{
-							registers[instruction.Destination] =
-								getValue(instruction.Source);
-							break;
-						}
+					{
+						registers[instruction.Destination] =
+							getValue(instruction.Source);
+						break;
+					}
 
 					case "snd":
-						{
-							isWaiting[1 - id] = false;
-							queues[id].Add(getValue(instruction.Destination));
-							sendCount[id]++;
-							break;
-						}
+					{
+						isWaiting[1 - id] = false;
+						queues[id].Add(getValue(instruction.Destination));
+						sendCount[id]++;
+						break;
+					}
 
 					case "rcv":
-						{
-							if (isWaiting[1 - id] && queues[1 - id].Count == 0)
-								return;
+					{
+						if (isWaiting[1 - id] && queues[1 - id].Count == 0)
+							return;
 
-							if (queues[1 - id].Count == 0)
-								isWaiting[id] = true;
+						if (queues[1 - id].Count == 0)
+							isWaiting[id] = true;
 
-							var value = queues[1 - id].Take();
-							isWaiting[id] = false;
-							registers[instruction.Destination] = value;
-							break;
-						}
+						var value = queues[1 - id].Take();
+						isWaiting[id] = false;
+						registers[instruction.Destination] = value;
+						break;
+					}
 
 					case "add":
-						{
-							var register = getRegister(instruction.Destination);
-							register += getValue(instruction.Source);
-							registers[instruction.Destination] = register;
-							break;
-						}
+					{
+						var register = getRegister(instruction.Destination);
+						register += getValue(instruction.Source);
+						registers[instruction.Destination] = register;
+						break;
+					}
 
 					case "mul":
-						{
-							var register = getRegister(instruction.Destination);
-							register *= getValue(instruction.Source);
-							registers[instruction.Destination] = register;
-							break;
-						}
+					{
+						var register = getRegister(instruction.Destination);
+						register *= getValue(instruction.Source);
+						registers[instruction.Destination] = register;
+						break;
+					}
 
 					case "mod":
-						{
-							var register = getRegister(instruction.Destination);
-							register %= getValue(instruction.Source);
-							registers[instruction.Destination] = register;
-							break;
-						}
+					{
+						var register = getRegister(instruction.Destination);
+						register %= getValue(instruction.Source);
+						registers[instruction.Destination] = register;
+						break;
+					}
 
 					case "jgz":
+					{
+						var value = getValue(instruction.Destination);
+						if (value > 0)
 						{
-							var value = getValue(instruction.Destination);
-							if (value > 0)
-							{
-								ip += (int)getValue(instruction.Source);
-								continue;
-							}
-							break;
+							ip += (int)getValue(instruction.Source);
+							continue;
 						}
+						break;
+					}
 				}
 
 				ip++;
 			}
 		}
 	}
+#endif
 }

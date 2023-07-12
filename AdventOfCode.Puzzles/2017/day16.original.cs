@@ -1,24 +1,22 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2017;
 
-public class Day_2017_16_Original : Day
+[Puzzle(2017, 16, CodeType.Original)]
+public partial class Day_16_Original : IPuzzle
 {
-	public override int Year => 2017;
-	public override int DayNumber => 16;
-	public override CodeType CodeType => CodeType.Original;
+	[GeneratedRegex("^((?<spin>s(?<amt>\\d+))|(?<xchg>x(?<xchg_a>\\d+)/(?<xchg_b>\\d+))|(?<partner>p(?<part_a>\\w)/(?<part_b>\\w)))$", RegexOptions.Compiled)]
+	private static partial Regex IsntructionRegex();
 
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var regex = new Regex(@"^((?<spin>s(?<amt>\d+))|(?<xchg>x(?<xchg_a>\d+)/(?<xchg_b>\d+))|(?<partner>p(?<part_a>\w)/(?<part_b>\w)))$", RegexOptions.Compiled);
-		var instructions = input.GetString()
+		var regex = IsntructionRegex();
+		var instructions = input.Text
 			.Split(',')
 			.Select(inst => regex.Match(inst))
 			.ToList();
 
 		const int length = 16;
 		var programs = Enumerable.Range(0, length)
-			.Select(i => (char)(i + (int)'a'))
+			.Select(i => (char)(i + 'a'))
 			.ToArray();
 
 		char[] Round(char[] @in)
@@ -36,17 +34,17 @@ public class Day_2017_16_Original : Day
 				{
 					var idx_a = Convert.ToInt32(m.Groups["xchg_a"].Value);
 					var idx_b = Convert.ToInt32(m.Groups["xchg_b"].Value);
-					var tmp = @out[idx_a];
-					@out[idx_a] = @out[idx_b];
-					@out[idx_b] = tmp;
+					(@out[idx_b], @out[idx_a]) = (@out[idx_a], @out[idx_b]);
 				}
 				else if (m.Groups["partner"].Success)
 				{
 					var a = m.Groups["part_a"].Value[0];
 					var b = m.Groups["part_b"].Value[0];
-					for (int i = 0; i < length; i++)
+					for (var i = 0; i < length; i++)
+					{
 						if (@out[i] == a) @out[i] = b;
 						else if (@out[i] == b) @out[i] = a;
+					}
 				}
 			}
 
@@ -54,7 +52,7 @@ public class Day_2017_16_Original : Day
 		}
 
 		programs = Round(programs);
-		Dump('A', string.Join("", programs));
+		var partA = string.Join("", programs);
 
 		var k = 1;
 		var programs_dbl = Round(programs);
@@ -73,9 +71,11 @@ public class Day_2017_16_Original : Day
 
 		var final_round = 1_000_000_000;
 		var remainder = final_round % k;
-		for (int i = 0; i < remainder; i++)
+		for (var i = 0; i < remainder; i++)
 			programs = Round(programs);
 
-		Dump('B', string.Join("", programs));
+		var partB = string.Join("", programs);
+
+		return (partA, partB);
 	}
 }

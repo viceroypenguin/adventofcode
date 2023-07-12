@@ -1,16 +1,11 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2017;
 
-public class Day_2017_10_Original : Day
+[Puzzle(2017, 10, CodeType.Original)]
+public class Day_10_Original : IPuzzle
 {
-	public override int Year => 2017;
-	public override int DayNumber => 10;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var nums = input.GetString()
+		var nums = input.Text
 			.Split(',')
 			.Select(i => Convert.ToInt32(i))
 			.ToList();
@@ -37,10 +32,10 @@ public class Day_2017_10_Original : Day
 		}
 
 		KnotHashRound();
-		Dump('A', list[0] * list[1]);
+		var partA = list[0] * list[1];
 
 		list = Enumerable.Range(0, listCount).ToArray();
-		nums = input.GetString()
+		nums = input.Text
 			.Trim()
 			.ToCharArray()
 			.Select(c => (int)c)
@@ -53,12 +48,14 @@ public class Day_2017_10_Original : Day
 
 		KnotHashRound();
 
-		Dump('B',
+		var partB =
 			string.Join(
 				"",
 				list.Select((val, idx) => new { val, g = idx / 16, })
 					.GroupBy(x => x.g)
 					.Select(x => x.Aggregate(0, (a, v) => a ^ v.val))
-					.Select(x => x.ToString("X2").ToLower())));
+					.Select(x => x.ToString("X2").ToLower()));
+
+		return (partA.ToString(), partB);
 	}
 }

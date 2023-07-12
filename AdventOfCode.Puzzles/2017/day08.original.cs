@@ -1,18 +1,16 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2017;
 
-public class Day_2017_08_Original : Day
+[Puzzle(2017, 08, CodeType.Original)]
+public partial class Day_08_Original : IPuzzle
 {
-	public override int Year => 2017;
-	public override int DayNumber => 8;
-	public override CodeType CodeType => CodeType.Original;
+	[GeneratedRegex("^(?<reg_a>\\w+) (?<adj_dir>inc|dec) (?<adj_amt>-?\\d+) if (?<reg_b>\\w+) (?<comp>.{1,2}) (?<val>-?\\d+)$", RegexOptions.Compiled)]
+	private static partial Regex InstructionRegex();
 
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
+		var regex = InstructionRegex();
 
-		var regex = new Regex(@"^(?<reg_a>\w+) (?<adj_dir>inc|dec) (?<adj_amt>-?\d+) if (?<reg_b>\w+) (?<comp>.{1,2}) (?<val>-?\d+)$", RegexOptions.Compiled);
-
-		var instructions = input.GetLines()
+		var instructions = input.Lines
 			.Select(l => regex.Match(l))
 			.Select(m => new
 			{
@@ -36,27 +34,26 @@ public class Day_2017_08_Original : Day
 		};
 
 		var registers = new Dictionary<string, int>();
-		Func<string, int> getRegister = reg => registers.ContainsKey(reg) ? registers[reg] : 0;
+
 		var maxValue = 0;
 		foreach (var i in instructions)
 		{
-			var regValue = getRegister(i.comp_reg);
+			var regValue = registers.GetValueOrDefault(i.comp_reg);
 			if (comparisons[i.comp_type](regValue, i.comp_value))
 			{
-				var destRegValue = getRegister(i.dest_reg);
+				var destRegValue = registers.GetValueOrDefault(i.dest_reg);
 				destRegValue += i.adj_val;
 				maxValue = Math.Max(maxValue, destRegValue);
 				registers[i.dest_reg] = destRegValue;
 			}
 		}
 
-		// registers.Dump();
-		Dump('A',
+		return (
 			registers
 				.OrderByDescending(kvp => kvp.Value)
 				.First()
-				.Value);
-
-		Dump('B', maxValue);
+				.Value
+				.ToString(),
+			maxValue.ToString());
 	}
 }

@@ -1,31 +1,31 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2017;
 
-public class Day_2017_01_Fastest : Day
+[Puzzle(2017, 01, CodeType.Fastest)]
+public class Day_01_Fastest : IPuzzle
 {
-	public override int Year => 2017;
-	public override int DayNumber => 1;
-	public override CodeType CodeType => CodeType.Fastest;
-
-	[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
+		var span = input.GetSpan()[..^1];
 
 		var sum = 0;
-		var last = input[0] -= (byte)'0';
-		for (int i = 1; i < input.Length; i++)
+
+		var last = span[^1];
+		foreach (var c in span)
 		{
-			if ((input[i] -= (byte)'0') == last)
-				sum += last;
-			last = input[i];
+			if (c == last)
+				sum += c - '0';
+			last = c;
 		}
-		sum += input[^1];
-		PartA = sum.ToString();
+		var partA = sum;
 
 		sum = 0;
-		for (int i = 0, j = input.Length / 2; j < input.Length; i++, j++)
-			if (input[i] == input[j])
-				sum += input[i];
-		PartB = (sum << 1).ToString();
+		for (int i = 0, j = span.Length / 2; j < span.Length; i++, j++)
+		{
+			if (span[i] == span[j])
+				sum += span[i] - '0';
+		}
+		var partB = sum << 1;
+
+		return (partA.ToString(), partB.ToString());
 	}
 }

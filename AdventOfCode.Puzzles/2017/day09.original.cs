@@ -1,34 +1,30 @@
-﻿namespace AdventOfCode;
+﻿using System.Diagnostics;
 
-public class Day_2017_09_Original : Day
+namespace AdventOfCode.Puzzles._2017;
+
+[Puzzle(2017, 09, CodeType.Original)]
+public class Day_09_Original : IPuzzle
 {
-	public override int Year => 2017;
-	public override int DayNumber => 9;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var str = input.GetString();
+		var str = input.Text;
 
 		var index = 0;
-		char getNextChar()
-		{
-			if (index == input.Length) return default(char);
-			return str[index++];
-		}
+		char GetNextChar() =>
+			index == str.Length
+				? default
+				: str[index++];
 
 		int parseGarbage()
 		{
 			var cnt = 0;
 			while (true)
 			{
-				switch (getNextChar())
+				switch (GetNextChar())
 				{
 					case '!':
 						// ignore next char
-						getNextChar();
+						_ = GetNextChar();
 						break;
 
 					case '>':
@@ -41,13 +37,13 @@ public class Day_2017_09_Original : Day
 			}
 		}
 
-		(int score, int garbage) getScore(int level = 1)
+		(int score, int garbage) GetScore(int level = 1)
 		{
 			var x = (score: level, garbage: 0);
 
 			while (true)
 			{
-				switch (getNextChar())
+				switch (GetNextChar())
 				{
 					case '}':
 						return x;
@@ -57,19 +53,23 @@ public class Day_2017_09_Original : Day
 						break;
 
 					case '{':
-						var y = getScore(level + 1);
+						var y = GetScore(level + 1);
 						x.score += y.score;
 						x.garbage += y.garbage;
+						break;
+
+					default:
 						break;
 				}
 			}
 		}
 
-		getNextChar(); // drop first {
-		{
-			var (score, garbage) = getScore();
-			Dump('A', score);
-			Dump('B', garbage);
-		}
+		// drop first {
+		_ = GetNextChar();
+
+		var (score, garbage) = GetScore();
+		return (
+			score.ToString(),
+			garbage.ToString());
 	}
 }

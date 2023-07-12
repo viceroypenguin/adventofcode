@@ -1,24 +1,24 @@
-﻿namespace AdventOfCode;
+﻿using System.Diagnostics;
 
-public class Day_2017_23_Original : Day
+namespace AdventOfCode.Puzzles._2017;
+
+[Puzzle(2017, 23, CodeType.Original)]
+public partial class Day_23_Original : IPuzzle
 {
-	public override int Year => 2017;
-	public override int DayNumber => 23;
-	public override CodeType CodeType => CodeType.Original;
+	[GeneratedRegex("^(?<inst>set|sub|mul|jnz) (?<dst>\\w|-?\\d+)( (?<src>\\w|-?\\d+))?$", RegexOptions.Compiled)]
+	private static partial Regex InstructionRegex();
 
-	class Instruction
+	private sealed class Instruction
 	{
 		public string Operation { get; set; }
 		public string Source { get; set; }
 		public string Destination { get; set; }
 	}
 
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var regex = new Regex(@"^(?<inst>set|sub|mul|jnz) (?<dst>\w|-?\d+)( (?<src>\w|-?\d+))?$", RegexOptions.Compiled);
-		var instructions = input.GetLines()
+		var regex = InstructionRegex();
+		var instructions = input.Lines
 			.Select(inst => regex.Match(inst))
 			.Select(m => new Instruction
 			{
@@ -28,20 +28,19 @@ public class Day_2017_23_Original : Day
 			})
 			.ToList();
 
-		ProcessInstructions(instructions);
-		CountComposites(instructions);
+		return (
+			ProcessInstructions(instructions).ToString(),
+			CountComposites(instructions).ToString());
 	}
 
-	void ProcessInstructions(IList<Instruction> input)
+	private static long ProcessInstructions(IList<Instruction> input)
 	{
 		var registers = new Dictionary<string, long>();
 
-		long getRegister(string r) => registers.ContainsKey(r) ? registers[r] : 0;
-		long getValue(string src)
-		{
-			if (int.TryParse(src, out var x)) return x;
-			return getRegister(src);
-		}
+		long GetValue(string src) =>
+			int.TryParse(src, out var x)
+				? x
+				: registers.GetValueOrDefault(src);
 
 		var ip = 0;
 		var mulInstructions = 0;
@@ -52,50 +51,53 @@ public class Day_2017_23_Original : Day
 			switch (instruction.Operation)
 			{
 				case "set":
-					{
-						registers[instruction.Destination] =
-							getValue(instruction.Source);
-						break;
-					}
+				{
+					registers[instruction.Destination] =
+						GetValue(instruction.Source);
+					break;
+				}
 
 				case "sub":
-					{
-						var register = getRegister(instruction.Destination);
-						register -= getValue(instruction.Source);
-						registers[instruction.Destination] = register;
-						break;
-					}
+				{
+					var register = registers.GetValueOrDefault(instruction.Destination);
+					register -= GetValue(instruction.Source);
+					registers[instruction.Destination] = register;
+					break;
+				}
 
 				case "mul":
-					{
-						mulInstructions++;
-						var register = getRegister(instruction.Destination);
-						register *= getValue(instruction.Source);
-						registers[instruction.Destination] = register;
-						break;
-					}
+				{
+					mulInstructions++;
+					var register = registers.GetValueOrDefault(instruction.Destination);
+					register *= GetValue(instruction.Source);
+					registers[instruction.Destination] = register;
+					break;
+				}
 
 				case "jnz":
+				{
+					var value = GetValue(instruction.Destination);
+					if (value != 0)
 					{
-						var value = getValue(instruction.Destination);
-						if (value != 0)
-						{
-							ip += (int)getValue(instruction.Source);
-							continue;
-						}
-						break;
+						ip += (int)GetValue(instruction.Source);
+						continue;
 					}
+					break;
+				}
+
+				default:
+					throw new UnreachableException();
 			}
 
 			ip++;
 		}
 
-		Dump('A', mulInstructions);
+		return mulInstructions;
 	}
 
-	void CountComposites(IList<Instruction> input)
+	private static long CountComposites(IList<Instruction> input)
 	{
-		var initial = Convert.ToInt32(input[0].Source) * 100 + 100000;
+		var initial = (Convert.ToInt32(input[0].Source) * 100) + 100000;
 		var max = initial - Convert.ToInt32(input[7].Source);
 		var maxFactor = (int)Math.Sqrt(max);
 		var increment = -Convert.ToInt32(input[30].Source);
@@ -119,6 +121,6 @@ public class Day_2017_23_Original : Day
 			}
 		}
 
-		Dump('B', composites);
+		return composites;
 	}
 }

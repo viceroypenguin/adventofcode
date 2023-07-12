@@ -1,21 +1,16 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2017;
 
-public class Day_2017_11_Original : Day
+[Puzzle(2017, 11, CodeType.Original)]
+public class Day_11_Original : IPuzzle
 {
-	public override int Year => 2017;
-	public override int DayNumber => 11;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var dirs = input.GetString()
+		var dirs = input.Text
 			.Trim()
 			.Split(',')
 			.ToList();
 
-		(int nw, int n, int ne) Move((int nw, int n, int ne) old, string dir)
+		static (int nw, int n, int ne) Move((int nw, int n, int ne) old, string dir)
 		{
 			switch (dir)
 			{
@@ -79,11 +74,13 @@ public class Day_2017_11_Original : Day
 		}
 
 		var positions = dirs
-			.ScanEx((nw: 0, n: 0, ne: 0), Move)
+			.Scan((nw: 0, n: 0, ne: 0), Move)
 			.Select(x => Math.Abs(x.nw) + Math.Abs(x.n) + Math.Abs(x.ne))
 			.ToList();
 
-		Dump('A', positions[positions.Count - 1]);
-		Dump('B', positions.Max());
+		var partA = positions[^1];
+		var partB = positions.Max();
+
+		return (partA.ToString(), partB.ToString());
 	}
 }

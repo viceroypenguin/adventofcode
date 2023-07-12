@@ -1,17 +1,12 @@
 ﻿using System.Collections;
 
-namespace AdventOfCode;
+namespace AdventOfCode.Puzzles._2017;
 
-public class Day_2017_14_Original : Day
+[Puzzle(2017, 14, CodeType.Original)]
+public class Day_14_Original : IPuzzle
 {
-	public override int Year => 2017;
-	public override int DayNumber => 14;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
 		byte[] KnotHash(string str)
 		{
 			const int ArrayLength = 256;
@@ -52,7 +47,7 @@ public class Day_2017_14_Original : Day
 			return final;
 		}
 
-		var key = input.GetString();
+		var key = input.Text;
 
 		var map =
 			Enumerable.Range(0, 128)
@@ -65,10 +60,9 @@ public class Day_2017_14_Original : Day
 				})
 				.ToArray();
 
-		Dump('A', map
-			.SelectMany(i => i)
-			.Where(b => b)
-			.Count());
+		var partA = map
+			.SelectMany(SuperEnumerable.Identity)
+			.Count(b => b);
 
 		var groupCount = 0;
 		var groupMap = new int?[128, 128];
@@ -84,7 +78,7 @@ public class Day_2017_14_Original : Day
 				var pos = queue.Dequeue();
 				if (alreadySeen.Contains(pos)) continue;
 
-				alreadySeen.Add(pos);
+				_ = alreadySeen.Add(pos);
 				groupMap[pos.x, pos.y] = groupNumber;
 
 				if (pos.x > 0 && map[pos.x - 1][pos.y])
@@ -99,15 +93,19 @@ public class Day_2017_14_Original : Day
 		}
 
 
-		for (int x = 0; x < 128; x++)
-			for (int y = 0; y < 128; y++)
+		for (var x = 0; x < 128; x++)
+		{
+			for (var y = 0; y < 128; y++)
 			{
 				if (groupMap[x, y] != null) continue;
 				if (!map[x][y]) continue;
 
 				ExploreGroup(x, y);
 			}
+		}
 
-		Dump('B', groupCount);
+		var partB = groupCount;
+
+		return (partA.ToString(), partB.ToString());
 	}
 }

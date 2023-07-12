@@ -1,22 +1,17 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2017;
 
-public class Day_2017_25_Original : Day
+[Puzzle(2017, 25, CodeType.Original)]
+public class Day_25_Original : IPuzzle
 {
-	public override int Year => 2017;
-	public override int DayNumber => 25;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var instructions = input.GetLines();
+		var instructions = input.Lines;
 		var initialState = instructions[0][15];
 		var steps = Convert.ToInt32(instructions[1].Split()[5]);
 
 		var states =
-			instructions.Skip(2)
-				.Batch(9)
+			instructions.Skip(3)
+				.Batch(10)
 				.Cast<string[]>()
 				.Select(x => new
 				{
@@ -31,6 +26,7 @@ public class Day_2017_25_Original : Day
 								MoveDirection = y[2].Split()[10] == "left." ? -1 : 1,
 								NextState = y[3][26],
 							})
+							.Take(2)
 							.ToList(),
 				})
 				.ToDictionary(x => x.State);
@@ -60,7 +56,7 @@ public class Day_2017_25_Original : Day
 		var currentPos = 0;
 		var state = initialState;
 
-		for (int i = 0; i < steps; i++)
+		for (var i = 0; i < steps; i++)
 		{
 			var currentValue = GetValue(currentPos);
 			var transition = states[state].Transitions[currentValue];
@@ -69,7 +65,8 @@ public class Day_2017_25_Original : Day
 			currentPos += transition.MoveDirection;
 		}
 
-		Dump('A',
-			negList.Concat(posList).Where(x => x == 1).Count());
+		return (
+			negList.Concat(posList).Count(x => x == 1).ToString(),
+			string.Empty);
 	}
 }

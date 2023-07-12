@@ -1,18 +1,13 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2017;
 
-public class Day_2017_07_Original : Day
+[Puzzle(2017, 07, CodeType.Original)]
+public class Day_07_Original : IPuzzle
 {
-	public override int Year => 2017;
-	public override int DayNumber => 7;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
 		var regex = new Regex(@"^(?<id>\w+) \((?<weight>\d+)\)( -> ((?<childid>\w+)(,\s*)?)*)?$", RegexOptions.Compiled);
 
-		var nodes = input.GetLines()
+		var nodes = input.Lines
 			.Select(s => regex.Match(s))
 			.Select(m => new
 			{
@@ -27,7 +22,6 @@ public class Day_2017_07_Original : Day
 		var root = nodes.Select(n => n.id)
 			.Except(nodes.SelectMany(n => n.childids))
 			.Single();
-		Dump('A', root);
 
 		var dict = nodes.ToDictionary(n => n.id);
 		int getSum(string id)
@@ -54,6 +48,7 @@ public class Day_2017_07_Original : Day
 			return dict[variantId].weight + adjustment;
 		};
 
-		Dump('B', getVariance(root));
+		var partB = getVariance(root);
+		return (root, partB.ToString());
 	}
 }

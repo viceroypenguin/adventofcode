@@ -1,25 +1,20 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2017;
 
-public class Day_2017_02_Original : Day
+[Puzzle(2017, 02, CodeType.Original)]
+public class Day_02_Original : IPuzzle
 {
-	public override int Year => 2017;
-	public override int DayNumber => 2;
-	public override CodeType CodeType => CodeType.Original;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var lines = input.GetLines()
+		var lines = input.Lines
 			.Select(x => x.Split().Select(s => Convert.ToInt32(s)).ToList())
 			.ToList();
 
-		Dump('A',
+		var partA =
 			lines
 				.Select(x => x.Max() - x.Min())
-				.Sum());
+				.Sum();
 
-		Dump('B',
+		var partB =
 			lines
 				.Select(arr =>
 				{
@@ -30,6 +25,8 @@ public class Day_2017_02_Original : Day
 						where num % div == 0
 						select num / div).Single();
 				})
-				.Sum());
+				.Sum();
+
+		return (partA.ToString(), partB.ToString());
 	}
 }

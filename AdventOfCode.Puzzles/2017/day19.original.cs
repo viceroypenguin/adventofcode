@@ -1,64 +1,59 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2017;
 
-public class Day_2017_19_Original : Day
+[Puzzle(2017, 19, CodeType.Original)]
+public class Day_19_Original : IPuzzle
 {
-	public override int Year => 2017;
-	public override int DayNumber => 19;
-	public override CodeType CodeType => CodeType.Original;
+	private byte[][] map;
 
-	char[][] map;
+	private (int x, int y) coords;
+	private char direction;
+	private int count;
 
-	(int x, int y) coords;
-	char direction;
-	int count;
+	private Queue<byte> queue;
 
-	Queue<char> queue;
-
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		map = input.GetLines()
-			.Select(s => s.ToArray())
-			.ToArray();
+		map = input.Bytes.GetMap();
 
 		coords = (x: 0, y: map[0].Select((c, i) => new { c, i }).First(x => x.c == '|').i);
 		direction = 's';
 		count = 0;
 
-		queue = new Queue<char>();
+		queue = new();
 
 		while (MoveNext())
 			count++;
 
-		Dump('A', string.Join("", queue));
-		Dump('B', count);
+		var partA = string.Join("", queue.Select(c => (char)c));
+		var partB = count;
+
+		return (partA, partB.ToString());
 	}
 
-	bool MoveNext()
+	private bool MoveNext()
 	{
 		// $"Coords: {coords}; Value: {map[coords.x][coords.y]}".Dump();
 		switch (map[coords.x][coords.y])
 		{
-			case '|':
-			case '-':
+			case (byte)'|':
+			case (byte)'-':
 				MoveStraight();
 				return true;
 
-			case '+':
+			case (byte)'+':
 				ChangeDirection();
 				return true;
 
-			case ' ':
+			case (byte)' ':
 				return false;
 
 			default:
 				queue.Enqueue(map[coords.x][coords.y]);
-				goto case '|';
+				goto case (byte)'|';
 		}
 	}
 
-	void MoveStraight()
+	private void MoveStraight()
 	{
 		switch (direction)
 		{
@@ -83,7 +78,7 @@ public class Day_2017_19_Original : Day
 		}
 	}
 
-	void ChangeDirection()
+	private void ChangeDirection()
 	{
 		if (direction != 's' &&
 			coords.x > 0 &&

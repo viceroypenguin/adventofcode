@@ -1,22 +1,16 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2017;
 
-public class Day_2017_02_Fastest : Day
+[Puzzle(2017, 02, CodeType.Fastest)]
+public class Day_02_Fastest : IPuzzle
 {
-	public override int Year => 2017;
-	public override int DayNumber => 2;
-	public override CodeType CodeType => CodeType.Fastest;
-
-	[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var span = new ReadOnlySpan<byte>(input);
+		var span = input.GetSpan();
 		int part1 = 0, part2 = 0;
 		Span<int> arr = stackalloc int[16];
 
 		var j = 0;
-		for (int i = 0; i < input.Length;)
+		for (var i = 0; i < span.Length;)
 		{
 			var (x, y) = span[i..].AtoI();
 			arr[j++] = x;
@@ -36,7 +30,8 @@ public class Day_2017_02_Fastest : Day
 
 				var flag = false;
 				for (j = 0; !flag && j < 16; j++)
-					for (int k = 0; !flag && k < 16; k++)
+				{
+					for (var k = 0; !flag && k < 16; k++)
 					{
 						if (j == k) continue;
 						if (arr[j] % arr[k] == 0)
@@ -50,6 +45,7 @@ public class Day_2017_02_Fastest : Day
 							flag = true;
 						}
 					}
+				}
 
 				j = 0;
 			}
@@ -57,7 +53,8 @@ public class Day_2017_02_Fastest : Day
 			i++;
 		}
 
-		PartA = part1.ToString();
-		PartB = part2.ToString();
+		return (
+			part1.ToString(),
+			part2.ToString());
 	}
 }

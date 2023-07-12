@@ -1,25 +1,21 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2017;
 
-public class Day_2017_17_Fastest : Day
+[Puzzle(2017, 17, CodeType.Fastest)]
+public class Day_17_Fastest : IPuzzle
 {
-	public override int Year => 2017;
-	public override int DayNumber => 17;
-	public override CodeType CodeType => CodeType.Fastest;
-
-	[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
 		// borrowed liberally from https://github.com/Voltara/advent2017-fast/blob/master/src/day17.c
-		int key = 0;
-		for (int i = 0; i < input.Length && input[i] >= '0'; i++)
-			key = key * 10 + input[i] - '0';
+		var span = input.GetSpan();
+
+		var key = 0;
+		for (var i = 0; i < span.Length && span[i] >= '0'; i++)
+			key = (key * 10) + span[i] - '0';
 
 		var position = 0;
 		// Find the index of the 2017th insertion
-		for (int i = 1; i <= 2017; i++)
-			position = (position + key) % i + 1;
+		for (var i = 1; i <= 2017; i++)
+			position = ((position + key) % i) + 1;
 
 		// Reverse the simulation to find the value which follows
 		int nextValue, nextPosition = (position + 1) % 2017;
@@ -31,7 +27,7 @@ public class Day_2017_17_Fastest : Day
 				position += nextValue;
 		}
 
-		PartA = nextValue.ToString();
+		var partA = nextValue;
 
 		var position1 = position = 0;
 		// loop runs in O(log i)
@@ -41,11 +37,13 @@ public class Day_2017_17_Fastest : Day
 				position1 = i;
 
 			// use n * (n + 1) concept to skip processing every item in loop
-			var skip = (i - position) / key + 1;
-			position += skip * (key + 1) - 1;
-			position %= (i += skip);
+			var skip = ((i - position) / key) + 1;
+			position += (skip * (key + 1)) - 1;
+			position %= i += skip;
 		}
 
-		PartB = position1.ToString();
+		var partB = position1;
+
+		return (partA.ToString(), partB.ToString());
 	}
 }

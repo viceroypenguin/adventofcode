@@ -1,17 +1,15 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2017;
 
-public class Day_2017_20_Original : Day
+[Puzzle(2017, 20, CodeType.Original)]
+public partial class Day_20_Original : IPuzzle
 {
-	public override int Year => 2017;
-	public override int DayNumber => 20;
-	public override CodeType CodeType => CodeType.Original;
+	[GeneratedRegex("^p=<(-?\\d+),(-?\\d+),(-?\\d+)>,\\s*v=<(-?\\d+),(-?\\d+),(-?\\d+)>,\\s*a=<(-?\\d+),(-?\\d+),(-?\\d+)>$", RegexOptions.Compiled)]
+	private static partial Regex PointRegex();
 
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var regex = new Regex(@"^p=<(-?\d+),(-?\d+),(-?\d+)>,\s*v=<(-?\d+),(-?\d+),(-?\d+)>,\s*a=<(-?\d+),(-?\d+),(-?\d+)>$", RegexOptions.Compiled);
-		var particles = input.GetLines()
+		var regex = PointRegex();
+		var particles = input.Lines
 			.Select(s => regex.Match(s))
 			.Select((m, i) =>
 			(
@@ -32,7 +30,10 @@ public class Day_2017_20_Original : Day
 			))
 			.ToArray();
 
-		Dump('A', particles.OrderBy(x => Math.Abs(x.a.x) + Math.Abs(x.a.y) + Math.Abs(x.a.z)).First());
+		var partA = particles
+			.OrderBy(x => Math.Abs(x.a.x) + Math.Abs(x.a.y) + Math.Abs(x.a.z))
+			.Select(x => x.i)
+			.First();
 
 		var intersectMatrix =
 			particles
@@ -61,14 +62,19 @@ public class Day_2017_20_Original : Day
 				break;
 
 			foreach (var i in particles.Where(i => !i.hasCollided).ToList())
+			{
 				foreach (var j in particles
 						.Where(j => !j.hasCollided)
 						.Where(j => intersectMatrix[i.i][j.i] == collisionTime)
 						.ToList())
+				{
 					particles[j.i].hasCollided = true;
+				}
+			}
 		}
 
-		Dump('B', particles.Where(i => !i.hasCollided).Count());
+		var partB = particles.Where(i => !i.hasCollided).Count();
+		return (partA.ToString(), partB.ToString());
 
 		int? DirectionsDoIntersect(
 			(int p, int v, int a) first,
@@ -98,12 +104,9 @@ public class Day_2017_20_Original : Day
 			}
 			else if (b != 0)
 			{
-				if (Math.Sign(b) == Math.Sign(c))
-					return null;
-				else if (c < 0)
-					return (-c % b) == 0 ? -c / b : default(int?);
-				else
-					return (c % -b) == 0 ? c / -b : default(int?);
+				return Math.Sign(b) == Math.Sign(c) ? null :
+					c < 0 ? -c % b == 0 ? -c / b : default(int?) :
+					c % -b == 0 ? c / -b : default(int?);
 			}
 
 			return null;
@@ -132,9 +135,9 @@ public class Day_2017_20_Original : Day
 					.Distinct()
 					.ToList();
 
-			if (times.Count == 1)
-				return times[0];
-			return null;
+			return times.Count == 1
+				? times[0]
+				: null;
 		}
 	}
 }

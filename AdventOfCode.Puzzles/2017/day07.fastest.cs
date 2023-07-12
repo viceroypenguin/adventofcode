@@ -1,19 +1,16 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2017;
 
-public class Day_2017_07_Fastest : Day
+[Puzzle(2017, 07, CodeType.Fastest)]
+public unsafe class Day_07_Fastest : IPuzzle
 {
-	public override int Year => 2017;
-	public override int DayNumber => 7;
-	public override CodeType CodeType => CodeType.Fastest;
-
-	private unsafe struct Line
+	private struct Line
 	{
 		public long Id;
 		public long Weight;
 		public fixed long Children[8];
 	}
 
-	private unsafe struct HashEntry
+	private struct HashEntry
 	{
 		public long Id;
 		public int Idx;
@@ -22,28 +19,32 @@ public class Day_2017_07_Fastest : Day
 
 	private const int HASH_SIZE = 4093;
 
-	[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-	protected unsafe override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
 		// borrowed liberally from https://github.com/Voltara/advent2017-fast/blob/master/src/day07.c
 		var hashTable = stackalloc HashEntry[HASH_SIZE];
 
-		var data = stackalloc Line[input.Length / 16];
+		var span = input.GetSpan();
+		var data = stackalloc Line[span.Length / 16];
 		var d = &data[0];
 
 		var pidx = 0;
 		var n = 0L;
 		var cid = 0;
-		foreach (var c in input)
+		foreach (var c in span)
 		{
 			if (c >= 'a')
-				n = n << 8 | c;
+			{
+				n = (n << 8) | c;
+			}
 			else if (c == '>')
+			{
 				;
+			}
 			else if (c >= '0')
-				n = n * 10 + c - '0';
+			{
+				n = (n * 10) + c - '0';
+			}
 			else if (c == '(')
 			{
 				d->Id = n;
@@ -94,15 +95,14 @@ public class Day_2017_07_Fastest : Day
 				chars[idx--] = (char)(n & 0xff);
 				n >>= 8;
 			}
-			PartA = new string(chars, idx + 1, chars.Length - idx - 1);
+
+			return (
+				new string(chars, idx + 1, chars.Length - idx - 1),
+				(-GetRebalancedWeight(data, hashTable, root)).ToString());
 		}
-
-
-		PartB = (-GetRebalancedWeight(data, hashTable, root)).ToString();
 	}
 
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	private unsafe HashEntry* GetHashEntry(HashEntry* hashTable, long id)
+	private HashEntry* GetHashEntry(HashEntry* hashTable, long id)
 	{
 		var hash = id % HASH_SIZE;
 		while (hashTable[hash].Id != 0)
@@ -116,8 +116,7 @@ public class Day_2017_07_Fastest : Day
 		return &hashTable[hash];
 	}
 
-	[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-	private unsafe long GetRebalancedWeight(Line* data, HashEntry* hashTable, long n)
+	private long GetRebalancedWeight(Line* data, HashEntry* hashTable, long n)
 	{
 		var node = &data[GetHashEntry(hashTable, n)->Idx];
 		var weight = node->Weight;
@@ -135,7 +134,9 @@ public class Day_2017_07_Fastest : Day
 
 			weight += i;
 			if (ctr == 0)
+			{
 				balance = i;
+			}
 			else if (balance != i)
 			{
 				if (ctr == 1)

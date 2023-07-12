@@ -1,16 +1,13 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2017;
 
-public class Day_2017_24_Fastest : Day
+[Puzzle(2017, 24, CodeType.Fastest)]
+public class Day_24_Fastest : IPuzzle
 {
-	public override int Year => 2017;
-	public override int DayNumber => 24;
-	public override CodeType CodeType => CodeType.Fastest;
-
-	private class Component
+	private sealed class Component
 	{
-		public int PortA;
-		public int PortB;
-		public bool Used;
+		public int PortA { get; set; }
+		public int PortB { get; set; }
+		public bool Used { get; set; }
 	}
 
 	private List<Component>[] lookupByA;
@@ -20,18 +17,16 @@ public class Day_2017_24_Fastest : Day
 	private int longestPath = -1;
 	private int maxLongestPath = -1;
 
-	[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
 		// borrowed liberally from https://github.com/Voltara/advent2017-fast/blob/master/src/day24.c
-		var ports = new List<Component>(input.Length / 4);
+		var span = input.GetSpan();
+
+		var ports = new List<Component>(span.Length / 4);
 		{
 			int a = 0, n = 0;
-			for (int i = 0; i < input.Length; i++)
+			foreach (var c in span)
 			{
-				var c = input[i];
 				if (c == '/')
 				{
 					a = n;
@@ -43,12 +38,14 @@ public class Day_2017_24_Fastest : Day
 					n = 0;
 				}
 				else if (c >= '0')
-					n = n * 10 + c - '0';
+				{
+					n = (n * 10) + c - '0';
+				}
 			}
 		}
 
 		var maxPort = -1;
-		for (int i = 0; i < ports.Count; i++)
+		for (var i = 0; i < ports.Count; i++)
 		{
 			var p = ports[i];
 			if (p.PortA > maxPort)
@@ -59,7 +56,7 @@ public class Day_2017_24_Fastest : Day
 
 		var byA = new List<Component>[maxPort + 1];
 		var byB = new List<Component>[maxPort + 1];
-		for (int i = 0; i < ports.Count; i++)
+		for (var i = 0; i < ports.Count; i++)
 		{
 			var p = ports[i];
 			var arr = byA[p.PortA] = byA[p.PortA] ?? new List<Component>();
@@ -76,11 +73,11 @@ public class Day_2017_24_Fastest : Day
 
 		CalculateStrength(0, 0, 0);
 
-		Dump('A', maxStrength);
-		Dump('B', maxLongestPath);
+		return (
+			maxStrength.ToString(),
+			maxLongestPath.ToString());
 	}
 
-	[MethodImpl(MethodImplOptions.AggressiveOptimization)]
 	private void CalculateStrength(int port, int curStrength, int curLength)
 	{
 		if (curStrength > maxStrength)

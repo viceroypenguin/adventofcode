@@ -1,22 +1,20 @@
-﻿namespace AdventOfCode;
+﻿using System.Runtime.CompilerServices;
 
-public class Day_2017_16_Fastest : Day
+namespace AdventOfCode.Puzzles._2017;
+
+[Puzzle(2017, 16, CodeType.Fastest)]
+public class Day_16_Fastest : IPuzzle
 {
-	public override int Year => 2017;
-	public override int DayNumber => 16;
-	public override CodeType CodeType => CodeType.Fastest;
-
-	[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
+		var span = input.GetSpan();
 
 		const ulong identity = 0xfedcba9876543210UL;
 		ulong swapRotate = identity, permute = identity;
 
 		byte command = 0;
 		int a = 0, b = 0;
-		foreach (var c in input)
+		foreach (var c in span)
 		{
 			if (c > 'p') command = c;
 			// p could be command or number
@@ -24,9 +22,9 @@ public class Day_2017_16_Fastest : Day
 			// so resetting command is ok
 			else if (c == 'p') { command = c; a = 15; }
 			else if (c >= 'a') a = c - 'a';
-			else if (c >= '0') a = a * 10 + c - '0';
+			else if (c >= '0') a = (a * 10) + c - '0';
 			else if (c == '/') { b = a; a = 0; }
-			else if (c == ',' || c == '\n')
+			else if (c is (byte)',' or (byte)'\n')
 			{
 				if (command == 'p')
 					permute = NibbleSwap(permute, a, b);
@@ -41,7 +39,7 @@ public class Day_2017_16_Fastest : Day
 		// permute instructions create the inverse transformation
 		permute = Inverse(permute);
 
-		PartA = Format(Compose(permute, swapRotate));
+		var partA = Format(Compose(permute, swapRotate));
 
 		ulong swapRotateB = identity, permuteB = identity;
 		for (long n = 1_000_000_000; n != 0; n >>= 1)
@@ -55,7 +53,9 @@ public class Day_2017_16_Fastest : Day
 			permute = Compose(permute, permute);
 		}
 
-		PartB = Format(Compose(permuteB, swapRotateB));
+		var partB = Format(Compose(permuteB, swapRotateB));
+
+		return (partA, partB);
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -69,7 +69,7 @@ public class Day_2017_16_Fastest : Day
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	private static ulong NibbleSwap(ulong x, int a, int b)
 	{
-		int r = ((a <<= 2) - (b <<= 2)) & 63;
+		var r = ((a <<= 2) - (b <<= 2)) & 63;
 		var maskA = 15UL << a;
 		var maskB = 15UL << b;
 		return (x & ~(maskA | maskB)) |
@@ -99,7 +99,7 @@ public class Day_2017_16_Fastest : Day
 	private static string Format(ulong x)
 	{
 		var c = new char[16];
-		for (int i = 0; i < 16; i++, x >>= 4)
+		for (var i = 0; i < 16; i++, x >>= 4)
 			c[i] = (char)('a' + (x & 15));
 		return new string(c);
 	}

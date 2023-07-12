@@ -1,17 +1,15 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2017;
 
-public class Day_2017_13_Original : Day
+[Puzzle(2017, 13, CodeType.Original)]
+public partial class Day_13_Original : IPuzzle
 {
-	public override int Year => 2017;
-	public override int DayNumber => 13;
-	public override CodeType CodeType => CodeType.Original;
+	[GeneratedRegex("^(?<depth>\\d+): (?<range>\\d+)$", RegexOptions.Compiled)]
+	private static partial Regex TargetRegex();
 
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var regex = new Regex(@"^(?<depth>\d+): (?<range>\d+)$", RegexOptions.Compiled);
-		var depths = input.GetLines()
+		var regex = TargetRegex();
+		var depths = input.Lines
 			.Select(l => regex.Match(l))
 			.Select(m => new
 			{
@@ -20,24 +18,23 @@ public class Day_2017_13_Original : Day
 			})
 			.ToList();
 
-		Dump('A',
+		var partA =
 			depths
-				.Where(f => (f.depth % ((f.range - 1) * 2)) == 0)
+				.Where(f => f.depth % ((f.range - 1) * 2) == 0)
 				.Select(f => f.depth * f.range)
-				.Sum());
+				.Sum();
 
-		Dump('B',
+		var partB =
 			Enumerable.Range(0, int.MaxValue)
 				.Select(i =>
 				{
 					var any = depths
-						.Where(f => ((f.depth + i) % ((f.range - 1) * 2)) == 0)
-						.Any();
-					return new { i, any, };
-
+						.Any(f => (f.depth + i) % ((f.range - 1) * 2) == 0);
+					return (i, any);
 				})
-				.Where(x => !x.any)
-				.First()
-				.i);
+				.First(x => !x.any)
+				.i;
+
+		return (partA.ToString(), partB.ToString());
 	}
 }

@@ -1,21 +1,19 @@
-﻿namespace AdventOfCode;
+﻿using System.Diagnostics;
 
-public class Day_2017_11_Fastest : Day
+namespace AdventOfCode.Puzzles._2017;
+
+[Puzzle(2017, 11, CodeType.Fastest)]
+public class Day_11_Fastest : IPuzzle
 {
-	public override int Year => 2017;
-	public override int DayNumber => 11;
-	public override CodeType CodeType => CodeType.Fastest;
-
-	[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
 		int dir = 0, nw = 0, n = 0, ne = 0, max = 0;
-		foreach (var c in input)
+		foreach (var c in input.GetSpan())
 		{
 			if (c >= 'a')
+			{
 				dir = (dir << 8) + c;
+			}
 			else
 			{
 				switch (dir)
@@ -55,13 +53,16 @@ public class Day_2017_11_Fastest : Day
 						else if (n > 0 || ne < 0) { ne++; n--; }
 						else nw--;
 						break;
+
+					default:
+						throw new UnreachableException();
 				}
 				max = Math.Max(max, Math.Abs(nw) + Math.Abs(n) + Math.Abs(ne));
 				dir = 0;
 			}
 		}
 
-		PartA = (Math.Abs(nw) + Math.Abs(n) + Math.Abs(ne)).ToString();
-		PartB = max.ToString();
+		var partA = Math.Abs(nw) + Math.Abs(n) + Math.Abs(ne);
+		return (partA.ToString(), max.ToString());
 	}
 }

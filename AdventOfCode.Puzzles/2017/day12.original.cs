@@ -1,17 +1,15 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2017;
 
-public class Day_2017_12_Original : Day
+[Puzzle(2017, 12, CodeType.Original)]
+public partial class Day_12_Original : IPuzzle
 {
-	public override int Year => 2017;
-	public override int DayNumber => 12;
-	public override CodeType CodeType => CodeType.Original;
+	[GeneratedRegex("^(?<prog_a>\\w+) \\<-\\> ((?<prog_b>\\w+)(,\\s*)?)*$", RegexOptions.Compiled)]
+	private static partial Regex ProgramRegex();
 
-	protected override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
-
-		var regex = new Regex(@"^(?<prog_a>\w+) \<-\> ((?<prog_b>\w+)(,\s*)?)*$", RegexOptions.Compiled);
-		var instructions = input.GetLines()
+		var regex = ProgramRegex();
+		var instructions = input.Lines
 			.Select(l => regex.Match(l))
 			.Select(m => new int[] { Convert.ToInt32(m.Groups["prog_a"].Value), }
 				.Concat(m.Groups["prog_b"].Captures.OfType<Capture>().Select(c => Convert.ToInt32(c.Value)))
@@ -28,7 +26,7 @@ public class Day_2017_12_Original : Day
 				foreach (var g2 in existingL.Skip(1))
 				{
 					g.UnionWith(g2);
-					groups.Remove(g2);
+					_ = groups.Remove(g2);
 				}
 				existingL = new List<HashSet<int>>() { g };
 			}
@@ -40,12 +38,9 @@ public class Day_2017_12_Original : Day
 				groups.Add(new HashSet<int>(m));
 		}
 
-		Dump('A',
-			groups
-				.Where(g => g.Contains(0))
-				.Single()
-				.Count);
+		var partA = groups.Single(g => g.Contains(0)).Count;
+		var partB = groups.Count;
 
-		Dump('B', groups.Count);
+		return (partA.ToString(), partB.ToString());
 	}
 }

@@ -1,54 +1,49 @@
-﻿namespace AdventOfCode;
+﻿namespace AdventOfCode.Puzzles._2017;
 
-public class Day_2017_05_Fastest : Day
+[Puzzle(2017, 05, CodeType.Fastest)]
+public class Day_05_Fastest : IPuzzle
 {
-	public override int Year => 2017;
-	public override int DayNumber => 5;
-	public override CodeType CodeType => CodeType.Fastest;
-
-	[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-	protected unsafe override void ExecuteDay(byte[] input)
+	public (string, string) Solve(PuzzleInput input)
 	{
-		if (input == null) return;
+		var span = input.GetSpan();
 
-		var nums1 = stackalloc int[input.Length / 4];
-		var nums2 = stackalloc int[input.Length / 4];
+		Span<int> nums1 = stackalloc int[span.Length / 4];
+		Span<int> nums2 = stackalloc int[span.Length / 4];
 		var count = 0;
-		for (int i = 0, neg = 0, n = 0; i < input.Length; i++)
+		for (var i = 0; i < span.Length;)
 		{
-			var c = input[i];
-			if (c == '\n')
-			{
-				nums1[count] = nums2[count] = neg == 1 ? -n : n;
-				count++;
-				n = neg = 0;
-			}
-			else if (c == '-')
-				neg = 1;
-			else if (c >= '0')
-				n = n * 10 + c - '0';
+			var (x, y) = span[i..].AtoI();
+			nums1[count] = nums2[count] = x;
+			count++;
+			i += y + 1;
 		}
 
+		return (
+			DoPartA(nums1[..count]).ToString(),
+			DoPartB(nums2[..count]).ToString());
+	}
+
+	private static int DoPartA(Span<int> nums)
+	{
+		var steps = 0;
+		var cnt = (uint)nums.Length;
+		for (var i = 0; i >= 0 && i < cnt; steps++)
+			i += nums[i]++;
+
+		return steps;
+	}
+
+	private static int DoPartB(Span<int> nums)
+	{
+		var steps = 0;
+		var cnt = (uint)nums.Length;
+		for (var i = 0; i >= 0 && i < cnt; steps++)
 		{
-			var start = nums1;
-			var end = &start[count];
-			var steps = 0;
-			for (var p = start; p >= start && p < end; steps++)
-				p += (*p)++;
-			PartA = steps.ToString();
+			var j = nums[i];
+			nums[i] += -(((j - 3) >> 31) << 1) - 1;
+			i += j;
 		}
 
-		{
-			var start = nums2;
-			var end = &start[count];
-			var steps = 0;
-			for (var p = start; p >= start && p < end; steps++)
-			{
-				var j = *p;
-				*p += -(((j - 3) >> 31) << 1) - 1;
-				p += j;
-			}
-			PartB = steps.ToString();
-		}
+		return steps;
 	}
 }
