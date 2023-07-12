@@ -31,18 +31,19 @@ public static class Helpers
 	public static (int value, int numChars) AtoI(this ReadOnlySpan<byte> bytes)
 	{
 		// initial sign? also, track negative
+		var n = 0;
+
 		var isNegSign = bytes[0] == '-';
 		if (isNegSign || bytes[0] == '+')
-			bytes = bytes[1..];
+			bytes = bytes[++n..];
 
 		var value = 0;
-		var n = 0;
 		foreach (var t in bytes)
 		{
 			if (t is < (byte)'0' or > (byte)'9')
 				break;
 
-			value = value * 10 + (t - '0');
+			value = (value * 10) + (t - '0');
 			n++;
 		}
 
