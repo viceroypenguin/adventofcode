@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Numerics;
+using System.Runtime.CompilerServices;
 
 namespace AdventOfCode.Puzzles._2017;
 
@@ -29,7 +30,7 @@ public class Day_16_Fastest : IPuzzle
 				if (command == 'p')
 					permute = NibbleSwap(permute, a, b);
 				else if (command == 's')
-					swapRotate = RotateLeft(swapRotate, a << 2);
+					swapRotate = BitOperations.RotateLeft(swapRotate, a << 2);
 				else if (command == 'x')
 					swapRotate = NibbleSwap(swapRotate, a, b);
 				a = b = command = 0;
@@ -59,22 +60,14 @@ public class Day_16_Fastest : IPuzzle
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	private static ulong RotateRight(ulong x, int r) =>
-		(x >> r) | (x << (64 - r));
-
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
-	private static ulong RotateLeft(ulong x, int r) =>
-		(x << r) | (x >> (64 - r));
-
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
 	private static ulong NibbleSwap(ulong x, int a, int b)
 	{
 		var r = ((a <<= 2) - (b <<= 2)) & 63;
 		var maskA = 15UL << a;
 		var maskB = 15UL << b;
 		return (x & ~(maskA | maskB)) |
-			(RotateLeft(x, r) & maskA) |
-			(RotateRight(x, r) & maskB);
+			(BitOperations.RotateLeft(x, r) & maskA) |
+			(BitOperations.RotateRight(x, r) & maskB);
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveInlining)]

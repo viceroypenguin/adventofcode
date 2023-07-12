@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode.Puzzles._2019;
+﻿using static AdventOfCode.Common.Helpers;
+
+namespace AdventOfCode.Puzzles._2019;
 
 [Puzzle(2019, 10, CodeType.Original)]
 public class Day_10_Original : IPuzzle
@@ -40,7 +42,7 @@ public class Day_10_Original : IPuzzle
 					xDist = Math.Sign(xDist);
 				else
 				{
-					var gcd = GCD(Math.Abs(xDist), Math.Abs(yDist));
+					var gcd = (int)Gcd(Math.Abs(xDist), Math.Abs(yDist));
 					if (gcd == 1)
 					{
 						see++;
@@ -111,17 +113,5 @@ public class Day_10_Original : IPuzzle
 			.ToString();
 
 		return (part1, part2);
-	}
-
-	static int GCD(int a, int b)
-	{
-		while (b != 0)
-		{
-			var mod = a % b;
-			a = b;
-			b = mod;
-		}
-
-		return a;
 	}
 }

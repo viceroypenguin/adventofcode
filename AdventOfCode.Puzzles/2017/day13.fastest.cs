@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using static AdventOfCode.Common.Helpers;
 
 namespace AdventOfCode.Puzzles._2017;
 
@@ -92,7 +93,7 @@ public class Day_2017_13_Fastest : IPuzzle
 				// increase cycle length to accomodate new information
 				// cycle will be lcm of all used lengths so far,
 				// so that mod of each will remain the same
-				fullCycle *= (uint)layers[idx].CycleLength / GreatestCommonDivisor(fullCycle, (uint)layers[idx].CycleLength);
+				fullCycle *= (uint)layers[idx].CycleLength / (uint)Gcd(fullCycle, (uint)layers[idx].CycleLength);
 				layers[idx--] = layers[--end];
 			}
 		}
@@ -110,12 +111,6 @@ public class Day_2017_13_Fastest : IPuzzle
 		var partB = (delay - fullCycle).ToString();
 
 		return (partA.ToString(), partB.ToString());
-	}
-
-	private static uint GreatestCommonDivisor(uint a, uint b)
-	{
-		while (b != 0) b = a % (a = b);
-		return a;
 	}
 
 	private static int GetLayer(Span<ModMask> span, int i, uint cycleLength)

@@ -30,7 +30,7 @@ public class Day_13_Original : IPuzzle
 			var modValue = curTime - (i % curTime);
 			while (earliestTime % curTime != modValue)
 				earliestTime += increment;
-			increment = lcm(increment, curTime);
+			increment = Lcm(increment, curTime);
 		}
 
 		var part2 = earliestTime.ToString();

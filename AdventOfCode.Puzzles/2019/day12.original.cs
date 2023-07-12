@@ -57,7 +57,7 @@ public partial class Day_12_Original : IPuzzle
 		}
 
 		var part2 = cycleLengths
-			.Aggregate(1L, (l, cl) => lcm(l, cl))
+			.Aggregate(1L, (l, cl) => Lcm(l, cl))
 			.ToString();
 
 		return (part1, part2);
