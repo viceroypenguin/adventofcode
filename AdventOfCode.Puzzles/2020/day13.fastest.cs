@@ -7,7 +7,7 @@ public class Day_13_Fastest : IPuzzle
 {
 	public (string, string) Solve(PuzzleInput input)
 	{
-		var span = new ReadOnlySpan<byte>(input.Bytes);
+		var span = input.GetSpan();
 		var (myTime, i) = span.AtoI();
 		i++;
 

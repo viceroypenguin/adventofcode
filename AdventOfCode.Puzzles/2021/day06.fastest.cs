@@ -7,7 +7,7 @@ public class Day_06_Fastest : IPuzzle
 	{
 		Span<long> fish = stackalloc long[9];
 
-		var span = new ReadOnlySpan<byte>(input.Bytes);
+		var span = input.GetSpan();
 		for (int i = 0; i < span.Length;)
 		{
 			var (value, numChars) = span[i..].AtoI();

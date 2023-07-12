@@ -8,7 +8,7 @@ public class Day_01_Fastest : IPuzzle
 		Span<int> numbers = stackalloc int[3];
 		var elf = 0;
 
-		var span = new ReadOnlySpan<byte>(input.Bytes);
+		var span = input.GetSpan();
 		for (int i = 0; i < span.Length;)
 		{
 			if (span[i] == '\n')

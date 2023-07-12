@@ -7,7 +7,7 @@ public class Day_02_Fastest : IPuzzle
 	{
 		int part1 = 0, part2 = 0;
 
-		var span = new ReadOnlySpan<byte>(input.Bytes);
+		var span = input.GetSpan();
 		for (int i = 0; i < span.Length;)
 		{
 			var x = span[i..].AtoI();

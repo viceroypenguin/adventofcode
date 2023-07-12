@@ -15,7 +15,7 @@ public class Day_2021_07_Fastest : IPuzzle
 		Span<int> crabs = stackalloc int[2048];
 
 		// read data from input
-		var span = new ReadOnlySpan<byte>(input.Bytes);
+		var span = input.GetSpan();
 		int i = 0, cnt = 0, max = 0;
 		while (i < span.Length)
 		{
