@@ -23,7 +23,7 @@ public partial class Day_07_Original : IPuzzle
 			else if (l.StartsWith("$ cd "))
 			{
 				var path = l[5..];
-				cwd = path.StartsWith("/") ? path : $"{cwd}{path}/";
+				cwd = path.StartsWith('/') ? path : $"{cwd}{path}/";
 			}
 			else if (l.StartsWith("dir"))
 			{

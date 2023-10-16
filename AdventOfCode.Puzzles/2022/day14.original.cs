@@ -1,17 +1,19 @@
 ﻿namespace AdventOfCode.Puzzles._2022;
 
+#pragma warning disable CS1717 // Assignment made to same variable
+
 [Puzzle(2022, 14, CodeType.Original)]
 public partial class Day_14_Original : IPuzzle
 {
-	private record struct Line(int x1, int y1, int x2, int y2);
+	private record struct Line(int X1, int Y1, int X2, int Y2);
 
 	public (string part1, string part2) Solve(PuzzleInput input)
 	{
-		var (lines, maxX, maxY) = ParseLines(input.Lines);
+		var (lines, _, maxY) = ParseLines(input.Lines);
 
 		return (
-			RunSand(lines, maxX, maxY, false).ToString(),
-			RunSand(lines, maxX, maxY, true).ToString());
+			RunSand(lines, maxY, false).ToString(),
+			RunSand(lines, maxY, true).ToString());
 	}
 
 	private static (List<Line> lines, int maxX, int maxY) ParseLines(string[] lines)
@@ -44,10 +46,10 @@ public partial class Day_14_Original : IPuzzle
 		return (x, y);
 	}
 
-	private static int RunSand(List<Line> lines, int maxX, int maxY, bool p2)
+	private static int RunSand(List<Line> lines, int maxY, bool p2)
 	{
 		maxY += 2;
-		maxX = 510 + maxY;
+		var maxX = 510 + maxY;
 		var map = new byte[maxX, maxY + 1];
 
 		foreach (var (x1, y1, x2, y2) in lines)
@@ -57,7 +59,7 @@ public partial class Day_14_Original : IPuzzle
 				var min = int.Min(y1, y2);
 				var max = int.Max(y1, y2);
 
-				for (int j = min; j <= max; j++)
+				for (var j = min; j <= max; j++)
 					map[x1, j] = (byte)'#';
 			}
 			else
@@ -65,14 +67,14 @@ public partial class Day_14_Original : IPuzzle
 				var min = int.Min(x1, x2);
 				var max = int.Max(x1, x2);
 
-				for (int j = min; j <= max; j++)
+				for (var j = min; j <= max; j++)
 					map[j, y1] = (byte)'#';
 			}
 		}
 
 		if (p2)
 		{
-			for (int x = 490 - maxY; x < 510 + maxY; x++)
+			for (var x = 490 - maxY; x < 510 + maxY; x++)
 				map[x, maxY] = (byte)'#';
 			maxY++;
 		}

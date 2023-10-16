@@ -35,19 +35,15 @@ public class Day_21_Original : IPuzzle
 			return bv;
 		}
 
-		IList<BitVector32> ConvertOutput(bool[] arr)
-		{
-			if (arr.Length == 9)
-				return new[] { ConvertArray(arr), };
-
-			return new[]
-			{
-					ConvertArray(new[]{ arr[ 0], arr[ 1], arr[ 4], arr[ 5], }),
-					ConvertArray(new[]{ arr[ 2], arr[ 3], arr[ 6], arr[ 7], }),
-					ConvertArray(new[]{ arr[ 8], arr[ 9], arr[12], arr[13], }),
-					ConvertArray(new[]{ arr[10], arr[11], arr[14], arr[15], }),
-				};
-		}
+		BitVector32[] ConvertOutput(bool[] arr) =>
+			arr.Length == 9
+				? [ConvertArray(arr),]
+				: [
+					ConvertArray([arr[0], arr[1], arr[4], arr[5],]),
+					ConvertArray([arr[2], arr[3], arr[6], arr[7],]),
+					ConvertArray([arr[8], arr[9], arr[12], arr[13],]),
+					ConvertArray([arr[10], arr[11], arr[14], arr[15],]),
+				];
 
 		BitVector32 FlipState(BitVector32 state)
 		{
@@ -79,7 +75,7 @@ public class Day_21_Original : IPuzzle
 			}
 			initial = FlipState(initial);
 			yield return initial;
-			for (int i = 0; i < 3; i++)
+			for (var i = 0; i < 3; i++)
 			{
 				initial = RotateState(initial);
 				yield return initial;
@@ -118,15 +114,15 @@ public class Day_21_Original : IPuzzle
 			// [ 0, 1, 2 ] [ 0, 1, 2 ]
 			// [ 3, 4, 5 ] [ 3, 4, 5 ]
 			// [ 6, 7, 8 ] [ 6, 7, 8 ]
-			yield return ConvertArray(new[] { bvs[0][1 << 0], bvs[0][1 << 1], bvs[0][1 << 3], bvs[0][1 << 4], });
-			yield return ConvertArray(new[] { bvs[0][1 << 2], bvs[1][1 << 0], bvs[0][1 << 5], bvs[1][1 << 3], });
-			yield return ConvertArray(new[] { bvs[1][1 << 1], bvs[1][1 << 2], bvs[1][1 << 4], bvs[1][1 << 5], });
-			yield return ConvertArray(new[] { bvs[0][1 << 6], bvs[0][1 << 7], bvs[2][1 << 0], bvs[2][1 << 1], });
-			yield return ConvertArray(new[] { bvs[0][1 << 8], bvs[1][1 << 6], bvs[2][1 << 2], bvs[3][1 << 0], });
-			yield return ConvertArray(new[] { bvs[1][1 << 7], bvs[1][1 << 8], bvs[3][1 << 1], bvs[3][1 << 2], });
-			yield return ConvertArray(new[] { bvs[2][1 << 3], bvs[2][1 << 4], bvs[2][1 << 6], bvs[2][1 << 7], });
-			yield return ConvertArray(new[] { bvs[2][1 << 5], bvs[3][1 << 3], bvs[2][1 << 8], bvs[3][1 << 6], });
-			yield return ConvertArray(new[] { bvs[3][1 << 4], bvs[3][1 << 5], bvs[3][1 << 7], bvs[3][1 << 8], });
+			yield return ConvertArray([bvs[0][1 << 0], bvs[0][1 << 1], bvs[0][1 << 3], bvs[0][1 << 4],]);
+			yield return ConvertArray([bvs[0][1 << 2], bvs[1][1 << 0], bvs[0][1 << 5], bvs[1][1 << 3],]);
+			yield return ConvertArray([bvs[1][1 << 1], bvs[1][1 << 2], bvs[1][1 << 4], bvs[1][1 << 5],]);
+			yield return ConvertArray([bvs[0][1 << 6], bvs[0][1 << 7], bvs[2][1 << 0], bvs[2][1 << 1],]);
+			yield return ConvertArray([bvs[0][1 << 8], bvs[1][1 << 6], bvs[2][1 << 2], bvs[3][1 << 0],]);
+			yield return ConvertArray([bvs[1][1 << 7], bvs[1][1 << 8], bvs[3][1 << 1], bvs[3][1 << 2],]);
+			yield return ConvertArray([bvs[2][1 << 3], bvs[2][1 << 4], bvs[2][1 << 6], bvs[2][1 << 7],]);
+			yield return ConvertArray([bvs[2][1 << 5], bvs[3][1 << 3], bvs[2][1 << 8], bvs[3][1 << 6],]);
+			yield return ConvertArray([bvs[3][1 << 4], bvs[3][1 << 5], bvs[3][1 << 7], bvs[3][1 << 8],]);
 		}
 
 		IEnumerable<BitVector32> Convert3To2(IList<BitVector32> bvs)
@@ -137,7 +133,7 @@ public class Day_21_Original : IPuzzle
 				{
 					var i = _i * 2;
 					var j = _j * 2;
-					return DoConvert3To2(new[] { bvs[i * n + j], bvs[i * n + j + 1], bvs[(i + 1) * n + j], bvs[(i + 1) * n + j + 1], });
+					return DoConvert3To2([bvs[(i * n) + j], bvs[(i * n) + j + 1], bvs[((i + 1) * n) + j], bvs[((i + 1) * n) + j + 1],]);
 				}));
 		}
 
@@ -149,6 +145,7 @@ public class Day_21_Original : IPuzzle
 			return x.SelectMany(TransitionState).ToList();
 		}
 
+#pragma warning disable CS8321 // Local function is declared but never used
 		string Print(BitVector32 state)
 		{
 			var size = state[isSize3] ? 3 : 2;
@@ -161,6 +158,7 @@ public class Day_21_Original : IPuzzle
 						Enumerable.Range(0, size)
 							.Select(j => state[1 << (i + j)] ? '#' : '_'))));
 		}
+#pragma warning restore CS8321 // Local function is declared but never used
 
 		var map = rules
 			.Where(kvp => kvp.Key[isSize3])

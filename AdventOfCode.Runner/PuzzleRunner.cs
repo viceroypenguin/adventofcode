@@ -15,7 +15,7 @@ public class PuzzleRunner
 	private readonly Type _benchmarkClass;
 
 	private static readonly Assembly[] assemblies =
-	{
+	[
 		Assembly.GetAssembly(typeof(Puzzles._2015.Day_01_Original))!,
 		Assembly.GetAssembly(typeof(Puzzles._2016.Day_01_Original))!,
 		Assembly.GetAssembly(typeof(Puzzles._2017.Day_01_Original))!,
@@ -24,7 +24,7 @@ public class PuzzleRunner
 		Assembly.GetAssembly(typeof(Puzzles._2020.Day_01_Original))!,
 		Assembly.GetAssembly(typeof(Puzzles._2021.Day_01_Original))!,
 		Assembly.GetAssembly(typeof(Puzzles._2022.Day_01_Original))!,
-	};
+	];
 
 	public PuzzleRunner()
 	{
@@ -55,7 +55,7 @@ public class PuzzleRunner
 					.WithOrderer(new TypeOrderer()));
 	}
 
-	private class TypeOrderer : DefaultOrderer, IOrderer
+	private sealed class TypeOrderer : DefaultOrderer, IOrderer
 	{
 		public override IEnumerable<BenchmarkCase> GetSummaryOrder(ImmutableArray<BenchmarkCase> benchmarksCases, Summary summary) =>
 			benchmarksCases
@@ -63,7 +63,7 @@ public class PuzzleRunner
 				.ThenBy(c => c.Descriptor.MethodIndex);
 	}
 
-	private static IReadOnlyList<PuzzleModel> GetAllPuzzles()
+	private static List<PuzzleModel> GetAllPuzzles()
 	{
 		var c = assemblies
 			.SelectMany(
@@ -102,7 +102,7 @@ public class PuzzleRunner
 		if (elapsed < TimeSpan.FromMilliseconds(500))
 		{
 			sw.Restart();
-			puzzle.Solve(rawInput);
+			_ = puzzle.Solve(rawInput);
 			sw.Stop();
 			elapsed = sw.Elapsed;
 		}

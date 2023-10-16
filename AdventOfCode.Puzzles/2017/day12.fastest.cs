@@ -54,7 +54,7 @@ public class Day_12_Fastest : IPuzzle
 					}
 				}
 
-				for (int i = 0; i < rowCount; i++)
+				for (var i = 0; i < rowCount; i++)
 					parents[rowNumbers[i]] = parent;
 				entryCount++;
 				rowCount = 0;

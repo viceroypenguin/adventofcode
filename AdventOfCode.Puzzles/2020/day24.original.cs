@@ -35,7 +35,7 @@ public class Day_24_Original : IPuzzle
 
 		var part1 = tiles.Values.Count(x => x).ToString();
 
-		for (int i = 0; i < 100; i++)
+		for (var i = 0; i < 100; i++)
 			tiles = Step(tiles);
 		var part2 = tiles.Values.Count(x => x).ToString();
 

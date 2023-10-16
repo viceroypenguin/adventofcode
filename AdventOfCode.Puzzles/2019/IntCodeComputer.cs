@@ -17,7 +17,7 @@ internal sealed class IntCodeComputer
 	[MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
 	private ref long GetParameter(int parameter)
 	{
-		ref long value = ref memory[ip + parameter];
+		ref var value = ref memory[ip + parameter];
 		var mode = GetParameterMode(memory[ip], parameter);
 		return
 			ref mode == 1 ? ref value :
@@ -38,11 +38,11 @@ internal sealed class IntCodeComputer
 		memory = new long[size];
 		instructions.CopyTo(memory, 0);
 
-		this.Inputs = inputs ?? new();
-		this.Outputs = outputs ?? new();
+		Inputs = inputs ?? new();
+		Outputs = outputs ?? new();
 
-		this.ip = 0;
-		this.relativeBase = 0L;
+		ip = 0;
+		relativeBase = 0L;
 	}
 
 	public IReadOnlyList<long> Memory => memory;

@@ -7,14 +7,14 @@ public partial class Day_08_Original : IPuzzle
 	{
 		var map = input.Bytes.GetIntMap();
 		var part1 = 0;
-		for (int y = 0; y < map.Length; y++)
-			for (int x = 0; x < map[y].Length; x++)
+		for (var y = 0; y < map.Length; y++)
+			for (var x = 0; x < map[y].Length; x++)
 			{
 				var height = map[y][x];
 
 				// w
 				var visible = true;
-				for (int j = 0; visible && j < x; j++)
+				for (var j = 0; visible && j < x; j++)
 					if (map[y][j] >= height)
 						visible = false;
 
@@ -26,7 +26,7 @@ public partial class Day_08_Original : IPuzzle
 
 				// e
 				visible = true;
-				for (int j = map[y].Length - 1; visible && x < j; j--)
+				for (var j = map[y].Length - 1; visible && x < j; j--)
 					if (map[y][j] >= height)
 						visible = false;
 
@@ -38,7 +38,7 @@ public partial class Day_08_Original : IPuzzle
 
 				// n
 				visible = true;
-				for (int j = 0; visible && j < y; j++)
+				for (var j = 0; visible && j < y; j++)
 					if (map[j][x] >= height)
 						visible = false;
 
@@ -50,7 +50,7 @@ public partial class Day_08_Original : IPuzzle
 
 				// s
 				visible = true;
-				for (int j = map.Length - 1; visible && y < j; j--)
+				for (var j = map.Length - 1; visible && y < j; j--)
 					if (map[j][x] >= height)
 						visible = false;
 
@@ -62,15 +62,15 @@ public partial class Day_08_Original : IPuzzle
 			}
 
 		var part2 = 0;
-		for (int y = 0; y < map.Length; y++)
-			for (int x = 0; x < map[y].Length; x++)
+		for (var y = 0; y < map.Length; y++)
+			for (var x = 0; x < map[y].Length; x++)
 			{
 				var height = map[y][x];
 				var product = 1;
 
 				// w
 				var cnt = 0;
-				for (int j = x - 1; j >= 0; j--)
+				for (var j = x - 1; j >= 0; j--)
 				{
 					cnt++;
 					if (map[y][j] >= height)
@@ -81,7 +81,7 @@ public partial class Day_08_Original : IPuzzle
 
 				// e
 				cnt = 0;
-				for (int j = x + 1; j < map[y].Length; j++)
+				for (var j = x + 1; j < map[y].Length; j++)
 				{
 					cnt++;
 					if (map[y][j] >= height)
@@ -92,7 +92,7 @@ public partial class Day_08_Original : IPuzzle
 
 				// n
 				cnt = 0;
-				for (int j = y - 1; j >= 0; j--)
+				for (var j = y - 1; j >= 0; j--)
 				{
 					cnt++;
 					if (map[j][x] >= height)
@@ -103,7 +103,7 @@ public partial class Day_08_Original : IPuzzle
 
 				// s
 				cnt = 0;
-				for (int j = y + 1; j < map.Length; j++)
+				for (var j = y + 1; j < map.Length; j++)
 				{
 					cnt++;
 					if (map[j][x] >= height)

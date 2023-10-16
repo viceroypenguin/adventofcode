@@ -16,11 +16,11 @@ public partial class Day_09_Original : IPuzzle
 		foreach (var l in instructions)
 		{
 			var (cnt, _) = l.AsSpan()[2..].AtoI();
-			for (int i = 0; i < cnt; i++)
+			for (var i = 0; i < cnt; i++)
 			{
 				snake[0] = MoveHead(snake[0], l[0]);
 
-				for (int j = 1; j < snakeLength; j++)
+				for (var j = 1; j < snakeLength; j++)
 				{
 					var newTail = MoveFollower(snake[j - 1], snake[j]);
 

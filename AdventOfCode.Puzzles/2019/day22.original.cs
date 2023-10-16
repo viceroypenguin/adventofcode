@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics;
+using System.Numerics;
 
 namespace AdventOfCode.Puzzles._2019;
 
@@ -48,6 +49,7 @@ public partial class Day_22_Original : IPuzzle
 					(Instruction.NewStack, _) => DeckSize - c - 1,
 					(Instruction.Cut, var n) => (c - n + DeckSize + DeckSize) % DeckSize,
 					(Instruction.Increment, var n) => c * n % DeckSize,
+					_ => throw new UnreachableException(),
 				})
 			.ToString();
 	}
@@ -63,7 +65,7 @@ public partial class Day_22_Original : IPuzzle
 
 		static BigInteger Normalize(BigInteger value) =>
 			value < 0
-				? value + DeckSize * (-value / DeckSize + 1)
+				? value + (DeckSize * ((-value / DeckSize) + 1))
 				: value % DeckSize;
 
 		// build per-loop offset/increment
@@ -75,6 +77,7 @@ public partial class Day_22_Original : IPuzzle
 					(Instruction.NewStack, _) => (-x.increment, DeckSize - x.offset - 1),
 					(Instruction.Cut, var n) => (x.increment, DeckSize + x.offset - n),
 					(Instruction.Increment, var n) => (x.increment * n, x.offset * n),
+					_ => throw new UnreachableException(),
 				});
 
 		// execute Shuffles loops

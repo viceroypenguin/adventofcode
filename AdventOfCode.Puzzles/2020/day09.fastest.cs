@@ -7,9 +7,9 @@ public class Day_09_Fastest : IPuzzle
 	{
 		var span = input.Span;
 		Span<long> arr = stackalloc long[input.Bytes.Length / 8];
-		int maxIndex = 0;
+		var maxIndex = 0;
 
-		for (int i = 0; i < span.Length;)
+		for (var i = 0; i < span.Length;)
 		{
 			var (x, y) = span[i..].AtoL();
 			arr[maxIndex++] = x;
@@ -18,10 +18,10 @@ public class Day_09_Fastest : IPuzzle
 
 		var invalidNumber = 0L;
 		var part1 = string.Empty;
-		for (int i = 25; i < maxIndex; i++)
+		for (var i = 25; i < maxIndex; i++)
 		{
-			for (int j = i - 25; j < i; j++)
-				for (int k = j + 1; k < i; k++)
+			for (var j = i - 25; j < i; j++)
+				for (var k = j + 1; k < i; k++)
 					if (arr[j] + arr[k] == arr[i])
 						goto found_match;
 
@@ -45,7 +45,7 @@ found_match:
 		}
 
 		long min = arr[start], max = arr[start];
-		for (int i = start + 1; i <= end; i++)
+		for (var i = start + 1; i <= end; i++)
 			(min, max) = (
 				Math.Min(min, arr[i]),
 				Math.Max(max, arr[i]));

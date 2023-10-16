@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode.Puzzles._2019;
+﻿using System.Diagnostics;
+
+namespace AdventOfCode.Puzzles._2019;
 
 [Puzzle(2019, 03, CodeType.Original)]
 public class Day_03_Original : IPuzzle
@@ -8,7 +10,7 @@ public class Day_03_Original : IPuzzle
 		var wirePaths = input.Lines
 			.Select(w => w
 				.Split(',')
-				.ScanEx(
+				.Scan(
 					new[] { (x: 0, y: 0, steps: 0), },
 					(pos, dir) =>
 					{
@@ -20,6 +22,7 @@ public class Day_03_Original : IPuzzle
 							'L' => Enumerable.Range(1, number).Select(x => (last.x - x, last.y, last.steps + x)).ToArray(),
 							'U' => Enumerable.Range(1, number).Select(y => (last.x, last.y + y, last.steps + y)).ToArray(),
 							'D' => Enumerable.Range(1, number).Select(y => (last.x, last.y - y, last.steps + y)).ToArray(),
+							_ => throw new UnreachableException(),
 						};
 					})
 				.SelectMany(x => x))

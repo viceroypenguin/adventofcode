@@ -37,7 +37,7 @@ public class Day_03_Fastest : IPuzzle
 	private static string Part2(string[] input)
 	{
 		var sum = 0;
-		for (int i = 0; i < input.Length; i += 3)
+		for (var i = 0; i < input.Length; i += 3)
 		{
 			foreach (var c in input[i])
 			{

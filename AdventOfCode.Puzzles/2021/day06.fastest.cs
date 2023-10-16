@@ -8,7 +8,7 @@ public class Day_06_Fastest : IPuzzle
 		Span<long> fish = stackalloc long[9];
 
 		var span = input.Span;
-		for (int i = 0; i < span.Length;)
+		for (var i = 0; i < span.Length;)
 		{
 			var (value, numChars) = span[i..].AtoI();
 			fish[value]++;
@@ -21,7 +21,7 @@ public class Day_06_Fastest : IPuzzle
 		//   ┌──[       ]─<─(+)───[  ]──┐
 		//   └──────>────────┴─────>────┘
 
-		for (int i = 0; i < 80; i++)
+		for (var i = 0; i < 80; i++)
 			fish[(i + 7) % 9] += fish[i % 9];
 
 		var totalFish = 0L;
@@ -29,7 +29,7 @@ public class Day_06_Fastest : IPuzzle
 			totalFish += f;
 		var part1 = totalFish.ToString();
 
-		for (int i = 80; i < 256; i++)
+		for (var i = 80; i < 256; i++)
 			fish[(i + 7) % 9] += fish[i % 9];
 
 		totalFish = 0L;

@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Diagnostics;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace AdventOfCode.Puzzles._2022;
@@ -44,6 +45,7 @@ public partial class Day_13_Original : IPuzzle
 				l.ZipLongest(r, CompareItem)
 					.SkipWhile(x => x == 0)
 					.FirstOrDefault(),
+			_ => throw new UnreachableException(),
 		};
 }
 

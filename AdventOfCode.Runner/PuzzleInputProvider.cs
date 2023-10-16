@@ -1,10 +1,9 @@
 ﻿using System.Net;
-using System.Text;
 using Microsoft.Extensions.Configuration;
 
 namespace AdventOfCode.Runner;
 
-public class PuzzleInputProvider
+public sealed class PuzzleInputProvider
 {
 	public static PuzzleInputProvider Instance { get; } = new();
 
@@ -41,15 +40,16 @@ public class PuzzleInputProvider
 	public PuzzleInput GetRawInput(int year, int day)
 	{
 		var inputFile = @$"Inputs\{year}\day{day:00}.input.txt";
-		Directory.CreateDirectory(Path.GetDirectoryName(inputFile)!);
+		_ = Directory.CreateDirectory(Path.GetDirectoryName(inputFile)!);
 		if (!File.Exists(inputFile))
 		{
 			var response = _httpClient.GetAsync($"{year}/day/{day}/input")
 				.GetAwaiter()
 				.GetResult();
-			response.EnsureSuccessStatusCode();
 
-			var text = response.Content.ReadAsStringAsync()
+			var text = response
+				.EnsureSuccessStatusCode()
+				.Content.ReadAsStringAsync()
 				.GetAwaiter()
 				.GetResult();
 			File.WriteAllText(inputFile, text);

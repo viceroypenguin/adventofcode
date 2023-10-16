@@ -6,7 +6,7 @@ public class Day_06_Original : IPuzzle
 	public (string, string) Solve(PuzzleInput input)
 	{
 		var coordinates = input.Lines
-			.Select(s => s.Split(new[] { ", " }, StringSplitOptions.None))
+			.Select(s => s.Split(", ", StringSplitOptions.None))
 			.Select(s => s.Select(i => Convert.ToInt32(i)).ToArray())
 			.Select(s => (x: s[0], y: s[1]))
 			.ToArray();
@@ -17,8 +17,9 @@ public class Day_06_Original : IPuzzle
 		var grid = new int[maxX + 2, maxY + 2];
 		var safeCount = 0;
 
-		for (int x = 0; x <= maxX + 1; x++)
-			for (int y = 0; y <= maxY + 1; y++)
+		for (var x = 0; x <= maxX + 1; x++)
+		{
+			for (var y = 0; y <= maxY + 1; y++)
 			{
 				var distances = coordinates
 					.Select((c, i) => (i, dist: Math.Abs(c.x - x) + Math.Abs(c.y - y)))
@@ -32,12 +33,14 @@ public class Day_06_Original : IPuzzle
 				if (distances.Sum(c => c.dist) < 10000)
 					safeCount++;
 			}
+		}
 
 		var excluded = new List<int>();
 		var counts = Enumerable.Range(-1, coordinates.Length + 1).ToDictionary(i => i, _ => 0);
 
-		for (int x = 0; x <= maxX + 1; x++)
-			for (int y = 0; y <= maxY + 1; y++)
+		for (var x = 0; x <= maxX + 1; x++)
+		{
+			for (var y = 0; y <= maxY + 1; y++)
 			{
 				if (x == 0 || y == 0 ||
 					x == maxX + 1 || y == maxY + 1)
@@ -46,6 +49,7 @@ public class Day_06_Original : IPuzzle
 				}
 				counts[grid[x, y]] += 1;
 			}
+		}
 
 		excluded = excluded.Distinct().ToList();
 

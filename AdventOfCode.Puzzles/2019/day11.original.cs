@@ -1,5 +1,5 @@
-﻿using System.Runtime.CompilerServices;
-using System.Threading.Tasks.Dataflow;
+﻿using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace AdventOfCode.Puzzles._2019;
 
@@ -37,7 +37,7 @@ public class Day_11_Original : IPuzzle
 
 	private static Dictionary<long, long> RunPart(long[] instructions, int initialPointValue)
 	{
-		var pc = new IntCodeComputer(instructions.ToArray(), size: 640 * 1024);
+		var pc = new IntCodeComputer([.. instructions], size: 640 * 1024);
 
 		var map = new Dictionary<long, long>();
 		var coord = (x: 0, y: 0);
@@ -55,13 +55,19 @@ public class Day_11_Original : IPuzzle
 
 			map[coordValue] = pc.Outputs.Dequeue();
 			var turn = pc.Outputs.Dequeue();
-			dir = turn switch { 0 => (dir + 3) % 4, 1 => (dir + 1) % 4, };
+			dir = turn switch
+			{
+				0 => (dir + 3) % 4,
+				1 => (dir + 1) % 4,
+				_ => throw new UnreachableException(),
+			};
 			coord = dir switch
 			{
 				0 => (coord.x, coord.y + 1),
 				1 => (coord.x + 1, coord.y),
 				2 => (coord.x, coord.y - 1),
 				3 => (coord.x - 1, coord.y),
+				_ => throw new UnreachableException(),
 			};
 		}
 	}

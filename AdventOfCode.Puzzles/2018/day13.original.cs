@@ -3,10 +3,10 @@
 [Puzzle(2018, 13, CodeType.Original)]
 public class Day_13_Original : IPuzzle
 {
-	static Cart[] carts;
-	static char[][] map;
+	private static Cart[] carts;
+	private static char[][] map;
 
-	enum Direction
+	private enum Direction
 	{
 		Left = 0,
 		Up,
@@ -39,7 +39,7 @@ public class Day_13_Original : IPuzzle
 			}).ToArray();
 
 		foreach (var c in carts)
-			map[c.X][c.Y] = c.Dir == Direction.Left || c.Dir == Direction.Right ? '-' : '|';
+			map[c.X][c.Y] = c.Dir is Direction.Left or Direction.Right ? '-' : '|';
 
 		var ticks = 0;
 		var firstCrash = false;
@@ -48,9 +48,11 @@ public class Day_13_Original : IPuzzle
 		{
 			ticks++;
 			foreach (var c in carts
-					.OrderBy(c => c.Y)
-					.ThenBy(c => c.X))
+				.OrderBy(c => c.Y)
+				.ThenBy(c => c.X))
+			{
 				c.MoveNext();
+			}
 
 			if (carts.Any(c => c.IsCrashed))
 			{
@@ -73,7 +75,7 @@ public class Day_13_Original : IPuzzle
 		}
 	}
 
-	class Cart
+	private sealed class Cart
 	{
 		public int Id;
 		public int X;
@@ -106,9 +108,9 @@ public class Day_13_Original : IPuzzle
 			}
 
 			var r = carts.FirstOrDefault(
-				c => c.Id != this.Id &&
-					c.X == this.X &&
-					c.Y == this.Y);
+				c => c.Id != Id &&
+					c.X == X &&
+					c.Y == Y);
 
 			if (r != null)
 			{
@@ -117,7 +119,7 @@ public class Day_13_Original : IPuzzle
 			}
 		}
 
-		void MoveStraight()
+		private void MoveStraight()
 		{
 			switch (Dir)
 			{
@@ -158,7 +160,7 @@ public class Day_13_Original : IPuzzle
 			}
 		}
 
-		void ChangeDirection()
+		private void ChangeDirection()
 		{
 			Dir = (Direction)(((int)Dir + NextChangeDir + 4) % 4);
 			NextChangeDir =

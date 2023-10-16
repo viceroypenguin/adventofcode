@@ -13,7 +13,7 @@ public class Day_18_Original : IPuzzle
 			.Select(s => s.ToArray())
 			.ToArray();
 
-		for (int i = 0; i < 10; i++)
+		for (var i = 0; i < 10; i++)
 		{
 			DoIteration();
 		}
@@ -26,7 +26,7 @@ public class Day_18_Original : IPuzzle
 		var maxIter = 1_000_000_000;
 		var flag = false;
 		var seenStates = new Dictionary<string, int>();
-		for (int i = 10; i < maxIter; i++)
+		for (var i = 10; i < maxIter; i++)
 		{
 			DoIteration();
 

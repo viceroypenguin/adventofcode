@@ -54,7 +54,7 @@ public class Day_11_Original : IPuzzle
 		
 		// keep track of flashes over 100 steps
 		var flashes = 0;
-		for (int i = 0; i < 100; i++)
+		for (var i = 0; i < 100; i++)
 			flashes += step(map);
 
 		var part1 = flashes.ToString();
@@ -64,7 +64,7 @@ public class Day_11_Original : IPuzzle
 		// how many cells are on map
 		// i.e. how many flashes == entire map flashed
 		var mapSize = map.Length * map[0].Length;
-		for (int i = 1; ; i++)
+		for (var i = 1; ; i++)
 		{
 			// run step
 			flashes = step(map);

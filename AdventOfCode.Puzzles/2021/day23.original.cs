@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode.Puzzles._2021;
+﻿using System.Diagnostics;
+
+namespace AdventOfCode.Puzzles._2021;
 
 [Puzzle(2021, 23, CodeType.Original)]
 public class Day_23_Original : IPuzzle
@@ -11,8 +13,8 @@ public class Day_23_Original : IPuzzle
 		for (var i = 0; i < 4; i++)
 		{
 			var room = start.Rooms.Span()[i].Span();
-			room[0] = map[2][i * 2 + 3];
-			room[1] = map[3][i * 2 + 3];
+			room[0] = map[2][(i * 2) + 3];
+			room[1] = map[3][(i * 2) + 3];
 		}
 
 		var goal = new Board();
@@ -30,10 +32,10 @@ public class Day_23_Original : IPuzzle
 
 		var insert = new[]
 		{
-			new[] { D, D, },
-			new[] { C, B, },
-			new[] { B, A, },
-			new[] { A, C, },
+			"DD"u8.ToArray(),
+			"CB"u8.ToArray(),
+			"BA"u8.ToArray(),
+			"AC"u8.ToArray(),
 		};
 
 		for (var i = 0; i < 4; i++)
@@ -56,17 +58,27 @@ public class Day_23_Original : IPuzzle
 		return (part1, part2);
 	}
 
+	private static int GetCost(byte b) =>
+		b switch
+		{
+			A => 1,
+			B => 10,
+			C => 100,
+			D => 1000,
+			_ => throw new UnreachableException(),
+		};
+
 	private static (Board, int) MoveTokenToHallway(Board board, int cost, int room, int i, int hallway)
 	{
 		var roomSpan = board.Rooms.Span()[room].Span();
 		var hallwaySpan = board.Hallway.Span();
 
-		var moveCost = roomSpan[i] switch { A => 1, B => 10, C => 100, D => 1000, };
+		var moveCost = GetCost(roomSpan[i]);
 		var steps = GetSteps(room, hallway) + i + 1;
 
 		(roomSpan[i], hallwaySpan[hallway]) =
 			(Empty, roomSpan[i]);
-		return (board, cost + moveCost * steps);
+		return (board, cost + (moveCost * steps));
 	}
 
 	private static (Board, int) MoveTokenToRoom(Board board, int cost, int room, int i, int hallway)
@@ -74,12 +86,12 @@ public class Day_23_Original : IPuzzle
 		var roomSpan = board.Rooms.Span()[room].Span();
 		var hallwaySpan = board.Hallway.Span();
 
-		var moveCost = hallwaySpan[hallway] switch { A => 1, B => 10, C => 100, D => 1000, };
+		var moveCost = GetCost(hallwaySpan[hallway]);
 		var steps = GetSteps(room, hallway) + i + 1;
 
 		(hallwaySpan[hallway], roomSpan[i]) =
 			(Empty, hallwaySpan[hallway]);
-		return (board, cost + moveCost * steps);
+		return (board, cost + (moveCost * steps));
 	}
 
 	private static (Board, int) MoveTokenToRoom(Board board, int cost, int from, int i, int to, int j)
@@ -87,12 +99,12 @@ public class Day_23_Original : IPuzzle
 		var fromSpan = board.Rooms.Span()[from].Span();
 		var toSpan = board.Rooms.Span()[to].Span();
 
-		var moveCost = fromSpan[i] switch { A => 1, B => 10, C => 100, D => 1000, };
-		var steps = Math.Abs(from - to) * 2 + i + 1 + j + 1;
+		var moveCost = GetCost(fromSpan[i]);
+		var steps = (Math.Abs(from - to) * 2) + i + 1 + j + 1;
 
 		(fromSpan[i], toSpan[j]) =
 			(Empty, fromSpan[i]);
-		return (board, cost + moveCost * steps);
+		return (board, cost + (moveCost * steps));
 	}
 
 	private static int GetSteps(int room, int hallway) =>
@@ -126,6 +138,7 @@ public class Day_23_Original : IPuzzle
 			(3, 4) => 1,
 			(3, 5) => 1,
 			(3, 6) => 2,
+			_ => throw new UnreachableException(),
 		};
 
 	private static IEnumerable<(Board, int)> GetPossibleMovesA(Board board, int cost) =>
@@ -141,7 +154,7 @@ public class Day_23_Original : IPuzzle
 
 	private static IEnumerable<(Board, int)> GetHallToRoomMoves(Board board, int cost, int depth)
 	{
-		for (int i = 0; i < 7; i++)
+		for (var i = 0; i < 7; i++)
 		{
 			// do we have a token to play with?
 			if (board.Hallway[i] == Empty) continue;
@@ -151,36 +164,49 @@ public class Day_23_Original : IPuzzle
 
 			// look for any blocking tokens
 			var flag = false;
-			for (int x = i + 1; !flag && x <= dest + 1; x++)
+			for (var x = i + 1; !flag && x <= dest + 1; x++)
+			{
 				if (board.Hallway[x] != Empty)
 					flag = true;
-			for (int x = i - 1; !flag && x > dest + 1; x--)
+			}
+
+			for (var x = i - 1; !flag && x > dest + 1; x--)
+			{
 				if (board.Hallway[x] != Empty)
 					flag = true;
+			}
+
 			if (flag) continue;
 
 			// are there any blocking tokens in the room?
-			for (int x = 0; !flag && x < depth; x++)
+			for (var x = 0; !flag && x < depth; x++)
+			{
 				if (board.Rooms[dest][x] != Empty
 					&& board.Rooms[dest][x] != board.Hallway[i])
+				{
 					flag = true;
+				}
+			}
+
 			if (flag) continue;
 
 			// ok, we can move to room
-			for (int x = depth - 1; !flag && x >= 0; x--)
+			for (var x = depth - 1; !flag && x >= 0; x--)
+			{
 				if (board.Rooms[dest][x] == Empty)
 				{
 					yield return MoveTokenToRoom(board, cost, dest, x, i);
 					flag = true;
 				}
+			}
 		}
 	}
 
 	private static IEnumerable<(Board, int)> GetRoomToRoomMoves(Board board, int cost, int depth)
 	{
-		for (int from = 0; from < 4; from++)
+		for (var from = 0; from < 4; from++)
 		{
-			for (int i = 0; i < depth; i++)
+			for (var i = 0; i < depth; i++)
 			{
 				if (board.Rooms[from][i] == Empty)
 					continue;
@@ -191,28 +217,41 @@ public class Day_23_Original : IPuzzle
 
 				// look for any blocking tokens in hallway
 				var flag = false;
-				for (int x = from + 2; !flag && x <= dest + 1; x++)
+				for (var x = from + 2; !flag && x <= dest + 1; x++)
+				{
 					if (board.Hallway[x] != Empty)
 						flag = true;
-				for (int x = from + 1; !flag && x > dest + 1; x--)
+				}
+
+				for (var x = from + 1; !flag && x > dest + 1; x--)
+				{
 					if (board.Hallway[x] != Empty)
 						flag = true;
+				}
+
 				if (flag) break;
 
 				// are there any blocking tokens in the room?
-				for (int x = 0; !flag && x < depth; x++)
+				for (var x = 0; !flag && x < depth; x++)
+				{
 					if (board.Rooms[dest][x] != Empty
 						&& board.Rooms[dest][x] != board.Rooms[from][i])
+					{
 						flag = true;
+					}
+				}
+
 				if (flag) break;
 
 				// ok, we can move to room
-				for (int x = depth - 1; !flag && x >= 0; x--)
+				for (var x = depth - 1; !flag && x >= 0; x--)
+				{
 					if (board.Rooms[dest][x] == Empty)
 					{
 						yield return MoveTokenToRoom(board, cost, from, i, dest, x);
 						flag = true;
 					}
+				}
 
 				break;
 			}
@@ -221,23 +260,28 @@ public class Day_23_Original : IPuzzle
 
 	private static IEnumerable<(Board, int)> GetRoomToHallMoves(Board board, int cost)
 	{
-		for (int from = 0; from < 4; from++)
+		for (var from = 0; from < 4; from++)
 		{
-			for (int i = 0; i < 4; i++)
+			for (var i = 0; i < 4; i++)
 			{
 				if (board.Rooms[from][i] == Empty)
 					continue;
 
-				for (int hallway = 0; hallway < 7; hallway++)
+				for (var hallway = 0; hallway < 7; hallway++)
 				{
 					// look for any blocking tokens in hallway
 					var flag = false;
-					for (int x = from + 2; !flag && x <= hallway; x++)
+					for (var x = from + 2; !flag && x <= hallway; x++)
+					{
 						if (board.Hallway[x] != Empty)
 							flag = true;
-					for (int x = from + 1; !flag && x >= hallway; x--)
+					}
+
+					for (var x = from + 1; !flag && x >= hallway; x--)
+					{
 						if (board.Hallway[x] != Empty)
 							flag = true;
+					}
 
 					// ok, we can move to hallway
 					if (!flag)

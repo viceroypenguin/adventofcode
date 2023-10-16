@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace AdventOfCode.Puzzles._2021;
 
@@ -27,10 +28,11 @@ public partial class Day_02_Original : IPuzzle
 				{
 					// aim remains the same, forward movement based on n
 					// depth based on aim
-					"forward" => (p.depth + p.aim * m.n, p.hor + m.n, p.aim),
+					"forward" => (p.depth + (p.aim * m.n), p.hor + m.n, p.aim),
 					// depth and forward remain the same, adjust aim
 					"down" => (p.depth, p.hor, p.aim + m.n),
 					"up" => (p.depth, p.hor, p.aim - m.n),
+					_ => throw new UnreachableException(),
 				});
 
 		// aim == parta depth

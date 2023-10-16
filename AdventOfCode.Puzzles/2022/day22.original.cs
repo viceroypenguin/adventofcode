@@ -1,14 +1,18 @@
-﻿namespace AdventOfCode.Puzzles._2022;
+﻿using System.Diagnostics;
+
+namespace AdventOfCode.Puzzles._2022;
 
 [Puzzle(2022, 22, CodeType.Original)]
 public partial class Day_22_Original : IPuzzle
 {
+	private static readonly char[] anyOf = ['.', '#',];
+
 	public (string part1, string part2) Solve(PuzzleInput input)
 	{
 		var xRanges = input.Lines.Take(..^2)
 			.Select(l => (
-				from: l.IndexOfAny(new[] { '.', '#', }),
-				to: l.LastIndexOfAny(new[] { '.', '#', })))
+				from: l.IndexOfAny(anyOf),
+				to: l.LastIndexOfAny(anyOf)))
 			.ToList();
 		var yRanges = Enumerable.Range(0, input.Lines[0].Length)
 			.Select(x => (
@@ -41,7 +45,7 @@ public partial class Day_22_Original : IPuzzle
 			{
 				case 0:
 				{
-					for (int j = 0; j < n; j++)
+					for (var j = 0; j < n; j++)
 					{
 						var newX = pos.x + 1;
 						if (newX > xRanges[pos.y].to)
@@ -55,7 +59,7 @@ public partial class Day_22_Original : IPuzzle
 
 				case 1:
 				{
-					for (int j = 0; j < n; j++)
+					for (var j = 0; j < n; j++)
 					{
 						var newY = pos.y + 1;
 						if (newY > yRanges[pos.x].to)
@@ -69,7 +73,7 @@ public partial class Day_22_Original : IPuzzle
 
 				case 2:
 				{
-					for (int j = 0; j < n; j++)
+					for (var j = 0; j < n; j++)
 					{
 						var newX = pos.x - 1;
 						if (newX < xRanges[pos.y].from)
@@ -83,7 +87,7 @@ public partial class Day_22_Original : IPuzzle
 
 				case 3:
 				{
-					for (int j = 0; j < n; j++)
+					for (var j = 0; j < n; j++)
 					{
 						var newY = pos.y - 1;
 						if (newY < yRanges[pos.x].from)
@@ -94,6 +98,9 @@ public partial class Day_22_Original : IPuzzle
 					}
 					break;
 				}
+
+				default:
+					throw new UnreachableException();
 			}
 
 			if (span.Length == i)
@@ -108,7 +115,7 @@ public partial class Day_22_Original : IPuzzle
 			span = span[(i + 1)..];
 		}
 
-		return (pos.y + 1) * 1000 + (pos.x + 1) * 4 + pos.face;
+		return ((pos.y + 1) * 1000) + ((pos.x + 1) * 4) + pos.face;
 	}
 
 	private static int DoPart2(string[] grid, List<(int from, int to)> xRanges, List<(int from, int to)> yRanges)
@@ -119,7 +126,7 @@ public partial class Day_22_Original : IPuzzle
 		{
 			var (n, i) = span.AtoI();
 
-			for (int j = 0; j < n; j++)
+			for (var j = 0; j < n; j++)
 			{
 				var next = MoveNextPart2(grid, xRanges, yRanges, pos);
 				if (next == pos)
@@ -141,7 +148,7 @@ public partial class Day_22_Original : IPuzzle
 			span = span[(i + 1)..];
 		}
 
-		return (pos.y + 1) * 1000 + (pos.x + 1) * 4 + pos.face;
+		return ((pos.y + 1) * 1000) + ((pos.x + 1) * 4) + pos.face;
 	}
 
 	private static (int x, int y, int face) MoveNextPart2(string[] grid, List<(int from, int to)> xRanges, List<(int from, int to)> yRanges, (int x, int y, int face) pos)
@@ -282,6 +289,9 @@ public partial class Day_22_Original : IPuzzle
 				}
 				break;
 			}
+
+			default:
+				throw new UnreachableException();
 		}
 
 		return grid[next.y][next.x] == '#'

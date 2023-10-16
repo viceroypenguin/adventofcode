@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace AdventOfCode.Puzzles._2020;
 
@@ -8,7 +9,7 @@ public class Day_18_Original : IPuzzle
 	public (string, string) Solve(PuzzleInput input)
 	{
 		Span<long> stack = stackalloc long[64];
-		int stackLevel = -1;
+		var stackLevel = -1;
 
 		long grandSum = 0;
 
@@ -31,6 +32,7 @@ public class Day_18_Original : IPuzzle
 					{
 						-1 => Pop(stack) + val,
 						-2 => Pop(stack) * val,
+						_ => throw new UnreachableException(),
 					});
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -72,7 +74,7 @@ public class Day_18_Original : IPuzzle
 				case (byte)')':
 				{
 					var val = Pop(stack);
-					Pop(stack);
+					_ = Pop(stack);
 					ProcessNumber(stack, val);
 					break;
 				}
@@ -80,7 +82,7 @@ public class Day_18_Original : IPuzzle
 				default:
 				{
 					// since all ints in problem are 1-char long...
-					int val = c - (byte)'0';
+					var val = c - (byte)'0';
 					ProcessNumber(stack, val);
 					break;
 				}
@@ -135,7 +137,7 @@ public class Day_18_Original : IPuzzle
 				default:
 				{
 					// since all ints in problem are 1-char long...
-					int val = c - (byte)'0';
+					var val = c - (byte)'0';
 					if (stackLevel > 0 && stack[stackLevel] == -1)
 						Operate(stack, val);
 					else

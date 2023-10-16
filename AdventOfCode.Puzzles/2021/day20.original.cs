@@ -77,7 +77,7 @@ public class Day_20_Original : IPuzzle
 	private static int DoPart(List<bool> algorithm, Dictionary<(int x, int y), bool> image, int steps)
 	{
 		// process the image n times
-		for (int i = 1; i <= steps; i++)
+		for (var i = 1; i <= steps; i++)
 			image = ImageProcessingStep(algorithm, image, i);
 		// how many lit values are there?
 		return image.Where(kvp => kvp.Value).Count();

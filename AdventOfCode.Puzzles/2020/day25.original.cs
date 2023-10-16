@@ -25,7 +25,7 @@ public class Day_25_Original : IPuzzle
 	{
 		var sn = 7L;
 		var value = 1L;
-		int i = 0;
+		var i = 0;
 
 		while (value != publicKey)
 		{
@@ -38,7 +38,7 @@ public class Day_25_Original : IPuzzle
 	private static int GetKey(int sn, int loopSize)
 	{
 		var value = 1L;
-		for (int i = 0; i < loopSize; i++)
+		for (var i = 0; i < loopSize; i++)
 			value = (value * sn) % 20201227;
 
 		return (int)value;

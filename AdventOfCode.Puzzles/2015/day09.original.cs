@@ -3,10 +3,12 @@
 [Puzzle(2015, 09, CodeType.Original)]
 public class Day_09_Original : IPuzzle
 {
+	private static readonly string[] separators = [" to ", " = "];
+
 	public (string, string) Solve(PuzzleInput input)
 	{
 		var edges = input.Lines
-			.Select(x => x.Split(new[] { " to ", " = " }, StringSplitOptions.None))
+			.Select(x => x.Split(separators, StringSplitOptions.None))
 			.Select(x => new { Start = x[0], End = x[1], Distance = Convert.ToInt32(x[2]) })
 			.OrderBy(x => x.Distance)
 			.ToList();

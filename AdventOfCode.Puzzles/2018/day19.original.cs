@@ -74,8 +74,8 @@ public class Day_19_Original : IPuzzle
 			["eqir"] = (a, b, ip) => Expression.Equal(Expression.Constant(a), GetRegisterValue(b, ip)),
 		};
 
-		List<Expression> expressions = new List<Expression>();
-		for (int i = 0; i < instructions.Count; i++)
+		var expressions = new List<Expression>();
+		for (var i = 0; i < instructions.Count; i++)
 		{
 			var inst = instructions[i];
 			if (inst.c == ipRegister)

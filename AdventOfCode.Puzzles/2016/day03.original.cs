@@ -6,12 +6,12 @@ public class Day_03_Original : IPuzzle
 	public (string, string) Solve(PuzzleInput input)
 	{
 		var partA = input.Lines
-			.Select(line => line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries))
+			.Select(line => line.Split(' ', StringSplitOptions.RemoveEmptyEntries))
 			.Select(line => new { A = Convert.ToInt32(line[0]), B = Convert.ToInt32(line[1]), C = Convert.ToInt32(line[2]), })
 			.Count(tri => tri.A + tri.B > tri.C && tri.A + tri.C > tri.B && tri.B + tri.C > tri.A);
 
 		var partB = input.Lines
-			.Select((line, idx) => new { parts = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries), idx })
+			.Select((line, idx) => new { parts = line.Split(' ', StringSplitOptions.RemoveEmptyEntries), idx })
 			.GroupBy(x => x.idx / 3)
 			.SelectMany(x =>
 			{

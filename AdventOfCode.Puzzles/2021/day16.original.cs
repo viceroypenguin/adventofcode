@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode.Puzzles._2021;
+﻿using System.Diagnostics;
+
+namespace AdventOfCode.Puzzles._2021;
 
 [Puzzle(2021, 16, CodeType.Original)]
 public class Day_16_Original : IPuzzle
@@ -44,6 +46,7 @@ public class Day_16_Original : IPuzzle
 					value = (value << 4) | (bits & 0xF);
 
 					if ((bits & 0x10) == 0)
+					{
 						return (
 							new Packet
 							{
@@ -52,17 +55,18 @@ public class Day_16_Original : IPuzzle
 								Value = value,
 							},
 							numBits);
+					}
 				}
 			}
 			else
 			{
 				var lengthType = GetBits(idx + numBits, 1);
 				numBits++;
-				uint? childBitCount =
+				var childBitCount =
 					lengthType == 0
 						? GetBits(idx + numBits, 15)
 						: default(uint?);
-				uint? childPackets =
+				var childPackets =
 					lengthType == 1
 						? GetBits(idx + numBits, 11)
 						: default(uint?);
@@ -107,7 +111,7 @@ public class Day_16_Original : IPuzzle
 		EqualTo = 7,
 	}
 
-	private class Packet
+	private sealed class Packet
 	{
 		public uint Version { get; set; }
 		public PacketType Type { get; set; }
@@ -128,6 +132,7 @@ public class Day_16_Original : IPuzzle
 				PacketType.GreaterThan => Children[0].GetValue() > Children[1].GetValue() ? 1 : 0,
 				PacketType.LessThan => Children[0].GetValue() < Children[1].GetValue() ? 1 : 0,
 				PacketType.EqualTo => Children[0].GetValue() == Children[1].GetValue() ? 1 : 0,
+				_ => throw new UnreachableException(),
 			};
 
 		public override string ToString() =>
@@ -141,6 +146,7 @@ public class Day_16_Original : IPuzzle
 				PacketType.GreaterThan => $"{Children[0]} > {Children[1]}",
 				PacketType.LessThan => $"{Children[0]} < {Children[1]}",
 				PacketType.EqualTo => $"{Children[0]} == {Children[1]}",
+				_ => throw new UnreachableException(),
 			};
 	}
 }

@@ -8,7 +8,7 @@ public class Day_02_Fastest : IPuzzle
 		int part1 = 0, part2 = 0;
 
 		var span = input.Span;
-		for (int i = 0; i < span.Length;)
+		for (var i = 0; i < span.Length;)
 		{
 			var x = span[i..].AtoI();
 			var min = x.value;

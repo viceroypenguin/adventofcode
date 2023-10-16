@@ -128,6 +128,7 @@ csharp_preserve_single_line_statements = true:suggestion
 dotnet_analyzer_diagnostic.category-Style.severity = warning
 
 # Specific issues to ignore
+dotnet_diagnostic.CA1001.severity = none				# CA1001: Types that own disposable fields should be disposable
 dotnet_diagnostic.CA1304.severity = none				# CA1304: Specify CultureInfo
 dotnet_diagnostic.CA1305.severity = none				# CA1305: Specify IFormatProvider
 dotnet_diagnostic.CA1309.severity = none				# CA1309: Use ordinal string comparison
@@ -136,3 +137,5 @@ dotnet_diagnostic.CA1311.severity = none				# CA1311: Specify a culture or use a
 dotnet_diagnostic.CA1707.severity = none				# CA1707: Identifiers should not contain underscores
 dotnet_diagnostic.CA1819.severity = none				# CA1819: Properties should not return arrays
 dotnet_diagnostic.CA5394.severity = none                # CA5394: Random is an insecure random number generator. Use cryptographically secure random number generators when randomness is required for security.
+
+dotnet_diagnostic.IDE0290.severity = none				# IDE0290: Use primary constructor

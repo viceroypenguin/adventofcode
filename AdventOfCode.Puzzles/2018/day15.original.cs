@@ -3,15 +3,15 @@
 [Puzzle(2018, 15, CodeType.Original)]
 public class Day_15_Original : IPuzzle
 {
-	static string[] map;
-	static Square[][] space;
+	private static string[] map;
+	private static Square[][] space;
 
 	public (string, string) Solve(PuzzleInput input)
 	{
 		map = input.Lines;
 		var part1 = RunGame(true, 3);
 
-		for (int i = 4; ; i++)
+		for (var i = 4; ; i++)
 		{
 			var value = RunGame(false, i);
 			if (value > 0)
@@ -59,18 +59,19 @@ public class Day_15_Original : IPuzzle
 			.Where(u => u.IsAlive)
 			.Sum(u => u.HitPoints);
 
-		return (rounds * totalHitPoints);
+		return rounds * totalHitPoints;
 	}
 
-	class Square { public override string ToString() => "."; }
+	private class Square { public override string ToString() => "."; }
 
-	class Wall : Square { public override string ToString() => "#"; }
+	private sealed class Wall : Square { public override string ToString() => "#"; }
 
-	enum UnitType
+	private enum UnitType
 	{
 		Elf, Goblin,
 	}
-	class Unit : Square
+
+	private sealed class Unit : Square
 	{
 		public Unit(UnitType type, int attackStrength, (int x, int y) location)
 		{
@@ -100,12 +101,14 @@ public class Day_15_Original : IPuzzle
 			var moved = DoMove();
 			if (!moved)
 			{
+#pragma warning disable IDE0120 // Simplify LINQ expression
 				return space
 					.SelectMany(r => r)
 					.OfType<Unit>()
-					.Where(u => u.UnitType != this.UnitType)
+					.Where(u => u.UnitType != UnitType)
 					.Where(u => u.IsAlive)
 					.Any();
+#pragma warning restore IDE0120 // Simplify LINQ expression
 			}
 
 			DoAttack();
@@ -120,7 +123,9 @@ public class Day_15_Original : IPuzzle
 
 			if (space[dir.Value.y][dir.Value.x] is Unit u &&
 					u.IsAlive)
+			{
 				return true;
+			}
 
 			space[Location.y][Location.x] = new Square();
 			Location = dir.Value;
@@ -140,25 +145,25 @@ public class Day_15_Original : IPuzzle
 
 			while (queue.Count > 0)
 			{
-				var l = queue.Dequeue();
-				if (visited.Contains(l.loc))
+				var (dir, loc) = queue.Dequeue();
+				if (visited.Contains(loc))
 					continue;
-				visited.Add(l.loc);
+				_ = visited.Add(loc);
 
-				var s = space[l.loc.y][l.loc.x];
+				var s = space[loc.y][loc.x];
 				if (s is Wall) continue;
 				if (s is Unit u && u.IsAlive)
 				{
-					if (u.UnitType == this.UnitType)
+					if (u.UnitType == UnitType)
 						continue;
 					else
-						return l.dir;
+						return dir;
 				}
 
-				queue.Enqueue((l.dir, loc: (l.loc.x, l.loc.y - 1)));
-				queue.Enqueue((l.dir, loc: (l.loc.x - 1, l.loc.y)));
-				queue.Enqueue((l.dir, loc: (l.loc.x + 1, l.loc.y)));
-				queue.Enqueue((l.dir, loc: (l.loc.x, l.loc.y + 1)));
+				queue.Enqueue((dir, loc: (loc.x, loc.y - 1)));
+				queue.Enqueue((dir, loc: (loc.x - 1, loc.y)));
+				queue.Enqueue((dir, loc: (loc.x + 1, loc.y)));
+				queue.Enqueue((dir, loc: (loc.x, loc.y + 1)));
 			}
 
 			return null;
@@ -176,15 +181,14 @@ public class Day_15_Original : IPuzzle
 				}
 				.Select(l => space[l.y][l.x])
 				.OfType<Unit>()
-				.Where(u => u.UnitType != this.UnitType)
+				.Where(u => u.UnitType != UnitType)
 				.Where(u => u.IsAlive)
 				.OrderBy(u => u.HitPoints)
 				.ThenBy(u => u.Location.y)
 				.ThenBy(u => u.Location.x)
 				.FirstOrDefault();
 
-			if (attackUnit != null)
-				attackUnit.ReceiveAttack(this.AttackStrength);
+			attackUnit?.ReceiveAttack(AttackStrength);
 		}
 	}
 }

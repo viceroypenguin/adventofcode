@@ -12,7 +12,7 @@ public partial class Day_08_Fastest : IPuzzle
 		var part2 = 0;
 
 		for (int y = 1, ty = 0; y < height - 1; y++, ty += width - 2)
-			for (int x = 1; x < width - 1; x++)
+			for (var x = 1; x < width - 1; x++)
 			{
 				var score = 1;
 				var visible = false;

@@ -16,7 +16,7 @@ public class Day_24_Original : IPuzzle
 		groupWeight = totalWeight / 3;
 
 		GetSubsets(weights);
-		var partA = 
+		var partA =
 			Potentials
 				.Select(l => new
 				{
@@ -28,10 +28,10 @@ public class Day_24_Original : IPuzzle
 				.QE;
 
 		groupWeight = totalWeight / 4;
-		Potentials = new List<IList<int>>();
+		Potentials = [];
 
 		GetSubsets(weights);
-		var partB = 
+		var partB =
 			Potentials
 				.Select(l => new
 				{
@@ -48,18 +48,18 @@ public class Day_24_Original : IPuzzle
 	private int totalWeight;
 	private int groupWeight;
 
-	IList<IList<int>> Potentials = new List<IList<int>>();
+	private List<ImmutableList<int>> Potentials = [];
 
-	void GetSubsets(IList<int> weights)
+	private void GetSubsets(IList<int> weights)
 	{
-		_GetSubsets(
-			ImmutableList<int>.Empty.AddRange(weights),
-			ImmutableList<int>.Empty,
+		_ = DoGetSubsets(
+			[.. weights],
+			[],
 			0,
 			int.MaxValue);
 	}
 
-	int _GetSubsets(ImmutableList<int> weights, ImmutableList<int> setA, int startIndex, int minLength)
+	private int DoGetSubsets(ImmutableList<int> weights, ImmutableList<int> setA, int startIndex, int minLength)
 	{
 		var setTotalSoFar = setA.Sum();
 		foreach (var i in Enumerable.Range(startIndex, weights.Count - startIndex))
@@ -82,7 +82,7 @@ public class Day_24_Original : IPuzzle
 				Potentials.Add(setA.Add(val));
 			}
 
-			minLength = _GetSubsets(
+			minLength = DoGetSubsets(
 				weights.RemoveAt(i),
 				setA.Add(val),
 				i,

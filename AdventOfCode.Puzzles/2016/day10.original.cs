@@ -43,7 +43,7 @@ public partial class Day_10_Original : IPuzzle
 		var outputs = new int[3];
 
 		var partA = 0;
-		while (destinations.Any())
+		while (destinations.Count != 0)
 		{
 			foreach (var x in destinations.ToList())
 			{

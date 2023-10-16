@@ -3,11 +3,14 @@
 namespace AdventOfCode.Puzzles._2022;
 
 [Puzzle(2022, 16, CodeType.Original)]
-public class Day_16_Original : IPuzzle
+public partial class Day_16_Original : IPuzzle
 {
+	[GeneratedRegex(@"^Valve (?<id>\w+) has flow rate=(?<flow>\d+); tunnels? leads? to valves? ((?<dest>\w+)(, )?)+$", RegexOptions.ExplicitCapture)]
+	private static partial Regex ValveRegex();
+
 	public (string, string) Solve(PuzzleInput input)
 	{
-		var regex = new Regex(@"^Valve (?<id>\w+) has flow rate=(?<flow>\d+); tunnels? leads? to valves? ((?<dest>\w+)(, )?)+$", RegexOptions.ExplicitCapture);
+		var regex = ValveRegex();
 		var valves = input.Lines
 			.Select(l => regex.Match(l))
 			.Select(m => (
@@ -26,22 +29,22 @@ public class Day_16_Original : IPuzzle
 			allValves = allValves.Add(v);
 		}
 
-		var part1 = DoPart1(
+		var (part1, _) = DoPart1(
 			distanceMap,
-			new() { new("AA", allValves), },
+			[new("AA", allValves),],
 			30);
 
-		var you = DoPart1(
+		var (you, state) = DoPart1(
 			distanceMap,
-			new() { new("AA", allValves), },
+			[new("AA", allValves),],
 			26);
-		var ele = DoPart1(
+		var (ele, _) = DoPart1(
 			distanceMap,
-			new() { new("AA", you.state.ClosedValves), },
+			[new("AA", state.ClosedValves),],
 			26);
-		var part2 = you.maxPressure + ele.maxPressure;
+		var part2 = you + ele;
 
-		return (part1.maxPressure.ToString(), part2.ToString());
+		return (part1.ToString(), part2.ToString());
 	}
 
 	private static Dictionary<(string from, string to), int> BuildDistanceMap(
@@ -61,7 +64,7 @@ public class Day_16_Original : IPuzzle
 		return distanceMap;
 	}
 
-	private record State1(
+	private sealed record State1(
 		string Valve,
 		ImmutableHashSet<(string id, int flow)> ClosedValves);
 	private static (int maxPressure, State1 state) DoPart1(

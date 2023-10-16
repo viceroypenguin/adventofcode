@@ -6,7 +6,7 @@ public partial class Day_15_Original : IPuzzle
 	[GeneratedRegex("Disc #(?<disc_num>\\d+) has (?<num_positions>\\d+) positions; at time=0, it is at position (?<initial_position>\\d+).", RegexOptions.Compiled)]
 	private static partial Regex DiscRegex();
 
-	private record Disc(int NumPositions, int InitialPosition);
+	private sealed record Disc(int NumPositions, int InitialPosition);
 
 	public (string, string) Solve(PuzzleInput input)
 	{

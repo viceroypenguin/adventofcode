@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode.Puzzles._2022;
+﻿using System.Diagnostics;
+
+namespace AdventOfCode.Puzzles._2022;
 
 [Puzzle(2022, 25, CodeType.Original)]
 public class Day_25_Original : IPuzzle
@@ -18,6 +20,7 @@ public class Day_25_Original : IPuzzle
 					'0' => 0,
 					'-' => -1,
 					'=' => -2,
+					_ => throw new UnreachableException(),
 				};
 
 				value += scale * n;
@@ -46,7 +49,9 @@ public class Day_25_Original : IPuzzle
 					value += 1;
 				}
 				else
+				{
 					digits[i] = (char)(rem + '0');
+				}
 			}
 
 			return string.Join("", digits.Reverse().Where(d => d != 0));

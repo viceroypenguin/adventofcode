@@ -70,8 +70,8 @@ public class Day_21_Original : IPuzzle
 			["sigr"] = (a, b, ip) => Expression.Invoke(signalParam, GetRegisterValue(a, ip)),
 		};
 
-		List<Expression> expressions = new List<Expression>();
-		for (int i = 0; i < instructions.Count; i++)
+		var expressions = new List<Expression>();
+		for (var i = 0; i < instructions.Count; i++)
 		{
 			var inst = instructions[i];
 			if (inst.c == ipRegister)

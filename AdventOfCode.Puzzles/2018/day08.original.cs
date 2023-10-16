@@ -11,7 +11,7 @@ public class Day_08_Original : IPuzzle
 			.Select(int.Parse)
 			.ToList();
 
-		int index = 0;
+		var index = 0;
 		int GetMetadataValue()
 		{
 			var childNodes = data[index++];

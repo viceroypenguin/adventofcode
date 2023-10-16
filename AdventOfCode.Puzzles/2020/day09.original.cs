@@ -29,14 +29,14 @@ public class Day_09_Original : IPuzzle
 		}
 
 		Array.Reverse(numbers);
-		for (int i = 0; ; i++)
+		for (var i = 0; ; i++)
 		{
 			if (numbers[i] > invalidNumber)
 				continue;
 
 			var x = numbers[i];
 			var (sum, min, max) = (x, x, x);
-			for (int j = i + 1; j < numbers.Length; j++)
+			for (var j = i + 1; j < numbers.Length; j++)
 			{
 				sum += numbers[j];
 				min = Math.Min(min, numbers[j]);

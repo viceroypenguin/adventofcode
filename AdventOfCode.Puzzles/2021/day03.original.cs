@@ -30,7 +30,7 @@ public class Day_03_Original : IPuzzle
 		// start with full list
 		var tmp = input.Lines.ToList();
 		// we're narrowing down to single element
-		for (int i = 0; tmp.Count != 1; i++)
+		for (var i = 0; tmp.Count != 1; i++)
 		{
 			// how many rows have a 1 in the i-th column?
 			var cnt = tmp.Count(s => s[i] == '1');
@@ -48,7 +48,7 @@ public class Day_03_Original : IPuzzle
 		// start with full list
 		tmp = input.Lines.ToList();
 		// we're narrowing down to single element
-		for (int i = 0; tmp.Count != 1; i++)
+		for (var i = 0; tmp.Count != 1; i++)
 		{
 			// how many rows have a 0 in the i-th column?
 			var cnt = tmp.Count(s => s[i] == '0');

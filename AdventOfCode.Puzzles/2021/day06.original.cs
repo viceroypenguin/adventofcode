@@ -32,12 +32,12 @@ public class Day_06_Original : IPuzzle
 		};
 
 		// run first 80 days
-		for (int i = 0; i < 80; i++)
+		for (var i = 0; i < 80; i++)
 			fish = DayCycle(fish);
 		var part1 = fish.Values.Sum().ToString();
 
 		// run 80-256 days
-		for (int i = 80; i < 256; i++)
+		for (var i = 80; i < 256; i++)
 			fish = DayCycle(fish);
 		var part2 = fish.Values.Sum().ToString();
 

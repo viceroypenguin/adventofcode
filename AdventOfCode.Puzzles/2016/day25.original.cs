@@ -29,7 +29,7 @@ public partial class Day_25_Original : IPuzzle
 
 	}
 
-	private record Instruction(string I, string X, string Y);
+	private sealed record Instruction(string I, string X, string Y);
 
 	private static bool RunProgram(Instruction[] instructions, int a)
 	{
@@ -41,7 +41,9 @@ public partial class Day_25_Original : IPuzzle
 			["d"] = 0,
 		};
 
-		int GetArgumentValue(string s) => registers.ContainsKey(s) ? registers[s] : Convert.ToInt32(s);
+		int GetArgumentValue(string s) =>
+			registers.TryGetValue(s, out var value)
+				? value : Convert.ToInt32(s);
 
 		var str = new List<int>();
 

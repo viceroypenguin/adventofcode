@@ -1,15 +1,11 @@
-﻿namespace AdventOfCode.Puzzles._2020;
+﻿using System.Diagnostics;
+
+namespace AdventOfCode.Puzzles._2020;
 
 [Puzzle(2020, 20, CodeType.Original)]
 public class Day_20_Original : IPuzzle
 {
-	private record ModularArray<T>(IReadOnlyList<T> Items)
-	{
-		public T this[int index] =>
-			Items[index % Items.Count];
-	}
-
-	private record Tile
+	private sealed record Tile
 	{
 		public required int TileId { get; init; }
 		public required int[] ForwardSides { get; init; }
@@ -32,14 +28,15 @@ public class Day_20_Original : IPuzzle
 			6 => map.Reverse(),
 			7 => Enumerable.Range(1, map[0].Count)
 				.Select(x => map.Select(s => s[^x]).Reverse()),
+			_ => throw new UnreachableException(),
 		};
 
 	private static readonly string[] Nessie =
-	{
+	[
 		"                  # ",
 		"#    ##    ##    ###",
 		" #  #  #  #  #  #   ",
-	};
+	];
 
 	private Dictionary<int, Tile> _tiles;
 	private ILookup<int, int> _tileLookup;
@@ -69,7 +66,7 @@ public class Day_20_Original : IPuzzle
 			(ulong)_stack[0].tileId *
 			(ulong)_stack[_sideLength - 1].tileId *
 			(ulong)_stack[(_sideLength - 1) * _sideLength].tileId *
-			(ulong)_stack[_sideLength * _sideLength - 1].tileId;
+			(ulong)_stack[(_sideLength * _sideLength) - 1].tileId;
 
 		var part1 = prod.ToString();
 
@@ -79,7 +76,7 @@ public class Day_20_Original : IPuzzle
 			.Select(x => x.ToList())
 			.ToList();
 
-		for (int i = 0; ; i++)
+		for (var i = 0; ; i++)
 		{
 			var nessie = GetRotatedMap(Nessie.Select(s => s.ToList()).ToList(), i)
 				.Select(x => x.ToList()).ToList();
@@ -132,16 +129,16 @@ public class Day_20_Original : IPuzzle
 		}
 	}
 
-	private bool BuildGrid()
+	private void BuildGrid()
 	{
 		_stack = new List<(int, int)>();
 		foreach (var tile in _tiles.Values)
 		{
-			for (int o = 0; o < 8; o++)
+			for (var o = 0; o < 8; o++)
 			{
 				_stack.Add((tile.TileId, o));
 				var gridBuilt = BuildGrid(0, 1);
-				if (gridBuilt) return true;
+				if (gridBuilt) return;
 
 				_stack.RemoveAt(0);
 			}
@@ -184,12 +181,12 @@ public class Day_20_Original : IPuzzle
 
 				var tile = _tiles[tileIdx];
 
-				for (int o = 0; o < 8; o++)
+				for (var o = 0; o < 8; o++)
 				{
 					var side = GetSide(tile, o, 2);
 					if (side != aboveSide) continue;
 
-					_stack.Add((tileIdx, ((10 - o) % 4) + (o & 4 ^ 4)));
+					_stack.Add((tileIdx, ((10 - o) % 4) + ((o & 4) ^ 4)));
 					var gridBuilt = BuildGrid(row, 1);
 					if (gridBuilt) return true;
 
@@ -206,14 +203,14 @@ public class Day_20_Original : IPuzzle
 			if (nextCol == _sideLength)
 				(nextRow, nextCol) = (row + 1, 0);
 
-			var leftIdx = row * _sideLength + col - 1;
+			var leftIdx = (row * _sideLength) + col - 1;
 			var leftSide = GetSide(leftIdx, 1);
 			foreach (var tileIdx in _tileLookup[leftSide])
 			{
 				if (_stack.Any(x => x.tileId == tileIdx)) continue;
 
 				var tile = _tiles[tileIdx];
-				for (int o = 0; o < 8; o++)
+				for (var o = 0; o < 8; o++)
 				{
 					var side = GetSide(tile, o, 3);
 					if (side != leftSide) continue;
@@ -226,7 +223,7 @@ public class Day_20_Original : IPuzzle
 						if (side != aboveSide) continue;
 					}
 
-					_stack.Add((tileIdx, ((10 - o) % 4) + (o & 4 ^ 4)));
+					_stack.Add((tileIdx, ((10 - o) % 4) + ((o & 4) ^ 4)));
 					var gridBuilt = BuildGrid(nextRow, nextCol);
 					if (gridBuilt) return true;
 
@@ -240,9 +237,9 @@ public class Day_20_Original : IPuzzle
 
 	private static (int x, int y)? FindNessie(IReadOnlyList<IReadOnlyList<char>> map, IReadOnlyList<IReadOnlyList<char>> nessie, (int x, int y) loc)
 	{
-		for (int y = loc.y; y < map.Count - nessie.Count; y++)
+		for (var y = loc.y; y < map.Count - nessie.Count; y++)
 		{
-			for (int x = loc.x; x < map[y].Count - nessie[0].Count; x++)
+			for (var x = loc.x; x < map[y].Count - nessie[0].Count; x++)
 			{
 				if (IsNessieHere(map, nessie, (x, y)))
 					return (x, y);
@@ -256,18 +253,27 @@ public class Day_20_Original : IPuzzle
 
 	private static bool IsNessieHere(IReadOnlyList<IReadOnlyList<char>> map, IReadOnlyList<IReadOnlyList<char>> nessie, (int x, int y) loc)
 	{
-		for (int y = 0; y < nessie.Count; y++)
-			for (int x = 0; x < nessie[y].Count; x++)
+		for (var y = 0; y < nessie.Count; y++)
+		{
+			for (var x = 0; x < nessie[y].Count; x++)
+			{
 				if (nessie[y][x] == '#' && map[y + loc.y][x + loc.x] != '#')
 					return false;
+			}
+		}
+
 		return true;
 	}
 
 	private static void ClearNessie(List<List<char>> map, IReadOnlyList<IReadOnlyList<char>> nessie, (int x, int y) loc)
 	{
-		for (int y = 0; y < nessie.Count; y++)
-			for (int x = 0; x < nessie[y].Count; x++)
+		for (var y = 0; y < nessie.Count; y++)
+		{
+			for (var x = 0; x < nessie[y].Count; x++)
+			{
 				if (nessie[y][x] == '#')
 					map[y + loc.y][x + loc.x] = '.';
+			}
+		}
 	}
 }

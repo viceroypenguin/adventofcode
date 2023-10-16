@@ -23,7 +23,7 @@ public partial class Day_12_Original : IPuzzle
 		return (partA.ToString(), partB.ToString());
 	}
 
-	private int RunInstructions(Match[] instructions, int c)
+	private static int RunInstructions(Match[] instructions, int c)
 	{
 		var registers = new Dictionary<string, int>()
 		{
@@ -42,7 +42,8 @@ public partial class Day_12_Original : IPuzzle
 				case "cpy":
 				{
 					var dest = instruction.Groups["y"].Value;
-					var value = registers.ContainsKey(instruction.Groups["x"].Value) ? registers[instruction.Groups["x"].Value] : Convert.ToInt32(instruction.Groups["x"].Value);
+					if (!registers.TryGetValue(instruction.Groups["x"].Value, out var value))
+						value = Convert.ToInt32(instruction.Groups["x"].Value);
 					registers[dest] = value;
 					break;
 				}
@@ -63,7 +64,8 @@ public partial class Day_12_Original : IPuzzle
 
 				case "jnz":
 				{
-					var value = registers.ContainsKey(instruction.Groups["x"].Value) ? registers[instruction.Groups["x"].Value] : Convert.ToInt32(instruction.Groups["x"].Value);
+					if (!registers.TryGetValue(instruction.Groups["x"].Value, out var value))
+						value = Convert.ToInt32(instruction.Groups["x"].Value);
 					if (value != 0)
 					{
 						var distance = Convert.ToInt32(instruction.Groups["y"].Value);

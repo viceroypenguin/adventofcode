@@ -27,8 +27,8 @@ public partial class Day_10_Original : IPuzzle
 
 		var atStep = points
 			 .Select(p => (
-				  x: p.posx + steps * p.velx,
-				  y: p.posy + steps * p.vely))
+				  x: p.posx + (steps * p.velx),
+				  y: p.posy + (steps * p.vely)))
 			 .ToList();
 
 		var minx = atStep.Min(p => p.x);
@@ -38,13 +38,13 @@ public partial class Day_10_Original : IPuzzle
 
 		var pixels = Enumerable.Range(0, xdiff)
 			.Select(x => Enumerable.Range(0, ydiff)
-				.Select(y => '.')
+				.Select(y => ' ')
 				.ToArray())
 			.ToArray();
 
 		for (var i = 0; i < points.Length; i++)
 		{
-			pixels[atStep[i].x - minx][atStep[i].y - miny] = '#';
+			pixels[atStep[i].x - minx][atStep[i].y - miny] = '█';
 		}
 
 		var part1 = string.Join(Environment.NewLine, pixels

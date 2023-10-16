@@ -99,7 +99,7 @@ public class Day_24_Fastest : IPuzzle
 		curStrength += port;
 
 		var arr = lookupByA[port];
-		for (int i = 0; i < arr?.Count; i++)
+		for (var i = 0; i < arr?.Count; i++)
 		{
 			var p = arr[i];
 			if (!p.Used)
@@ -111,7 +111,7 @@ public class Day_24_Fastest : IPuzzle
 		}
 
 		arr = lookupByB[port];
-		for (int i = 0; i < arr?.Count; i++)
+		for (var i = 0; i < arr?.Count; i++)
 		{
 			var p = arr[i];
 			if (!p.Used)

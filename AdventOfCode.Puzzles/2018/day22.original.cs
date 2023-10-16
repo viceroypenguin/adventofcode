@@ -16,18 +16,18 @@ public class Day_22_Original : IPuzzle
 			.Select(x => Enumerable.Repeat(0, destination.x + margin).ToArray())
 			.ToArray();
 
-		for (int x = 0; x < destination.x + margin; x++)
+		for (var x = 0; x < destination.x + margin; x++)
 			ground[0][x] = ((x % modulo) * 16807 + depth) % modulo;
 
-		for (int y = 0; y < destination.y + margin; y++)
+		for (var y = 0; y < destination.y + margin; y++)
 			ground[y][0] = ((y % modulo) * (48271 % modulo) + depth) % modulo;
 
-		for (int y = 1; y < destination.y + margin; y++)
+		for (var y = 1; y < destination.y + margin; y++)
 		{
 			var curRow = ground[y];
 			var prevRow = ground[y - 1];
 
-			for (int x = 1; x < destination.x + margin; x++)
+			for (var x = 1; x < destination.x + margin; x++)
 			{
 				if (x == destination.x && y == destination.y)
 					curRow[x] = depth % modulo;

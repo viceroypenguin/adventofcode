@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode.Puzzles._2022;
+﻿using System.Diagnostics;
+
+namespace AdventOfCode.Puzzles._2022;
 
 [Puzzle(2022, 23, CodeType.Original)]
 public partial class Day_23_Original : IPuzzle
@@ -28,7 +30,7 @@ public partial class Day_23_Original : IPuzzle
 					minY: Math.Min(dim.minY, p.y),
 					maxY: Math.Max(dim.maxY, p.y)));
 
-		var part1 = (maxX - minX + 1) * (maxY - minY + 1) - grid.Count;
+		var part1 = ((maxX - minX + 1) * (maxY - minY + 1)) - grid.Count;
 
 		while (true)
 		{
@@ -41,16 +43,17 @@ public partial class Day_23_Original : IPuzzle
 		return (part1.ToString(), (i + 1).ToString());
 	}
 
-	static Direction NextDirection(Direction dir) =>
+	private static Direction NextDirection(Direction dir) =>
 		dir switch
 		{
 			Direction.North => Direction.South,
 			Direction.South => Direction.West,
 			Direction.West => Direction.East,
 			Direction.East => Direction.North,
+			_ => throw new UnreachableException(),
 		};
 
-	static (HashSet<(int x, int y)> grid, Direction startDir, bool noMoves) RunLifeStep(
+	private static (HashSet<(int x, int y)> grid, Direction startDir, bool noMoves) RunLifeStep(
 		HashSet<(int x, int y)> grid, Direction startDir)
 	{
 		var next = new List<((int x, int y) old, (int x, int y) @new)>();
@@ -92,6 +95,7 @@ public partial class Day_23_Original : IPuzzle
 							|| grid.Contains((x - 1, y))
 							|| grid.Contains((x - 1, y + 1)),
 							(x - 1, y)),
+						_ => throw new UnreachableException(),
 					};
 
 					if (!blocked)

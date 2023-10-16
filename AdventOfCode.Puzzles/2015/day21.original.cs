@@ -87,8 +87,10 @@ Defense +3   80     0       3").Concat(new Item[] { null });
 	[GeneratedRegex("(.+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)")]
 	private static partial Regex ParseRegex();
 
-	private static IList<Item> ParseItems(string input) => 
-		input.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+	private static readonly char[] separator = ['\r', '\n'];
+
+	private static List<Item> ParseItems(string input) =>
+		input.Split(separator, StringSplitOptions.RemoveEmptyEntries)
 			.Select(s => ParseRegex().Match(s))
 			.Select(m => new Item()
 			{

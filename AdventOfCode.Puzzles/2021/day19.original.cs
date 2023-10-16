@@ -3,8 +3,11 @@
 namespace AdventOfCode.Puzzles._2021;
 
 [Puzzle(2021, 19, CodeType.Original)]
-public class Day_19_Original : IPuzzle
+public partial class Day_19_Original : IPuzzle
 {
+	[GeneratedRegex("\\d+")]
+	private static partial Regex NumberRegex();
+
 	public (string part1, string part2) Solve(PuzzleInput input)
 	{
 		var scanners = input.Lines
@@ -13,7 +16,7 @@ public class Day_19_Original : IPuzzle
 			.Segment(x => x.Contains("scanner"))
 			// each for each block, parse scanner id and points
 			.Select(x => (
-				scanner: Convert.ToInt32(Regex.Match(x.First(), "\\d+").Value),
+				scanner: Convert.ToInt32(NumberRegex().Match(x.First()).Value),
 				points: x.Skip(1)
 					.Select(l => l.Split(','))
 					.Select(l => (
@@ -33,7 +36,7 @@ public class Day_19_Original : IPuzzle
 						x: p[0].item.x - p[1].item.x,
 						y: p[0].item.y - p[1].item.y,
 						z: p[0].item.z - p[1].item.z))
-					.Select(p => (p.i, p.j, dst: Math.Sqrt(p.x * p.x + p.y * p.y + p.z * p.z)))
+					.Select(p => (p.i, p.j, dst: Math.Sqrt((p.x * p.x) + (p.y * p.y) + (p.z * p.z))))
 					.ToList()))
 			// transform - we want the raw list of distances
 			// and we want a list of distance by point id
@@ -41,7 +44,7 @@ public class Day_19_Original : IPuzzle
 				s.scanner,
 				s.points,
 				distances: s.distances.Select(d => d.dst).ToList(),
-				distByPointIdx: s.distances.Select(d => (i: d.i, d.dst))
+				distByPointIdx: s.distances.Select(d => (d.i, d.dst))
 					.Concat(s.distances.Select(d => (i: d.j, d.dst)))
 					.GroupBy(
 						d => d.i,
@@ -76,13 +79,13 @@ public class Day_19_Original : IPuzzle
 		var map = new (bool set, (int x, int y, int z) origin, List<(int x, int y, int z)> points)[scanners.Count];
 		// start with the first scanner
 		map[0] = (true, (0, 0, 0), scanners[0].points);
-		while (overlaps.Any())
+		while (overlaps.Count != 0)
 		{
 			// grab the next scanner; any pair where one of them
 			// has already been placed will work
 			var (i, j) = overlaps.FirstOrDefault(o => map[o.i].set || map[o.j].set);
 			// don't need it anymore
-			overlaps.Remove((i, j));
+			_ = overlaps.Remove((i, j));
 
 			// for simplicity of code, i is the one that's already placed
 			// if not, swap them so i is for sure
@@ -118,11 +121,11 @@ public class Day_19_Original : IPuzzle
 			var p = map[i].points[pointMap[0].i];
 			var q = o(scanners[j].points[pointMap[0].j]);
 			var origin = (x: p.x - q.x, y: p.y - q.y, z: p.z - q.z);
-			
+
 			// save the new adjusted points, along with the origin
 			map[j] = (
-				true, 
-				origin, 
+				true,
+				origin,
 				scanners[j].points
 					.Select(o)
 					.Select(p => (p.x + origin.x, p.y + origin.y, p.z + origin.z))

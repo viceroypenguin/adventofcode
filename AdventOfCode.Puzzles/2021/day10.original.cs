@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode.Puzzles._2021;
+﻿using System.Diagnostics;
+
+namespace AdventOfCode.Puzzles._2021;
 
 [Puzzle(2021, 10, CodeType.Original)]
 public class Day_10_Original : IPuzzle
@@ -15,7 +17,9 @@ public class Day_10_Original : IPuzzle
 				{
 					// if we open a chunk, then keep track of it
 					if (c is '{' or '(' or '[' or '<')
+					{
 						stack.Push(c);
+					}
 					else
 					{
 						// ending a chunk - is it the right value?
@@ -35,6 +39,8 @@ public class Day_10_Original : IPuzzle
 
 							('<', '>') => -1,
 							(_, '>') => 25137,
+
+							_ => throw new UnreachableException(),
 						};
 						// corrupted? return the value
 						if (v != -1)
@@ -49,12 +55,13 @@ public class Day_10_Original : IPuzzle
 					// return i
 					.Aggregate(
 						0L,
-						(i, c) => i * 5 + c switch
+						(i, c) => (i * 5) + c switch
 						{
 							'(' => 1,
 							'[' => 2,
 							'{' => 3,
 							'<' => 4,
+							_ => throw new UnreachableException(),
 						});
 				return (corrupted: false, value: score);
 			})

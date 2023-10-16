@@ -13,9 +13,9 @@ public class Day_05_Original : IPuzzle
 				.Select(c => (c, isActive: true))
 				.ToArray();
 
-			for (int i = 1; i < characters.Length; i++)
+			for (var i = 1; i < characters.Length; i++)
 			{
-				int j = i - 1;
+				var j = i - 1;
 				while (j >= 0 && !characters[j].isActive)
 					j--;
 				if (j >= 0 &&

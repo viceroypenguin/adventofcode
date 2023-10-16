@@ -23,7 +23,7 @@ public partial class Day_05_Original : IPuzzle
 
 		var stacks = BuildStacks(input.Lines);
 		foreach (var (cnt, from, to) in instructions)
-			for (int i = 0; i < cnt; i++)
+			for (var i = 0; i < cnt; i++)
 				stacks[to - 1].Push(stacks[from - 1].Pop());
 
 		var part1 = string.Join("", stacks.Select(s => s.Peek()));
@@ -32,9 +32,9 @@ public partial class Day_05_Original : IPuzzle
 		foreach (var (cnt, from, to) in instructions)
 		{
 			var tmp = new Stack<char>();
-			for (int i = 0; i < cnt; i++)
+			for (var i = 0; i < cnt; i++)
 				tmp.Push(stacks[from - 1].Pop());
-			for (int i = 0; i < cnt; i++)
+			for (var i = 0; i < cnt; i++)
 				stacks[to - 1].Push(tmp.Pop());
 		}
 

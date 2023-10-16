@@ -1,9 +1,11 @@
 ﻿namespace AdventOfCode.Puzzles._2022;
 
+#pragma warning disable CS1717 // Assignment made to same variable
+
 [Puzzle(2022, 14, CodeType.Fastest)]
 public partial class Day_14_Fastest : IPuzzle
 {
-	private record struct Line(int x1, int y1, int x2, int y2);
+	private record struct Line(int X1, int Y1, int X2, int Y2);
 
 	public (string part1, string part2) Solve(PuzzleInput input)
 	{
@@ -72,21 +74,21 @@ public partial class Day_14_Fastest : IPuzzle
 			{
 				var (min, max) = y1 < y2 ? (y1, y2) : (y2, y1);
 
-				for (int j = min; j <= max; j++)
+				for (var j = min; j <= max; j++)
 					map[x1, j] = (byte)'#';
 			}
 			else
 			{
 				var (min, max) = x1 < x2 ? (x1, x2) : (x2, x1);
 
-				for (int j = min; j <= max; j++)
+				for (var j = min; j <= max; j++)
 					map[j, y1] = (byte)'#';
 			}
 		}
 
 		if (p2)
 		{
-			for (int x = 490 - maxY; x < 510 + maxY; x++)
+			for (var x = 490 - maxY; x < 510 + maxY; x++)
 				map[x, maxY] = (byte)'#';
 			maxY++;
 		}
@@ -128,7 +130,7 @@ public partial class Day_14_Fastest : IPuzzle
 				break;
 			}
 
-			path.Pop();
+			_ = path.Pop();
 			map[x, y] = (byte)'O';
 			n++;
 		}

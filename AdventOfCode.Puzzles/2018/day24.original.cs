@@ -1,9 +1,9 @@
 ﻿namespace AdventOfCode.Puzzles._2018;
 
 [Puzzle(2018, 24, CodeType.Original)]
-public class Day_24_Original : IPuzzle
+public partial class Day_24_Original : IPuzzle
 {
-	class Group
+	private sealed class Group
 	{
 		public int Id;
 		public int LiveUnits;
@@ -17,20 +17,21 @@ public class Day_24_Original : IPuzzle
 		public int EffectivePower => LiveUnits * AttackDamage;
 	}
 
-	class Army
+	private sealed class Army
 	{
 		public string Name;
 		public List<Group> Groups;
 	}
 
+	[GeneratedRegex(@"^(?<u>\d+) units each with (?<hp>\d+) hit points (\(((; )?immune to ((, )?(?<immune>\w+))+|(; )?weak to ((, )?(?<weak>\w+))+)+\) )?with an attack that does (?<dmg>\d+) (?<type>\w+) damage at initiative (?<init>\d+)$", RegexOptions.ExplicitCapture | RegexOptions.Compiled)]
+	private static partial Regex UnitRegex();
+
 	public (string, string) Solve(PuzzleInput input)
 	{
 		var data = input.Lines
-			.Segment(l => l.EndsWith(":"));
+			.Segment(l => l.EndsWith(':'));
 
-		var regex = new Regex(
-			@"^(?<u>\d+) units each with (?<hp>\d+) hit points (\(((; )?immune to ((, )?(?<immune>\w+))+|(; )?weak to ((, )?(?<weak>\w+))+)+\) )?with an attack that does (?<dmg>\d+) (?<type>\w+) damage at initiative (?<init>\d+)$",
-			RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+		var regex = UnitRegex();
 
 		var armies = data
 			.Select((g, j) =>
@@ -103,7 +104,7 @@ public class Day_24_Original : IPuzzle
 		{
 			// target round
 			var targets = new List<(int attacker, int defender, int ap)>();
-			for (int i = 0; i < 2; i++)
+			for (var i = 0; i < 2; i++)
 			{
 				var army = armies[i];
 				var enemy = armies[1 - i];
@@ -146,12 +147,11 @@ public class Day_24_Original : IPuzzle
 
 			// clean up
 			foreach (var a in armies)
-				a.Groups.RemoveAll(g => g.LiveUnits <= 0);
+				_ = a.Groups.RemoveAll(g => g.LiveUnits <= 0);
 		}
 
 		return armies
 			.Select((a, i) => (idx: i, cnt: a.Groups.Sum(g => g.LiveUnits)))
-			.Where(x => x.cnt != 0)
-			.First();
+			.First(x => x.cnt != 0);
 	}
 }

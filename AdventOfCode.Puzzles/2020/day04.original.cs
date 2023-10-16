@@ -8,7 +8,7 @@ public class Day_04_Original : IPuzzle
 		var required = new[] { "byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid", };
 
 		var passports = input.Lines
-			.Segment(l => string.IsNullOrWhiteSpace(l))
+			.Segment(string.IsNullOrWhiteSpace)
 			.Select(l => l.SelectMany(s => s.Split())
 				.Where(s => !string.IsNullOrWhiteSpace(s))
 				.Select(s => s.Split(':'))
@@ -17,10 +17,10 @@ public class Day_04_Original : IPuzzle
 					a => a[1]));
 
 		var part1 = passports
-			.Where(p => required.All(r => p.ContainsKey(r)))
-			.Count()
+			.Count(p => required.All(r => p.ContainsKey(r)))
 			.ToString();
 
+#pragma warning disable SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
 		var isValidPassports = passports
 			.Select(p => (
 				p,
@@ -31,9 +31,10 @@ public class Day_04_Original : IPuzzle
 					&& Convert.ToInt32(p["eyr"]).Between(2020, 2030)
 					&& IsValidHeight(p["hgt"])
 					&& Regex.IsMatch(p["hcl"], "^#[0-9a-f]{6}$")
-					&& new[] { "amb", "blu", "brn", "gry", "grn", "hzl", "oth" }.Contains(p["ecl"])
+					&& p["ecl"] is "amb" or "blu" or "brn" or "gry" or "grn" or "hzl" or "oth"
 					&& Regex.IsMatch(p["pid"], "^\\d{9}$")))
 			.ToArray();
+#pragma warning restore SYSLIB1045 // Convert to 'GeneratedRegexAttribute'.
 
 		var part2 = isValidPassports.Where(x => x.isValid).Count().ToString();
 

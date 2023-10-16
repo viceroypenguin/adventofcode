@@ -10,7 +10,7 @@ public class Day_18_Original : IPuzzle
 			ExecutePart(true, input.Lines).ToString());
 	}
 
-	private int ExecutePart(bool part2, string[] lines)
+	private static int ExecutePart(bool part2, string[] lines)
 	{
 		var lights = lines
 			.Select(s => s.ToCharArray().Select(c => c == '#').ToArray())
@@ -24,15 +24,13 @@ public class Day_18_Original : IPuzzle
 			lights[^1][^1] = true;
 		}
 
-		int getLight(int x, int y)
-		{
-			if (x < 0) return 0;
-			if (y < 0) return 0;
-			if (x >= lights.Length) return 0;
-			if (y >= lights[0].Length) return 0;
-
-			return lights[x][y] ? 1 : 0;
-		}
+		int getLight(int x, int y) =>
+			x < 0 || y < 0
+				|| x >= lights.Length
+				|| y >= lights[0].Length
+				|| !lights[x][y]
+				? 0
+				: 1;
 
 		foreach (var _ in Enumerable.Range(0, 100))
 		{

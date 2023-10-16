@@ -9,7 +9,7 @@ public class Day_01_Fastest : IPuzzle
 		var elf = 0;
 
 		var span = input.Span;
-		for (int i = 0; i < span.Length;)
+		for (var i = 0; i < span.Length;)
 		{
 			if (span[i] == '\n')
 			{

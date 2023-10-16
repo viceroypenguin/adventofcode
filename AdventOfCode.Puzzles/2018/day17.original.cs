@@ -5,22 +5,23 @@ public class Day_17_Original : IPuzzle
 {
 	public (string, string) Solve(PuzzleInput input)
 	{
-		(int start, int end) ParseDesc(string str)
+		static (int start, int end) ParseDesc(string str)
 		{
-			var split = str.Split(new[] { "..", }, StringSplitOptions.None);
+			var split = str.Split("..", StringSplitOptions.None);
 			var start = Convert.ToInt32(split[0]);
 			var end = split.Length == 1 ? start : Convert.ToInt32(split[1]);
 			return (start, end);
 		}
 
 		var data = input.Lines
-			.Select(l => l.Split(new[] { ", ", }, StringSplitOptions.None))
+			.Select(l => l.Split(", ", StringSplitOptions.None))
 			.Select(l =>
 			{
-				var xDesc = l[0].StartsWith("x") ? l[0] : l[1];
-				var yDesc = l[0].StartsWith("y") ? l[0] : l[1];
+				var (xDesc, yDesc) = l[0].StartsWith('x')
+					? (l[0], l[1])
+					: (l[1], l[0]);
 
-				return (x: ParseDesc(xDesc.Substring(2)), y: ParseDesc(yDesc.Substring(2)));
+				return (x: ParseDesc(xDesc[2..]), y: ParseDesc(yDesc[2..]));
 			})
 			.ToList();
 
@@ -42,10 +43,10 @@ public class Day_17_Original : IPuzzle
 
 		foreach (var l in data)
 		{
-			for (int y = l.y.start; y <= l.y.end; y++)
+			for (var y = l.y.start; y <= l.y.end; y++)
 			{
 				var row = ground[y - yMin];
-				for (int x = l.x.start; x <= l.x.end; x++)
+				for (var x = l.x.start; x <= l.x.end; x++)
 					row[x - xMin] = '#';
 			}
 		}
@@ -69,17 +70,19 @@ public class Day_17_Original : IPuzzle
 
 
 			// hit clay or water; move up a row
-			if (ground[s.y][s.x] == '#' || ground[s.y][s.x] == '~')
+			if (ground[s.y][s.x] is '#' or '~')
 				s.y--;
 
 			var row = ground[s.y];
 
 			var below = ground[s.y + 1];
-			int x = s.x;
+			var x = s.x;
 
 			while (row[x] != '#' &&
 					(below[x] == '#' || below[x] == '~'))
+			{
 				row[x++] = '|';
+			}
 
 			var right = x;
 			var rightWall = row[x] == '#';
@@ -87,7 +90,9 @@ public class Day_17_Original : IPuzzle
 			x = s.x;
 			while (row[x] != '#' &&
 					(below[x] == '#' || below[x] == '~'))
+			{
 				row[x--] = '|';
+			}
 
 			var left = x;
 			var leftWall = row[x] == '#';

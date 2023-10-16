@@ -24,7 +24,7 @@ public partial class Day_17_Original : IPuzzle
 				// start with y = 0, t = 0
 				// return every position y and time t
 				// using the velocity to adjust y
-				.ScanEx((py: 0, t: 0), (py, vy) => (py.py + vy, py.t + 1))
+				.Scan((py: 0, t: 0), (py, vy) => (py.py + vy, py.t + 1))
 				// stop when we get past y1
 				.TakeWhile(x => x.py >= y1)
 				// and exclude points before we get to y2
@@ -34,14 +34,14 @@ public partial class Day_17_Original : IPuzzle
 				.Select(x => x.t);
 
 		// search every possible y1
-		var yCandidates = Enumerable.Range(y1, -y1 * 2 + 2)
+		var yCandidates = Enumerable.Range(y1, (-y1 * 2) + 2)
 			// get valid times for this vy
 			.SelectMany(vy => GetCandidatesForY(vy).Select(t => (vy, t)))
 			// group by the times
 			.ToLookup(x => x.t, x => x.vy);
 
 		// min vx is root of quadratic n * (n + 1) / 2
-		var minVX = (int)Math.Ceiling(-0.5 + Math.Sqrt(0.25 + 2 * x1));
+		var minVX = (int)Math.Ceiling(-0.5 + Math.Sqrt(0.25 + (2 * x1)));
 		var maxVX = x2 + 1;
 
 		// for each valid time

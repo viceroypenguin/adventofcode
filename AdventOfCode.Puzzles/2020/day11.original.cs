@@ -32,8 +32,8 @@ public class Day_11_Original : IPuzzle
 	private static string RunStep(string map, int width, bool immediate)
 	{
 		Span<char> newMap = stackalloc char[map.Length];
-		for (int y = 0; y < map.Length; y += width + 1)
-			for (int x = 0; x < width + 1; x++)
+		for (var y = 0; y < map.Length; y += width + 1)
+			for (var x = 0; x < width + 1; x++)
 			{
 				if (map[y + x] == '.')
 				{

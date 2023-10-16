@@ -20,12 +20,12 @@ public class Day_09_Original : IPuzzle
 		LinkedListNode<int> prevNode(LinkedListNode<int> node) =>
 			node.Previous ?? marbles.Last;
 
-		int i = 0;
+		var i = 0;
 		void DoLoop()
 		{
 			if (i % 23 == 0)
 			{
-				for (int j = 0; j < 7; j++)
+				for (var j = 0; j < 7; j++)
 					current = prevNode(current);
 
 				var player = i % numPlayers;

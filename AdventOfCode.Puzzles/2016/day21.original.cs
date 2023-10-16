@@ -31,7 +31,7 @@ public partial class Day_21_Original : IPuzzle
 			DoPartB(instructions));
 	}
 
-	private string DoPartA(List<Match> instructions)
+	private static string DoPartA(List<Match> instructions)
 	{
 		var password = "abcdefgh";
 
@@ -106,7 +106,7 @@ public partial class Day_21_Original : IPuzzle
 		return string.Join("", working);
 	}
 
-	private string DoPartB(List<Match> instructions)
+	private static string DoPartB(List<Match> instructions)
 	{
 		var scramble = "fbgdceah";
 

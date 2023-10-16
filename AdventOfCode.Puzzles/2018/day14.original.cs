@@ -12,7 +12,7 @@ public class Day_14_Original : IPuzzle
 			node.Next ?? marbles.First;
 		LinkedListNode<int> nextNodeCount(LinkedListNode<int> node, int count)
 		{
-			for (int i = 0; i < count; i++)
+			for (var i = 0; i < count; i++)
 				node = nextNode(node);
 			return node;
 		}

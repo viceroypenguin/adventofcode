@@ -44,7 +44,7 @@ public class Day_11_Fastest : IPuzzle
 	{
 		var arr = MemoryMarshal.Cast<byte, Vector256<byte>>(new ReadOnlySpan<byte>(input));
 		var newLine = Vector256.Create((byte)'\n');
-		int i = 0;
+		var i = 0;
 		foreach (var a in arr)
 		{
 			var mask = Avx2.MoveMask(Avx2.CompareEqual(a, newLine));
@@ -59,16 +59,16 @@ public class Day_11_Fastest : IPuzzle
 	[MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
 	private static void CopyMap(byte[] input, Span<byte> map, int width, int simdMapWidth)
 	{
-		int my = 0;
+		var my = 0;
 		for (; my < simdMapWidth * 2; my++)
 			map[my] = Floor;
-		for (int iy = 0; iy < input.Length; iy += width + 1, my += simdMapWidth)
+		for (var iy = 0; iy < input.Length; iy += width + 1, my += simdMapWidth)
 		{
 			map[my] = Floor;
 			map[my + 1] = Floor;
 			for (int ix = 0, mx = 2; ix < width; ix++, mx++)
 				map[my + mx] = input[iy + ix] == '.' ? Floor : Empty;
-			for (int mx = width + 2; mx < simdMapWidth; mx++)
+			for (var mx = width + 2; mx < simdMapWidth; mx++)
 				map[my + mx] = Floor;
 		}
 		for (; my < map.Length; my++)
@@ -94,7 +94,7 @@ public class Day_11_Fastest : IPuzzle
 		{
 			for (int i = 0, my = simdMapWidth * 2 + 2; i < height; i++, my += simdMapWidth)
 			{
-				for (int x = 0; x < lanes; x += Vector256<byte>.Count)
+				for (var x = 0; x < lanes; x += Vector256<byte>.Count)
 				{
 					var cnt = Vector256<byte>.Zero;
 					var @base = my + x;
@@ -135,7 +135,7 @@ public class Day_11_Fastest : IPuzzle
 	[MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
 	private static int DoPartB(Span<byte> map1, Span<byte> map2, Span<byte> counts, Span<(int i, int j)> gaps, int lanes, int simdMapWidth, int height)
 	{
-		int maxGap = FindGaps(gaps, map1, lanes, simdMapWidth, height);
+		var maxGap = FindGaps(gaps, map1, lanes, simdMapWidth, height);
 		gaps = gaps[..maxGap];
 
 		var changed = false;
@@ -154,7 +154,7 @@ public class Day_11_Fastest : IPuzzle
 		{
 			for (int i = 0, my = simdMapWidth * 2 + 2; i < height; i++, my += simdMapWidth)
 			{
-				for (int x = 0; x < lanes; x += Vector256<byte>.Count)
+				for (var x = 0; x < lanes; x += Vector256<byte>.Count)
 				{
 					var cnt = Vector256<byte>.Zero;
 					var @base = my + x;
@@ -303,7 +303,7 @@ public class Day_11_Fastest : IPuzzle
 		var floor = Vector256.Create(Floor);
 		for (int i = 0, my = simdMapWidth * 2 + 2; i < height; i++, my += simdMapWidth)
 		{
-			for (int x = 0; x < lanes; x += Vector256<byte>.Count)
+			for (var x = 0; x < lanes; x += Vector256<byte>.Count)
 			{
 				var cnt = Unsafe.As<byte, Vector256<byte>>(ref counts[my + x]);
 				var old = Unsafe.As<byte, Vector256<byte>>(ref map1[my + x]);
@@ -336,7 +336,7 @@ public class Day_11_Fastest : IPuzzle
 		var occupied = Vector256.Create(Occupied);
 		for (int i = 0, my = simdMapWidth * 2 + 2; i < height; i++, my += simdMapWidth)
 		{
-			for (int x = 0; x < lanes; x += Vector256<byte>.Count)
+			for (var x = 0; x < lanes; x += Vector256<byte>.Count)
 			{
 				var cnt = Avx2.MoveMask(
 					Avx2.CompareEqual(

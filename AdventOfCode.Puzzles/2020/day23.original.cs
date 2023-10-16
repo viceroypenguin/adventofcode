@@ -9,11 +9,11 @@ public class Day_23_Original : IPuzzle
 
 		var list = new int[10];
 		list[bytes[8] - 0x30] = bytes[0] - 0x30;
-		for (int i = 0; i < 8; i++)
+		for (var i = 0; i < 8; i++)
 			list[bytes[i] - 0x30] = bytes[i + 1] - 0x30;
 
 		var idx = bytes[0] - 0x30;
-		for (int i = 0; i < 100; i++)
+		for (var i = 0; i < 100; i++)
 			idx = Step(list, idx, 9);
 
 		Span<char> output = stackalloc char[8];
@@ -30,16 +30,16 @@ public class Day_23_Original : IPuzzle
 
 		// so list[1_000_000] is valid
 		list = new int[1_000_001];
-		for (int i = 0; i < 8; i++)
+		for (var i = 0; i < 8; i++)
 			list[bytes[i] - 0x30] = bytes[i + 1] - 0x30;
 		list[bytes[8] - 0x30] = 10;
 
-		for (int i = 10; i < 1_000_000; i++)
+		for (var i = 10; i < 1_000_000; i++)
 			list[i] = i + 1;
 		list[1_000_000] = bytes[0] - 0x30;
 
 		idx = bytes[0] - 0x30;
-		for (int i = 0; i < 10_000_000; i++)
+		for (var i = 0; i < 10_000_000; i++)
 			idx = Step(list, idx, 1_000_000);
 
 		var v1 = (ulong)list[1];

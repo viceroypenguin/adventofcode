@@ -47,7 +47,7 @@ public class Day_14_Original : IPuzzle
 				.ToList();
 
 		// run the insertion ten times
-		for (int i = 0; i < 10; i++)
+		for (var i = 0; i < 10; i++)
 			polymer = insert(polymer);
 
 		var elements = polymer
@@ -108,7 +108,7 @@ public class Day_14_Original : IPuzzle
 				.ToList();
 
 		// run the process 40 times
-		for (int i = 0; i < 40; i++)
+		for (var i = 0; i < 40; i++)
 			polymer = insert(polymer);
 
 		var elements = polymer

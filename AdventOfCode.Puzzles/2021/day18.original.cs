@@ -3,7 +3,7 @@
 [Puzzle(2021, 18, CodeType.Original)]
 public class Day_18_Original : IPuzzle
 {
-	private class SnailfishNode
+	private sealed class SnailfishNode
 	{
 		public int? Number { get; set; }
 		public SnailfishNode LeftChild { get; set; }
@@ -13,7 +13,7 @@ public class Day_18_Original : IPuzzle
 		public SnailfishNode RightNode { get; set; }
 
 		public long GetMagnitude() =>
-			Number ?? (LeftChild.GetMagnitude() * 3 + RightChild.GetMagnitude() * 2);
+			Number ?? ((LeftChild.GetMagnitude() * 3) + (RightChild.GetMagnitude() * 2));
 
 		public override string ToString() =>
 			Number != null ? Number.ToString() :
@@ -22,7 +22,7 @@ public class Day_18_Original : IPuzzle
 		public SnailfishNode Clone() =>
 			new Cloner().Clone(this);
 
-		private class Cloner
+		private sealed class Cloner
 		{
 			private SnailfishNode clonerCurrent;
 			public SnailfishNode Clone(SnailfishNode node)
@@ -78,12 +78,12 @@ public class Day_18_Original : IPuzzle
 	}
 
 	private static SnailfishNode ParseLine(string l) =>
-		new SnailfishParser().ParseNode(l, default).node;
+		new SnailfishParser().ParseNode(l).node;
 
-	private class SnailfishParser
+	private sealed class SnailfishParser
 	{
 		private SnailfishNode parserCurrent;
-		public (SnailfishNode node, int idx) ParseNode(ReadOnlySpan<char> txt, SnailfishNode parent)
+		public (SnailfishNode node, int idx) ParseNode(ReadOnlySpan<char> txt)
 		{
 			var node = new SnailfishNode();
 
@@ -99,8 +99,8 @@ public class Day_18_Original : IPuzzle
 			}
 			else
 			{
-				(node.LeftChild, var ll) = ParseNode(txt[1..], node);
-				(node.RightChild, var rl) = ParseNode(txt[(1 + ll + 1)..], node);
+				(node.LeftChild, var ll) = ParseNode(txt[1..]);
+				(node.RightChild, var rl) = ParseNode(txt[(1 + ll + 1)..]);
 
 				return (
 					node,
@@ -111,6 +111,7 @@ public class Day_18_Original : IPuzzle
 
 	private static SnailfishNode FindNode(SnailfishNode root, int level, Func<SnailfishNode, int, bool> predicate)
 	{
+#pragma warning disable IDE0046 // Convert to conditional expression
 		if (predicate(root, level))
 			return root;
 		if (root.Number != null)
@@ -118,6 +119,7 @@ public class Day_18_Original : IPuzzle
 
 		return FindNode(root.LeftChild, level + 1, predicate)
 			?? FindNode(root.RightChild, level + 1, predicate);
+#pragma warning restore IDE0046 // Convert to conditional expression
 	}
 
 	private static bool NeedExplode(SnailfishNode root, out SnailfishNode node) =>

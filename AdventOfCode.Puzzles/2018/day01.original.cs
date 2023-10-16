@@ -13,14 +13,8 @@ public class Day_01_Original : IPuzzle
 
 		var seen = new HashSet<int>();
 		var part2 = changes.Repeat()
-			.ScanEx((acc, next) => acc + next)
-			.First(f =>
-			{
-				if (seen.Contains(f))
-					return true;
-				seen.Add(f);
-				return false;
-			})
+			.Scan((acc, next) => acc + next)
+			.First(f => !seen.Add(f))
 			.ToString();
 
 		return (part1, part2);

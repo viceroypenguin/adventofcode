@@ -4,7 +4,7 @@
 public partial class Day_11_Original : IPuzzle
 {
 	private static readonly Func<long, long>[] Operations =
-	{
+	[
 		i => i * 3,
 		i => i + 8,
 		i => i + 2,
@@ -13,7 +13,7 @@ public partial class Day_11_Original : IPuzzle
 		i => i + 5,
 		i => i * i,
 		i => i + 1,
-	};
+	];
 
 	public (string part1, string part2) Solve(PuzzleInput input)
 	{
@@ -42,7 +42,7 @@ public partial class Day_11_Original : IPuzzle
 			})
 			.ToList();
 
-		for (int i = 0; i < 20; i++)
+		for (var i = 0; i < 20; i++)
 		{
 			foreach (var m in monkeys)
 			{
@@ -90,7 +90,7 @@ public partial class Day_11_Original : IPuzzle
 			.ToList();
 
 		var factor = monkeys.Aggregate(1L, (f, m) => f * m.Test);
-		for (int i = 0; i < 10_000; i++)
+		for (var i = 0; i < 10_000; i++)
 		{
 			foreach (var m in monkeys)
 			{
@@ -115,7 +115,7 @@ public partial class Day_11_Original : IPuzzle
 		return (part1, part2);
 	}
 
-	private class Monkey
+	private sealed class Monkey
 	{
 		public required int Id { get; init; }
 		public required List<long> Items { get; init; }

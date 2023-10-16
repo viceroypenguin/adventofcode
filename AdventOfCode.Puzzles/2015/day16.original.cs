@@ -9,6 +9,8 @@ public partial class Day_16_Original : IPuzzle
 	[GeneratedRegex(@" ?(\w+): (\d+)")]
 	private static partial Regex IngredientRegex();
 
+	private static readonly char[] newline = ['\r', '\n'];
+
 	public (string, string) Solve(PuzzleInput input)
 	{
 		var giftInput =
@@ -42,7 +44,7 @@ perfumes: 1";
 			})
 			.ToList();
 
-		var giftDetails = giftInput.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)
+		var giftDetails = giftInput.Split(newline, StringSplitOptions.RemoveEmptyEntries)
 			.Select(c => detailRegex.Match(c))
 			.Select(c => new
 			{

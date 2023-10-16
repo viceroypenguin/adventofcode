@@ -27,7 +27,7 @@ public class Day_24_Original : IPuzzle
 					x => x.i,
 					x => x.x);
 
-		var (maxStrength, _, maxLongestPath) = CalculateStrength(map, ImmutableList<Component>.Empty, 0, (0, 0, 0));
+		var (maxStrength, _, maxLongestPath) = CalculateStrength(map, [], 0, (0, 0, 0));
 
 		return (
 			maxStrength.ToString(),
@@ -46,12 +46,19 @@ public class Day_24_Original : IPuzzle
 				(maxStrength: x.maxStrength + c.PortA + c.PortB, x.longestPath, x.maxLongestPath)))
 			.ToList();
 
-		if (list.Any())
+#pragma warning disable IDE0046 // Convert to conditional expression
+		if (list.Count != 0)
+		{
 			return (
 				list.Max(y => y.maxStrength),
 				list.Max(y => y.longestPath),
-				list.OrderByDescending(y => y.longestPath).ThenByDescending(y => y.maxLongestPath).First().maxLongestPath);
+				list.OrderByDescending(y => y.longestPath)
+					.ThenByDescending(y => y.maxLongestPath)
+					.First()
+					.maxLongestPath);
+		}
 
 		return (x.maxStrength, path.Count, x.maxStrength);
+#pragma warning restore IDE0046 // Convert to conditional expression
 	}
 }

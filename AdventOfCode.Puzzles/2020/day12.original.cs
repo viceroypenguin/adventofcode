@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode.Puzzles._2020;
+﻿using System.Diagnostics;
+
+namespace AdventOfCode.Puzzles._2020;
 
 [Puzzle(2020, 12, CodeType.Original)]
 public class Day_12_Original : IPuzzle
@@ -19,6 +21,7 @@ public class Day_12_Original : IPuzzle
 				1 => (x, y - amount, d),
 				2 => (x - amount, y, d),
 				3 => (x, y + amount, d),
+				_ => throw new UnreachableException(),
 			};
 
 		(int x, int y, int d) RotateDir(int x, int y, int d, int a) =>
@@ -38,6 +41,8 @@ public class Day_12_Original : IPuzzle
 
 				'R' => RotateDir(x, y, d, n / 90),
 				'L' => RotateDir(x, y, d, 4 - (n / 90)),
+
+				_ => throw new UnreachableException(),
 			};
 		}
 
@@ -46,13 +51,14 @@ public class Day_12_Original : IPuzzle
 
 	private static string DoPartB(string[] lines)
 	{
-		(int x, int y, int wayx, int wayy) RotateWaypoint(int x, int y, int wayx, int wayy, int a) =>
+		static (int x, int y, int wayx, int wayy) RotateWaypoint(int x, int y, int wayx, int wayy, int a) =>
 			a switch
 			{
 				0 => (x, y, wayx, wayy),
 				1 => (x, y, wayy, -wayx),
 				2 => (x, y, -wayx, -wayy),
 				3 => (x, y, -wayy, wayx),
+				_ => throw new UnreachableException(),
 			};
 
 		int wayx = 10, wayy = 1;
@@ -70,6 +76,8 @@ public class Day_12_Original : IPuzzle
 
 				'R' => RotateWaypoint(x, y, wayx, wayy, n / 90),
 				'L' => RotateWaypoint(x, y, wayx, wayy, 4 - (n / 90)),
+
+				_ => throw new UnreachableException(),
 			};
 		}
 

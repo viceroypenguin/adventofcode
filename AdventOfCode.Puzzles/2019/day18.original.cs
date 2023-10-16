@@ -107,8 +107,8 @@ public class Day_18_Original : IPuzzle
 
 	private string DoPartB(byte[][] map)
 	{
-		for (int y = 0; y < map.Length; y++)
-			for (int x = 0; x < map[y].Length; x++)
+		for (var y = 0; y < map.Length; y++)
+			for (var x = 0; x < map[y].Length; x++)
 				if (map[y][x] == (byte)'@')
 				{
 					map[y][x] = (byte)'#';
@@ -145,7 +145,7 @@ public class Day_18_Original : IPuzzle
 		IEnumerable<((ulong, uint), int)> getNeighbors((ulong keys, uint pos) state, int cost)
 		{
 			var positions = BitConverter.GetBytes(state.pos);
-			for (int i = 0; i < positions.Length; i++)
+			for (var i = 0; i < positions.Length; i++)
 			{
 				var basePos = positions[i];
 				foreach (var (_key, steps, requiredKeys) in importantItems[basePos])

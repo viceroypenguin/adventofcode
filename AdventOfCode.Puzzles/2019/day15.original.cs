@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks.Dataflow;
+﻿using System.Diagnostics;
 
 namespace AdventOfCode.Puzzles._2019;
 
@@ -14,7 +14,7 @@ public class Day_15_Original : IPuzzle
 
 		pc = new IntCodeComputer(instructions);
 
-		for (int i = 1; i <= 4; i++)
+		for (var i = 1; i <= 4; i++)
 			HandleDirection((0, 0), i, 1);
 
 		var part1 = map[oxygenLocation].distance.ToString();
@@ -23,7 +23,7 @@ public class Day_15_Original : IPuzzle
 		queue.Enqueue((oxygenLocation, 0));
 
 		map[oxygenLocation] = (1, 0); // simplify type check below
-		while (queue.Any())
+		while (queue.Count != 0)
 		{
 			var (position, distance) = queue.Dequeue();
 			if (map[position].type != 1)
@@ -44,7 +44,7 @@ public class Day_15_Original : IPuzzle
 	private IntCodeComputer pc;
 	private readonly Dictionary<(int x, int y), (int type, int distance)> map =
 		new() { [(0, 0)] = (0, 0), };
-	(int x, int y) oxygenLocation;
+	private (int x, int y) oxygenLocation;
 
 	private void HandleDirection((int x, int y) position, int direction, int distance)
 	{
@@ -54,13 +54,14 @@ public class Day_15_Original : IPuzzle
 			2 => (position.x, position.y + 1),
 			3 => (position.x - 1, position.y),
 			4 => (position.x + 1, position.y),
+			_ => throw new UnreachableException(),
 		};
 
 		if (map.ContainsKey(newPosition))
 			return;
 
 		pc.Inputs.Enqueue(direction);
-		pc.RunProgram();
+		_ = pc.RunProgram();
 		var response = pc.Outputs.Dequeue();
 		map[newPosition] = ((int)response, distance);
 		if (response == 0)
@@ -69,11 +70,11 @@ public class Day_15_Original : IPuzzle
 		if (response == 2)
 			oxygenLocation = newPosition;
 
-		for (int i = 1; i <= 4; i++)
+		for (var i = 1; i <= 4; i++)
 			HandleDirection(newPosition, i, distance + 1);
 
-		pc.Inputs.Enqueue(direction switch { 1 => 2, 2 => 1, 3 => 4, 4 => 3, });
-		pc.RunProgram();
-		pc.Outputs.Dequeue();
+		pc.Inputs.Enqueue(direction switch { 1 => 2, 2 => 1, 3 => 4, 4 => 3, _ => throw new UnreachableException(), });
+		_ = pc.RunProgram();
+		_ = pc.Outputs.Dequeue();
 	}
 }

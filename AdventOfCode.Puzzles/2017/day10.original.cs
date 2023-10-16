@@ -3,6 +3,8 @@
 [Puzzle(2017, 10, CodeType.Original)]
 public class Day_10_Original : IPuzzle
 {
+	private static readonly int[] keys = [17, 31, 73, 47, 23,];
+
 	public (string, string) Solve(PuzzleInput input)
 	{
 		var nums = input.Text
@@ -39,7 +41,7 @@ public class Day_10_Original : IPuzzle
 			.Trim()
 			.ToCharArray()
 			.Select(c => (int)c)
-			.Concat(new[] { 17, 31, 73, 47, 23, })
+			.Concat(keys)
 			.ToList();
 
 		nums = Enumerable.Repeat(nums, 64)

@@ -20,11 +20,13 @@ public class Day_25_Original : IPuzzle
 					.Select(x => (x, y)))
 				.ToList();
 
-			if (moveInstructions.Any())
+			if (moveInstructions.Count != 0)
 				anyMove = true;
 			foreach (var (x, y) in moveInstructions)
+			{
 				(map[y][x], map[y][(x + 1) % xLength]) =
 					((byte)'.', (byte)'>');
+			}
 
 			moveInstructions = Enumerable.Range(0, yLength)
 				.SelectMany(y => Enumerable.Range(0, xLength)
@@ -32,11 +34,13 @@ public class Day_25_Original : IPuzzle
 					.Select(x => (x, y)))
 				.ToList();
 
-			if (moveInstructions.Any())
+			if (moveInstructions.Count != 0)
 				anyMove = true;
 			foreach (var (x, y) in moveInstructions)
+			{
 				(map[y][x], map[(y + 1) % yLength][x]) =
 					((byte)'.', (byte)'v');
+			}
 
 			return anyMove;
 		}

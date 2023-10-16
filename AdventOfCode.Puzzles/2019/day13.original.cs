@@ -20,8 +20,8 @@ public class Day_13_Original : IPuzzle
 		var magicB = Math.Max(instructions[616], instructions[617]);
 
 		long numBlocks = 0, score = 0;
-		for (int y = 0; y < screenHeight; y++)
-			for (int x = 0; x < screenWidth; x++)
+		for (var y = 0; y < screenHeight; y++)
+			for (var x = 0; x < screenWidth; x++)
 				if (instructions[screenOffset + y * screenWidth + x] == 2)
 				{
 					numBlocks++;

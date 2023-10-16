@@ -39,7 +39,7 @@ public class Day_20_Original : IPuzzle
 				}
 			}
 
-			if (!factors.Any())
+			if (factors.Count == 0)
 				factors.Add(num, 1);
 
 			var sum = factors.Select(x => Enumerable.Range(0, x.Value + 1).Select(y => (int)Math.Pow(x.Key, y)).Sum()).ToList();

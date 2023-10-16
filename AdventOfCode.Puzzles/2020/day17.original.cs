@@ -29,7 +29,7 @@ public class Day_17_Original : IPuzzle
 					.Select(z => (x, y, z))))
 			.Where(d => d != (0, 0, 0))
 			.ToArray();
-		for (int i = 0; i < 6; i++)
+		for (var i = 0; i < 6; i++)
 		{
 			count.Clear();
 
@@ -72,7 +72,7 @@ public class Day_17_Original : IPuzzle
 						.Select(w => (x, y, z, w)))))
 			.Where(d => d != (0, 0, 0, 0))
 			.ToArray();
-		for (int i = 0; i < 6; i++)
+		for (var i = 0; i < 6; i++)
 		{
 			count.Clear();
 

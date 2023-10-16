@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode.Puzzles._2022;
+﻿using System.Diagnostics;
+
+namespace AdventOfCode.Puzzles._2022;
 
 [Puzzle(2022, 21, CodeType.Original)]
 public partial class Day_21_Original : IPuzzle
@@ -21,9 +23,11 @@ public partial class Day_21_Original : IPuzzle
 							"-" => Operation.Subtract,
 							"*" => Operation.Multiply,
 							"/" => Operation.Divide,
+							_ => throw new UnreachableException(),
 						},
 						Left: a,
 						Right: b),
+					_ => throw new UnreachableException(),
 				});
 
 		var cache = new Dictionary<string, decimal?>(values.Count);
@@ -35,6 +39,7 @@ public partial class Day_21_Original : IPuzzle
 				(Operation.Subtract, _, var l, var r) => GetValue(l) - GetValue(r),
 				(Operation.Multiply, _, var l, var r) => GetValue(l) * GetValue(r),
 				(Operation.Divide, _, var l, var r) => GetValue(l) / GetValue(r),
+				_ => throw new UnreachableException(),
 			};
 
 		var part1 = GetValue("root")!.Value.ToString();
@@ -67,6 +72,7 @@ public partial class Day_21_Original : IPuzzle
 					(Operation.Multiply, _) => val / known,
 					(Operation.Divide, false) => known / val,
 					(Operation.Divide, true) => val * known,
+					_ => throw new UnreachableException(),
 				};
 				(monkey, val) = (unknown, v);
 			}

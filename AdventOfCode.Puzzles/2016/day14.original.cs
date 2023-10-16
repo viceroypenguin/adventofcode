@@ -18,7 +18,7 @@ public partial class Day_14_Original : IPuzzle
 
 #pragma warning disable CA5351 // Do Not Use Broken Cryptographic Algorithms
 #pragma warning disable CA1850 // Prefer static 'HashData' method over 'ComputeHash'
-	private int ExecutePart(string input, int numHashes)
+	private static int ExecutePart(string input, int numHashes)
 	{
 		using var md5 = MD5.Create();
 

@@ -43,7 +43,7 @@ public partial class Day_14_Original : IPuzzle
 		while (true)
 		{
 			ore = CalculateOreRequirement(recipes, (guess, "FUEL"));
-			var newGuess = guess + guess * (OneTrillion - ore) / OneTrillion;
+			var newGuess = guess + (guess * (OneTrillion - ore) / OneTrillion);
 			if (newGuess == guess)
 				break;
 			guess = newGuess;
@@ -63,7 +63,7 @@ public partial class Day_14_Original : IPuzzle
 		var excess = new Dictionary<string, long>();
 		var ore = 0L;
 
-		while (materials.Any())
+		while (materials.Count != 0)
 		{
 			var (amt, mat) = materials.Dequeue();
 			if (mat == "ORE")
@@ -82,13 +82,13 @@ public partial class Day_14_Original : IPuzzle
 			if (amt == 0)
 				continue;
 
-			var recipe = recipes[mat];
-			var factor = (amt - 1) / recipe.output.amt + 1;
-			exAmt = factor * recipe.output.amt - amt;
+			var (inp, output) = recipes[mat];
+			var factor = ((amt - 1) / output.amt) + 1;
+			exAmt = (factor * output.amt) - amt;
 			if (exAmt != 0)
 				excess[mat] = exAmt;
 
-			foreach (var (qAmt, qMat) in recipe.inp)
+			foreach (var (qAmt, qMat) in inp)
 				materials.Enqueue((qAmt * factor, qMat));
 		}
 

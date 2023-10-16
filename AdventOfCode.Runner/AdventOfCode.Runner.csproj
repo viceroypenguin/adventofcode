@@ -12,12 +12,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="BenchmarkDotNet" Version="0.13.2" />
+		<PackageReference Include="BenchmarkDotNet" Version="0.13.9" />
 		<PackageReference Include="docopt.net" Version="0.8.1" />
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
-		<PackageReference Include="Spectre.Console" Version="0.45.0" />
+		<PackageReference Include="Spectre.Console" Version="0.47.0" />
 	</ItemGroup>
 
 	<ItemGroup>

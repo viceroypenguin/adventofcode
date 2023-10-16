@@ -8,11 +8,11 @@ public class Day_11_Original : IPuzzle
 		var serialNumber = Convert.ToInt32(input.Text);
 		var cells = new int[301, 301];
 
-		for (int x = 1; x <= 300; x++)
+		for (var x = 1; x <= 300; x++)
 		{
 			var rackId = x + 10;
 
-			for (int y = 1; y <= 300; y++)
+			for (var y = 1; y <= 300; y++)
 			{
 				var powerLevel = (rackId * y + serialNumber) * rackId;
 				cells[x, y] = (powerLevel % 1000) / 100 - 5;

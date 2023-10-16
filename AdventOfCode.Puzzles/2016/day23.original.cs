@@ -28,11 +28,11 @@ public partial class Day_23_Original : IPuzzle
 		instructions[8] = new("nop", "", "");
 
 		return (
-			ExecutePart(instructions.ToArray(), 7).ToString(),
-			ExecutePart(instructions.ToArray(), 12).ToString());
+			ExecutePart([.. instructions], 7).ToString(),
+			ExecutePart([.. instructions], 12).ToString());
 	}
 
-	private record Instruction(string I, string X, string Y);
+	private sealed record Instruction(string I, string X, string Y);
 
 	private static int ExecutePart(Instruction[] instructions, int a)
 	{
@@ -44,7 +44,7 @@ public partial class Day_23_Original : IPuzzle
 			["d"] = 0,
 		};
 
-		int GetArgumentValue(string s) => registers.ContainsKey(s) ? registers[s] : Convert.ToInt32(s);
+		int GetArgumentValue(string s) => registers.TryGetValue(s, out var value) ? value : Convert.ToInt32(s);
 
 		var ip = 0;
 		while (ip < instructions.Length)

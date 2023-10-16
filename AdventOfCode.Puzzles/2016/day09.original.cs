@@ -78,10 +78,10 @@ public class Day_09_Original : IPuzzle
 		return output.Length;
 	}
 
-	private long DoPartB(string input) =>
+	private static long DoPartB(string input) =>
 		GetStringLength(input);
 
-	private long GetStringLength(string str)
+	private static long GetStringLength(string str)
 	{
 		var state = "outside";
 		var index = 0;

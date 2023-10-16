@@ -22,7 +22,7 @@ public class Day_13_Original : IPuzzle
 
 		var earliestTime = long.Parse(times[0]);
 		var increment = earliestTime;
-		for (int i = 1; i < times.Length; i++)
+		for (var i = 1; i < times.Length; i++)
 		{
 			if (times[i] == "x") continue;
 

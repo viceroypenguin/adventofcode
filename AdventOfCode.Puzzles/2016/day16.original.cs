@@ -15,7 +15,7 @@ public class Day_16_Original : IPuzzle
 		var data = input.Select(c => c == '1').ToList();
 
 		static List<bool> CurveStep(IList<bool> bits) =>
-			bits.Concat(new[] { false }).Concat(bits.Reverse().Select(b => !b)).ToList();
+			bits.Append(false).Concat(bits.Reverse().Select(b => !b)).ToList();
 
 		while (data.Count < length)
 			data = CurveStep(data);

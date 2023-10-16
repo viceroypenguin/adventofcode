@@ -65,7 +65,7 @@ public class Day_2021_07_Fastest : IPuzzle
 		// keep track of index aka position
 		var index = Vector256.Create(0, 1, 2, 3, 4, 5, 6, 7);
 
-		for (int i = 0; i < arr.Length; i += Vector256<int>.Count)
+		for (var i = 0; i < arr.Length; i += Vector256<int>.Count)
 		{
 			simdSum = Avx2.Add(simdSum,
 				Avx2.MultiplyLow(index, simdCrabs[0]));
@@ -96,7 +96,7 @@ public class Day_2021_07_Fastest : IPuzzle
 		// keep track of index aka position
 		var index = Vector256.Create(0, 1, 2, 3, 4, 5, 6, 7);
 		// simd add
-		for (int i = 0; i < arr.Length; i += Vector256<int>.Count)
+		for (var i = 0; i < arr.Length; i += Vector256<int>.Count)
 		{
 			var n = Avx2.Abs(Avx2.Subtract(index, simdPosition)).AsInt32();
 			simdSum = Avx2.Add(simdSum,
@@ -128,7 +128,7 @@ public class Day_2021_07_Fastest : IPuzzle
 		// keep track of index aka position
 		var index = Vector256.Create(0, 1, 2, 3, 4, 5, 6, 7);
 		// simd add
-		for (int i = 0; i < arr.Length; i += Vector256<int>.Count)
+		for (var i = 0; i < arr.Length; i += Vector256<int>.Count)
 		{
 			var n = Avx2.Abs(Avx2.Subtract(index, simdPosition)).AsInt32();
 			var fuel = Avx2.ShiftRightArithmetic(Avx2.MultiplyLow(n, Avx2.Add(n, one)), 1);

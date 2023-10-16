@@ -3,7 +3,7 @@
 [Puzzle(2022, 20, CodeType.Original)]
 public partial class Day_20_Original : IPuzzle
 {
-	private record Node
+	private sealed record Node
 	{
 		public long Value { get; set; }
 		public Node NextInt { get; set; } = default!;
@@ -11,11 +11,13 @@ public partial class Day_20_Original : IPuzzle
 		public Node PrevNode { get; set; } = default!;
 	}
 
+#pragma warning disable IDE0051 // Remove unused private members
 	private static string OutputNodes(Node node, int count) =>
 		string.Join(", ",
 			SuperEnumerable.Generate(node, n => n.NextNode)
 				.Take(count)
 				.Select(n => n.Value));
+#pragma warning restore IDE0051 // Remove unused private members
 
 	public (string part1, string part2) Solve(PuzzleInput input) =>
 		(
@@ -32,12 +34,12 @@ public partial class Day_20_Original : IPuzzle
 
 		var len = lines.Length - 1;
 
-		for (int i = 0; i < count; i++)
+		for (var i = 0; i < count; i++)
 		{
 			var nextNode = node = intNode;
 			intNode = intNode.NextInt;
 
-			var n = node.Value + key * len * 2;
+			var n = node.Value + (key * len * 2);
 			n %= len;
 
 			if (n == 0)
@@ -45,13 +47,13 @@ public partial class Day_20_Original : IPuzzle
 
 			if (n <= len / 2)
 			{
-				for (int j = 0; j < n; j++)
+				for (var j = 0; j < n; j++)
 					nextNode = nextNode.NextNode;
 			}
 			else
 			{
 				n = len - n;
-				for (int j = 0; j <= n; j++)
+				for (var j = 0; j <= n; j++)
 					nextNode = nextNode.PrevNode;
 			}
 
@@ -67,13 +69,13 @@ public partial class Day_20_Original : IPuzzle
 		var sum = 0L;
 		node = zero;
 
-		for (int i = 0; i < 1000; i++)
+		for (var i = 0; i < 1000; i++)
 			node = node.NextNode;
 		sum += node.Value;
-		for (int i = 1000; i < 2000; i++)
+		for (var i = 1000; i < 2000; i++)
 			node = node.NextNode;
 		sum += node.Value;
-		for (int i = 2000; i < 3000; i++)
+		for (var i = 2000; i < 3000; i++)
 			node = node.NextNode;
 		sum += node.Value;
 

@@ -21,7 +21,7 @@ public class Day_24_Original : IPuzzle
 		}
 
 		var seen = new HashSet<int>() { state, };
-		for (int i = 0; ; i++)
+		for (var i = 0; ; i++)
 		{
 			var up = state >> 5;
 			var right = (state << 1) & 0b11110_11110_11110_11110_11110;
@@ -50,7 +50,7 @@ public class Day_24_Original : IPuzzle
 		var state = new HashSet<(int x, int y, int z)>();
 		{
 			int x = 1, y = 1;
-			for (int i = 0; i < input.Length; i++)
+			for (var i = 0; i < input.Length; i++)
 			{
 				if (input[i] != '\n')
 				{
@@ -64,14 +64,14 @@ public class Day_24_Original : IPuzzle
 			state.Remove((3, 3, 0));
 		}
 
-		for (int i = 0; i < 200; i++)
+		for (var i = 0; i < 200; i++)
 		{
 			var counts = new Dictionary<(int x, int y, int z), int>();
 			foreach (var (x, y, z) in state)
 			{
 				if (x - 1 == 3 && y == 3)
 				{
-					for (int _y = 1; _y <= 5; _y++)
+					for (var _y = 1; _y <= 5; _y++)
 						counts[(5, _y, z + 1)] = counts.GetValueOrDefault((5, _y, z + 1)) + 1;
 				}
 				else if (x == 1)
@@ -81,7 +81,7 @@ public class Day_24_Original : IPuzzle
 
 				if (y - 1 == 3 && x == 3)
 				{
-					for (int _x = 1; _x <= 5; _x++)
+					for (var _x = 1; _x <= 5; _x++)
 						counts[(_x, 5, z + 1)] = counts.GetValueOrDefault((_x, 5, z + 1)) + 1;
 				}
 				else if (y == 1)
@@ -91,7 +91,7 @@ public class Day_24_Original : IPuzzle
 
 				if (x + 1 == 3 && y == 3)
 				{
-					for (int _y = 1; _y <= 5; _y++)
+					for (var _y = 1; _y <= 5; _y++)
 						counts[(1, _y, z + 1)] = counts.GetValueOrDefault((1, _y, z + 1)) + 1;
 				}
 				else if (x == 5)
@@ -101,7 +101,7 @@ public class Day_24_Original : IPuzzle
 
 				if (y + 1 == 3 && x == 3)
 				{
-					for (int _x = 1; _x <= 5; _x++)
+					for (var _x = 1; _x <= 5; _x++)
 						counts[(_x, 1, z + 1)] = counts.GetValueOrDefault((_x, 1, z + 1)) + 1;
 				}
 				else if (y == 5)

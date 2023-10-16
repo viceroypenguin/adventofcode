@@ -24,7 +24,7 @@ public static class ProjectionEqualityComparer
 	public static IEqualityComparer<T> Create<T>(Func<T?, T?, bool> equalityFunction, Func<T, int> hashFunction) =>
 		new ProjectionEqualityComparerImpl<T>(equalityFunction, hashFunction);
 
-	private class ProjectionEqualityComparerImpl<T> : EqualityComparer<T>
+	private sealed class ProjectionEqualityComparerImpl<T> : EqualityComparer<T>
 	{
 		/// <summary>
 		/// Type specific equality function
@@ -48,9 +48,9 @@ public static class ProjectionEqualityComparer
 		}
 
 		/// <inheritdoc/>
-		public override bool Equals(T? x, T? y) => this.equalityFunction(x, y);
+		public override bool Equals(T? x, T? y) => equalityFunction(x, y);
 
 		/// <inheritdoc/>
-		public override int GetHashCode(T obj) => this.hashFunction(obj);
+		public override int GetHashCode(T obj) => hashFunction(obj);
 	}
 }

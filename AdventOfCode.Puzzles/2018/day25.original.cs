@@ -21,9 +21,9 @@ public class Day_25_Original : IPuzzle
 		int ManhattanDistance((int x, int y, int z, int t) a, (int x, int y, int z, int t) b) =>
 			Math.Abs(a.x - b.x) + Math.Abs(a.y - b.y) + Math.Abs(a.z - b.z) + Math.Abs(a.t - b.t);
 
-		for (int i = 0; i < stars.Length; i++)
+		for (var i = 0; i < stars.Length; i++)
 		{
-			for (int j = 0; j < stars.Length; j++)
+			for (var j = 0; j < stars.Length; j++)
 			{
 				if (i == j) continue;
 				if (ManhattanDistance(stars[i], stars[j]) <= 3)
@@ -47,7 +47,7 @@ public class Day_25_Original : IPuzzle
 						{
 							var oldId = constellations[j];
 							var newId = constellations[i];
-							for (int k = 0; k < stars.Length; k++)
+							for (var k = 0; k < stars.Length; k++)
 								if (constellations[k] == oldId)
 									constellations[k] = newId;
 						}

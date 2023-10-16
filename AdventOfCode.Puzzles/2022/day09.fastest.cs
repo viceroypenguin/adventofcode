@@ -23,11 +23,11 @@ public partial class Day_09_Fastest : IPuzzle
 				_ => new Vector2(0, 0),
 			};
 
-			for (int i = 0; i < cnt; i++)
+			for (var i = 0; i < cnt; i++)
 			{
 				snake[0] += dir;
 
-				for (int j = 1; j < 10; j++)
+				for (var j = 1; j < 10; j++)
 				{
 					var move = snake[j - 1] - snake[j];
 

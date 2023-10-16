@@ -1,5 +1,7 @@
 ﻿namespace AdventOfCode.Puzzles._2018;
 
+#pragma warning disable IDE0305 // Simplify collection initialization
+
 [Puzzle(2018, 07, CodeType.Original)]
 public class Day_07_Original : IPuzzle
 {
@@ -23,23 +25,25 @@ public class Day_07_Original : IPuzzle
 			.Select(s => (before: string.Empty, after: s.Key))
 			.OrderBy(x => x.after)
 			.ToList();
-		while (queue.Any())
+		while (queue.Count != 0)
 		{
 			var step = queue.First();
 			if (!visitedSteps.Contains(step.after))
 			{
 				orderedSteps.Add(step.after);
-				visitedSteps.Add(step.after);
+				_ = visitedSteps.Add(step.after);
 			}
 
-			queue.Remove(step);
+			_ = queue.Remove(step);
 			if (befores[step.after].Any())
+			{
 				queue = queue
 					.Concat(befores[step.after]
 						.Where(x => afters[x.after]
 							.All(y => visitedSteps.Contains(y.before))))
 					.OrderBy(x => x.after)
 					.ToList();
+			}
 		}
 
 		var part1 = string.Join("", orderedSteps);
@@ -50,23 +54,23 @@ public class Day_07_Original : IPuzzle
 		var time = 0;
 		var timedSteps = new SortedList<string, int>();
 
-		visitedSteps = new HashSet<string> { string.Empty, };
+		visitedSteps = [string.Empty,];
 		queue = befores
 			.Where(s => !afters.Any(a => a.Key == s.Key))
 			.Select(s => (before: string.Empty, after: s.Key))
 			.OrderBy(x => x.after)
 			.ToList();
-		while (queue.Any() || timedSteps.Any())
+		while (queue.Count != 0 || timedSteps.Count != 0)
 		{
-			while (workers > 0 && queue.Any())
+			while (workers > 0 && queue.Count != 0)
 			{
 				var step = queue.First();
 				if (!visitedSteps.Contains(step.after))
 				{
-					timedSteps.Add(step.after, stepTime + (step.after[0] - 'A' + 1));
+					timedSteps.Add(step.after, stepTime + step.after[0] - 'A' + 1);
 					workers--;
 				}
-				queue.Remove(step);
+				_ = queue.Remove(step);
 			}
 
 			var nextTime = timedSteps
@@ -80,15 +84,17 @@ public class Day_07_Original : IPuzzle
 				.ToArray())
 			{
 				workers++;
-				timedSteps.Remove(s.Key);
-				visitedSteps.Add(s.Key);
+				_ = timedSteps.Remove(s.Key);
+				_ = visitedSteps.Add(s.Key);
 				if (befores[s.Key].Any())
+				{
 					queue = queue
 						.Concat(befores[s.Key]
 							.Where(x => afters[x.after]
 								.All(y => visitedSteps.Contains(y.before))))
 						.OrderBy(x => x.after)
 						.ToList();
+				}
 			}
 		}
 

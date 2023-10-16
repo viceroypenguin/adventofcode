@@ -17,8 +17,8 @@ public class Day_02_Original : IPuzzle
 
 		var part1 = pc.Memory[0].ToString();
 
-		for (int noun = 0; ; noun++)
-			for (int verb = 0; verb < 100; verb++)
+		for (var noun = 0; ; noun++)
+			for (var verb = 0; verb < 100; verb++)
 			{
 				instructions[1] = noun;
 				instructions[2] = verb;

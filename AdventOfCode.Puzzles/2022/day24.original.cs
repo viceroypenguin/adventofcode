@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode.Puzzles._2022;
+﻿using System.Diagnostics;
+
+namespace AdventOfCode.Puzzles._2022;
 
 [Puzzle(2022, 24, CodeType.Original)]
 public class Day_24_Original : IPuzzle
@@ -29,6 +31,7 @@ public class Day_24_Original : IPuzzle
 						(byte)'<' => (x: x - 1 == 0 ? map[0].Length - 2 : x - 1, y),
 						(byte)'^' => (x, y - 1 == 0 ? map.Length - 2 : y - 1),
 						(byte)'v' => (x, y + 1 == map.Length - 1 ? 1 : y + 1),
+						_ => throw new UnreachableException(),
 					};
 					return (n, dir);
 				})
