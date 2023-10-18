@@ -1,58 +1,54 @@
-﻿namespace AdventOfCode.Puzzles._2018;
+﻿using System.Diagnostics;
+
+namespace AdventOfCode.Puzzles._2018;
 
 [Puzzle(2018, 20, CodeType.Original)]
-public class Day_20_Original : IPuzzle
+public partial class Day_20_Original : IPuzzle
 {
 	public (string, string) Solve(PuzzleInput input)
 	{
-		return (string.Empty, string.Empty);
-		// Apparently, I checked in incomplete code?
-		//var data = input.GetString();
+		var map = BuildMap(input.Span[1..^2]);
 
-		//var map = new Dictionary<(int x, int y), (bool n, bool e, bool s, bool w)>();
-		//void SetDoor((int x, int y) loc, bool n = false, bool e = false, bool s = false, bool w = false)
-		//{
-		//	map.TryGetValue(loc, out var walls);
+		var distances = SuperEnumerable.GetShortestPaths<(int x, int y), int>(
+			(0, 0),
+			(pos, cost) => map[pos].Select(q => (q, cost + 1)));
 
-		//	if (n)
-		//		walls.n = true;
-		//	if (e)
-		//		walls.e = true;
-		//	if (s)
-		//		walls.s = true;
-		//	if (w)
-		//		walls.w = true;
+		var part1 = distances.Max(d => d.Value.cost);
+		var part2 = distances.Count(d => d.Value.cost >= 1000);
 
-		//	map[loc] = walls;
-		//}
+		return (part1.ToString(), part2.ToString());
+	}
 
-		//var location = (x: 0, y: 0);
-		//var stack = new Stack<(int x, int y)>();
-		//foreach (var ch in data)
-		//{
-		//	switch (ch)
-		//	{
-		//		case 'N':
-		//		case 'E':
-		//		case 'S':
-		//		case 'W':
-		//			SetDoor(location, ch);
-		//			break;
+	private static ILookup<(int x, int y), (int x, int y)> BuildMap(ReadOnlySpan<byte> input)
+	{
+		var set = new HashSet<((int x, int y) from, (int x, int y) to)>();
 
-		//		case '^':
-		//			break;
+		var pos = (x: 0, y: 0);
+		var stack = new Stack<(int x, int y)>();
+		foreach (var ch in input)
+		{
+			var prev = pos;
+			switch (ch)
+			{
+				case (byte)'N': pos = (pos.x, pos.y + 1); break;
+				case (byte)'S': pos = (pos.x, pos.y - 1); break;
+				case (byte)'E': pos = (pos.x + 1, pos.y); break;
+				case (byte)'W': pos = (pos.x - 1, pos.y); break;
 
-		//		case '(':
-		//			stack.Push(location);
-		//			break;
+				case (byte)'(': stack.Push(pos); continue;
+				case (byte)'|': pos = stack.Peek(); continue;
 
-		//		case ')':
-		//			location = stack.Pop();
-		//			break;
+				// shortcut because input is known to reset on `)`.
+				// will fail if path continues after ')'.
+				case (byte)')': pos = stack.Pop(); continue;
 
-		//		case '|':
+				default: throw new UnreachableException();
+			}
 
-		//	}
-		//}
+			_ = set.Add((pos, prev));
+			_ = set.Add((prev, pos));
+		}
+
+		return set.ToLookup(x => x.from, x => x.to);
 	}
 }
