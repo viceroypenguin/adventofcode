@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using SuperLinq;
 
 namespace AdventOfCode.Common;
@@ -193,9 +194,9 @@ public static class Helpers
 	public static TValue GetOrAdd<TKey, TValue>(this Dictionary<TKey, TValue> dict, TKey key, Func<TKey, TValue> func)
 		where TKey : notnull
 	{
-		return dict.TryGetValue(key, out var value)
-			? value
-			: (dict[key] = func(key));
+		ref var value = ref CollectionsMarshal.GetValueRefOrAddDefault(dict, key, out var exists);
+		if (!exists) value = func(key);
+		return value!;
 	}
 	#endregion
 }
