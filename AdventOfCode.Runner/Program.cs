@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using AdventOfCode.Runner;
 using DocoptNet;
 using Spectre.Console;
@@ -39,7 +38,7 @@ if (args.Length > 0)
 
 		if (arguments.OptBenchmark)
 		{
-			runner.BenchmarkPuzzles(puzzles);
+			_ = runner.BenchmarkPuzzles(puzzles);
 		}
 		else
 		{
