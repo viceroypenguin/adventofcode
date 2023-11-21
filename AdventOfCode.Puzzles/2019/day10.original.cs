@@ -1,4 +1,4 @@
-﻿using static AdventOfCode.Common.Helpers;
+﻿using static AdventOfCode.Common.Extensions.NumberExtensions;
 
 namespace AdventOfCode.Puzzles._2019;
 
