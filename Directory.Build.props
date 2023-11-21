@@ -24,7 +24,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="SuperLinq" Version="5.2.0" />
+		<PackageReference Include="SuperLinq" Version="5.3.0" />
 	</ItemGroup>
 	
 </Project>
