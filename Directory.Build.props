@@ -1,4 +1,5 @@
 <Project>
+	
 	<PropertyGroup>
 		<LangVersion>latest</LangVersion>
 		<TargetFramework>net8.0</TargetFramework>
@@ -13,6 +14,17 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Using Include="AdventOfCode.Common"/>
+		<Using Include="AdventOfCode.Common.Attributes"/>
+		<Using Include="AdventOfCode.Common.Extensions"/>
+		<Using Include="AdventOfCode.Common.Interfaces"/>
+		<Using Include="AdventOfCode.Common.Models"/>
+		<Using Include="SuperLinq"/>
+		<Using Include="System.Text.RegularExpressions"/>
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="SuperLinq" Version="5.2.0" />
 	</ItemGroup>
+	
 </Project>

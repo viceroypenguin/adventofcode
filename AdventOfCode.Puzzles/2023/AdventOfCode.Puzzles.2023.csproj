@@ -3,15 +3,6 @@
 		<RootNamespace>AdventOfCode.Puzzles._2023</RootNamespace>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<Using Include="AdventOfCode.Common"/>
-		<Using Include="AdventOfCode.Common.Attributes"/>
-		<Using Include="AdventOfCode.Common.Interfaces"/>
-		<Using Include="AdventOfCode.Common.Models"/>
-		<Using Include="SuperLinq"/>
-		<Using Include="System.Text.RegularExpressions"/>
-	</ItemGroup>
-	
   <ItemGroup>
     <ProjectReference Include="..\..\AdventOfCode.Common\AdventOfCode.Common.csproj" />
   </ItemGroup>
