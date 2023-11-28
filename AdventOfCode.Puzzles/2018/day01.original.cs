@@ -11,10 +11,10 @@ public class Day_01_Original : IPuzzle
 
 		var part1 = changes.Sum().ToString();
 
-		var seen = new HashSet<int>();
 		var part2 = changes.Repeat()
 			.Scan((acc, next) => acc + next)
-			.First(f => !seen.Add(f))
+			.Duplicates()
+			.First()
 			.ToString();
 
 		return (part1, part2);
