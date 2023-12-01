@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode.Puzzles._2023;
+﻿using System.Runtime.InteropServices;
+
+namespace AdventOfCode.Puzzles._2023;
 
 [Puzzle(2023, 01, CodeType.Fastest)]
 public partial class Day_01_Fastest : IPuzzle
@@ -19,30 +21,34 @@ public partial class Day_01_Fastest : IPuzzle
 			}
 
 			{
-				var tens = -1;
-				var ones = -1;
+				var span = MemoryMarshal.CreateSpan(
+					ref MemoryMarshal.GetReference(l),
+					l.Length);
 
-				for (var i = 0; i < l.Length; i++)
+				static void Replace(Span<char> span, ReadOnlySpan<char> oldValue, char newValue)
 				{
-					ones = l[i] switch
+					while (true)
 					{
-						var c when c is >= '0' and <= '9' => c - '0',
-						'o' when i + 3 <= l.Length && l[i..(i + 3)] is "one" => 1,
-						't' when i + 3 <= l.Length && l[i..(i + 3)] is "two" => 2,
-						't' when i + 5 <= l.Length && l[i..(i + 5)] is "three" => 3,
-						'f' when i + 4 <= l.Length && l[i..(i + 4)] is "four" => 4,
-						'f' when i + 4 <= l.Length && l[i..(i + 4)] is "five" => 5,
-						's' when i + 3 <= l.Length && l[i..(i + 3)] is "six" => 6,
-						's' when i + 5 <= l.Length && l[i..(i + 5)] is "seven" => 7,
-						'e' when i + 5 <= l.Length && l[i..(i + 5)] is "eight" => 8,
-						'n' when i + 4 <= l.Length && l[i..(i + 4)] is "nine" => 9,
-						_ => ones,
-					};
-
-					if (ones != -1 && tens == -1)
-						tens = ones * 10;
+						var index = span.IndexOf(oldValue);
+						if (index < 0)
+							return;
+						span[index + (oldValue.Length / 2)] = newValue;
+						span = span[(index + 1)..];
+					}
 				}
 
+				Replace(span, "one", '1');
+				Replace(span, "two", '2');
+				Replace(span, "three", '3');
+				Replace(span, "four", '4');
+				Replace(span, "five", '5');
+				Replace(span, "six", '6');
+				Replace(span, "seven", '7');
+				Replace(span, "eight", '8');
+				Replace(span, "nine", '9');
+
+				var tens = (l[l.IndexOfAnyInRange('0', '9')] - '0') * 10;
+				var ones = l[l.LastIndexOfAnyInRange('0', '9')] - '0';
 				part2 += tens + ones;
 			}
 		}
