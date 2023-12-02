@@ -1,23 +1,23 @@
-﻿using System.Drawing;
-
-namespace AdventOfCode.Puzzles._2023;
+﻿namespace AdventOfCode.Puzzles._2023;
 
 [Puzzle(2023, 02, CodeType.Original)]
 public partial class Day_02_Original : IPuzzle
 {
+	[GeneratedRegex(@"^Game (?<gameid>\d+): ((?<sets>[^;]*)(; )?)*$", RegexOptions.ExplicitCapture)]
+	private static partial Regex GameRegex();
+	[GeneratedRegex(@"(\d+) (\w+)")]
+	private static partial Regex SetRegex();
+
 	public (string, string) Solve(PuzzleInput input)
 	{
-		var regex = new Regex(@"^Game (?<gameid>\d+): ((?<sets>[^;]*)(; )?)*$", RegexOptions.ExplicitCapture);
-		var regex2 = new Regex(@"(\d+) (\w+)");
-
 		var games = input.Lines
-			.Select(l => regex.Match(l))
+			.Select(l => GameRegex().Match(l))
 			.Select(m => new
 			{
 				id = int.Parse(m.Groups["gameid"].Value),
 				sets = m.Groups["sets"]
 					.Captures
-					.Select(c => regex2.Matches(c.Value)
+					.Select(c => SetRegex().Matches(c.Value)
 						.OfType<Match>()
 						.Select(m => (num: int.Parse(m.Groups[1].Value), Color: m.Groups[2].Value))
 						.GroupBy(
