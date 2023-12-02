@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices;
-
-namespace AdventOfCode.Puzzles._2023;
+﻿namespace AdventOfCode.Puzzles._2023;
 
 [Puzzle(2023, 01, CodeType.Fastest)]
 public partial class Day_01_Fastest : IPuzzle
@@ -14,43 +12,56 @@ public partial class Day_01_Fastest : IPuzzle
 			if (l.Length == 0)
 				continue;
 
-			{
-				var tens = (l[l.IndexOfAnyInRange('0', '9')] - '0') * 10;
-				var ones = l[l.LastIndexOfAnyInRange('0', '9')] - '0';
-				part1 += tens + ones;
-			}
+			var firstDigitIndex = l.IndexOfAnyInRange('0', '9');
+			var lastDigitIndex = l.LastIndexOfAnyInRange('0', '9');
 
-			{
-				var span = MemoryMarshal.CreateSpan(
-					ref MemoryMarshal.GetReference(l),
-					l.Length);
+			var tens = (l[firstDigitIndex] - '0') * 10;
+			var ones = l[lastDigitIndex] - '0';
+			part1 += tens + ones;
 
-				static void Replace(Span<char> span, ReadOnlySpan<char> oldValue, char newValue)
+			var span = l[..firstDigitIndex];
+			while (span.Length >= 3)
+			{
+				(tens, var success) = span[0] switch
 				{
-					while (true)
-					{
-						var index = span.IndexOf(oldValue);
-						if (index < 0)
-							return;
-						span[index + (oldValue.Length / 2)] = newValue;
-						span = span[(index + 1)..];
-					}
-				}
+					'o' when span.StartsWith("one") => (10, true),
+					't' when span.StartsWith("two") => (20, true),
+					't' when span.StartsWith("three") => (30, true),
+					'f' when span.StartsWith("four") => (40, true),
+					'f' when span.StartsWith("five") => (50, true),
+					's' when span.StartsWith("six") => (60, true),
+					's' when span.StartsWith("seven") => (70, true),
+					'e' when span.StartsWith("eight") => (80, true),
+					'n' when span.StartsWith("nine") => (90, true),
+					_ => (tens, false),
+				};
+				if (success) break;
 
-				Replace(span, "one", '1');
-				Replace(span, "two", '2');
-				Replace(span, "three", '3');
-				Replace(span, "four", '4');
-				Replace(span, "five", '5');
-				Replace(span, "six", '6');
-				Replace(span, "seven", '7');
-				Replace(span, "eight", '8');
-				Replace(span, "nine", '9');
-
-				var tens = (l[l.IndexOfAnyInRange('0', '9')] - '0') * 10;
-				var ones = l[l.LastIndexOfAnyInRange('0', '9')] - '0';
-				part2 += tens + ones;
+				span = span[1..];
 			}
+
+			span = l[(lastDigitIndex + 1)..];
+			while (span.Length >= 3)
+			{
+				(ones, var success) = span[^1] switch
+				{
+					'e' when span.EndsWith("one") => (1, true),
+					'o' when span.EndsWith("two") => (2, true),
+					'e' when span.EndsWith("three") => (3, true),
+					'r' when span.EndsWith("four") => (4, true),
+					'e' when span.EndsWith("five") => (5, true),
+					'x' when span.EndsWith("six") => (6, true),
+					'n' when span.EndsWith("seven") => (7, true),
+					't' when span.EndsWith("eight") => (8, true),
+					'e' when span.EndsWith("nine") => (9, true),
+					_ => (ones, false),
+				};
+				if (success) break;
+
+				span = span[..^1];
+			}
+
+			part2 += tens + ones;
 		}
 
 		return (part1.ToString(), part2.ToString());
