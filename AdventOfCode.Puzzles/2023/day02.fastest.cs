@@ -9,10 +9,11 @@ public partial class Day_02_Fastest : IPuzzle
 		var part2 = 0;
 		var span = input.Span;
 
+		var id = 1;
 		while (span.Length > 0)
 		{
-			var (id, n) = span.Slice(5).AtoI();
-			span = span.Slice(n + 7);
+			span = span.Slice(
+				id switch { > 100 => 10, > 10 => 9, _ => 8, });
 
 			var maxRed = 0;
 			var maxGreen = 0;
@@ -20,7 +21,7 @@ public partial class Day_02_Fastest : IPuzzle
 
 			while (true)
 			{
-				(var num, n) = span.AtoI();
+				var (num, n) = span.AtoI();
 				span = span.Slice(n + 1);
 
 				switch (span[0])
