@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode.Puzzles._2023;
+﻿using System.Numerics;
+
+namespace AdventOfCode.Puzzles._2023;
 
 [Puzzle(2023, 04, CodeType.Fastest)]
 public sealed partial class Day_04_Fastest : IPuzzle
@@ -8,8 +10,8 @@ public sealed partial class Day_04_Fastest : IPuzzle
 		var part1 = 0;
 		var part2 = 0;
 
-		Span<int> winning = stackalloc int[10];
-		Span<int> mine = stackalloc int[25];
+		Span<ulong> winning = stackalloc ulong[2];
+		Span<ulong> mine = stackalloc ulong[2];
 		Span<int> multipliers = stackalloc int[10];
 
 		foreach (var line in input.Span.EnumerateLines())
@@ -17,30 +19,29 @@ public sealed partial class Day_04_Fastest : IPuzzle
 			if (line.Length == 0)
 				break;
 
-			for (int x = 10, n = 0; n < winning.Length; x += 3, n++)
+			winning[0] = 0;
+			winning[1] = 0;
+			mine[0] = 0;
+			mine[1] = 0;
+
+			for (int x = 10, n = 0; n < 10; x += 3, n++)
 			{
-				var tens = line[x] == ' ' ? 0 : (line[x] - '0') * 10;
-				winning[n] = tens + line[x + 1] - '0';
+				var num = ((line[x] | 0x10) - '0') * 10;
+				num += line[x + 1] - '0';
+
+				winning[num / 64] |= 1UL << (num % 64);
 			}
 
-			for (int x = 42, n = 0; n < mine.Length; x += 3, n++)
+			for (int x = 42, n = 0; n < 25; x += 3, n++)
 			{
-				var tens = line[x] == ' ' ? 0 : (line[x] - '0') * 10;
-				mine[n] = tens + line[x + 1] - '0';
+				var num = ((line[x] | 0x10) - '0') * 10;
+				num += line[x + 1] - '0';
+
+				mine[num / 64] |= 1UL << (num % 64);
 			}
 
-			var count = 0;
-			foreach (var w in winning)
-			{
-				foreach (var m in mine)
-				{
-					if (w == m)
-					{
-						count++;
-						break;
-					}
-				}
-			}
+			var count = BitOperations.PopCount(winning[0] & mine[0])
+				+ BitOperations.PopCount(winning[1] & mine[1]);
 
 			part1 += 1 << (count - 1);
 
