@@ -11,6 +11,11 @@ public static class NumberExtensions
 		return min <= value && value <= max;
 	}
 
+	public static bool Between(this byte value, byte min, byte max)
+	{
+		return (uint)(value - min) <= (uint)(max - min);
+	}
+
 	[MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
 	public static long Gcd(long a, long b)
 	{

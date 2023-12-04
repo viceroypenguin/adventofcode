@@ -1,109 +1,99 @@
-﻿namespace AdventOfCode.Puzzles._2023;
+﻿using System.Buffers;
+using CommunityToolkit.HighPerformance;
+
+namespace AdventOfCode.Puzzles._2023;
 
 [Puzzle(2023, 03, CodeType.Fastest)]
-public partial class Day_03_Fastest : IPuzzle
+public sealed partial class Day_03_Fastest : IPuzzle
 {
+	private static readonly (int x, int y)[] _adjacent =
+	[
+		(0, 1),
+		(1, 0),
+		(0, -1),
+		(-1, 0),
+		(-1, -1),
+		(1, 1),
+		(-1, 1),
+		(1, -1),
+	];
+
+	private static readonly SearchValues<byte> _symbols = SearchValues.Create("0123456789."u8);
+
 	public (string, string) Solve(PuzzleInput input)
 	{
+		var stride = input.Span.IndexOf((byte)'\n');
+
 		var part1 = 0;
 		var part2 = 0;
-		var y = 0;
 
-		Span<(int number, int y, int start, int end)> openNumbers =
-			stackalloc (int number, int y, int start, int end)[24];
-		Span<(int x, int y, byte symbol)> openSymbol =
-			stackalloc (int x, int y, byte symbol)[24];
-
-		Span<(int x, int y, int num1)> openGears =
-			stackalloc (int x, int y, int num1)[24];
-
-		foreach (var l in input.Span.EnumerateLines())
+		var mutableMap = new Span2D<byte>(input.Bytes, 0, input.Bytes.Length / (stride + 1), stride, 1);
+		for (var y = 0; y < mutableMap.Height; y++)
 		{
-			var x = 0;
-			while (x < l.Length)
+			var line = mutableMap.GetRowSpan(y);
+
+			for (var x = 0; x < line.Length; x++)
 			{
-				if (l[x] == '.')
+				var advance = line.Slice(x).IndexOfAnyExcept(_symbols);
+				if (advance == -1)
+					break;
+
+				x += advance;
+
+				var number1 = 0;
+				foreach (var (dx, dy) in _adjacent)
 				{
-					var advance = l[x..].IndexOfAnyExcept((byte)'.');
-					if (advance == -1)
+					if (y + dy < 0 || y + dy >= mutableMap.Height)
+						continue;
+					if (x + dx < 0 || x + dx >= mutableMap.Width)
+						continue;
+
+					if (!mutableMap[y + dy, x + dx].Between((byte)'0', (byte)'9'))
+					{
+						continue;
+					}
+
+					var number = SweepAndReplace(mutableMap, x + dx, y + dy);
+					if (mutableMap[y, x] != '*')
+					{
+						part1 += number;
 						break;
-					x += advance;
-				}
-
-				if (l[x] is >= (byte)'0' and <= (byte)'9')
-				{
-					var (num, n) = l[x..(x + 3)].AtoI();
-
-					var flag = false;
-					foreach (var (sx, sy, b) in openSymbol)
-					{
-						if (b == 0) continue;
-						if (sy < y - 1) continue;
-
-						if (sx >= x - 1 && sx <= x + n)
-						{
-							flag = true;
-							break;
-						}
 					}
 
-					if (flag)
+					if (number1 == 0)
 					{
-						part1 += num;
+						part1 += number;
+						number1 = number;
 					}
-					else
+					else if (number1 != number)
 					{
-						for (var i = 0; ; i++)
-						{
-							if (openNumbers[i].number == 0
-								|| openNumbers[i].y < y - 1)
-							{
-								openNumbers[i] = (num, y, x - 1, x + n);
-								break;
-							}
-						}
+						part1 += number;
+						part2 += number1 * number;
+						break;
 					}
-
-					x += n;
-				}
-
-				else
-				{
-					for (var i = 0; i < openNumbers.Length; i++)
-					{
-						if (openNumbers[i].number == 0)
-							continue;
-
-						if (openNumbers[i].y < y - 1)
-							continue;
-
-						if (x < openNumbers[i].start
-							|| x > openNumbers[i].end)
-						{
-							continue;
-						}
-
-						part1 += openNumbers[i].number;
-						openNumbers[i] = default;
-					}
-
-					for (var i = 0; ; i++)
-					{
-						if (openSymbol[i].symbol == 0
-							|| openSymbol[i].y < y - 1)
-						{
-							openSymbol[i] = (x, y, l[x]);
-							break;
-						}
-					}
-
-					x++;
 				}
 			}
-
-			y++;
 		}
 
 		return (part1.ToString(), part2.ToString());
+	}
+
+	private static int SweepAndReplace(Span2D<byte> mutableMap, int x, int y)
+	{
+		var xStart = x;
+		while (xStart > 0 && mutableMap[y, xStart - 1].Between((byte)'0', (byte)'9'))
+		{
+			xStart--;
+		}
+
+		var xEnd = x;
+		while (xEnd < mutableMap.Width - 1 && mutableMap[y, xEnd + 1].Between((byte)'0', (byte)'9'))
+		{
+			xEnd++;
+		}
+
+		var number = mutableMap.GetRowSpan(y).Slice(xStart, xEnd - xStart + 1);
+		var (output, _) = ((ReadOnlySpan<byte>)number).AtoI();
+		return output;
 	}
 }
