@@ -7,13 +7,13 @@ public partial class Day_01_Fastest : IPuzzle
 	{
 		var part1 = 0;
 		var part2 = 0;
-		foreach (var l in input.Text.AsSpan().EnumerateLines())
+		foreach (var l in input.Span.EnumerateLines())
 		{
 			if (l.Length == 0)
 				continue;
 
-			var firstDigitIndex = l.IndexOfAnyInRange('0', '9');
-			var lastDigitIndex = l.LastIndexOfAnyInRange('0', '9');
+			var firstDigitIndex = l.IndexOfAnyInRange((byte)'0', (byte)'9');
+			var lastDigitIndex = l.LastIndexOfAnyInRange((byte)'0', (byte)'9');
 
 			var tens = (l[firstDigitIndex] - '0') * 10;
 			var ones = l[lastDigitIndex] - '0';
@@ -24,15 +24,15 @@ public partial class Day_01_Fastest : IPuzzle
 			{
 				(tens, var success) = span[0] switch
 				{
-					'o' when span.StartsWith("one") => (10, true),
-					't' when span.StartsWith("two") => (20, true),
-					't' when span.StartsWith("three") => (30, true),
-					'f' when span.StartsWith("four") => (40, true),
-					'f' when span.StartsWith("five") => (50, true),
-					's' when span.StartsWith("six") => (60, true),
-					's' when span.StartsWith("seven") => (70, true),
-					'e' when span.StartsWith("eight") => (80, true),
-					'n' when span.StartsWith("nine") => (90, true),
+					(byte)'o' when span.StartsWith("one"u8) => (10, true),
+					(byte)'t' when span.StartsWith("two"u8) => (20, true),
+					(byte)'t' when span.StartsWith("three"u8) => (30, true),
+					(byte)'f' when span.StartsWith("four"u8) => (40, true),
+					(byte)'f' when span.StartsWith("five"u8) => (50, true),
+					(byte)'s' when span.StartsWith("six"u8) => (60, true),
+					(byte)'s' when span.StartsWith("seven"u8) => (70, true),
+					(byte)'e' when span.StartsWith("eight"u8) => (80, true),
+					(byte)'n' when span.StartsWith("nine"u8) => (90, true),
 					_ => (tens, false),
 				};
 				if (success) break;
@@ -45,15 +45,15 @@ public partial class Day_01_Fastest : IPuzzle
 			{
 				(ones, var success) = span[^1] switch
 				{
-					'e' when span.EndsWith("one") => (1, true),
-					'o' when span.EndsWith("two") => (2, true),
-					'e' when span.EndsWith("three") => (3, true),
-					'r' when span.EndsWith("four") => (4, true),
-					'e' when span.EndsWith("five") => (5, true),
-					'x' when span.EndsWith("six") => (6, true),
-					'n' when span.EndsWith("seven") => (7, true),
-					't' when span.EndsWith("eight") => (8, true),
-					'e' when span.EndsWith("nine") => (9, true),
+					(byte)'e' when span.EndsWith("one"u8) => (1, true),
+					(byte)'o' when span.EndsWith("two"u8) => (2, true),
+					(byte)'e' when span.EndsWith("three"u8) => (3, true),
+					(byte)'r' when span.EndsWith("four"u8) => (4, true),
+					(byte)'e' when span.EndsWith("five"u8) => (5, true),
+					(byte)'x' when span.EndsWith("six"u8) => (6, true),
+					(byte)'n' when span.EndsWith("seven"u8) => (7, true),
+					(byte)'t' when span.EndsWith("eight"u8) => (8, true),
+					(byte)'e' when span.EndsWith("nine"u8) => (9, true),
 					_ => (ones, false),
 				};
 				if (success) break;
