@@ -43,7 +43,7 @@ public sealed partial class Day_04_Fastest : IPuzzle
 			var count = BitOperations.PopCount(winning[0] & mine[0])
 				+ BitOperations.PopCount(winning[1] & mine[1]);
 
-			part1 += 1 << (count - 1);
+			part1 += (1 << count) >> 1;
 
 			var cards = multipliers[0] + 1;
 			part2 += cards;
