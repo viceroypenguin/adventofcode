@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode.Puzzles._2023;
+﻿using System.Runtime.InteropServices;
+
+namespace AdventOfCode.Puzzles._2023;
 
 [Puzzle(2023, 05, CodeType.Fastest)]
 public sealed partial class Day_05_Fastest : IPuzzle
@@ -22,8 +24,8 @@ public sealed partial class Day_05_Fastest : IPuzzle
 		}
 
 		var numMapRanges = span.Count((byte)'\n') - 13;
-		Span<(long from, long to, long adjust)> mapRanges =
-			stackalloc (long from, long to, long adjust)[numMapRanges];
+		Span<(long from, long length, long adjust)> mapRanges =
+			stackalloc (long from, long length, long adjust)[numMapRanges];
 		Span<int> mapRangeIndices = stackalloc int[8];
 		mapRangeIndices[7] = numMapRanges;
 
@@ -41,10 +43,10 @@ public sealed partial class Day_05_Fastest : IPuzzle
 				(var from, n) = span.AtoL();
 				span = span.Slice(n + 1);
 
-				(var to, n) = span.AtoL();
+				(var length, n) = span.AtoL();
 				span = span.Slice(n + 1);
 
-				mapRanges[idx++] = (from, from + to - 1, dest - from);
+				mapRanges[idx++] = (from, from + length - 1, dest - from);
 			}
 
 			mapRanges[mapRangeIndices[i]..idx].Sort();
@@ -74,98 +76,88 @@ public sealed partial class Day_05_Fastest : IPuzzle
 				part1 = s;
 		}
 
-		var part2 = long.MaxValue;
+		Span<(long from, long length)> seedRanges = MemoryMarshal.Cast<long, (long, long)>(seeds);
+		seedRanges.Sort();
 
-		Span<(long from, long to)> seedRanges = stackalloc (long from, long to)[64];
-		Span<(long from, long to)> nextSeedRanges = stackalloc (long from, long to)[64];
+		Span<(long location, long from, long to, int level)> stack =
+			stackalloc (long location, long from, long to, int level)[64];
 
-		for (var j = 0; j < seeds.Length; j += 2)
+		for (i = 0; i < mapRanges.Length; i++)
 		{
-			var seedRangeCount = 0;
-			seedRanges[seedRangeCount++] = (seeds[j], seeds[j + 1] + seeds[j] - 1);
+			var (from, to, adjust) = mapRanges[i];
+			mapRanges[i] = (from + adjust, to + adjust, -adjust);
+		}
+		for (i = 0; i < 7; i++)
+			mapRanges[mapRangeIndices[i]..mapRangeIndices[i + 1]].Sort();
 
-			for (i = 0; i < 7; i++)
+		var stackIdx = 0;
+		foreach (var (from, to, adjust) in mapRanges[mapRangeIndices[6]..mapRangeIndices[7]])
+			stack[stackIdx++] = (from, from + adjust, to + adjust, 5);
+		stack[..stackIdx].Sort();
+		stack[..stackIdx].Reverse();
+
+		var part2 = long.MaxValue;
+		while (part2 == long.MaxValue)
+		{
+			var (location, from, to, level) = stack[--stackIdx];
+
+			if (level == -1)
 			{
-				var nextCount = 0;
-
-				foreach (var r in seedRanges[..seedRangeCount])
+				foreach (var (sFrom, sLength) in seedRanges)
 				{
-					var (from, to) = r;
-					foreach (var mapRange in mapRanges[mapRangeIndices[i]..mapRangeIndices[i + 1]])
+					if (sFrom > to)
+						break;
+					if (from > sFrom + sLength - 1)
+						continue;
+
+					part2 = sFrom < from
+						? location
+						: location + (sFrom - from);
+				}
+			}
+			else
+			{
+				var start = stackIdx;
+
+				foreach (var (mFrom, mTo, mAdjust) in mapRanges[mapRangeIndices[level]..mapRangeIndices[level + 1]])
+				{
+					if (mFrom > to)
 					{
-						if (from > mapRange.to)
-							continue;
-
-						if (to < mapRange.from)
-						{
-							nextSeedRanges[nextCount++] = (from, to);
-							(from, to) = (0, 0);
-							break;
-						}
-
-						if (from < mapRange.from)
-						{
-							nextSeedRanges[nextCount++] = (
-								from + mapRange.adjust, mapRange.from - 1 + mapRange.adjust);
-							from = mapRange.from;
-						}
-
-						var end = Math.Min(to, mapRange.to);
-						nextSeedRanges[nextCount++] = (
-							from + mapRange.adjust, end + mapRange.adjust);
-
-						if (to > mapRange.to)
-						{
-							from = mapRange.to + 1;
-						}
-						else
-						{
-							(from, to) = (0, 0);
-							break;
-						}
+						stack[stackIdx++] = (location, from, to, level - 1);
+						level = int.MinValue;
+						break;
 					}
 
-					if (from != 0 && to != 0)
-						nextSeedRanges[nextCount++] = (from, to);
+					if (from > mTo)
+						continue;
+
+					if (from < mFrom)
+					{
+						stack[stackIdx++] = (location, from, mFrom - 1, level - 1);
+						location += mFrom - from;
+						from = mFrom;
+					}
+
+					var end = Math.Min(to, mTo);
+					stack[stackIdx++] = (location, from + mAdjust, end + mAdjust, level - 1);
+
+					if (end == to)
+					{
+						level = int.MinValue;
+						break;
+					}
+
+					location += mTo + 1 - from;
+					from = mTo + 1;
 				}
 
-				nextSeedRanges[..nextCount].Sort();
+				if (level != int.MinValue)
+					stack[stackIdx++] = (location, from, to, level - 1);
 
-				var tmp = seedRanges;
-				seedRanges = nextSeedRanges;
-				nextSeedRanges = tmp;
-
-				seedRangeCount = nextCount;
+				stack[start..stackIdx].Reverse();
 			}
-
-			var s = seedRanges[0].from;
-			if (s < part2)
-				part2 = s;
 		}
 
 		return (part1.ToString(), part2.ToString());
-	}
-
-	private static (long from, long to, long adjust) BinarySearchMapRanges(
-		ReadOnlySpan<(long from, long to, long adjust)> ranges,
-		long value)
-	{
-		var lo = 0;
-		var hi = ranges.Length - 1;
-		while (lo <= hi)
-		{
-			var mid = lo + ((hi - lo) / 2);
-
-			var (from, to, _) = ranges[mid];
-			if (value.Between(from, to))
-				return ranges[mid];
-
-			if (to < value)
-				lo = mid + 1;
-			else
-				hi = mid - 1;
-		}
-
-		return (0, long.MaxValue, 0);
 	}
 }
