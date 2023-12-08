@@ -11,7 +11,8 @@ public sealed partial class Day_08_Fastest : IPuzzle
 		var span = input.Span;
 
 		var instructions = span.Slice(0, span.IndexOf((byte)'\n'));
-		span = span.Slice(instructions.Length + 2);
+		var insLength = instructions.Length;
+		span = span.Slice(insLength + 2);
 
 		var mapLength = span.Count((byte)'\n');
 		Span<(int from, int left, int right)> map =
@@ -54,22 +55,10 @@ public sealed partial class Day_08_Fastest : IPuzzle
 		startIndices = startIndices[..j];
 
 		var part1 = 0;
-		var point = p1Start;
-		var destination = 0x00_5A_5A_5A;
-		var insLength = instructions.Length;
-		for (
-			i = 0;
-			map[point].from != destination;
-			i = ++i == insLength ? 0 : i, part1++)
-		{
-			var (_, left, right) = map[point];
-			point = instructions[i] == 'L' ? left : right;
-		}
-
 		var part2 = 1L;
 		foreach (var k in startIndices)
 		{
-			point = k;
+			var point = k;
 			var count = 0;
 			for (
 				i = 0;
@@ -80,6 +69,8 @@ public sealed partial class Day_08_Fastest : IPuzzle
 				point = instructions[i] == 'L' ? left : right;
 			}
 
+			if (k == p1Start)
+				part1 = count;
 			part2 = Lcm(part2, count);
 		}
 
