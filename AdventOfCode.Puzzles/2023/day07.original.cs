@@ -42,7 +42,7 @@ public partial class Day_07_Original : IPuzzle
 		HighCard,
 	}
 
-	private class Hand : IComparable<Hand>
+	private sealed class Hand : IComparable<Hand>
 	{
 		private readonly HandType _handType;
 		private readonly char[] _cards;
