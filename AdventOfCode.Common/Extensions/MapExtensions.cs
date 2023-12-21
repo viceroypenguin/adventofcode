@@ -27,6 +27,12 @@ public static class MapExtensions
 			.SelectMany(y => Enumerable.Range(0, map[y].Count)
 				.Select(x => ((x, y), map[y][x])));
 
+	public static bool IsValid<T>(
+			this (int x, int y) p,
+			IReadOnlyList<IReadOnlyList<T>> map) =>
+		p.x.Between(0, map[0].Count - 1)
+		&& p.y.Between(0, map.Count - 1);
+
 	public static readonly IReadOnlyList<(int x, int y)> Neighbors =
 		new (int x, int y)[] { (0, 1), (0, -1), (1, 0), (-1, 0), };
 	public static IEnumerable<(int x, int y)> GetCartesianNeighbors(this (int x, int y) p) =>
@@ -36,9 +42,7 @@ public static class MapExtensions
 			this (int x, int y) p,
 			IReadOnlyList<IReadOnlyList<T>> map) =>
 		p.GetCartesianNeighbors()
-			.Where(q =>
-				q.y >= 0 && q.y < map.Count
-				&& q.x >= 0 && q.x < map[q.y].Count);
+			.Where(q => q.IsValid(map));
 
 	public static readonly IReadOnlyList<(int x, int y)> Adjacent =
 		new (int x, int y)[] { (-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1), };
@@ -49,9 +53,7 @@ public static class MapExtensions
 			this (int x, int y) p,
 			IReadOnlyList<IReadOnlyList<T>> map) =>
 		p.GetCartesianAdjacent()
-			.Where(q =>
-				q.y >= 0 && q.y < map.Count
-				&& q.x >= 0 && q.x < map[q.y].Count);
+			.Where(q => q.IsValid(map));
 
 	public static void FloodFill<T>(
 			this IReadOnlyList<IReadOnlyList<T>> map,
