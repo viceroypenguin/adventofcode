@@ -3,13 +3,13 @@
 [Puzzle(2023, 15, CodeType.Original)]
 public partial class Day_15_Original : IPuzzle
 {
-	private record Lens
+	private sealed record Lens
 	{
 		public required string Name { get; set; }
 		public int Length { get; set; }
 	}
 
-	private static readonly char[] separator = new[] { '-', '=' };
+	private static readonly char[] separator = ['-', '='];
 
 	public (string, string) Solve(PuzzleInput input)
 	{
@@ -30,7 +30,7 @@ public partial class Day_15_Original : IPuzzle
 
 			if (i[^1] == '-')
 			{
-				list.RemoveAll(x => x.Name == label);
+				_ = list.RemoveAll(x => x.Name == label);
 			}
 			else
 			{

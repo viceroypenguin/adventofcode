@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode.Puzzles._2023;
+﻿using System.Diagnostics;
+
+namespace AdventOfCode.Puzzles._2023;
 
 [Puzzle(2023, 16, CodeType.Original)]
 public partial class Day_16_Original : IPuzzle
@@ -44,6 +46,7 @@ public partial class Day_16_Original : IPuzzle
 					Dir.East => (x + 1, y),
 					Dir.South => (x, y + 1),
 					Dir.West => (x - 1, y),
+					_ => throw new UnreachableException(),
 				};
 
 			while (true)
@@ -60,6 +63,7 @@ public partial class Day_16_Original : IPuzzle
 						Dir.South => Dir.West,
 						Dir.West => Dir.South,
 						Dir.East => Dir.North,
+						_ => throw new UnreachableException(),
 					};
 				}
 				else if (c == '\\')
@@ -70,6 +74,7 @@ public partial class Day_16_Original : IPuzzle
 						Dir.South => Dir.East,
 						Dir.West => Dir.North,
 						Dir.East => Dir.South,
+						_ => throw new UnreachableException(),
 					};
 				}
 				else if (c == '-')

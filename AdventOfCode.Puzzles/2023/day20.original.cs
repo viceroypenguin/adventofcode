@@ -15,7 +15,7 @@ public partial class Day_20_Original : IPuzzle
 		public virtual PulseType SendPulse(PulseType pulseType, string source) => pulseType;
 	}
 
-	private class FlipFlipModule : Module
+	private sealed class FlipFlipModule : Module
 	{
 		private bool state;
 		public sealed override PulseType SendPulse(PulseType pulseType, string source)
@@ -28,7 +28,7 @@ public partial class Day_20_Original : IPuzzle
 		}
 	}
 
-	private class ConjunctionModule : Module
+	private sealed class ConjunctionModule : Module
 	{
 		public IReadOnlyList<string> Inputs { get; set; } = [];
 		private readonly Dictionary<string, PulseType> _inputs = [];

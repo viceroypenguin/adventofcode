@@ -3,7 +3,7 @@
 [Puzzle(2023, 19, CodeType.Original)]
 public partial class Day_19_Original : IPuzzle
 {
-	private record Rule(string Destination)
+	private sealed record Rule(string Destination)
 	{
 		public char? Category { get; init; }
 		public bool? IsGreater { get; init; }
@@ -155,5 +155,5 @@ public partial class Day_19_Original : IPuzzle
 		return (part1.ToString(), part2.ToString());
 	}
 
-	private record State(string Flow, Dictionary<char, (int start, int end)> Potentials);
+	private sealed record State(string Flow, Dictionary<char, (int start, int end)> Potentials);
 }
