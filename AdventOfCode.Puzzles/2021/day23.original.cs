@@ -12,7 +12,7 @@ public class Day_23_Original : IPuzzle
 		var start = new Board() { Padding = 0, };
 		for (var i = 0; i < 4; i++)
 		{
-			var room = start.Rooms.Span()[i].Span();
+			var room = start.Rooms[i];
 			room[0] = map[2][(i * 2) + 3];
 			room[1] = map[3][(i * 2) + 3];
 		}
@@ -20,7 +20,7 @@ public class Day_23_Original : IPuzzle
 		var goal = new Board();
 		for (var i = 0; i < 4; i++)
 		{
-			var room = goal.Rooms.Span()[i].Span();
+			var room = goal.Rooms[i];
 			room[0] = (byte)('A' + i);
 			room[1] = (byte)('A' + i);
 		}
@@ -40,12 +40,12 @@ public class Day_23_Original : IPuzzle
 
 		for (var i = 0; i < 4; i++)
 		{
-			var room = start.Rooms.Span()[i].Span();
+			var room = start.Rooms[i];
 			room[3] = room[1];
 			room[1] = insert[i][0];
 			room[2] = insert[i][1];
 
-			room = goal.Rooms.Span()[i].Span();
+			room = goal.Rooms[i];
 			room[2] = (byte)('A' + i);
 			room[3] = (byte)('A' + i);
 		}
@@ -70,8 +70,8 @@ public class Day_23_Original : IPuzzle
 
 	private static (Board, int) MoveTokenToHallway(Board board, int cost, int room, int i, int hallway)
 	{
-		var roomSpan = board.Rooms.Span()[room].Span();
-		var hallwaySpan = board.Hallway.Span();
+		var roomSpan = board.Rooms[room];
+		var hallwaySpan = board.Hallway;
 
 		var moveCost = GetCost(roomSpan[i]);
 		var steps = GetSteps(room, hallway) + i + 1;
@@ -83,8 +83,8 @@ public class Day_23_Original : IPuzzle
 
 	private static (Board, int) MoveTokenToRoom(Board board, int cost, int room, int i, int hallway)
 	{
-		var roomSpan = board.Rooms.Span()[room].Span();
-		var hallwaySpan = board.Hallway.Span();
+		var roomSpan = board.Rooms[room];
+		var hallwaySpan = board.Hallway;
 
 		var moveCost = GetCost(hallwaySpan[hallway]);
 		var steps = GetSteps(room, hallway) + i + 1;
@@ -96,8 +96,8 @@ public class Day_23_Original : IPuzzle
 
 	private static (Board, int) MoveTokenToRoom(Board board, int cost, int from, int i, int to, int j)
 	{
-		var fromSpan = board.Rooms.Span()[from].Span();
-		var toSpan = board.Rooms.Span()[to].Span();
+		var fromSpan = board.Rooms[from];
+		var toSpan = board.Rooms[to];
 
 		var moveCost = GetCost(fromSpan[i]);
 		var steps = (Math.Abs(from - to) * 2) + i + 1 + j + 1;
