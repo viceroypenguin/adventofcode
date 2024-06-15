@@ -34,12 +34,17 @@ public partial class Day_12_Original : IPuzzle
 			moons = moons.Select(Timestep).ToArray();
 
 			for (var d = 0; d < moons.Length; d++)
+			{
 				if (cycleLengths[d] == -1
 					&& Enumerable.Range(0, moons[d].Length)
 						.All(m => moons[d][m].velocity == 0))
+				{
 					cycleLengths[d] = i * 2;
+				}
+			}
 
 			if (i == 1000)
+			{
 				part1 = Enumerable.Range(0, moons[0].Length)
 					.Sum(m =>
 					{
@@ -54,6 +59,7 @@ public partial class Day_12_Original : IPuzzle
 						return pos * vel;
 					})
 					.ToString();
+			}
 		}
 
 		var part2 = cycleLengths
@@ -63,7 +69,7 @@ public partial class Day_12_Original : IPuzzle
 		return (part1, part2);
 	}
 
-	static (int position, int velocity)[] Timestep(
+	private static (int position, int velocity)[] Timestep(
 		(int position, int velocity)[] current) =>
 		Enumerable.Range(0, current.Length)
 			.Select(pi =>

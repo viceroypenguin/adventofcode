@@ -5,7 +5,7 @@ namespace AdventOfCode.Puzzles._2017;
 [Puzzle(2017, 14, CodeType.Original)]
 public class Day_14_Original : IPuzzle
 {
-	private static readonly int[] keys = [17, 31, 73, 47, 23,];
+	private static readonly int[] s_keys = [17, 31, 73, 47, 23,];
 
 	public (string, string) Solve(PuzzleInput input)
 	{
@@ -20,7 +20,7 @@ public class Day_14_Original : IPuzzle
 				.Trim()
 				.ToCharArray()
 				.Select(c => (int)c)
-				.Concat(keys)
+				.Concat(s_keys)
 				.ToList()
 				.AsEnumerable();
 
@@ -93,7 +93,6 @@ public class Day_14_Original : IPuzzle
 					queue.Enqueue((pos.x, pos.y + 1));
 			}
 		}
-
 
 		for (var x = 0; x < 128; x++)
 		{

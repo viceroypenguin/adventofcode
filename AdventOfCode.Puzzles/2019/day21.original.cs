@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 
 namespace AdventOfCode.Puzzles._2019;
 
@@ -13,33 +13,35 @@ public class Day_21_Original : IPuzzle
 			.ToArray();
 
 		return (
-			DoPart(instructions, springScriptA),
-			DoPart(instructions, springScriptB));
+			DoPart(instructions, SpringScriptA),
+			DoPart(instructions, SpringScriptB));
 	}
 
-		const string springScriptA =
-@"NOT A J
-NOT B T
-OR T J
-NOT C T
-OR T J
-AND D J
-WALK
-";
+	private const string SpringScriptA =
+		"""
+		NOT A J
+		NOT B T
+		OR T J
+		NOT C T
+		OR T J
+		AND D J
+		WALK
+		""";
 
-		const string springScriptB =
-@"NOT A J
-NOT B T
-OR T J
-NOT C T
-OR T J
-AND D J
-NOT E T
-NOT T T
-OR H T
-AND T J
-RUN
-";
+	private const string SpringScriptB =
+		"""
+		NOT A J
+		NOT B T
+		OR T J
+		NOT C T
+		OR T J
+		AND D J
+		NOT E T
+		NOT T T
+		OR H T
+		AND T J
+		RUN
+		""";
 
 	private static string DoPart(long[] instructions, string scriptCode)
 	{

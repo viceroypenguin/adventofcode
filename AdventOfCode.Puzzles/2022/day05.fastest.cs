@@ -18,14 +18,14 @@ public partial class Day_05_Fastest : IPuzzle
 		static void PushStack(Span<byte> stackData, Span<byte> stackLengths, byte stack, byte value)
 		{
 			var i = stackLengths[stack]++;
-			stackData[stack * 64 + i] = value;
+			stackData[(stack * 64) + i] = value;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
 		static byte PopStack(Span<byte> stackData, Span<byte> stackLengths, byte stack)
 		{
 			var i = --stackLengths[stack];
-			return stackData[stack * 64 + i];
+			return stackData[(stack * 64) + i];
 		}
 
 		// find end of map
@@ -40,7 +40,7 @@ public partial class Day_05_Fastest : IPuzzle
 			var l = input.Lines[lineCnt].AsSpan();
 			for (byte stack = 0; stack < 9; stack++)
 			{
-				var c = (byte)l[stack * 4 + 1];
+				var c = (byte)l[(stack * 4) + 1];
 				if (c == ' ') continue;
 
 				PushStack(stackData1, stackLengths1, stack, c);
@@ -58,7 +58,7 @@ public partial class Day_05_Fastest : IPuzzle
 			if (l[i + 1] != ' ')
 			{
 				i++;
-				cnt = cnt * 10 + l[i] - '0';
+				cnt = (cnt * 10) + l[i] - '0';
 			}
 
 			i += 7;

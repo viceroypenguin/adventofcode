@@ -24,7 +24,7 @@ public class Day_18_Original : IPuzzle
 			lights[^1][^1] = true;
 		}
 
-		int getLight(int x, int y) =>
+		int GetLight(int x, int y) =>
 			x < 0 || y < 0
 				|| x >= lights.Length
 				|| y >= lights[0].Length
@@ -50,14 +50,14 @@ public class Day_18_Original : IPuzzle
 								}
 
 								var numNeighbors =
-									getLight(x - 1, y - 1) +
-									getLight(x - 1, y) +
-									getLight(x - 1, y + 1) +
-									getLight(x, y - 1) +
-									getLight(x, y + 1) +
-									getLight(x + 1, y - 1) +
-									getLight(x + 1, y) +
-									getLight(x + 1, y + 1);
+									GetLight(x - 1, y - 1) +
+									GetLight(x - 1, y) +
+									GetLight(x - 1, y + 1) +
+									GetLight(x, y - 1) +
+									GetLight(x, y + 1) +
+									GetLight(x + 1, y - 1) +
+									GetLight(x + 1, y) +
+									GetLight(x + 1, y + 1);
 								return numNeighbors == 3 || (col && numNeighbors == 2);
 							})
 							.ToArray())

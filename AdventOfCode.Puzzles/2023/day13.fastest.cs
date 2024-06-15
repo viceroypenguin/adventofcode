@@ -1,4 +1,4 @@
-﻿using System.Numerics;
+using System.Numerics;
 using System.Runtime.Intrinsics;
 
 namespace AdventOfCode.Puzzles._2023;
@@ -16,7 +16,7 @@ public sealed partial class Day_13_Fastest : IPuzzle
 		{
 			var n = span.IndexOf("\n\n"u8);
 			var pattern = n > 0 ? span[..n] : span[..^1];
-			span = n > 0 ? span.Slice(n + 2) : [];
+			span = n > 0 ? span[(n + 2)..] : [];
 
 			var (p1, p2) = FindReflections(pattern);
 			part1 += p1;
@@ -87,8 +87,10 @@ public sealed partial class Day_13_Fastest : IPuzzle
 			{
 				return i;
 			}
+
 			prev = cur;
 		}
+
 		return -1;
 	}
 
@@ -117,8 +119,10 @@ public sealed partial class Day_13_Fastest : IPuzzle
 			{
 				return i;
 			}
+
 			prev = cur;
 		}
+
 		return -1;
 	}
 

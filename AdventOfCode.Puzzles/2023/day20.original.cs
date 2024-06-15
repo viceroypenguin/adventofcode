@@ -1,4 +1,4 @@
-﻿using static AdventOfCode.Common.Extensions.NumberExtensions;
+using static AdventOfCode.Common.Extensions.NumberExtensions;
 
 namespace AdventOfCode.Puzzles._2023;
 
@@ -10,21 +10,21 @@ public partial class Day_20_Original : IPuzzle
 	private class Module
 	{
 		public required string Name { get; init; }
-		public required IReadOnlyList<string> Destinations { get; init; }
+		public required string[] Destinations { get; init; }
 
 		public virtual PulseType SendPulse(PulseType pulseType, string source) => pulseType;
 	}
 
 	private sealed class FlipFlipModule : Module
 	{
-		private bool state;
+		private bool _state;
 		public sealed override PulseType SendPulse(PulseType pulseType, string source)
 		{
 			if (pulseType == PulseType.High)
 				return PulseType.None;
 
-			state = !state;
-			return state ? PulseType.High : PulseType.Low;
+			_state = !_state;
+			return _state ? PulseType.High : PulseType.Low;
 		}
 	}
 
@@ -105,9 +105,9 @@ public partial class Day_20_Original : IPuzzle
 					continue;
 
 				if (nextPulse == PulseType.Low)
-					low += x.module.Destinations.Count;
+					low += x.module.Destinations.Length;
 				else
-					high += x.module.Destinations.Count;
+					high += x.module.Destinations.Length;
 
 				foreach (var dest in x.module.Destinations)
 				{

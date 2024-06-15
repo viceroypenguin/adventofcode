@@ -47,6 +47,7 @@ public class Day_06_Original : IPuzzle
 				{
 					excluded.Add(grid[x, y]);
 				}
+
 				counts[grid[x, y]] += 1;
 			}
 		}

@@ -1,10 +1,10 @@
-﻿namespace AdventOfCode.Puzzles._2018;
+namespace AdventOfCode.Puzzles._2018;
 
 [Puzzle(2018, 13, CodeType.Original)]
 public class Day_13_Original : IPuzzle
 {
-	private static Cart[] carts;
-	private static char[][] map;
+	private static Cart[] s_carts;
+	private static char[][] s_map;
 
 	private enum Direction
 	{
@@ -16,15 +16,15 @@ public class Day_13_Original : IPuzzle
 
 	public (string, string) Solve(PuzzleInput input)
 	{
-		map = input.Lines
+		s_map = input.Lines
 			.Select(s => s.ToArray())
 			.ToArray();
 
 		var id = 1;
-		carts = (
-			from x in Enumerable.Range(0, map.Length)
-			from y in Enumerable.Range(0, map[x].Length)
-			let c = map[x][y]
+		s_carts = (
+			from x in Enumerable.Range(0, s_map.Length)
+			from y in Enumerable.Range(0, s_map[x].Length)
+			let c = s_map[x][y]
 			where new[] { '<', '>', '^', 'v' }.Contains(c)
 			select new Cart
 			{
@@ -38,8 +38,8 @@ public class Day_13_Original : IPuzzle
 				NextChangeDir = -1,
 			}).ToArray();
 
-		foreach (var c in carts)
-			map[c.X][c.Y] = c.Dir is Direction.Left or Direction.Right ? '-' : '|';
+		foreach (var c in s_carts)
+			s_map[c.X][c.Y] = c.Dir is Direction.Left or Direction.Right ? '-' : '|';
 
 		var ticks = 0;
 		var firstCrash = false;
@@ -47,28 +47,29 @@ public class Day_13_Original : IPuzzle
 		while (true)
 		{
 			ticks++;
-			foreach (var c in carts
+			foreach (var c in s_carts
 				.OrderBy(c => c.Y)
 				.ThenBy(c => c.X))
 			{
 				c.MoveNext();
 			}
 
-			if (carts.Any(c => c.IsCrashed))
+			if (s_carts.Any(c => c.IsCrashed))
 			{
 				if (!firstCrash)
 				{
-					var c = carts.First(x => x.IsCrashed);
+					var c = s_carts.First(x => x.IsCrashed);
 					part1 = $"{c.Y},{c.X}";
 					firstCrash = true;
 				}
-				carts = carts
+
+				s_carts = s_carts
 					.Where(c => !c.IsCrashed)
 					.ToArray();
 
-				if (carts.Length == 1)
+				if (s_carts.Length == 1)
 				{
-					var part2 = $"{carts[0].Y},{carts[0].X}";
+					var part2 = $"{s_carts[0].Y},{s_carts[0].X}";
 					return (part1, part2);
 				}
 			}
@@ -77,12 +78,12 @@ public class Day_13_Original : IPuzzle
 
 	private sealed class Cart
 	{
-		public int Id;
-		public int X;
-		public int Y;
-		public Direction Dir;
-		public int NextChangeDir;
-		public bool IsCrashed;
+		public int Id { get; set; }
+		public int X { get; set; }
+		public int Y { get; set; }
+		public Direction Dir { get; set; }
+		public int NextChangeDir { get; set; }
+		public bool IsCrashed { get; set; }
 
 		public void MoveNext()
 		{
@@ -90,7 +91,7 @@ public class Day_13_Original : IPuzzle
 				return;
 
 			// $"Coords: {coords}; Value: {map[coords.x][coords.y]}".Dump();
-			switch (map[X][Y])
+			switch (s_map[X][Y])
 			{
 				case '|':
 				case '-':
@@ -107,7 +108,7 @@ public class Day_13_Original : IPuzzle
 					throw new InvalidOperationException("wtf?");
 			}
 
-			var r = carts.FirstOrDefault(
+			var r = s_carts.FirstOrDefault(
 				c => c.Id != Id &&
 					c.X == X &&
 					c.Y == Y);
@@ -125,33 +126,33 @@ public class Day_13_Original : IPuzzle
 			{
 				case Direction.Up:
 					X--;
-					if (map[X][Y] == '/')
+					if (s_map[X][Y] == '/')
 						Dir = Direction.Right;
-					if (map[X][Y] == '\\')
+					if (s_map[X][Y] == '\\')
 						Dir = Direction.Left;
 					return;
 
 				case Direction.Down:
 					X++;
-					if (map[X][Y] == '/')
+					if (s_map[X][Y] == '/')
 						Dir = Direction.Left;
-					if (map[X][Y] == '\\')
+					if (s_map[X][Y] == '\\')
 						Dir = Direction.Right;
 					return;
 
 				case Direction.Left:
 					Y--;
-					if (map[X][Y] == '/')
+					if (s_map[X][Y] == '/')
 						Dir = Direction.Down;
-					if (map[X][Y] == '\\')
+					if (s_map[X][Y] == '\\')
 						Dir = Direction.Up;
 					break;
 
 				case Direction.Right:
 					Y++;
-					if (map[X][Y] == '/')
+					if (s_map[X][Y] == '/')
 						Dir = Direction.Up;
-					if (map[X][Y] == '\\')
+					if (s_map[X][Y] == '\\')
 						Dir = Direction.Down;
 					break;
 

@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode.Puzzles._2020;
+using System.Diagnostics;
+
+namespace AdventOfCode.Puzzles._2020;
 
 [Puzzle(2020, 24, CodeType.Original)]
 public class Day_24_Original : IPuzzle
@@ -24,9 +26,11 @@ public class Day_24_Original : IPuzzle
 
 				case (byte)'e':
 				case (byte)'w':
-
 					dir = (dir << 8) + c;
 					break;
+
+				default:
+					throw new UnreachableException();
 			}
 
 			(e, ne, se) = Move(e, ne, se, dir);
@@ -47,55 +51,118 @@ public class Day_24_Original : IPuzzle
 		switch (dir)
 		{
 			case 0x65: // e
-				if (e < 0) e++;
-				else if (se < 0 || ne < 0) { ne++; se++; }
-				else e++;
+				if (e < 0)
+				{
+					e++;
+				}
+				else if (se < 0 || ne < 0)
+				{
+					ne++; se++;
+				}
+				else
+				{
+					e++;
+				}
+
 				break;
 
 			case 0x77: // w
-				if (e > 0) e--;
-				else if (se > 0 || ne > 0) { se--; ne--; }
-				else e--;
+				if (e > 0)
+				{
+					e--;
+				}
+				else if (se > 0 || ne > 0)
+				{
+					se--; ne--;
+				}
+				else
+				{
+					e--;
+				}
+
 				break;
 
 			case 0x6e65: //ne
-				if (ne < 0) ne++;
-				else if (e < 0 || se > 0) { se--; e++; }
-				else ne++;
+				if (ne < 0)
+				{
+					ne++;
+				}
+				else if (e < 0 || se > 0)
+				{
+					se--; e++;
+				}
+				else
+				{
+					ne++;
+				}
+
 				break;
 
 			case 0x6e77: //nw
-				if (se > 0) se--;
-				else if (e > 0 || ne < 0) { e--; ne++; }
-				else se--;
+				if (se > 0)
+				{
+					se--;
+				}
+				else if (e > 0 || ne < 0)
+				{
+					e--; ne++;
+				}
+				else
+				{
+					se--;
+				}
+
 				break;
 
 			case 0x7377: //sw
-				if (ne > 0) ne--;
-				else if (e > 0 || se < 0) { se++; e--; }
-				else ne--;
+				if (ne > 0)
+				{
+					ne--;
+				}
+				else if (e > 0 || se < 0)
+				{
+					se++; e--;
+				}
+				else
+				{
+					ne--;
+				}
+
 				break;
 
 			case 0x7365: //se
-				if (se < 0) se++;
-				else if (e < 0 || ne > 0) { e++; ne--; }
-				else se++;
+				if (se < 0)
+				{
+					se++;
+				}
+				else if (e < 0 || ne > 0)
+				{
+					e++; ne--;
+				}
+				else
+				{
+					se++;
+				}
+
 				break;
+
+			default:
+				throw new UnreachableException();
 		}
 
 		return (e, ne, se);
 	}
 
-	private static readonly int[] directions =
-		new[]
-		{
+	private static readonly int[] s_directions =
+		[
 			0x65,
 			0x77,
 			0x6e65,
 			0x6e77,
 			0x7377,
 			0x7365,
-		};
+		];
+
 	private static Dictionary<(int e, int ne, int se), bool> Step(Dictionary<(int e, int ne, int se), bool> input)
 	{
 		var @new = new Dictionary<(int e, int ne, int se), bool>();
@@ -105,7 +172,7 @@ public class Day_24_Original : IPuzzle
 			if (!val) continue;
 
 			var cnt = 0;
-			foreach (var d in directions)
+			foreach (var d in s_directions)
 			{
 				var neighbor = Move(pos.e, pos.ne, pos.se, d);
 				if (input.GetValueOrDefault(neighbor))
@@ -114,21 +181,21 @@ public class Day_24_Original : IPuzzle
 					whites.Add(neighbor);
 			}
 
-			if (cnt == 1 || cnt == 2)
+			if (cnt is 1 or 2)
 				@new[pos] = true;
 		}
 
 		foreach (var pos in whites)
 		{
 			var cnt = 0;
-			foreach (var d in directions)
+			foreach (var d in s_directions)
 			{
 				var neighbor = Move(pos.e, pos.ne, pos.se, d);
 				if (input.GetValueOrDefault(neighbor))
 					cnt++;
 			}
 
-			if (cnt == 2)
+			if (cnt is 2)
 				@new[pos] = true;
 		}
 

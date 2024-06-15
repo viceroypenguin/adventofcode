@@ -42,15 +42,15 @@ public class Day_20_Original : IPuzzle
 				{
 					// collect neighboring values and coalesce into index
 					var idx =
-						(image.GetValueOrDefault((x - 1, y - 1), def) ? 1 : 0) << 8
-						| (image.GetValueOrDefault((x, y - 1), def) ? 1 : 0) << 7
-						| (image.GetValueOrDefault((x + 1, y - 1), def) ? 1 : 0) << 6
-						| (image.GetValueOrDefault((x - 1, y), def) ? 1 : 0) << 5
-						| (image.GetValueOrDefault((x, y), def) ? 1 : 0) << 4
-						| (image.GetValueOrDefault((x + 1, y), def) ? 1 : 0) << 3
-						| (image.GetValueOrDefault((x - 1, y + 1), def) ? 1 : 0) << 2
-						| (image.GetValueOrDefault((x, y + 1), def) ? 1 : 0) << 1
-						| (image.GetValueOrDefault((x + 1, y + 1), def) ? 1 : 0) << 0;
+						((image.GetValueOrDefault((x - 1, y - 1), def) ? 1 : 0) << 8)
+						| ((image.GetValueOrDefault((x, y - 1), def) ? 1 : 0) << 7)
+						| ((image.GetValueOrDefault((x + 1, y - 1), def) ? 1 : 0) << 6)
+						| ((image.GetValueOrDefault((x - 1, y), def) ? 1 : 0) << 5)
+						| ((image.GetValueOrDefault((x, y), def) ? 1 : 0) << 4)
+						| ((image.GetValueOrDefault((x + 1, y), def) ? 1 : 0) << 3)
+						| ((image.GetValueOrDefault((x - 1, y + 1), def) ? 1 : 0) << 2)
+						| ((image.GetValueOrDefault((x, y + 1), def) ? 1 : 0) << 1)
+						| ((image.GetValueOrDefault((x + 1, y + 1), def) ? 1 : 0) << 0);
 					// check the algorithm at index
 					var b = algorithm[idx];
 					// return value at point

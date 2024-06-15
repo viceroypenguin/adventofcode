@@ -1,4 +1,4 @@
-﻿using System.Buffers;
+using System.Buffers;
 using CommunityToolkit.HighPerformance;
 
 namespace AdventOfCode.Puzzles._2023;
@@ -6,7 +6,7 @@ namespace AdventOfCode.Puzzles._2023;
 [Puzzle(2023, 03, CodeType.Fastest)]
 public sealed partial class Day_03_Fastest : IPuzzle
 {
-	private static readonly (int x, int y)[] _adjacent =
+	private static readonly (int x, int y)[] s_adjacent =
 	[
 		(0, 1),
 		(1, 0),
@@ -18,7 +18,7 @@ public sealed partial class Day_03_Fastest : IPuzzle
 		(1, -1),
 	];
 
-	private static readonly SearchValues<byte> _symbols = SearchValues.Create("0123456789."u8);
+	private static readonly SearchValues<byte> s_symbols = SearchValues.Create("0123456789."u8);
 
 	public (string, string) Solve(PuzzleInput input)
 	{
@@ -34,14 +34,14 @@ public sealed partial class Day_03_Fastest : IPuzzle
 
 			for (var x = 0; x < line.Length; x++)
 			{
-				var advance = line.Slice(x).IndexOfAnyExcept(_symbols);
+				var advance = line[x..].IndexOfAnyExcept(s_symbols);
 				if (advance == -1)
 					break;
 
 				x += advance;
 
 				var number1 = 0;
-				foreach (var (dx, dy) in _adjacent)
+				foreach (var (dx, dy) in s_adjacent)
 				{
 					if (y + dy < 0 || y + dy >= mutableMap.Height)
 						continue;

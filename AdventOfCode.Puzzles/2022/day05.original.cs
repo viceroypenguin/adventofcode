@@ -23,8 +23,10 @@ public partial class Day_05_Original : IPuzzle
 
 		var stacks = BuildStacks(input.Lines);
 		foreach (var (cnt, from, to) in instructions)
+		{
 			for (var i = 0; i < cnt; i++)
 				stacks[to - 1].Push(stacks[from - 1].Pop());
+		}
 
 		var part1 = string.Join("", stacks.Select(s => s.Peek()));
 

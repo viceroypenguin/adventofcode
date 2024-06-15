@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace AdventOfCode.Puzzles._2019;
 
@@ -18,10 +19,15 @@ public class Day_05_Fastest : IPuzzle
 				sign = 1;
 			}
 			else if (c == '-')
+			{
 				sign = -1;
+			}
 			else if (c >= '0')
-				n = n * 10 + c - '0';
+			{
+				n = (n * 10) + c - '0';
+			}
 		}
+
 		nums[numCount++] = n;
 		nums = nums[..numCount];
 
@@ -73,6 +79,8 @@ public class Day_05_Fastest : IPuzzle
 				case 8:
 					DoSetEqualInstruction(instructions, ref ip);
 					break;
+				default:
+					throw new UnreachableException();
 			}
 		}
 	}
@@ -86,11 +94,10 @@ public class Day_05_Fastest : IPuzzle
 			: instructions[value];
 	}
 
-	private static readonly IReadOnlyList<int> powersOfTen = new[] { 1, 10, 100, 1000, 10000, 100000, };
+	private static readonly IReadOnlyList<int> s_powersOfTen = [1, 10, 100, 1000, 10000, 100000,];
 	[MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
 	private static int GetParameterMode(int opCode, int parameter) =>
-		opCode / powersOfTen[parameter + 1] % 10;
-
+		opCode / s_powersOfTen[parameter + 1] % 10;
 
 	[MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
 	private static void DoAddInstruction(Span<int> instructions, ref int ip)

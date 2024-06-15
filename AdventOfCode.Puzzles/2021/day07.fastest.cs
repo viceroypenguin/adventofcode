@@ -8,7 +8,7 @@ namespace AdventOfCode.Puzzles._2021;
 [Puzzle(2021, 7, CodeType.Fastest)]
 public class Day_2021_07_Fastest : IPuzzle
 {
-	public (string part1, string part2) Solve(PuzzleInput input) 
+	public (string part1, string part2) Solve(PuzzleInput input)
 	{
 		// keep track of how many crabs at each position 0..2048
 		// 2048 appears max based on data
@@ -37,7 +37,7 @@ public class Day_2021_07_Fastest : IPuzzle
 		var sum = 0;
 		for (i = 0; sum < half; i++)
 			sum += crabs[i];
-		var median = (i - 1);
+		var median = i - 1;
 		var part1 = PartAFuelTotal(crabs, median).ToString();
 
 		sum = IndexSum(crabs);
@@ -86,7 +86,6 @@ public class Day_2021_07_Fastest : IPuzzle
 	{
 		// cache loop constants
 		var simdPosition = Vector256.Create(position);
-		var one = Vector256.Create(1);
 		var eight = Vector256.Create(8);
 
 		// convert int array to simd array

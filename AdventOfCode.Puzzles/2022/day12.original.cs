@@ -10,7 +10,9 @@ public partial class Day_12_Original : IPuzzle
 		var start = (x: 0, y: 0);
 		var end = start;
 		for (var y = 0; y < map.Length; y++)
+		{
 			for (var x = 0; x < map[y].Length; x++)
+			{
 				if (map[y][x] == (byte)'S')
 				{
 					start = (x, y);
@@ -19,6 +21,8 @@ public partial class Day_12_Original : IPuzzle
 				{
 					end = (x, y);
 				}
+			}
+		}
 
 		map[start.y][start.x] = (byte)'a';
 		map[end.y][end.x] = (byte)'z';

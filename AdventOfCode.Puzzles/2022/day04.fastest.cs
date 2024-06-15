@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Puzzles._2022;
+namespace AdventOfCode.Puzzles._2022;
 
 [Puzzle(2022, 4, CodeType.Fastest)]
 public partial class Day_04_Fastest : IPuzzle
@@ -20,14 +20,14 @@ public partial class Day_04_Fastest : IPuzzle
 			(var hi2, c) = span[i..].AtoI();
 			i += c + 1;
 
-			if (lo1 <= lo2 && hi2 <= hi1
-				|| lo2 <= lo1 && hi1 <= hi2)
+			if ((lo1 <= lo2 && hi2 <= hi1)
+				|| (lo2 <= lo1 && hi1 <= hi2))
 			{
 				part1++;
 			}
 
-			if (hi1 >= lo2 && lo1 <= hi2
-				|| hi2 >= lo1 && lo2 <= hi1)
+			if ((hi1 >= lo2 && lo1 <= hi2)
+				|| (hi2 >= lo1 && lo2 <= hi1))
 			{
 				part2++;
 			}

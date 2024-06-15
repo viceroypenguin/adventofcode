@@ -1,9 +1,9 @@
-﻿namespace AdventOfCode.Puzzles._2022;
+namespace AdventOfCode.Puzzles._2022;
 
 [Puzzle(2022, 17, CodeType.Original)]
 public partial class Day_17_Original : IPuzzle
 {
-	private static readonly (int maxX, int maxY, HashSet<(int x, int y)>)[] Rocks =
+	private static readonly (int maxX, int maxY, HashSet<(int x, int y)>)[] s_rocks =
 	[
 		(3, 0, [(0, 0), (1, 0), (2, 0), (3, 0),]),
 		(2, 2, [(1, 0), (0, 1), (1, 1), (1, 2), (2, 1),]),
@@ -47,8 +47,8 @@ public partial class Day_17_Original : IPuzzle
 		{
 			var (x, y) = (2, MaximumMapRow + 3);
 
-			var (rockWidth, _, rock) = Rocks[CurrentRockIndex++];
-			if (CurrentRockIndex >= Rocks.Length)
+			var (rockWidth, _, rock) = s_rocks[CurrentRockIndex++];
+			if (CurrentRockIndex >= s_rocks.Length)
 				CurrentRockIndex = 0;
 
 			while (true)
@@ -89,6 +89,7 @@ public partial class Day_17_Original : IPuzzle
 				if (FallenRocks[y + ry][x + rx] == '#')
 					return true;
 			}
+
 			return false;
 		}
 

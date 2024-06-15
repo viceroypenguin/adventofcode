@@ -40,6 +40,7 @@ public partial class Day_07_Original : IPuzzle
 						var arg = GetArgument(m.Groups["not_arg"].Value);
 						return (destination, value: new Lazy<ushort>(() => (ushort)~arg()));
 					}
+
 					if (m.Groups["command"].Success)
 					{
 						var arg1 = GetArgument(m.Groups["arg1"].Value);
@@ -53,6 +54,7 @@ public partial class Day_07_Original : IPuzzle
 							_ => throw new UnreachableException(),
 						};
 					}
+
 					throw new UnreachableException();
 				})
 				.ToDictionary(x => x.destination, x => x.value);

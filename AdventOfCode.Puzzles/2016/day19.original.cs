@@ -5,7 +5,7 @@ public class Day_19_Original : IPuzzle
 {
 	public (string, string) Solve(PuzzleInput input)
 	{
-		static int nextPowerOfTwo(int n)
+		static int NextPowerOfTwo(int n)
 		{
 			n |= n >> 1;
 			n |= n >> 2;
@@ -16,10 +16,10 @@ public class Day_19_Original : IPuzzle
 			return n + 1;
 		}
 
-		static int partAElfHoldingPresents(int n) =>
-			(n * 2 % nextPowerOfTwo(n)) + 1;
+		static int PartAElfHoldingPresents(int n) =>
+			(n * 2 % NextPowerOfTwo(n)) + 1;
 
-		static int nextPowerOfThree(int n)
+		static int NextPowerOfThree(int n)
 		{
 			var x = 3;
 			for (; x < n; x *= 3)
@@ -27,9 +27,9 @@ public class Day_19_Original : IPuzzle
 			return x;
 		}
 
-		static int partBElfHoldingPresents(int n)
+		static int PartBElfHoldingPresents(int n)
 		{
-			var roundUp = nextPowerOfThree(n);
+			var roundUp = NextPowerOfThree(n);
 			var roundDown = roundUp / 3;
 			return n <= roundDown * 2 ? n - roundDown :
 				n == roundUp ? n :
@@ -39,7 +39,7 @@ public class Day_19_Original : IPuzzle
 		var num = Convert.ToInt32(input.Text);
 
 		return (
-			partAElfHoldingPresents(num).ToString(),
-			partBElfHoldingPresents(num).ToString());
+			PartAElfHoldingPresents(num).ToString(),
+			PartBElfHoldingPresents(num).ToString());
 	}
 }

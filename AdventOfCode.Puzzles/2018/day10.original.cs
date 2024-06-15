@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Puzzles._2018;
+namespace AdventOfCode.Puzzles._2018;
 
 [Puzzle(2018, 10, CodeType.Original)]
 public partial class Day_10_Original : IPuzzle
@@ -11,14 +11,15 @@ public partial class Day_10_Original : IPuzzle
 		var regex = PositionRegex();
 
 		var points = input.Lines
-			 .Select(l => regex.Match(l))
-			 .Select(m => (
-				  // transposing for visibility
-				  posx: Convert.ToInt32(m.Groups["posy"].Value),
-				  posy: Convert.ToInt32(m.Groups["posx"].Value),
-				  velx: Convert.ToInt32(m.Groups["vely"].Value),
-				  vely: Convert.ToInt32(m.Groups["velx"].Value)))
-			 .ToArray();
+			.Select(l => regex.Match(l))
+			.Select(m => (
+				// transposing for visibility
+				posx: Convert.ToInt32(m.Groups["posy"].Value),
+				posy: Convert.ToInt32(m.Groups["posx"].Value),
+				velx: Convert.ToInt32(m.Groups["vely"].Value),
+				vely: Convert.ToInt32(m.Groups["velx"].Value)
+			))
+			.ToArray();
 
 		var minyvel = points.MinBy(p => p.vely);
 		var maxyvel = points.MaxBy(p => p.vely);

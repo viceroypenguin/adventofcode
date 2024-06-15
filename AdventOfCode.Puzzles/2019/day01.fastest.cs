@@ -10,17 +10,20 @@ public class Day_01_Fastest : IPuzzle
 		{
 			if (c == '\n')
 			{
-				var fuel = n / 3 - 2;
+				var fuel = (n / 3) - 2;
 				part1Sum += fuel;
 				while (fuel > 0)
 				{
 					part2Sum += fuel;
-					fuel = fuel / 3 - 2;
+					fuel = (fuel / 3) - 2;
 				}
+
 				n = 0;
 			}
 			else if (c >= '0')
-				n = n * 10 + c - '0';
+			{
+				n = (n * 10) + c - '0';
+			}
 		}
 
 		return (

@@ -68,7 +68,6 @@ public class Day_17_Original : IPuzzle
 			if (s.y >= ground.Length)
 				continue;
 
-
 			// hit clay or water; move up a row
 			if (ground[s.y][s.x] is '#' or '~')
 				s.y--;

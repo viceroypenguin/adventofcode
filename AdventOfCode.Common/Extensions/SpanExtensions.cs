@@ -54,8 +54,8 @@ public ref struct SpanByteLineEnumerator
 
 		if ((uint)idx < (uint)remaining.Length)
 		{
-			Current = remaining.Slice(0, idx);
-			_remaining = remaining.Slice(idx + 1);
+			Current = remaining[..idx];
+			_remaining = remaining[(idx + 1)..];
 		}
 		else
 		{
@@ -119,8 +119,8 @@ public ref struct SpanByteLineLengthEnumerator
 
 		if ((uint)_length < (uint)remaining.Length)
 		{
-			Current = remaining.Slice(0, _length);
-			_remaining = remaining.Slice(_length + 1);
+			Current = remaining[.._length];
+			_remaining = remaining[(_length + 1)..];
 		}
 		else
 		{

@@ -21,9 +21,13 @@ public class Day_09_Fastest : IPuzzle
 		for (var i = 25; i < maxIndex; i++)
 		{
 			for (var j = i - 25; j < i; j++)
+			{
 				for (var k = j + 1; k < i; k++)
+				{
 					if (arr[j] + arr[k] == arr[i])
 						goto found_match;
+				}
+			}
 
 			part1 = (invalidNumber = arr[i]).ToString();
 			break;
@@ -46,9 +50,11 @@ found_match:
 
 		long min = arr[start], max = arr[start];
 		for (var i = start + 1; i <= end; i++)
+		{
 			(min, max) = (
 				Math.Min(min, arr[i]),
 				Math.Max(max, arr[i]));
+		}
 
 		var part2 = (min + max).ToString();
 

@@ -54,7 +54,7 @@ public class Day_22_Original : IPuzzle
 			StepPartA();
 		var partA = enable;
 
-		map = new Dictionary<(int x, int y), char>();
+		map = [];
 		foreach (var l in lines.Select((l, i) => (l, i)))
 		{
 			foreach (var c in l.l.Select((c, j) => (c, j)))

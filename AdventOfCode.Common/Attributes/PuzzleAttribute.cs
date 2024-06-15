@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Common.Attributes;
+namespace AdventOfCode.Common.Attributes;
 
 public enum CodeType
 {
@@ -7,18 +7,10 @@ public enum CodeType
 }
 
 [AttributeUsage(AttributeTargets.Class)]
-public class PuzzleAttribute : Attribute
+public sealed class PuzzleAttribute(int year, int day, CodeType codeType, string? name = null) : Attribute
 {
-	public string? Name { get; }
-	public int Year { get; }
-	public int Day { get; }
-	public CodeType CodeType { get; }
-
-	public PuzzleAttribute(int year, int day, CodeType codeType, string? name = null)
-	{
-		Year = year;
-		Day = day;
-		CodeType = codeType;
-		Name = name;
-	}
+	public string? Name { get; } = name;
+	public int Year { get; } = year;
+	public int Day { get; } = day;
+	public CodeType CodeType { get; } = codeType;
 }

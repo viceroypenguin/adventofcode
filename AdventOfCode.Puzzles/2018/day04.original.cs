@@ -30,15 +30,15 @@ public class Day_04_Original : IPuzzle
 			.Segment(x => x.activity == BeginShift)
 			.SelectMany(shift =>
 			{
-				var id = shift.First().id.Value;
+				var id = shift[0].id.Value;
 				return shift
 					.Skip(1)
 					.Batch(2)
 					.Select(s => new
 					{
-						id = id,
-						start = s.First().date,
-						end = s.Last().date,
+						id,
+						start = s[0].date,
+						end = s[^1].date,
 					});
 			})
 			.ToLookup(s => s.id);
@@ -54,13 +54,13 @@ public class Day_04_Original : IPuzzle
 				var x = g
 					.SelectMany(s => Enumerable.Range(s.start.Minute, (int)(s.end - s.start).TotalMinutes))
 					.CountBy(i => i)
-					.OrderByDescending(i => i.count)
+					.OrderByDescending(i => i.Value)
 					.First();
 				return new
 				{
 					id = g.Key,
-					minute = x.key,
-					times = x.count,
+					minute = x.Key,
+					times = x.Value,
 				};
 			})
 			.ToList();

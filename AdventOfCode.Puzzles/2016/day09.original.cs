@@ -140,6 +140,7 @@ public class Day_09_Original : IPuzzle
 				default:
 					throw new UnreachableException();
 			}
+
 			index++;
 		}
 

@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 
 namespace AdventOfCode.Puzzles._2023;
 
@@ -32,7 +32,7 @@ public sealed partial class Day_18_Fastest : IPuzzle
 			dp1 += num;
 			pos1 = q;
 
-			var span = l.Slice(num >= 10 ? 7 : 6);
+			var span = l[(num >= 10 ? 7 : 6)..];
 
 			num = 0;
 			for (var i = 0; i < 5; i++)

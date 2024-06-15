@@ -17,8 +17,8 @@ public class Day_02_Original : IPuzzle
 		var buttons = new[]
 		{
 			new [] { 1, 2, 3 },
-			new [] { 4, 5, 6 },
-			new [] { 7, 8, 9 },
+			[4, 5, 6],
+			[7, 8, 9],
 		};
 
 		var p = (x: 1, y: 1);
@@ -50,10 +50,10 @@ public class Day_02_Original : IPuzzle
 		var buttons = new[]
 		{
 			new char? [] { null, null,  '1', null, null, },
-			new char? [] { null,  '2',  '3',  '4', null, },
-			new char? [] {  '5',  '6',  '7',  '8',  '9', },
-			new char? [] { null,  'A',  'B',  'C', null, },
-			new char? [] { null, null,  'D', null, null, },
+			[null,  '2',  '3',  '4', null,],
+			['5',  '6',  '7',  '8',  '9',],
+			[null,  'A',  'B',  'C', null,],
+			[null, null,  'D', null, null,],
 		};
 
 		var p = (x: 0, y: 2);

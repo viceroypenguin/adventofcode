@@ -37,9 +37,13 @@ public class Day_10_Original : IPuzzle
 				var yDist = a.y - y;
 
 				if (xDist == 0)
+				{
 					yDist = Math.Sign(yDist);
+				}
 				else if (yDist == 0)
+				{
 					xDist = Math.Sign(xDist);
+				}
 				else
 				{
 					var gcd = (int)Gcd(Math.Abs(xDist), Math.Abs(yDist));
@@ -61,7 +65,9 @@ public class Day_10_Original : IPuzzle
 					&& (_x, _y) != a)
 				{
 					if (asteroids.Contains((_x, _y)))
+					{
 						flag = false;
+					}
 					else
 					{
 						_x += xDist;
@@ -90,7 +96,7 @@ public class Day_10_Original : IPuzzle
 				var yDist = a.y - maxCoords.y;
 
 				var angle = Math.Atan2(xDist, yDist);
-				return (a.x, a.y, angle, dist: Math.Sqrt(xDist * xDist + yDist * yDist));
+				return (a.x, a.y, angle, dist: Math.Sqrt((xDist * xDist) + (yDist * yDist)));
 			})
 			.ToLookup(a => a.angle)
 			.OrderByDescending(a => a.Key)
@@ -108,7 +114,7 @@ public class Day_10_Original : IPuzzle
 			.SelectMany(GetValue)
 			.Skip(199)
 			.Take(1)
-			.Select(a => a.x * 100 + a.y)
+			.Select(a => (a.x * 100) + a.y)
 			.Single()
 			.ToString();
 

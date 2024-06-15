@@ -33,8 +33,10 @@ public class Day_08_Original : IPuzzle
 			var metadataNodes = data[index++];
 
 			if (childNodes == 0)
+			{
 				return Enumerable.Range(0, metadataNodes)
 					.Sum(_ => data[index++]);
+			}
 
 			var nodes = Enumerable.Range(0, childNodes)
 				.Select(_ => GetNodeValue())

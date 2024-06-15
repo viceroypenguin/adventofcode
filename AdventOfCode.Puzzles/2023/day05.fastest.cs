@@ -8,10 +8,10 @@ public sealed partial class Day_05_Fastest : IPuzzle
 	public (string, string) Solve(PuzzleInput input)
 	{
 		var span = input.Span;
-		span = span.Slice("seeds: "u8.Length);
+		span = span["seeds: "u8.Length..];
 
-		var seedLine = span.Slice(0, span.IndexOf((byte)'\n') + 1);
-		span = span.Slice(seedLine.Length + 1);
+		var seedLine = span[..(span.IndexOf((byte)'\n') + 1)];
+		span = span[(seedLine.Length + 1)..];
 
 		var numSeeds = seedLine.Count((byte)' ') + 1;
 		Span<long> seeds = stackalloc long[numSeeds];
@@ -19,7 +19,7 @@ public sealed partial class Day_05_Fastest : IPuzzle
 		while (seedLine.Length > 0)
 		{
 			var (num, n) = seedLine.AtoL();
-			seedLine = seedLine.Slice(n + 1);
+			seedLine = seedLine[(n + 1)..];
 			seeds[i++] = num;
 		}
 
@@ -34,17 +34,17 @@ public sealed partial class Day_05_Fastest : IPuzzle
 		{
 			mapRangeIndices[i] = idx;
 
-			span = span.Slice(span.IndexOf((byte)'\n') + 1);
+			span = span[(span.IndexOf((byte)'\n') + 1)..];
 			while (span.Length > 0 && span[0] != '\n')
 			{
 				var (dest, n) = span.AtoL();
-				span = span.Slice(n + 1);
+				span = span[(n + 1)..];
 
 				(var from, n) = span.AtoL();
-				span = span.Slice(n + 1);
+				span = span[(n + 1)..];
 
 				(var length, n) = span.AtoL();
-				span = span.Slice(n + 1);
+				span = span[(n + 1)..];
 
 				mapRanges[idx++] = (from, from + length - 1, dest - from);
 			}
@@ -52,7 +52,7 @@ public sealed partial class Day_05_Fastest : IPuzzle
 			mapRanges[mapRangeIndices[i]..idx].Sort();
 
 			if (span.Length > 0)
-				span = span.Slice(1);
+				span = span[1..];
 		}
 
 		var part1 = long.MaxValue;
@@ -87,6 +87,7 @@ public sealed partial class Day_05_Fastest : IPuzzle
 			var (from, to, adjust) = mapRanges[i];
 			mapRanges[i] = (from + adjust, to + adjust, -adjust);
 		}
+
 		for (i = 0; i < 7; i++)
 			mapRanges[mapRangeIndices[i]..mapRangeIndices[i + 1]].Sort();
 

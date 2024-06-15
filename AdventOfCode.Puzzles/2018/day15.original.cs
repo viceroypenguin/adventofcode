@@ -3,12 +3,12 @@
 [Puzzle(2018, 15, CodeType.Original)]
 public class Day_15_Original : IPuzzle
 {
-	private static string[] map;
-	private static Square[][] space;
+	private static string[] s_map;
+	private static Square[][] s_space;
 
 	public (string, string) Solve(PuzzleInput input)
 	{
-		map = input.Lines;
+		s_map = input.Lines;
 		var part1 = RunGame(true, 3);
 
 		for (var i = 4; ; i++)
@@ -24,7 +24,7 @@ public class Day_15_Original : IPuzzle
 
 	private static int RunGame(bool allowElfDeath, int elfStrength)
 	{
-		space = map
+		s_space = s_map
 			.Select((s, y) => s
 				.Select((c, x) =>
 					c == '#' ? new Wall() :
@@ -34,14 +34,14 @@ public class Day_15_Original : IPuzzle
 				.ToArray())
 			.ToArray();
 
-		var elves = space.SelectMany(r => r)
+		var elves = s_space.SelectMany(r => r)
 			.OfType<Unit>()
 			.Where(u => u.UnitType == UnitType.Elf)
 			.ToList();
 
 		var rounds = 0;
 		while (
-			space.SelectMany(r => r)
+			s_space.SelectMany(r => r)
 				.OfType<Unit>()
 				.OrderBy(u => u.Location.y)
 				.ThenBy(u => u.Location.x)
@@ -54,7 +54,7 @@ public class Day_15_Original : IPuzzle
 			rounds++;
 		}
 
-		var totalHitPoints = space.SelectMany(r => r)
+		var totalHitPoints = s_space.SelectMany(r => r)
 			.OfType<Unit>()
 			.Where(u => u.IsAlive)
 			.Sum(u => u.HitPoints);
@@ -71,20 +71,13 @@ public class Day_15_Original : IPuzzle
 		Elf, Goblin,
 	}
 
-	private sealed class Unit : Square
+	private sealed class Unit(UnitType type, int attackStrength, (int x, int y) location) : Square
 	{
-		public Unit(UnitType type, int attackStrength, (int x, int y) location)
-		{
-			UnitType = type;
-			Location = location;
-			AttackStrength = attackStrength;
-		}
-
-		public UnitType UnitType { get; }
+		public UnitType UnitType { get; } = type;
 		public int HitPoints { get; private set; } = 200;
-		public int AttackStrength { get; }
+		public int AttackStrength { get; } = attackStrength;
 		public bool IsAlive => HitPoints > 0;
-		public (int x, int y) Location { get; private set; }
+		public (int x, int y) Location { get; private set; } = location;
 
 		public void ReceiveAttack(int attackStrength) =>
 			HitPoints -= attackStrength;
@@ -102,7 +95,7 @@ public class Day_15_Original : IPuzzle
 			if (!moved)
 			{
 #pragma warning disable IDE0120 // Simplify LINQ expression
-				return space
+				return s_space
 					.SelectMany(r => r)
 					.OfType<Unit>()
 					.Where(u => u.UnitType != UnitType)
@@ -121,15 +114,15 @@ public class Day_15_Original : IPuzzle
 			if (dir == null)
 				return false;
 
-			if (space[dir.Value.y][dir.Value.x] is Unit u &&
+			if (s_space[dir.Value.y][dir.Value.x] is Unit u &&
 					u.IsAlive)
 			{
 				return true;
 			}
 
-			space[Location.y][Location.x] = new Square();
+			s_space[Location.y][Location.x] = new Square();
 			Location = dir.Value;
-			space[Location.y][Location.x] = this;
+			s_space[Location.y][Location.x] = this;
 			return true;
 		}
 
@@ -150,7 +143,7 @@ public class Day_15_Original : IPuzzle
 					continue;
 				_ = visited.Add(loc);
 
-				var s = space[loc.y][loc.x];
+				var s = s_space[loc.y][loc.x];
 				if (s is Wall) continue;
 				if (s is Unit u && u.IsAlive)
 				{
@@ -179,7 +172,7 @@ public class Day_15_Original : IPuzzle
 						(Location.x + 1, Location.y),
 						(Location.x, Location.y + 1),
 				}
-				.Select(l => space[l.y][l.x])
+				.Select(l => s_space[l.y][l.x])
 				.OfType<Unit>()
 				.Where(u => u.UnitType != UnitType)
 				.Where(u => u.IsAlive)

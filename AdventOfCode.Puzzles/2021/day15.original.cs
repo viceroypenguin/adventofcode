@@ -15,12 +15,12 @@ public class Day_15_Original : IPuzzle
 			destination);
 		var part1 = risk.ToString();
 
-		destination = (sideLength * 5 - 1, sideLength * 5 - 1);
-		int getRisk(int x, int y)
+		destination = ((sideLength * 5) - 1, (sideLength * 5) - 1);
+		int GetRisk(int x, int y)
 		{
-			var increase = y / sideLength + x / sideLength;
+			var increase = (y / sideLength) + (x / sideLength);
 			(x, y) = (x % sideLength, y % sideLength);
-			return (((map[y][x] - 1) + increase) % 9) + 1;
+			return ((map[y][x] - 1 + increase) % 9) + 1;
 		}
 
 		risk = SuperEnumerable.GetShortestPathCost<(int, int), int>(
@@ -28,7 +28,7 @@ public class Day_15_Original : IPuzzle
 			(p, c) => p.GetCartesianNeighbors()
 				.Where(q => q.y >= 0 && q.y <= destination.y
 					&& q.x >= 0 && q.x <= destination.x)
-				.Select(q => (q, c + getRisk(q.x, q.y))),
+				.Select(q => (q, c + GetRisk(q.x, q.y))),
 			destination);
 		var part2 = risk.ToString();
 

@@ -51,7 +51,7 @@ public class Day_23_Original : IPuzzle
 
 	private static int Step(int[] list, int idx, int maxValue)
 	{
-		static int decrementValue(int value, int maxValue) =>
+		static int DecrementValue(int value, int maxValue) =>
 			value == 1 ? maxValue : value - 1;
 
 		// track next three values
@@ -63,9 +63,9 @@ public class Day_23_Original : IPuzzle
 		list[idx] = list[v3];
 
 		// find target location
-		var dest = decrementValue(idx, maxValue);
+		var dest = DecrementValue(idx, maxValue);
 		while (v1 == dest || v2 == dest || v3 == dest)
-			dest = decrementValue(dest, maxValue);
+			dest = DecrementValue(dest, maxValue);
 
 		// insert three nodes into linked-list
 		list[v3] = list[dest];

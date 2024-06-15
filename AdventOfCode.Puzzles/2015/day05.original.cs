@@ -11,9 +11,9 @@ public class Day_05_Original : IPuzzle
 	private static bool HasPair(string str) =>
 		str.Lead(1, (f, s) => f == s).Any(b => b);
 
-	private static readonly string[] evilStrings = new string[] { "ab", "cd", "pq", "xy", };
+	private static readonly string[] s_evilStrings = ["ab", "cd", "pq", "xy",];
 	private static bool HasEvilStrings(string str) =>
-		evilStrings.Any(str.Contains);
+		s_evilStrings.Any(str.Contains);
 
 	private static bool IsNicePartA(string str) =>
 		!HasEvilStrings(str)

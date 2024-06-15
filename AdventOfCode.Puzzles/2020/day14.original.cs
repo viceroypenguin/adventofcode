@@ -33,15 +33,15 @@ public partial class Day_14_Original : IPuzzle
 				for (var i = 0; i < s.Length; i++)
 				{
 					if (s[i] == '0')
-						mask.and &= ~(1ul << 35 - i);
+						mask.and &= ~(1ul << (35 - i));
 					else if (s[i] == '1')
-						mask.or |= 1ul << 35 - i;
+						mask.or |= 1ul << (35 - i);
 				}
 			}
 			else
 			{
 				memory[int.Parse(m.Groups["memloc"].Value)] =
-					ulong.Parse(m.Groups["memval"].Value) & mask.and | mask.or;
+					(ulong.Parse(m.Groups["memval"].Value) & mask.and) | mask.or;
 			}
 		}
 
@@ -61,25 +61,25 @@ public partial class Day_14_Original : IPuzzle
 				for (var i = 0; i < s.Length; i++)
 				{
 					if (s[i] == 'X')
-						mask.fl |= 1ul << 35 - i;
+						mask.fl |= 1ul << (35 - i);
 					else if (s[i] == '1')
-						mask.or |= 1ul << 35 - i;
+						mask.or |= 1ul << (35 - i);
 				}
 			}
 			else
 			{
-				static IEnumerable<ulong> getValues(ulong baseValue, ulong fl)
+				static IEnumerable<ulong> GetValues(ulong baseValue, ulong fl)
 				{
 					var lowest = Bmi1.X64.ExtractLowestSetBit(fl);
 					if (lowest == 0) return SuperEnumerable.Return(baseValue);
 					fl &= ~lowest;
-					return getValues(baseValue, fl).Concat(
-						getValues(baseValue | lowest, fl));
+					return GetValues(baseValue, fl).Concat(
+						GetValues(baseValue | lowest, fl));
 				}
 
 				var baseLocation = (ulong.Parse(m.Groups["memloc"].Value) | mask.or) & ~mask.fl;
 				var value = ulong.Parse(m.Groups["memval"].Value);
-				foreach (var v in getValues(baseLocation, mask.fl))
+				foreach (var v in GetValues(baseLocation, mask.fl))
 					memory[v] = value;
 			}
 		}

@@ -27,19 +27,19 @@ public class Day_14_Original : IPuzzle
 			.ToList();
 
 		// run an insertion process
-		List<char> insert(List<char> polymer) =>
+		List<char> Insert(List<char> polymer) =>
 			polymer
 				// look at every pair of chars
 				// last char will be paired w/ a '\0'
 				.Lead(1, (a, b) =>
 				{
 					// if we're on the last char, just return the first char
-					if (b == default) return new[] { a, };
+					if (b == default) return [a,];
 					// find the replacement instruction
 					var (_, @new) = instructions
 						.FirstOrDefault(x => x.old[0] == a && x.old[1] == b);
 					// return the replacement, or just the first char if there isn't one
-					return @new ?? new[] { a, };
+					return @new ?? [a,];
 				})
 				// at this point, we have a bunch of two-char arrays
 				// flatten them back into a single long array
@@ -48,7 +48,7 @@ public class Day_14_Original : IPuzzle
 
 		// run the insertion ten times
 		for (var i = 0; i < 10; i++)
-			polymer = insert(polymer);
+			polymer = Insert(polymer);
 
 		var elements = polymer
 			// group the list by element
@@ -90,7 +90,7 @@ public class Day_14_Original : IPuzzle
 				});
 
 		// run an insertion process
-		List<(string key, long cnt)> insert(List<(string key, long cnt)> polymer) =>
+		List<(string key, long cnt)> Insert(List<(string key, long cnt)> polymer) =>
 			polymer
 				// each replacement will return multiple entries
 				// so flatten them back out to start with
@@ -109,7 +109,7 @@ public class Day_14_Original : IPuzzle
 
 		// run the process 40 times
 		for (var i = 0; i < 40; i++)
-			polymer = insert(polymer);
+			polymer = Insert(polymer);
 
 		var elements = polymer
 			// we're only going to count the first char of each

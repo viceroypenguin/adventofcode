@@ -73,6 +73,7 @@ public class Day_21_Original : IPuzzle
 				initial = RotateState(initial);
 				yield return initial;
 			}
+
 			initial = FlipState(initial);
 			yield return initial;
 			for (var i = 0; i < 3; i++)

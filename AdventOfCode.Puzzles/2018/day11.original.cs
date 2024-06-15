@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Puzzles._2018;
+namespace AdventOfCode.Puzzles._2018;
 
 [Puzzle(2018, 11, CodeType.Original)]
 public class Day_11_Original : IPuzzle
@@ -14,12 +14,12 @@ public class Day_11_Original : IPuzzle
 
 			for (var y = 1; y <= 300; y++)
 			{
-				var powerLevel = (rackId * y + serialNumber) * rackId;
-				cells[x, y] = (powerLevel % 1000) / 100 - 5;
+				var powerLevel = ((rackId * y) + serialNumber) * rackId;
+				cells[x, y] = ((powerLevel % 1000) / 100) - 5;
 			}
 		}
 
-		var part1 = 
+		var part1 =
 			(
 				from x in Enumerable.Range(1, 298)
 				from y in Enumerable.Range(1, 298)
@@ -32,7 +32,7 @@ public class Day_11_Original : IPuzzle
 			.First()
 			.ToString();
 
-		var part2 = 
+		var part2 =
 			(
 				from size in Enumerable.Range(1, 30)
 				from x in Enumerable.Range(1, 301 - size)

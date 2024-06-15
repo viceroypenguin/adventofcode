@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Reflection;
 using BenchmarkDotNet.Configs;
@@ -14,7 +14,7 @@ public class PuzzleRunner
 	private readonly MethodInfo _runMethod;
 	private readonly Type _benchmarkClass;
 
-	private static readonly Assembly[] assemblies =
+	private static readonly Assembly[] s_assemblies =
 	[
 		Assembly.GetAssembly(typeof(Puzzles._2015.Day_01_Original))!,
 		Assembly.GetAssembly(typeof(Puzzles._2016.Day_01_Original))!,
@@ -34,14 +34,14 @@ public class PuzzleRunner
 		_benchmarkClass = typeof(PuzzleBenchmarkRunner<>);
 	}
 
-	public IReadOnlyCollection<PuzzleModel> GetPuzzles() => _puzzles;
+	public IReadOnlyCollection<PuzzleModel> Puzzles => _puzzles;
 
 	public IEnumerable<PuzzleResult> RunPuzzles(IEnumerable<PuzzleModel> puzzles) =>
 		puzzles
 			.Select(puzzle =>
 			{
 				var method = _runMethod.MakeGenericMethod(puzzle.PuzzleType);
-				return (PuzzleResult)method.Invoke(null, new object[] { puzzle })!;
+				return (PuzzleResult)method.Invoke(null, [puzzle])!;
 			});
 
 	public Summary BenchmarkPuzzles(IEnumerable<PuzzleModel> puzzles)
@@ -66,7 +66,7 @@ public class PuzzleRunner
 
 	private static List<PuzzleModel> GetAllPuzzles()
 	{
-		var c = assemblies
+		var c = s_assemblies
 			.SelectMany(
 				assembly => assembly.GetTypes(),
 				(assembly, type) => new

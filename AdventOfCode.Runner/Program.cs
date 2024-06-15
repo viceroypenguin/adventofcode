@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 using AdventOfCode.Runner;
 using DocoptNet;
 using Spectre.Console;
@@ -9,6 +9,7 @@ var console = AnsiConsole.Create(new AnsiConsoleSettings());
 if (args.Length > 0)
 {
 	static int ShowHelp(string help) { Console.WriteLine(help); return 0; }
+
 	static int OnError(string error) { Console.Error.WriteLine(error); return 1; }
 
 	return ProgramArguments.CreateParser()
@@ -22,7 +23,7 @@ if (args.Length > 0)
 
 	int Main(ProgramArguments arguments)
 	{
-		var puzzles = runner.GetPuzzles().AsEnumerable();
+		var puzzles = runner.Puzzles.AsEnumerable();
 
 		if (arguments.OptOriginal)
 			puzzles = puzzles.Where(p => p.CodeType == CodeType.Original);
@@ -46,7 +47,8 @@ if (args.Length > 0)
 				.OrderBy(p => p.Year)
 				.ThenBy(p => p.Day)
 				.ThenBy(p => p.CodeType == CodeType.Original ? 0 : 1)
-				.ToList());
+				.ToList()
+			);
 		}
 
 		return 0;
@@ -62,7 +64,7 @@ else
 
 	console.Write(f);
 
-	var puzzles = runner.GetPuzzles();
+	var puzzles = runner.Puzzles;
 
 	var years = puzzles.Select(x => x.Year).Distinct().OrderBy(x => x).ToList();
 

@@ -16,6 +16,7 @@ public class Day_01_Fastest : IPuzzle
 				sum += c - '0';
 			last = c;
 		}
+
 		var partA = sum;
 
 		sum = 0;
@@ -24,6 +25,7 @@ public class Day_01_Fastest : IPuzzle
 			if (span[i] == span[j])
 				sum += span[i] - '0';
 		}
+
 		var partB = sum << 1;
 
 		return (partA.ToString(), partB.ToString());

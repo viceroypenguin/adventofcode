@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 
 namespace AdventOfCode.Puzzles._2019;
 
@@ -12,24 +12,24 @@ public class Day_15_Original : IPuzzle
 			.Select(long.Parse)
 			.ToArray();
 
-		pc = new IntCodeComputer(instructions);
+		_pc = new IntCodeComputer(instructions);
 
 		for (var i = 1; i <= 4; i++)
 			HandleDirection((0, 0), i, 1);
 
-		var part1 = map[oxygenLocation].distance.ToString();
+		var part1 = _map[_oxygenLocation].distance.ToString();
 
 		var queue = new Queue<((int x, int y) position, int distance)>();
-		queue.Enqueue((oxygenLocation, 0));
+		queue.Enqueue((_oxygenLocation, 0));
 
-		map[oxygenLocation] = (1, 0); // simplify type check below
+		_map[_oxygenLocation] = (1, 0); // simplify type check below
 		while (queue.Count != 0)
 		{
 			var (position, distance) = queue.Dequeue();
-			if (map[position].type != 1)
+			if (_map[position].type != 1)
 				continue;
 
-			map[position] = (3, distance);
+			_map[position] = (3, distance);
 
 			queue.Enqueue(((position.x, position.y - 1), distance + 1));
 			queue.Enqueue(((position.x, position.y + 1), distance + 1));
@@ -37,14 +37,14 @@ public class Day_15_Original : IPuzzle
 			queue.Enqueue(((position.x + 1, position.y), distance + 1));
 		}
 
-		var part2 = map.Values.Where(x => x.type == 3).Max(x => x.distance).ToString();
+		var part2 = _map.Values.Where(x => x.type == 3).Max(x => x.distance).ToString();
 		return (part1, part2);
 	}
 
-	private IntCodeComputer pc;
-	private readonly Dictionary<(int x, int y), (int type, int distance)> map =
+	private IntCodeComputer _pc;
+	private readonly Dictionary<(int x, int y), (int type, int distance)> _map =
 		new() { [(0, 0)] = (0, 0), };
-	private (int x, int y) oxygenLocation;
+	private (int x, int y) _oxygenLocation;
 
 	private void HandleDirection((int x, int y) position, int direction, int distance)
 	{
@@ -57,24 +57,24 @@ public class Day_15_Original : IPuzzle
 			_ => throw new UnreachableException(),
 		};
 
-		if (map.ContainsKey(newPosition))
+		if (_map.ContainsKey(newPosition))
 			return;
 
-		pc.Inputs.Enqueue(direction);
-		_ = pc.RunProgram();
-		var response = pc.Outputs.Dequeue();
-		map[newPosition] = ((int)response, distance);
+		_pc.Inputs.Enqueue(direction);
+		_ = _pc.RunProgram();
+		var response = _pc.Outputs.Dequeue();
+		_map[newPosition] = ((int)response, distance);
 		if (response == 0)
 			return;
 
 		if (response == 2)
-			oxygenLocation = newPosition;
+			_oxygenLocation = newPosition;
 
 		for (var i = 1; i <= 4; i++)
 			HandleDirection(newPosition, i, distance + 1);
 
-		pc.Inputs.Enqueue(direction switch { 1 => 2, 2 => 1, 3 => 4, 4 => 3, _ => throw new UnreachableException(), });
-		_ = pc.RunProgram();
-		_ = pc.Outputs.Dequeue();
+		_pc.Inputs.Enqueue(direction switch { 1 => 2, 2 => 1, 3 => 4, 4 => 3, _ => throw new UnreachableException(), });
+		_ = _pc.RunProgram();
+		_ = _pc.Outputs.Dequeue();
 	}
 }

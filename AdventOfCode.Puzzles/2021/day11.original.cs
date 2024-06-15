@@ -6,7 +6,7 @@ public class Day_11_Original : IPuzzle
 	public (string part1, string part2) Solve(PuzzleInput input)
 	{
 		// handle one step
-		int step(int[][] map)
+		int Step(int[][] map)
 		{
 			// count the flashes
 			var flashes = 0;
@@ -15,7 +15,7 @@ public class Day_11_Original : IPuzzle
 
 			// increment a cell, and if necessary
 			// remember to flash neighbors
-			void increment(int x, int y)
+			void Increment(int x, int y)
 			{
 				var l = ++map[y][x];
 				if (l == 10)
@@ -28,7 +28,7 @@ public class Day_11_Original : IPuzzle
 			// for every point, just increment
 			// don't handle flashes yet
 			foreach (var ((x, y), l) in map.GetMapPoints())
-				increment(x, y);
+				Increment(x, y);
 
 			// now, for all flash points, trigger 
 			// and increment neighbors; will recurse
@@ -37,13 +37,17 @@ public class Day_11_Original : IPuzzle
 			{
 				foreach (var (x, y) in flashPoints.Dequeue()
 						.GetCartesianAdjacent(map))
-					increment(x, y);
+				{
+					Increment(x, y);
+				}
 			}
 
 			// now everything is done, reset flashed values
 			foreach (var ((x, y), l) in map.GetMapPoints())
+			{
 				if (l >= 10)
 					map[y][x] = 0;
+			}
 
 			// how many flashes did we see?
 			return flashes;
@@ -51,11 +55,11 @@ public class Day_11_Original : IPuzzle
 
 		// get initial state
 		var map = input.Bytes.GetIntMap();
-		
+
 		// keep track of flashes over 100 steps
 		var flashes = 0;
 		for (var i = 0; i < 100; i++)
-			flashes += step(map);
+			flashes += Step(map);
 
 		var part1 = flashes.ToString();
 
@@ -67,7 +71,7 @@ public class Day_11_Original : IPuzzle
 		for (var i = 1; ; i++)
 		{
 			// run step
-			flashes = step(map);
+			flashes = Step(map);
 			// if entire map flashed...
 			if (flashes == mapSize)
 			{

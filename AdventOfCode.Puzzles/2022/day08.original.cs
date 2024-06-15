@@ -8,6 +8,7 @@ public partial class Day_08_Original : IPuzzle
 		var map = input.Bytes.GetIntMap();
 		var part1 = 0;
 		for (var y = 0; y < map.Length; y++)
+		{
 			for (var x = 0; x < map[y].Length; x++)
 			{
 				var height = map[y][x];
@@ -15,8 +16,10 @@ public partial class Day_08_Original : IPuzzle
 				// w
 				var visible = true;
 				for (var j = 0; visible && j < x; j++)
+				{
 					if (map[y][j] >= height)
 						visible = false;
+				}
 
 				if (visible)
 				{
@@ -27,8 +30,10 @@ public partial class Day_08_Original : IPuzzle
 				// e
 				visible = true;
 				for (var j = map[y].Length - 1; visible && x < j; j--)
+				{
 					if (map[y][j] >= height)
 						visible = false;
+				}
 
 				if (visible)
 				{
@@ -39,8 +44,10 @@ public partial class Day_08_Original : IPuzzle
 				// n
 				visible = true;
 				for (var j = 0; visible && j < y; j++)
+				{
 					if (map[j][x] >= height)
 						visible = false;
+				}
 
 				if (visible)
 				{
@@ -51,8 +58,10 @@ public partial class Day_08_Original : IPuzzle
 				// s
 				visible = true;
 				for (var j = map.Length - 1; visible && y < j; j--)
+				{
 					if (map[j][x] >= height)
 						visible = false;
+				}
 
 				if (visible)
 				{
@@ -60,9 +69,11 @@ public partial class Day_08_Original : IPuzzle
 					continue;
 				}
 			}
+		}
 
 		var part2 = 0;
 		for (var y = 0; y < map.Length; y++)
+		{
 			for (var x = 0; x < map[y].Length; x++)
 			{
 				var height = map[y][x];
@@ -114,6 +125,7 @@ public partial class Day_08_Original : IPuzzle
 				if (product > part2)
 					part2 = product;
 			}
+		}
 
 		return (part1.ToString(), part2.ToString());
 	}

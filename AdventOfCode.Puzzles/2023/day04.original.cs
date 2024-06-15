@@ -27,6 +27,7 @@ public partial class Day_04_Original : IPuzzle
 			for (int j = i + 1, n = 0; j < counts.Count && n < games[i]; j++, n++)
 				counts[j] += counts[i];
 		}
+
 		var part2 = counts.Sum();
 
 		return (part1.ToString(), part2.ToString());

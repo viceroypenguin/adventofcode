@@ -41,7 +41,8 @@ public class Day_06_Original : IPuzzle
 			{
 				return (
 					history.Count.ToString(),
-					(history.Count - oldInput.idx).ToString());
+					(history.Count - oldInput.idx).ToString()
+				);
 			}
 
 			history.Add(nums.ToArray());

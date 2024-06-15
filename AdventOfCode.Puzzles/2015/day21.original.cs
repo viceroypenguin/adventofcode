@@ -6,26 +6,32 @@ public partial class Day_21_Original : IPuzzle
 	public (string, string) Solve(PuzzleInput input)
 	{
 		var weapons = ParseItems(
-@"Dagger        8     4       0
-Shortsword   10     5       0
-Warhammer    25     6       0
-Longsword    40     7       0
-Greataxe     74     8       0");
+			"""
+			Dagger        8     4       0
+			Shortsword   10     5       0
+			Warhammer    25     6       0
+			Longsword    40     7       0
+			Greataxe     74     8       0
+			""");
 
 		var armor = ParseItems(
-@"Leather      13     0       1
-Chainmail    31     0       2
-Splintmail   53     0       3
-Bandedmail   75     0       4
-Platemail   102     0       5").Concat(new Item[] { null });
+			"""
+			Leather      13     0       1
+			Chainmail    31     0       2
+			Splintmail   53     0       3
+			Bandedmail   75     0       4
+			Platemail   102     0       5
+			""").Concat([null]);
 
 		var rings = ParseItems(
-@"Damage +1    25     1       0
-Damage +2    50     2       0
-Damage +3   100     3       0
-Defense +1   20     0       1
-Defense +2   40     0       2
-Defense +3   80     0       3").Concat(new Item[] { null });
+			"""
+			Damage +1    25     1       0
+			Damage +2    50     2       0
+			Damage +3   100     3       0
+			Defense +1   20     0       1
+			Defense +2   40     0       2
+			Defense +3   80     0       3
+			""").Concat([null]);
 
 		var stats = input.Lines;
 
@@ -87,10 +93,10 @@ Defense +3   80     0       3").Concat(new Item[] { null });
 	[GeneratedRegex("(.+)\\s+(\\d+)\\s+(\\d+)\\s+(\\d+)")]
 	private static partial Regex ParseRegex();
 
-	private static readonly char[] separator = ['\r', '\n'];
+	private static readonly char[] s_separator = ['\r', '\n'];
 
 	private static List<Item> ParseItems(string input) =>
-		input.Split(separator, StringSplitOptions.RemoveEmptyEntries)
+		input.Split(s_separator, StringSplitOptions.RemoveEmptyEntries)
 			.Select(s => ParseRegex().Match(s))
 			.Select(m => new Item()
 			{

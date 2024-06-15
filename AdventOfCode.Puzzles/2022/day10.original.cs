@@ -25,7 +25,9 @@ public partial class Day_10_Original : IPuzzle
 					sum += x * cycle;
 				}
 				else if (cycle % 40 == 21)
+				{
 					sum += x * (cycle - 1);
+				}
 
 				var (amt, _) = l.AsSpan()[5..].AtoI();
 				x += amt;
@@ -52,9 +54,13 @@ public partial class Day_10_Original : IPuzzle
 			screen[cycle / 40][cycle % 40] = c;
 
 			if (e.Current.ToString() == "noop")
+			{
 				e.MoveNext();
+			}
 			else if (!inAdd)
+			{
 				inAdd = true;
+			}
 			else
 			{
 				inAdd = false;

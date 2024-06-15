@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks.Dataflow;
-
-namespace AdventOfCode.Puzzles._2019;
+﻿namespace AdventOfCode.Puzzles._2019;
 
 [Puzzle(2019, 07, CodeType.Original)]
 public class Day_07_Original : IPuzzle

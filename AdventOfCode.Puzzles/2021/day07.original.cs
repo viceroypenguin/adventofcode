@@ -5,7 +5,9 @@ public class Day_2021_07_Original : IPuzzle
 {
 	public (string, string) Solve(PuzzleInput input)
 	{
-		var crabs = input.Text.Split(',').Select(int.Parse);
+		var crabs = input.Text.Split(',')
+			.Select(int.Parse)
+			.ToList();
 
 		var part1 =
 			Enumerable.Range(0, crabs.Max())

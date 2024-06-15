@@ -24,7 +24,7 @@ public class Day_18_Original : IPuzzle
 
 		private sealed class Cloner
 		{
-			private SnailfishNode clonerCurrent;
+			private SnailfishNode _clonerCurrent;
 			public SnailfishNode Clone(SnailfishNode node)
 			{
 				if (node == null)
@@ -35,12 +35,12 @@ public class Day_18_Original : IPuzzle
 					var clone = new SnailfishNode
 					{
 						Number = node.Number,
-						LeftNode = clonerCurrent,
+						LeftNode = _clonerCurrent,
 					};
 
-					if (clonerCurrent != null)
-						clonerCurrent.RightNode = clone;
-					clonerCurrent = clone;
+					if (_clonerCurrent != null)
+						_clonerCurrent.RightNode = clone;
+					_clonerCurrent = clone;
 
 					return clone;
 				}
@@ -82,17 +82,17 @@ public class Day_18_Original : IPuzzle
 
 	private sealed class SnailfishParser
 	{
-		private SnailfishNode parserCurrent;
+		private SnailfishNode _parserCurrent;
 		public (SnailfishNode node, int idx) ParseNode(ReadOnlySpan<char> txt)
 		{
 			var node = new SnailfishNode();
 
 			if (char.IsNumber(txt[0]))
 			{
-				node.LeftNode = parserCurrent;
-				if (parserCurrent != null)
-					parserCurrent.RightNode = node;
-				parserCurrent = node;
+				node.LeftNode = _parserCurrent;
+				if (_parserCurrent != null)
+					_parserCurrent.RightNode = node;
+				_parserCurrent = node;
 
 				node.Number = txt[0] - '0';
 				return (node, 1);
@@ -141,6 +141,7 @@ public class Day_18_Original : IPuzzle
 			node.LeftNode.RightNode = node;
 			node.LeftNode.Number += left;
 		}
+
 		node.LeftChild = null;
 
 		node.RightNode = node.RightChild.RightNode;
@@ -149,6 +150,7 @@ public class Day_18_Original : IPuzzle
 			node.RightNode.LeftNode = node;
 			node.RightNode.Number += right;
 		}
+
 		node.RightChild = null;
 	}
 

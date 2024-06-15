@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Puzzles._2023;
+namespace AdventOfCode.Puzzles._2023;
 
 [Puzzle(2023, 11, CodeType.Fastest)]
 public sealed partial class Day_11_Fastest : IPuzzle
@@ -36,7 +36,7 @@ public sealed partial class Day_11_Fastest : IPuzzle
 				galaxies++;
 				cols[x + n]++;
 				x += n + 1;
-				span = span.Slice(n + 1);
+				span = span[(n + 1)..];
 			}
 
 			yDistanceP1 += galaxies;

@@ -73,6 +73,7 @@ public class Day_07_Original : IPuzzle
 				if (strs.Any(s => s.Contains(bab)))
 					return true;
 			}
+
 			return false;
 		}
 

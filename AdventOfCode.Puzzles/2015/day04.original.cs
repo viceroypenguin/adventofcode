@@ -14,6 +14,7 @@ public class Day_04_Original : IPuzzle
 			if ((bytes[i / 2] & mask) != 0x00)
 				return false;
 		}
+
 		return true;
 	}
 

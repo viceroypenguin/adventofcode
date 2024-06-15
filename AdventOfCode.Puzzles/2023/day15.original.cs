@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Puzzles._2023;
+namespace AdventOfCode.Puzzles._2023;
 
 [Puzzle(2023, 15, CodeType.Original)]
 public partial class Day_15_Original : IPuzzle
@@ -9,7 +9,7 @@ public partial class Day_15_Original : IPuzzle
 		public int Length { get; set; }
 	}
 
-	private static readonly char[] separator = ['-', '='];
+	private static readonly char[] s_separator = ['-', '='];
 
 	public (string, string) Solve(PuzzleInput input)
 	{
@@ -24,9 +24,9 @@ public partial class Day_15_Original : IPuzzle
 		var boxes = new Dictionary<int, List<Lens>>();
 		foreach (var i in instructions)
 		{
-			var label = i.Split(separator)[0];
+			var label = i.Split(s_separator)[0];
 			var hash = label.Aggregate(0, Hash);
-			var list = boxes.GetOrAdd(hash, _ => new());
+			var list = boxes.GetOrAdd(hash, _ => []);
 
 			if (i[^1] == '-')
 			{
@@ -46,7 +46,7 @@ public partial class Day_15_Original : IPuzzle
 		var part2 = boxes
 			.Select(kvp => kvp.Value
 				.Index()
-				.Select(x => (long)(x.index + 1) * x.item.Length)
+				.Select(x => (long)(x.Index + 1) * x.Item.Length)
 				.Sum() * (kvp.Key + 1))
 			.Sum();
 

@@ -44,7 +44,9 @@ public class Day_24_Original : IPuzzle
 				}
 			}
 			else
+			{
 				stack.Push((i, c));
+			}
 		}
 
 		var part1 = string.Join("", highDigits);

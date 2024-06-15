@@ -37,9 +37,10 @@ public class Day_08_Fastest : IPuzzle
 				neg = !neg;
 				c = span[++idx];
 			}
+
 			var num = c - '0';
 			while ((c = span[++idx]) >= '0')
-				num = num * 10 + c - '0';
+				num = (num * 10) + c - '0';
 			if (neg) num = -num;
 
 			// src
@@ -61,6 +62,7 @@ public class Day_08_Fastest : IPuzzle
 				neg = !neg;
 				c = span[++idx];
 			}
+
 			var chk = c - '0';
 			while ((c = span[++idx]) >= '0')
 				chk = (chk * 10) + c - '0';

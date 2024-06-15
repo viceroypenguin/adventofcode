@@ -10,12 +10,12 @@ public class Day_24_Fastest : IPuzzle
 		public bool Used { get; set; }
 	}
 
-	private List<Component>[] lookupByA;
-	private List<Component>[] lookupByB;
+	private List<Component>[] _lookupByA;
+	private List<Component>[] _lookupByB;
 
-	private int maxStrength = -1;
-	private int longestPath = -1;
-	private int maxLongestPath = -1;
+	private int _maxStrength = -1;
+	private int _longestPath = -1;
+	private int _maxLongestPath = -1;
 
 	public (string, string) Solve(PuzzleInput input)
 	{
@@ -59,46 +59,47 @@ public class Day_24_Fastest : IPuzzle
 		for (var i = 0; i < ports.Count; i++)
 		{
 			var p = ports[i];
-			var arr = byA[p.PortA] = byA[p.PortA] ?? new List<Component>();
+			var arr = byA[p.PortA] = byA[p.PortA] ?? [];
 			arr.Add(p);
 
 			if (p.PortA != p.PortB)
 			{
-				arr = byB[p.PortB] = byB[p.PortB] ?? new List<Component>();
+				arr = byB[p.PortB] = byB[p.PortB] ?? [];
 				arr.Add(p);
 			}
 		}
-		lookupByA = byA;
-		lookupByB = byB;
+
+		_lookupByA = byA;
+		_lookupByB = byB;
 
 		CalculateStrength(0, 0, 0);
 
 		return (
-			maxStrength.ToString(),
-			maxLongestPath.ToString());
+			_maxStrength.ToString(),
+			_maxLongestPath.ToString());
 	}
 
 	private void CalculateStrength(int port, int curStrength, int curLength)
 	{
-		if (curStrength > maxStrength)
+		if (curStrength > _maxStrength)
 		{
-			maxStrength = curStrength;
+			_maxStrength = curStrength;
 		}
 
-		if (curLength > longestPath)
+		if (curLength > _longestPath)
 		{
-			maxLongestPath = curStrength;
-			longestPath = curLength;
+			_maxLongestPath = curStrength;
+			_longestPath = curLength;
 		}
-		else if (curLength == longestPath && curStrength > maxLongestPath)
+		else if (curLength == _longestPath && curStrength > _maxLongestPath)
 		{
-			maxLongestPath = curStrength;
+			_maxLongestPath = curStrength;
 		}
 
 		curLength++;
 		curStrength += port;
 
-		var arr = lookupByA[port];
+		var arr = _lookupByA[port];
 		for (var i = 0; i < arr?.Count; i++)
 		{
 			var p = arr[i];
@@ -110,7 +111,7 @@ public class Day_24_Fastest : IPuzzle
 			}
 		}
 
-		arr = lookupByB[port];
+		arr = _lookupByB[port];
 		for (var i = 0; i < arr?.Count; i++)
 		{
 			var p = arr[i];

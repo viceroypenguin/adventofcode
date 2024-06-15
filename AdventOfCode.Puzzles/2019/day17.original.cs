@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 
 namespace AdventOfCode.Puzzles._2019;
 
@@ -24,9 +24,10 @@ public class Day_17_Original : IPuzzle
 		var intersections = Enumerable.Range(1, map.Length - 2)
 			.SelectMany(y => Enumerable.Range(1, map[0].Length - 2)
 				.Where(x => map[y][x] == '#')
-				.Where(x => (map[y][x - 1] == '#') && (x < map[0].Length && map[y][x + 1] == '#'))
-				.Where(x => (map[y - 1][x] == '#') && (y < map.Length && map[y + 1][x] == '#'))
-				.Select(x => (x, y)))
+				.Where(x => (map[y][x - 1] == '#') && x < map[0].Length && map[y][x + 1] == '#')
+				.Where(x => (map[y - 1][x] == '#') && y < map.Length && map[y + 1][x] == '#')
+				.Select(x => (x, y))
+			)
 			.ToList();
 		var part1 = intersections
 			.Sum(p => p.x * p.y)
@@ -34,7 +35,7 @@ public class Day_17_Original : IPuzzle
 
 		instructions[0] = 2;
 		pc = new IntCodeComputer(instructions);
-		foreach (var b in Encoding.ASCII.GetBytes(script).Where(b => b != '\r'))
+		foreach (var b in Encoding.ASCII.GetBytes(Script).Where(b => b != '\r'))
 			pc.Inputs.Enqueue(b);
 
 		pc.RunProgram();
@@ -43,11 +44,12 @@ public class Day_17_Original : IPuzzle
 		return (part1, part2);
 	}
 
-	const string script =
-@"A,C,A,B,C,B,A,C,A,B
-R,6,L,10,R,8,R,8
-R,12,L,10,R,6,L,10
-R,12,L,8,L,10
-n
-";
+	private const string Script =
+		"""
+		A,C,A,B,C,B,A,C,A,B
+		R,6,L,10,R,8,R,8
+		R,12,L,10,R,6,L,10
+		R,12,L,8,L,10
+		n
+		""";
 }

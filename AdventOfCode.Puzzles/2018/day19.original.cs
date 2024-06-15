@@ -123,7 +123,9 @@ public class Day_19_Original : IPuzzle
 							Expression.Goto(labels[i + 2])));
 					}
 					else
+					{
 						throw new InvalidOperationException("Dunno what to do here yet.");
+					}
 				}
 			}
 			else if (aluOpcodes.TryGetValue(inst.inst, out var value))

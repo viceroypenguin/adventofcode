@@ -5,12 +5,12 @@ namespace AdventOfCode.Puzzles._2015;
 [Puzzle(2015, 11, CodeType.Original)]
 public class Day_11_Original : IPuzzle
 {
-	private static readonly int[] invalidChars =
-	{
+	private static readonly int[] s_invalidChars =
+	[
 		'i' - 'a',
 		'o' - 'a',
 		'l' - 'a',
-	};
+	];
 
 	private static ImmutableStack<int> IncrementPassword(ImmutableStack<int> password)
 	{
@@ -18,7 +18,7 @@ public class Day_11_Original : IPuzzle
 		var tail = password.Pop();
 
 		return chr == 25 ? IncrementPassword(tail).Push(0) :
-			invalidChars.Contains(chr + 1) ? tail.Push(chr + 2) :
+			s_invalidChars.Contains(chr + 1) ? tail.Push(chr + 2) :
 			tail.Push(chr + 1);
 	}
 

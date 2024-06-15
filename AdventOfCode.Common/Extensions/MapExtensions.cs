@@ -1,5 +1,3 @@
-﻿using SuperLinq;
-
 namespace AdventOfCode.Common.Extensions;
 
 public static class MapExtensions
@@ -34,7 +32,7 @@ public static class MapExtensions
 		&& p.y.Between(0, map.Count - 1);
 
 	public static readonly IReadOnlyList<(int x, int y)> Neighbors =
-		new (int x, int y)[] { (0, 1), (0, -1), (1, 0), (-1, 0), };
+		[(0, 1), (0, -1), (1, 0), (-1, 0),];
 	public static IEnumerable<(int x, int y)> GetCartesianNeighbors(this (int x, int y) p) =>
 		Neighbors.Select(d => (p.x + d.x, p.y + d.y));
 
@@ -45,7 +43,7 @@ public static class MapExtensions
 			.Where(q => q.IsValid(map));
 
 	public static readonly IReadOnlyList<(int x, int y)> Adjacent =
-		new (int x, int y)[] { (-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1), };
+		[(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1),];
 	public static IEnumerable<(int x, int y)> GetCartesianAdjacent(this (int x, int y) p) =>
 		Adjacent.Select(d => (p.x + d.x, p.y + d.y));
 
@@ -72,12 +70,12 @@ public static class MapExtensions
 			// we've been here before
 			if (seen.Contains((x, y)))
 				// don't go anywhere
-				return Array.Empty<(int x, int y)>();
+				return [];
 
 			// on another type of border
 			if (!canVisitPoint(q, map[y][x]))
 				// don't go anywhere
-				return Array.Empty<(int x, int y)>();
+				return [];
 
 			// now we've been here for the first time
 			// remember this and increase size of the basin

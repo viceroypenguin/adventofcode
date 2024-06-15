@@ -25,7 +25,7 @@ public class Day_13_Original : IPuzzle
 			.ToList();
 
 		// a single fold instruction:
-		static List<(int x, int y)> fold(List<(int x, int y)> dots, char dir, int coord) =>
+		static List<(int x, int y)> Fold(List<(int x, int y)> dots, char dir, int coord) =>
 			// which coordinate
 			dir == 'x'
 				// x-coord folds over the x-axis
@@ -43,15 +43,15 @@ public class Day_13_Original : IPuzzle
 					.ToList();
 
 		// fold once, count the distinct points, and dump it
-		var part1 = fold(dots, folds[0].dir, folds[0].coord).Count.ToString();
+		var part1 = Fold(dots, folds[0].dir, folds[0].coord).Count.ToString();
 
 		// follow every fold instruction
 		foreach (var (dir, coord) in folds)
-			dots = fold(dots, dir, coord);
+			dots = Fold(dots, dir, coord);
 
 		// build an empty character map for display
 		var map = Enumerable.Range(0, dots.Max(x => x.y + 1))
-			.Select(x => Enumerable.Repeat(' ', dots.Max(x => x.x+ 1)).ToArray())
+			.Select(x => Enumerable.Repeat(' ', dots.Max(x => x.x + 1)).ToArray())
 			.ToArray();
 
 		// set each remaining dot on the display

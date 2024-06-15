@@ -18,7 +18,7 @@ public sealed partial class Day_07_Fastest : IPuzzle
 		{
 			if (line.Length == 0) break;
 
-			(var bid, _) = line.Slice(6).AtoI();
+			(var bid, _) = line[6..].AtoI();
 			var p1 = (ulong)bid;
 			var p2 = p1;
 

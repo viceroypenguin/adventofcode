@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics;
 using System.Runtime.Intrinsics.X86;
@@ -53,6 +53,7 @@ public class Day_11_Fastest : IPuzzle
 
 			i += Vector256<byte>.Count;
 		}
+
 		return 0;
 	}
 
@@ -71,6 +72,7 @@ public class Day_11_Fastest : IPuzzle
 			for (var mx = width + 2; mx < simdMapWidth; mx++)
 				map[my + mx] = Floor;
 		}
+
 		for (; my < map.Length; my++)
 			map[my] = Floor;
 	}
@@ -92,7 +94,7 @@ public class Day_11_Fastest : IPuzzle
 		var threshold = Vector256.Create((byte)3);
 		do
 		{
-			for (int i = 0, my = simdMapWidth * 2 + 2; i < height; i++, my += simdMapWidth)
+			for (int i = 0, my = (simdMapWidth * 2) + 2; i < height; i++, my += simdMapWidth)
 			{
 				for (var x = 0; x < lanes; x += Vector256<byte>.Count)
 				{
@@ -152,7 +154,7 @@ public class Day_11_Fastest : IPuzzle
 		var threshold = Vector256.Create((byte)4);
 		do
 		{
-			for (int i = 0, my = simdMapWidth * 2 + 2; i < height; i++, my += simdMapWidth)
+			for (int i = 0, my = (simdMapWidth * 2) + 2; i < height; i++, my += simdMapWidth)
 			{
 				for (var x = 0; x < lanes; x += Vector256<byte>.Count)
 				{
@@ -199,7 +201,7 @@ public class Day_11_Fastest : IPuzzle
 	{
 		var maxGap = -1;
 
-		for (int y = 0, my = simdMapWidth * 2 + 2; y < height; y++, my += simdMapWidth)
+		for (int y = 0, my = (simdMapWidth * 2) + 2; y < height; y++, my += simdMapWidth)
 		{
 			// horizontal gaps
 			for (int x = 1, mx = my; x < lanes; x++, mx++)
@@ -212,6 +214,7 @@ public class Day_11_Fastest : IPuzzle
 				{
 					x++; mx++;
 				}
+
 				if (x < lanes && mx - g1 > 2)
 					gaps[++maxGap] = (g1, mx);
 			}
@@ -231,11 +234,13 @@ public class Day_11_Fastest : IPuzzle
 				if (map[ffx] != Floor) continue;
 
 				for (int y1 = y + 3, f1 = ffx + simdMapWidth; y1 < height; y1++, f1 += simdMapWidth)
+				{
 					if (map[f1] != Floor)
 					{
 						gaps[++maxGap] = (mx, f1);
 						break;
 					}
+				}
 			}
 
 			// forward diagonal gaps
@@ -301,7 +306,7 @@ public class Day_11_Fastest : IPuzzle
 	{
 		var changed = false;
 		var floor = Vector256.Create(Floor);
-		for (int i = 0, my = simdMapWidth * 2 + 2; i < height; i++, my += simdMapWidth)
+		for (int i = 0, my = (simdMapWidth * 2) + 2; i < height; i++, my += simdMapWidth)
 		{
 			for (var x = 0; x < lanes; x += Vector256<byte>.Count)
 			{
@@ -334,7 +339,7 @@ public class Day_11_Fastest : IPuzzle
 	{
 		var count = 0;
 		var occupied = Vector256.Create(Occupied);
-		for (int i = 0, my = simdMapWidth * 2 + 2; i < height; i++, my += simdMapWidth)
+		for (int i = 0, my = (simdMapWidth * 2) + 2; i < height; i++, my += simdMapWidth)
 		{
 			for (var x = 0; x < lanes; x += Vector256<byte>.Count)
 			{

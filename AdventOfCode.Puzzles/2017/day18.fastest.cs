@@ -116,6 +116,7 @@ public class Day_18_Fastest : IPuzzle
 					{
 						return snd;
 					}
+
 					break;
 				}
 

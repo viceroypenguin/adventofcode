@@ -18,6 +18,7 @@ public class Day_02_Original : IPuzzle
 		var part1 = pc.Memory[0].ToString();
 
 		for (var noun = 0; ; noun++)
+		{
 			for (var verb = 0; verb < 100; verb++)
 			{
 				instructions[1] = noun;
@@ -28,9 +29,10 @@ public class Day_02_Original : IPuzzle
 
 				if (pc.Memory[0] == 19690720)
 				{
-					var part2 = (noun * 100 + verb).ToString();
+					var part2 = ((noun * 100) + verb).ToString();
 					return (part1, part2);
 				}
 			}
+		}
 	}
 }

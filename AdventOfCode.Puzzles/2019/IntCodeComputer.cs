@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace AdventOfCode.Puzzles._2019;
 
@@ -12,22 +13,22 @@ public enum ProgramStatus
 
 internal sealed class IntCodeComputer
 {
-	private static readonly int[] PowersOfTen = new[] { 1, 10, 100, 1000, 10000, 100000, };
+	private static readonly int[] s_powersOfTen = [1, 10, 100, 1000, 10000, 100000];
 
 	[MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
 	private ref long GetParameter(int parameter)
 	{
-		ref var value = ref memory[ip + parameter];
-		var mode = GetParameterMode(memory[ip], parameter);
+		ref var value = ref _memory[_ip + parameter];
+		var mode = GetParameterMode(_memory[_ip], parameter);
 		return
 			ref mode == 1 ? ref value :
-			ref mode == 2 ? ref memory[value + relativeBase] :
-			ref memory[value];
+			ref mode == 2 ? ref _memory[value + _relativeBase] :
+			ref _memory[value];
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
 	private static long GetParameterMode(long opCode, int parameter) =>
-		opCode / PowersOfTen[parameter + 1] % 10;
+		opCode / s_powersOfTen[parameter + 1] % 10;
 
 	public IntCodeComputer(
 		long[] instructions,
@@ -35,39 +36,39 @@ internal sealed class IntCodeComputer
 		Queue<long> outputs = default,
 		int size = 64 * 1024)
 	{
-		memory = new long[size];
-		instructions.CopyTo(memory, 0);
+		_memory = new long[size];
+		instructions.CopyTo(_memory, 0);
 
 		Inputs = inputs ?? new();
 		Outputs = outputs ?? new();
 
-		ip = 0;
-		relativeBase = 0L;
+		_ip = 0;
+		_relativeBase = 0L;
 	}
 
-	public IReadOnlyList<long> Memory => memory;
+	public IReadOnlyList<long> Memory => _memory;
 	public Queue<long> Inputs { get; }
 	public Queue<long> Outputs { get; }
 
 	public ProgramStatus ProgramStatus { get; private set; } = ProgramStatus.WaitingToRun;
 
-	private readonly long[] memory;
-	private int ip;
-	private long relativeBase;
+	private readonly long[] _memory;
+	private int _ip;
+	private long _relativeBase;
 
 	public ProgramStatus RunProgram()
 	{
 		ProgramStatus = ProgramStatus.Running;
 
-		while (ip < memory.Length && memory[ip] != 99)
+		while (_ip < _memory.Length && _memory[_ip] != 99)
 		{
-			switch (memory[ip] % 100)
+			switch (_memory[_ip] % 100)
 			{
 				case 1: DoAddInstruction(); break;
 				case 2: DoMulInstruction(); break;
-				case 3: 
-					if (!DoInputInstruction()) 
-						return ProgramStatus = ProgramStatus.WaitingForInput; 
+				case 3:
+					if (!DoInputInstruction())
+						return ProgramStatus = ProgramStatus.WaitingForInput;
 					break;
 				case 4: DoOutputInstruction(); break;
 				case 5: DoJnzInstruction(); break;
@@ -76,8 +77,10 @@ internal sealed class IntCodeComputer
 				case 8: DoSetEInstruction(); break;
 				case 9: DoAdjustBaseInstruction(); break;
 				case 99: return ProgramStatus.Completed;
+				default: throw new UnreachableException();
 			}
 		}
+
 		return ProgramStatus = ProgramStatus.Completed;
 	}
 
@@ -86,7 +89,7 @@ internal sealed class IntCodeComputer
 		var num1 = GetParameter(1);
 		var num2 = GetParameter(2);
 		GetParameter(3) = num1 + num2;
-		ip += 4;
+		_ip += 4;
 	}
 
 	private void DoMulInstruction()
@@ -94,7 +97,7 @@ internal sealed class IntCodeComputer
 		var num1 = GetParameter(1);
 		var num2 = GetParameter(2);
 		GetParameter(3) = num1 * num2;
-		ip += 4;
+		_ip += 4;
 	}
 
 	private bool DoInputInstruction()
@@ -103,28 +106,28 @@ internal sealed class IntCodeComputer
 			return false;
 		var value = Inputs.Dequeue();
 		GetParameter(1) = value;
-		ip += 2;
+		_ip += 2;
 		return true;
 	}
 
 	private void DoOutputInstruction()
 	{
 		Outputs.Enqueue(GetParameter(1));
-		ip += 2;
+		_ip += 2;
 	}
 
 	private void DoJnzInstruction()
 	{
 		var num1 = GetParameter(1);
 		var num2 = GetParameter(2);
-		ip = num1 == 0 ? ip + 3 : (int)num2;
+		_ip = num1 == 0 ? _ip + 3 : (int)num2;
 	}
 
 	private void DoJzInstruction()
 	{
 		var num1 = GetParameter(1);
 		var num2 = GetParameter(2);
-		ip = num1 != 0 ? ip + 3 : (int)num2;
+		_ip = num1 != 0 ? _ip + 3 : (int)num2;
 	}
 
 	private void DoSetLtInstruction()
@@ -132,7 +135,7 @@ internal sealed class IntCodeComputer
 		var num1 = GetParameter(1);
 		var num2 = GetParameter(2);
 		GetParameter(3) = num1 < num2 ? 1 : 0;
-		ip += 4;
+		_ip += 4;
 	}
 
 	private void DoSetEInstruction()
@@ -140,12 +143,12 @@ internal sealed class IntCodeComputer
 		var num1 = GetParameter(1);
 		var num2 = GetParameter(2);
 		GetParameter(3) = num1 == num2 ? 1 : 0;
-		ip += 4;
+		_ip += 4;
 	}
 
 	private void DoAdjustBaseInstruction()
 	{
-		relativeBase += GetParameter(1);
-		ip += 2;
+		_relativeBase += GetParameter(1);
+		_ip += 2;
 	}
 }

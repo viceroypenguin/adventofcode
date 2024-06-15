@@ -9,12 +9,16 @@ public class Day_04_Original : IPuzzle
 
 		var passports = input.Lines
 			.Segment(string.IsNullOrWhiteSpace)
-			.Select(l => l.SelectMany(s => s.Split())
+			.Select(l => l
+				.SelectMany(s => s.Split())
 				.Where(s => !string.IsNullOrWhiteSpace(s))
 				.Select(s => s.Split(':'))
 				.ToDictionary(
 					a => a[0],
-					a => a[1]));
+					a => a[1]
+				)
+			)
+			.ToList();
 
 		var part1 = passports
 			.Count(p => required.All(r => p.ContainsKey(r)))

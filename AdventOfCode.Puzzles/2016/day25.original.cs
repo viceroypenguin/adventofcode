@@ -124,12 +124,14 @@ public partial class Day_25_Original : IPuzzle
 							is "0101010101"
 							or "1010101010";
 					}
+
 					break;
 				}
 
 				default:
 					throw new UnreachableException();
 			}
+
 			ip++;
 		}
 

@@ -34,7 +34,7 @@ public class Day_06_Original : IPuzzle
 				o =>
 				{
 					if (visited.ContainsKey(o.orbiter))
-						return Array.Empty<(string, int)>();
+						return [];
 
 					visited[o.orbiter] = o.steps;
 

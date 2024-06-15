@@ -19,44 +19,87 @@ public class Day_11_Fastest : IPuzzle
 				switch (dir)
 				{
 					case 0x6e: // n
-						if (n < 0) n++;
+						if (n < 0)
+						{
+							n++;
+						}
 						else if (nw < 0 || ne < 0) { ne++; nw++; }
-						else n++;
+						else
+						{
+							n++;
+						}
+
 						break;
 
 					case 0x73: // s
-						if (n > 0) n--;
+						if (n > 0)
+						{
+							n--;
+						}
 						else if (nw > 0 || ne > 0) { nw--; ne--; }
-						else n--;
+						else
+						{
+							n--;
+						}
+
 						break;
 
 					case 0x6e65: //ne
-						if (ne < 0) ne++;
+						if (ne < 0)
+						{
+							ne++;
+						}
 						else if (n < 0 || nw > 0) { nw--; n++; }
-						else ne++;
+						else
+						{
+							ne++;
+						}
+
 						break;
 
 					case 0x6e77: //nw
-						if (nw < 0) nw++;
+						if (nw < 0)
+						{
+							nw++;
+						}
 						else if (n < 0 || ne > 0) { ne--; n++; }
-						else nw++;
+						else
+						{
+							nw++;
+						}
+
 						break;
 
 					case 0x7377: //sw
-						if (ne > 0) ne--;
+						if (ne > 0)
+						{
+							ne--;
+						}
 						else if (n > 0 || nw < 0) { nw++; n--; }
-						else ne--;
+						else
+						{
+							ne--;
+						}
+
 						break;
 
 					case 0x7365: //se
-						if (nw > 0) nw--;
+						if (nw > 0)
+						{
+							nw--;
+						}
 						else if (n > 0 || ne < 0) { ne++; n--; }
-						else nw--;
+						else
+						{
+							nw--;
+						}
+
 						break;
 
 					default:
 						throw new UnreachableException();
 				}
+
 				max = Math.Max(max, Math.Abs(nw) + Math.Abs(n) + Math.Abs(ne));
 				dir = 0;
 			}

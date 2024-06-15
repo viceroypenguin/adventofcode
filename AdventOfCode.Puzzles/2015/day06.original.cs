@@ -14,11 +14,11 @@ public partial class Day_06_Original : IPuzzle
 
 	private struct Action
 	{
-		public Command Command;
-		public int StartX;
-		public int StartY;
-		public int EndX;
-		public int EndY;
+		public Command Command { get; set; }
+		public int StartX { get; set; }
+		public int StartY { get; set; }
+		public int EndX { get; set; }
+		public int EndY { get; set; }
 	}
 
 	[GeneratedRegex("((?<on>turn on)|(?<off>turn off)|(?<toggle>toggle)) (?<startX>\\d+),(?<startY>\\d+) through (?<endX>\\d+),(?<endY>\\d+)", RegexOptions.ExplicitCapture | RegexOptions.Compiled)]
@@ -37,6 +37,7 @@ public partial class Day_06_Original : IPuzzle
 					m.Groups["off"].Success ? Command.TurnOff :
 					m.Groups["toggle"].Success ? Command.Toggle :
 					throw new InvalidOperationException(),
+
 				StartX = int.Parse(m.Groups["startX"].Value),
 				StartY = int.Parse(m.Groups["startY"].Value),
 				EndX = int.Parse(m.Groups["endX"].Value),

@@ -21,12 +21,16 @@ public class Day_13_Original : IPuzzle
 
 		long numBlocks = 0, score = 0;
 		for (var y = 0; y < screenHeight; y++)
+		{
 			for (var x = 0; x < screenWidth; x++)
-				if (instructions[screenOffset + y * screenWidth + x] == 2)
+			{
+				if (instructions[screenOffset + (y * screenWidth) + x] == 2)
 				{
 					numBlocks++;
-					score += instructions[scoreOffset + (((x * screenHeight + y) * magicA + magicB) % screenSize)];
+					score += instructions[scoreOffset + (((((x * screenHeight) + y) * magicA) + magicB) % screenSize)];
 				}
+			}
+		}
 
 		return (
 			numBlocks.ToString(),

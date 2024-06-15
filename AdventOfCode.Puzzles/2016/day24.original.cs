@@ -30,7 +30,7 @@ public class Day_24_Original : IPuzzle
 					.Select(q => (q, c + 1)));
 
 			foreach (var (dest, q) in numberPoints)
-				distanceMap.GetOrAdd(item - '0', _ => new()).Add((dest - '0', costs[q].cost));
+				distanceMap.GetOrAdd(item - '0', _ => []).Add((dest - '0', costs[q].cost));
 		}
 
 		return distanceMap;

@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Puzzles._2023;
+namespace AdventOfCode.Puzzles._2023;
 
 [Puzzle(2023, 14, CodeType.Original)]
 public partial class Day_14_Original : IPuzzle
@@ -16,7 +16,7 @@ public partial class Day_14_Original : IPuzzle
 		var map2 = input.Bytes.GetMap();
 
 		var i = 0;
-		for (i = 0; i < Cycles; i++)
+		for (; i < Cycles; i++)
 		{
 			TiltMap(map);
 			TiltMap(map2);
@@ -133,6 +133,7 @@ public partial class Day_14_Original : IPuzzle
 					sum += map.Length - y;
 			}
 		}
+
 		return sum;
 	}
 

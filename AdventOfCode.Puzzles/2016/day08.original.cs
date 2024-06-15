@@ -15,10 +15,10 @@ public partial class Day_08_Original : IPuzzle
 				.Select(str => regex.Match(str))
 				.ToList();
 
-		var SCREEN_ROWS = 6;
-		var SCREEN_COLS = 50;
+		const int ScreenRows = 6;
+		const int ScreenCols = 50;
 
-		var screen = new bool[SCREEN_COLS, SCREEN_ROWS];
+		var screen = new bool[ScreenCols, ScreenRows];
 
 		foreach (var i in instructions)
 		{
@@ -38,10 +38,10 @@ public partial class Day_08_Original : IPuzzle
 				var x = Convert.ToInt32(i.Groups["col_num"].Value);
 				var shift = Convert.ToInt32(i.Groups["col_amt"].Value);
 
-				var col = new bool[SCREEN_ROWS];
-				for (var y = 0; y < SCREEN_ROWS; y++)
-					col[(y + shift) % SCREEN_ROWS] = screen[x, y];
-				for (var y = 0; y < SCREEN_ROWS; y++)
+				var col = new bool[ScreenRows];
+				for (var y = 0; y < ScreenRows; y++)
+					col[(y + shift) % ScreenRows] = screen[x, y];
+				for (var y = 0; y < ScreenRows; y++)
 					screen[x, y] = col[y];
 			}
 			else if (i.Groups["rotate_row"].Success)
@@ -49,10 +49,10 @@ public partial class Day_08_Original : IPuzzle
 				var y = Convert.ToInt32(i.Groups["row_num"].Value);
 				var shift = Convert.ToInt32(i.Groups["row_amt"].Value);
 
-				var row = new bool[SCREEN_COLS];
-				for (var x = 0; x < SCREEN_COLS; x++)
-					row[(x + shift) % SCREEN_COLS] = screen[x, y];
-				for (var x = 0; x < SCREEN_COLS; x++)
+				var row = new bool[ScreenCols];
+				for (var x = 0; x < ScreenCols; x++)
+					row[(x + shift) % ScreenCols] = screen[x, y];
+				for (var x = 0; x < ScreenCols; x++)
 					screen[x, y] = row[x];
 			}
 			else
@@ -65,8 +65,8 @@ public partial class Day_08_Original : IPuzzle
 
 		var partB = string.Join(
 			Environment.NewLine,
-			Enumerable.Range(0, SCREEN_ROWS).Select(y =>
-				string.Join("", Enumerable.Range(0, SCREEN_COLS).Select(x =>
+			Enumerable.Range(0, ScreenRows).Select(y =>
+				string.Join("", Enumerable.Range(0, ScreenCols).Select(x =>
 					screen[x, y] ? '#' : ' '))));
 
 		return (partA, partB);

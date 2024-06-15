@@ -16,11 +16,16 @@ public class Day_01_Fastest : IPuzzle
 				if (elf > numbers[2])
 					numbers[2] = elf;
 				if (elf > numbers[1])
+				{
 					(numbers[1], numbers[2]) =
 						(elf, numbers[1]);
+				}
+
 				if (elf > numbers[0])
+				{
 					(numbers[0], numbers[1]) =
 						(elf, numbers[0]);
+				}
 
 				elf = 0;
 				i++;

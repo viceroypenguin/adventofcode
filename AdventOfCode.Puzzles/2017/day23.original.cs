@@ -82,6 +82,7 @@ public partial class Day_23_Original : IPuzzle
 						ip += (int)GetValue(instruction.Source);
 						continue;
 					}
+
 					break;
 				}
 

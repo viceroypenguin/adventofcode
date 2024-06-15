@@ -5,22 +5,22 @@ public partial class Day_24_Original : IPuzzle
 {
 	private sealed class Group
 	{
-		public int Id;
-		public int LiveUnits;
-		public int HitPoints;
-		public string DamageType;
-		public int AttackDamage;
-		public int Initiative;
-		public IReadOnlyList<string> Weaknesses;
-		public IReadOnlyList<string> Immunities;
+		public int Id { get; init; }
+		public int LiveUnits { get; set; }
+		public int HitPoints { get; init; }
+		public string DamageType { get; init; }
+		public int AttackDamage { get; init; }
+		public int Initiative { get; init; }
+		public IReadOnlyList<string> Weaknesses { get; init; }
+		public IReadOnlyList<string> Immunities { get; init; }
 
 		public int EffectivePower => LiveUnits * AttackDamage;
 	}
 
 	private sealed class Army
 	{
-		public string Name;
-		public List<Group> Groups;
+		public string Name { get; init; }
+		public List<Group> Groups { get; init; } = [];
 	}
 
 	[GeneratedRegex(@"^(?<u>\d+) units each with (?<hp>\d+) hit points (\(((; )?immune to ((, )?(?<immune>\w+))+|(; )?weak to ((, )?(?<weak>\w+))+)+\) )?with an attack that does (?<dmg>\d+) (?<type>\w+) damage at initiative (?<init>\d+)$", RegexOptions.ExplicitCapture | RegexOptions.Compiled)]
@@ -36,7 +36,7 @@ public partial class Day_24_Original : IPuzzle
 		var armies = data
 			.Select((g, j) =>
 			{
-				var name = g.First().TrimEnd(':');
+				var name = g[0].TrimEnd(':');
 
 				var groups = g.Skip(1)
 					.Where(s => !string.IsNullOrWhiteSpace(s))

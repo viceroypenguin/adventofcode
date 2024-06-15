@@ -3,7 +3,7 @@
 [Puzzle(2022, 11, CodeType.Original)]
 public partial class Day_11_Original : IPuzzle
 {
-	private static readonly Func<long, long>[] Operations =
+	private static readonly Func<long, long>[] s_operations =
 	[
 		i => i * 3,
 		i => i + 8,
@@ -20,12 +20,12 @@ public partial class Day_11_Original : IPuzzle
 		var monkeys = input.Lines.Split(string.Empty)
 			.Select(m =>
 			{
-				var id = int.Parse(m.First()[7..].Replace(":", ""));
+				var id = int.Parse(m[0][7..].Replace(":", ""));
 				var items = m.ElementAt(1)[18..]
 					.Split(", ")
 					.Select(long.Parse)
 					.ToList();
-				var operation = Operations[id];
+				var operation = s_operations[id];
 				var test = int.Parse(m.ElementAt(3)[21..]);
 				var ifTrue = int.Parse(m.ElementAt(4)[29..]);
 				var ifFalse = int.Parse(m.ElementAt(5)[30..]);
@@ -67,12 +67,12 @@ public partial class Day_11_Original : IPuzzle
 		monkeys = input.Lines.Split(string.Empty)
 			.Select(m =>
 			{
-				var id = int.Parse(m.First()[7..].Replace(":", ""));
+				var id = int.Parse(m[0][7..].Replace(":", ""));
 				var items = m.ElementAt(1)[18..]
 					.Split(", ")
 					.Select(long.Parse)
 					.ToList();
-				var operation = Operations[id];
+				var operation = s_operations[id];
 				var test = int.Parse(m.ElementAt(3)[21..]);
 				var ifTrue = int.Parse(m.ElementAt(4)[29..]);
 				var ifFalse = int.Parse(m.ElementAt(5)[30..]);

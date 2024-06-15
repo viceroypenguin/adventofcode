@@ -6,8 +6,8 @@ public partial class Day_11_Original : IPuzzle
 	public (string, string) Solve(PuzzleInput input)
 	{
 		var blankRows = input.Lines.Index()
-			.Where(x => x.item.All(b => b == '.'))
-			.Select(x => x.index)
+			.Where(x => x.Item.All(b => b == '.'))
+			.Select(x => x.Index)
 			.ToList();
 
 		var blankCols = Enumerable.Range(0, input.Lines[0].Length)

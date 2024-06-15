@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode.Puzzles._2020;
+using System.Diagnostics;
+
+namespace AdventOfCode.Puzzles._2020;
 
 [Puzzle(2020, 8, CodeType.Original)]
 public partial class Day_08_Original : IPuzzle
@@ -36,7 +38,9 @@ public partial class Day_08_Original : IPuzzle
 				return (part1, part2);
 			}
 			else
+			{
 				instructions[i] = orig;
+			}
 		}
 	}
 
@@ -58,6 +62,9 @@ public partial class Day_08_Original : IPuzzle
 				case ("jmp", var value):
 					ip += value;
 					break;
+
+				default:
+					throw new UnreachableException();
 			}
 
 			if (ip >= program.Length)

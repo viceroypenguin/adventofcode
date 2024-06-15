@@ -1,18 +1,18 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 
 namespace AdventOfCode.Puzzles._2022;
 
 [Puzzle(2022, 22, CodeType.Original)]
 public partial class Day_22_Original : IPuzzle
 {
-	private static readonly char[] anyOf = ['.', '#',];
+	private static readonly char[] s_anyOf = ['.', '#',];
 
 	public (string part1, string part2) Solve(PuzzleInput input)
 	{
 		var xRanges = input.Lines.Take(..^2)
 			.Select(l => (
-				from: l.IndexOfAny(anyOf),
-				to: l.LastIndexOfAny(anyOf)))
+				from: l.IndexOfAny(s_anyOf),
+				to: l.LastIndexOfAny(s_anyOf)))
 			.ToList();
 		var yRanges = Enumerable.Range(0, input.Lines[0].Length)
 			.Select(x => (
@@ -54,6 +54,7 @@ public partial class Day_22_Original : IPuzzle
 							break;
 						pos = (newX, pos.y, pos.face);
 					}
+
 					break;
 				}
 
@@ -68,6 +69,7 @@ public partial class Day_22_Original : IPuzzle
 							break;
 						pos = (pos.x, newY, pos.face);
 					}
+
 					break;
 				}
 
@@ -82,6 +84,7 @@ public partial class Day_22_Original : IPuzzle
 							break;
 						pos = (newX, pos.y, pos.face);
 					}
+
 					break;
 				}
 
@@ -96,6 +99,7 @@ public partial class Day_22_Original : IPuzzle
 							break;
 						pos = (pos.x, newY, pos.face);
 					}
+
 					break;
 				}
 
@@ -190,6 +194,7 @@ public partial class Day_22_Original : IPuzzle
 						next = (x, y, f);
 					}
 				}
+
 				break;
 			}
 
@@ -220,6 +225,7 @@ public partial class Day_22_Original : IPuzzle
 						next = (x, y, f);
 					}
 				}
+
 				break;
 			}
 
@@ -257,6 +263,7 @@ public partial class Day_22_Original : IPuzzle
 						next = (x, y, f);
 					}
 				}
+
 				break;
 			}
 
@@ -287,6 +294,7 @@ public partial class Day_22_Original : IPuzzle
 						next = (x, y, f);
 					}
 				}
+
 				break;
 			}
 

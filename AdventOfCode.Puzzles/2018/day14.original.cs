@@ -6,14 +6,14 @@ public class Day_14_Original : IPuzzle
 	public (string, string) Solve(PuzzleInput input)
 	{
 		var marbles = new LinkedList<int>();
-		LinkedListNode<int> prevNode(LinkedListNode<int> node) =>
+		LinkedListNode<int> PrevNode(LinkedListNode<int> node) =>
 			node.Previous ?? marbles.Last;
-		LinkedListNode<int> nextNode(LinkedListNode<int> node) =>
+		LinkedListNode<int> NextNode(LinkedListNode<int> node) =>
 			node.Next ?? marbles.First;
-		LinkedListNode<int> nextNodeCount(LinkedListNode<int> node, int count)
+		LinkedListNode<int> NextNodeCount(LinkedListNode<int> node, int count)
 		{
 			for (var i = 0; i < count; i++)
-				node = nextNode(node);
+				node = NextNode(node);
 			return node;
 		}
 
@@ -35,14 +35,14 @@ public class Day_14_Original : IPuzzle
 		AddNumber(37);
 
 		var elf1 = marbles.First;
-		var elf2 = nextNode(elf1);
+		var elf2 = NextNode(elf1);
 
 		void DoTick()
 		{
 			AddNumber(elf1.Value + elf2.Value);
 
-			elf1 = nextNodeCount(elf1, elf1.Value + 1);
-			elf2 = nextNodeCount(elf2, elf2.Value + 1);
+			elf1 = NextNodeCount(elf1, elf1.Value + 1);
+			elf2 = NextNodeCount(elf2, elf2.Value + 1);
 		}
 
 		var numRecipes = Convert.ToInt32(input.Text);
@@ -54,7 +54,7 @@ public class Day_14_Original : IPuzzle
 				SuperEnumerable
 					.Generate(
 						marbles.First,
-						n => nextNode(n))
+						NextNode)
 					.Skip(numRecipes)
 					.Take(10)
 					.Select(n => n.Value));
@@ -66,7 +66,7 @@ public class Day_14_Original : IPuzzle
 		marbles.Clear();
 		AddNumber(37);
 		elf1 = marbles.First;
-		elf2 = nextNode(elf1);
+		elf2 = NextNode(elf1);
 
 		var part2 = 0;
 		while (true)
@@ -76,7 +76,7 @@ public class Day_14_Original : IPuzzle
 			if (SuperEnumerable
 				.Generate(
 					marbles.Last,
-					n => prevNode(n))
+					PrevNode)
 				.Take(matchList.Count)
 				.Select(n => n.Value)
 				.SequenceEqual(matchList))
@@ -88,7 +88,7 @@ public class Day_14_Original : IPuzzle
 			if (SuperEnumerable
 				.Generate(
 					marbles.Last,
-					n => prevNode(n))
+					PrevNode)
 				.Skip(1)
 				.Take(matchList.Count)
 				.Select(n => n.Value)

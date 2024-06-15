@@ -31,7 +31,7 @@ public class Day_20_Original : IPuzzle
 			_ => throw new UnreachableException(),
 		};
 
-	private static readonly string[] Nessie =
+	private static readonly string[] s_nessie =
 	[
 		"                  # ",
 		"#    ##    ##    ###",
@@ -78,7 +78,7 @@ public class Day_20_Original : IPuzzle
 
 		for (var i = 0; ; i++)
 		{
-			var nessie = GetRotatedMap(Nessie.Select(s => s.ToList()).ToList(), i)
+			var nessie = GetRotatedMap(s_nessie.Select(s => s.ToList()).ToList(), i)
 				.Select(x => x.ToList()).ToList();
 			var loc = FindNessie(map, nessie, (0, 0));
 			if (loc == default) continue;
@@ -125,13 +125,14 @@ public class Day_20_Original : IPuzzle
 				r |= set << i;
 				i++;
 			}
+
 			return (f, r);
 		}
 	}
 
 	private void BuildGrid()
 	{
-		_stack = new List<(int, int)>();
+		_stack = [];
 		foreach (var tile in _tiles.Values)
 		{
 			for (var o = 0; o < 8; o++)

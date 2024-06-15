@@ -70,6 +70,7 @@ public class Day_07_Original : IPuzzle
 					timedSteps.Add(step.after, stepTime + step.after[0] - 'A' + 1);
 					workers--;
 				}
+
 				_ = queue.Remove(step);
 			}
 

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System;
 
 namespace AdventOfCode.Puzzles._2015;
 

@@ -28,8 +28,8 @@ public class Day_10_Original : IPuzzle
 
 		var sequences = differences
 			.Segment((cur, prev, _) => cur != prev)
-			.Where(x => x.First() == 1)
-			.Select(x => x.Count() switch
+			.Where(x => x[0] == 1)
+			.Select(x => x.Count switch
 			{
 				1 => 1,
 				2 => 2,

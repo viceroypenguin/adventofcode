@@ -32,6 +32,7 @@ public class Day_25_Original : IPuzzle
 			value = (value * sn) % 20201227;
 			i++;
 		}
+
 		return i;
 	}
 

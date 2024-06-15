@@ -24,29 +24,16 @@ public static class ProjectionEqualityComparer
 	public static IEqualityComparer<T> Create<T>(Func<T?, T?, bool> equalityFunction, Func<T, int> hashFunction) =>
 		new ProjectionEqualityComparerImpl<T>(equalityFunction, hashFunction);
 
-	private sealed class ProjectionEqualityComparerImpl<T> : EqualityComparer<T>
+	/// <summary>
+	/// Creates a new instance of an equality comparer using the provided functions
+	/// </summary>
+	/// <param name="equalityFunction">The equality function</param>
+	/// <param name="hashFunction">The hash function</param>
+	private sealed class ProjectionEqualityComparerImpl<T>(
+		Func<T?, T?, bool> equalityFunction,
+		Func<T, int> hashFunction
+	) : EqualityComparer<T>
 	{
-		/// <summary>
-		/// Type specific equality function
-		/// </summary>
-		private readonly Func<T?, T?, bool> equalityFunction;
-
-		/// <summary>
-		/// Type specific hash function
-		/// </summary>
-		private readonly Func<T, int> hashFunction;
-
-		/// <summary>
-		/// Creates a new instance of an equality comparer using the provided functions
-		/// </summary>
-		/// <param name="equalityFunction">The equality function</param>
-		/// <param name="hashFunction">The hash function</param>
-		public ProjectionEqualityComparerImpl(Func<T?, T?, bool> equalityFunction, Func<T, int> hashFunction)
-		{
-			this.equalityFunction = equalityFunction ?? throw new ArgumentNullException(nameof(equalityFunction));
-			this.hashFunction = hashFunction ?? throw new ArgumentNullException(nameof(hashFunction));
-		}
-
 		/// <inheritdoc/>
 		public override bool Equals(T? x, T? y) => equalityFunction(x, y);
 

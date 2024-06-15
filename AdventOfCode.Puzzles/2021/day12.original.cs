@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 
 namespace AdventOfCode.Puzzles._2021;
 
@@ -37,7 +37,7 @@ public class Day_12_Original : IPuzzle
 						|| !l.visited.Contains(e))
 					.Select(e => (
 						e,
-						l.visitedTwice || (char.IsLower(e[0]) && l.visited.Contains(e)), 
+						l.visitedTwice || (char.IsLower(e[0]) && l.visited.Contains(e)),
 						char.IsLower(e[0]) ? l.visited.Add(e) : l.visited)))
 			.Where(e => e.cur == "end")
 			.Count();

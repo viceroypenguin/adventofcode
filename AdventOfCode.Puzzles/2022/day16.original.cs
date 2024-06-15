@@ -61,6 +61,7 @@ public partial class Day_16_Original : IPuzzle
 				distanceMap[(key, kvp.Key)] = kvp.Value.cost;
 			}
 		}
+
 		return distanceMap;
 	}
 

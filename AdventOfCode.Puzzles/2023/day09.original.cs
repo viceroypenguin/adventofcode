@@ -6,7 +6,11 @@ public partial class Day_09_Original : IPuzzle
 	public (string, string) Solve(PuzzleInput input)
 	{
 		var longs = input.Lines
-			.Select(l => l.Split().Select(long.Parse).ToList());
+			.Select(l => l.Split()
+				.Select(long.Parse)
+				.ToList()
+			)
+			.ToList();
 
 		var part1 = longs
 			.Select(l => l[^1] + GetNextValue(l))
@@ -36,6 +40,7 @@ public partial class Day_09_Original : IPuzzle
 		var differences = ints.Window(2)
 			.Select(w => w[1] - w[0])
 			.ToList();
+
 		if (differences.All(d => d == 0))
 			return 0;
 

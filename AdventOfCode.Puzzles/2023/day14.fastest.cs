@@ -1,4 +1,4 @@
-﻿using System.Runtime.InteropServices;
+using System.Runtime.InteropServices;
 
 namespace AdventOfCode.Puzzles._2023;
 
@@ -184,9 +184,10 @@ public sealed partial class Day_14_Fastest : IPuzzle
 		while (map.Length > 0)
 		{
 			count += map[..width].Count((byte)'O') * y;
-			map = map.Slice(width);
+			map = map[width..];
 			y--;
 		}
+
 		return count;
 	}
 }

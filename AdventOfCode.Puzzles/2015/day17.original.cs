@@ -24,8 +24,10 @@ public class Day_17_Original : IPuzzle
 			var sum = 0;
 			var bitstream = new BitArray(new[] { cnt });
 			foreach (var _ in bitstream.OfType<bool>().Select((b, i) => new { b, i }))
+			{
 				if (_.b)
 					sum += containers[_.i];
+			}
 
 			if (sum == total)
 			{

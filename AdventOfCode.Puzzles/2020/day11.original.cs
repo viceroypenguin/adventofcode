@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode.Puzzles._2020;
+using System.Diagnostics;
+
+namespace AdventOfCode.Puzzles._2020;
 
 [Puzzle(2020, 11, CodeType.Original)]
 public class Day_11_Original : IPuzzle
@@ -28,11 +30,12 @@ public class Day_11_Original : IPuzzle
 		return map.Count(c => c == '#').ToString();
 	}
 
-	private static readonly (int yadj, int xadj)[] dirs = { (-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1), };
+	private static readonly (int yadj, int xadj)[] s_dirs = [(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1),];
 	private static string RunStep(string map, int width, bool immediate)
 	{
 		Span<char> newMap = stackalloc char[map.Length];
 		for (var y = 0; y < map.Length; y += width + 1)
+		{
 			for (var x = 0; x < width + 1; x++)
 			{
 				if (map[y + x] == '.')
@@ -40,6 +43,7 @@ public class Day_11_Original : IPuzzle
 					newMap[y + x] = '.';
 					continue;
 				}
+
 				if (map[y + x] == '\n')
 				{
 					newMap[y + x] = '\n';
@@ -48,7 +52,7 @@ public class Day_11_Original : IPuzzle
 
 				var cnt = 0;
 
-				foreach (var (yadj, xadj) in dirs)
+				foreach (var (yadj, xadj) in s_dirs)
 				{
 					int _y = y, _x = x;
 
@@ -81,6 +85,7 @@ public class Day_11_Original : IPuzzle
 					(var c, _, _) => c,
 				};
 			}
+		}
 
 		return new string(newMap);
 	}

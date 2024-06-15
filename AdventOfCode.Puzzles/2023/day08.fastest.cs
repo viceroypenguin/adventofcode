@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics;
 using System.Runtime.Intrinsics.X86;
@@ -13,9 +13,9 @@ public sealed partial class Day_08_Fastest : IPuzzle
 	{
 		var span = input.Span;
 
-		var instructions = span.Slice(0, span.IndexOf((byte)'\n'));
+		var instructions = span[..span.IndexOf((byte)'\n')];
 		var insLength = instructions.Length;
-		span = span.Slice(insLength + 2);
+		span = span[(insLength + 2)..];
 
 		var mapLength = span.Count((byte)'\n');
 		Span<(int from, int idx, int left, int right)> map =
@@ -27,8 +27,8 @@ public sealed partial class Day_08_Fastest : IPuzzle
 				break;
 
 			var from = MemoryMarshal.Cast<byte, int>(l)[0] & 0x00_ff_ff_ff;
-			var left = MemoryMarshal.Cast<byte, int>(l.Slice(7))[0] & 0x00_ff_ff_ff;
-			var right = MemoryMarshal.Cast<byte, int>(l.Slice(12))[0] & 0x00_ff_ff_ff;
+			var left = MemoryMarshal.Cast<byte, int>(l[7..])[0] & 0x00_ff_ff_ff;
+			var right = MemoryMarshal.Cast<byte, int>(l[12..])[0] & 0x00_ff_ff_ff;
 
 			map[i] = (from, i, left, right);
 			i++;

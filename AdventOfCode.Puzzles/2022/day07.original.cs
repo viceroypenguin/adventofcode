@@ -10,7 +10,7 @@ public partial class Day_07_Original : IPuzzle
 
 		foreach (var l in input.Lines)
 		{
-			if (l.Equals("$ cd .."))
+			if (l is "$ cd ..")
 			{
 				var previousSlash = cwd.LastIndexOf('/', cwd.Length - 2) + 1;
 				var name = cwd[previousSlash..^1];
@@ -27,14 +27,14 @@ public partial class Day_07_Original : IPuzzle
 			}
 			else if (l.StartsWith("dir"))
 			{
-				dirs.GetOrAdd(cwd, _ => new())[l[4..]] = 0;
+				dirs.GetOrAdd(cwd, _ => [])[l[4..]] = 0;
 			}
 			else if (!l.StartsWith("$ ls"))
 			{
 				var size = int.Parse(l.Split()[0]);
 				var name = l.Split()[1];
 
-				dirs.GetOrAdd(cwd, _ => new())[name] = size;
+				dirs.GetOrAdd(cwd, _ => [])[name] = size;
 			}
 		}
 

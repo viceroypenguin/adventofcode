@@ -1,4 +1,4 @@
-﻿using System.Numerics;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 
 namespace AdventOfCode.Puzzles._2017;
@@ -10,20 +10,29 @@ public class Day_16_Fastest : IPuzzle
 	{
 		var span = input.Span;
 
-		const ulong identity = 0xfedcba9876543210UL;
-		ulong swapRotate = identity, permute = identity;
+		const ulong Identity = 0xfedcba9876543210UL;
+		ulong swapRotate = Identity, permute = Identity;
 
 		byte command = 0;
 		int a = 0, b = 0;
 		foreach (var c in span)
 		{
-			if (c > 'p') command = c;
+			if (c > 'p')
+			{
+				command = c;
+			}
 			// p could be command or number
 			// both other commands use numbers, 
 			// so resetting command is ok
 			else if (c == 'p') { command = c; a = 15; }
-			else if (c >= 'a') a = c - 'a';
-			else if (c >= '0') a = (a * 10) + c - '0';
+			else if (c >= 'a')
+			{
+				a = c - 'a';
+			}
+			else if (c >= '0')
+			{
+				a = (a * 10) + c - '0';
+			}
 			else if (c == '/') { b = a; a = 0; }
 			else if (c is (byte)',' or (byte)'\n')
 			{
@@ -42,7 +51,7 @@ public class Day_16_Fastest : IPuzzle
 
 		var partA = Format(Compose(permute, swapRotate));
 
-		ulong swapRotateB = identity, permuteB = identity;
+		ulong swapRotateB = Identity, permuteB = Identity;
 		for (long n = 1_000_000_000; n != 0; n >>= 1)
 		{
 			if ((n & 0x1) != 0)
@@ -50,6 +59,7 @@ public class Day_16_Fastest : IPuzzle
 				swapRotateB = Compose(swapRotateB, swapRotate);
 				permuteB = Compose(permuteB, permute);
 			}
+
 			swapRotate = Compose(swapRotate, swapRotate);
 			permute = Compose(permute, permute);
 		}

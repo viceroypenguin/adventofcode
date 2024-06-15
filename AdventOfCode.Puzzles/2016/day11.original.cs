@@ -39,29 +39,30 @@ public class Day_11_Original : IPuzzle
 
 	private struct State : IEquatable<State>
 	{
-		public Devices[] Floors;
-		public int ElevatorFloor;
-		public int StepCount;
+		public Devices[] Floors { get; set; }
+		public int ElevatorFloor { get; set; }
+		public int StepCount { get; set; }
 
-		public override bool Equals(object other)
+		public override readonly bool Equals(object other)
 		{
 			return Equals((State)other);
 		}
 
-		public bool Equals(State s2) =>
+		public readonly bool Equals(State s2) =>
 			Floors[0] == s2.Floors[0]
 			&& Floors[1] == s2.Floors[1]
 			&& Floors[2] == s2.Floors[2]
 			&& Floors[3] == s2.Floors[3]
 			&& ElevatorFloor == s2.ElevatorFloor;
 
-		public override int GetHashCode() =>
+		public override readonly int GetHashCode() =>
 			HashCode.Combine(
 				Floors[0],
 				Floors[1],
 				Floors[2],
 				Floors[3],
-				ElevatorFloor);
+				ElevatorFloor
+			);
 	}
 
 	public static bool IsValidState(Devices d)
@@ -90,13 +91,13 @@ public class Day_11_Original : IPuzzle
 	{
 		var initialState = new State
 		{
-			Floors = new Devices[]
-			{
+			Floors =
+			[
 				firstFloor,
 				Devices.ThuliumGenerator | Devices.RutheniumGenerator | Devices.RutheniumMicrochip | Devices.CuriumGenerator | Devices.CuriumMicrochip,
 				Devices.ThuliumMicrochip,
 				0,
-			},
+			],
 			ElevatorFloor = 0,
 			StepCount = 0,
 		};
@@ -110,8 +111,8 @@ public class Day_11_Original : IPuzzle
 				&& s.Floors[3] != 0);
 	}
 
-	private static readonly Devices[] IndividualDevices = new[]
-	{
+	private static readonly Devices[] s_individualDevices =
+	[
 		Devices.StrontiumGenerator,
 		Devices.StrontiumMicrochip,
 		Devices.PlutoniumGenerator,
@@ -126,16 +127,16 @@ public class Day_11_Original : IPuzzle
 		Devices.EleriumMicrochip,
 		Devices.DilithiumGenerator,
 		Devices.DilithiumMicrochip,
-	};
+	];
 
 	private static IEnumerable<(State s, int cost)> GetNextStates(State s, int cost)
 	{
 		var floor = s.ElevatorFloor;
 		var currentDevices = s.Floors[floor];
 
-		for (var deviceAidx = 0; deviceAidx < IndividualDevices.Length; deviceAidx++)
+		for (var deviceAidx = 0; deviceAidx < s_individualDevices.Length; deviceAidx++)
 		{
-			var deviceA = IndividualDevices[deviceAidx];
+			var deviceA = s_individualDevices[deviceAidx];
 			if ((currentDevices & deviceA) == deviceA)
 			{
 				{
@@ -178,9 +179,9 @@ public class Day_11_Original : IPuzzle
 					}
 				}
 
-				for (var deviceBidx = deviceAidx + 1; deviceBidx < IndividualDevices.Length; deviceBidx++)
+				for (var deviceBidx = deviceAidx + 1; deviceBidx < s_individualDevices.Length; deviceBidx++)
 				{
-					var deviceB = IndividualDevices[deviceBidx];
+					var deviceB = s_individualDevices[deviceBidx];
 					if ((currentDevices & deviceB) == deviceB)
 					{
 						var newCurrentFloor = currentDevices & ~deviceA & ~deviceB;

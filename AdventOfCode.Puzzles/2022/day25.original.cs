@@ -26,6 +26,7 @@ public class Day_25_Original : IPuzzle
 				value += scale * n;
 				scale *= 5;
 			}
+
 			return value;
 		}
 

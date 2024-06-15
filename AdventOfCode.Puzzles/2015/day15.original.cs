@@ -26,7 +26,7 @@ public partial class Day_15_Original : IPuzzle
 			})
 			.ToList();
 
-		bool validCalories(IEnumerable<int> qtys) => qtys
+		bool ValidCalories(IEnumerable<int> qtys) => qtys
 			.Zip(
 				ingredients,
 				(q, i) => new { q, i })
@@ -35,7 +35,7 @@ public partial class Day_15_Original : IPuzzle
 				(calories, _) => calories + (_.q * _.i.calories),
 				calories => calories == totalCalories);
 
-		int scoreFunc(IEnumerable<int> qtys) => qtys
+		int ScoreFunc(IEnumerable<int> qtys) => qtys
 			.Zip(
 				ingredients,
 				(q, i) => new { q, i })
@@ -60,7 +60,7 @@ public partial class Day_15_Original : IPuzzle
 		var max500Score = 0;
 		var maxRawScore = 0;
 
-		bool getNextValue()
+		bool GetNextValue()
 		{
 			var i = 0;
 			do
@@ -87,12 +87,12 @@ public partial class Day_15_Original : IPuzzle
 
 		// full space search.  terrible, but few parameters so brute force works
 		// don't want to write full optimizing engine
-		while (getNextValue())
+		while (GetNextValue())
 		{
-			var score = scoreFunc(currValue);
+			var score = ScoreFunc(currValue);
 			maxRawScore = Math.Max(maxRawScore, score);
 
-			if (validCalories(currValue))
+			if (ValidCalories(currValue))
 				max500Score = Math.Max(max500Score, score);
 		}
 

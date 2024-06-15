@@ -17,7 +17,7 @@ public class Day_2021_09_Original : IPuzzle
 
 		// take the value at each point, add one, and sum them
 		var part1 = lowPoints
-			.Select(p => (p.item - (byte)'0') + 1)
+			.Select(p => p.item - (byte)'0' + 1)
 			.Sum()
 			.ToString();
 

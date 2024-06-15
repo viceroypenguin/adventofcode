@@ -99,7 +99,7 @@ public class Day_16_Original : IPuzzle
 		return (part1, part2);
 	}
 
-	public enum PacketType : uint
+	public enum PacketType
 	{
 		Sum = 0,
 		Product = 1,
@@ -116,7 +116,7 @@ public class Day_16_Original : IPuzzle
 		public uint Version { get; set; }
 		public PacketType Type { get; set; }
 		public ulong Value { get; set; }
-		public IReadOnlyList<Packet> Children { get; set; } = Array.Empty<Packet>();
+		public IReadOnlyList<Packet> Children { get; set; } = [];
 
 		public int GetVersionSum() =>
 			(int)Version + Children.Sum(c => c.GetVersionSum());

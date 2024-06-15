@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-namespace AdventOfCode.Puzzles._2017;
+﻿namespace AdventOfCode.Puzzles._2017;
 
 [Puzzle(2017, 09, CodeType.Original)]
 public class Day_09_Original : IPuzzle
@@ -15,7 +13,7 @@ public class Day_09_Original : IPuzzle
 				? default
 				: str[index++];
 
-		int parseGarbage()
+		int ParseGarbage()
 		{
 			var cnt = 0;
 			while (true)
@@ -49,7 +47,7 @@ public class Day_09_Original : IPuzzle
 						return x;
 
 					case '<':
-						x.garbage += parseGarbage();
+						x.garbage += ParseGarbage();
 						break;
 
 					case '{':

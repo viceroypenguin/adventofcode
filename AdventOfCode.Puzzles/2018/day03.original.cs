@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Puzzles._2018;
+namespace AdventOfCode.Puzzles._2018;
 
 [Puzzle(2018, 03, CodeType.Original)]
 public partial class Day_03_Original : IPuzzle
@@ -10,8 +10,8 @@ public partial class Day_03_Original : IPuzzle
 	{
 		var regex = ClaimsRegex();
 
-		static List<int> dGetOrAdd(Dictionary<(int x, int y), List<int>> d, (int x, int y) key) => 
-			d.TryGetValue(key, out var l) ? l : (d[key] = new List<int>());
+		static List<int> GetOrAdd(Dictionary<(int x, int y), List<int>> d, (int x, int y) key) =>
+			d.TryGetValue(key, out var l) ? l : (d[key] = []);
 
 		var claims = input.Lines
 			.Select(c => regex.Match(c))
@@ -27,9 +27,13 @@ public partial class Day_03_Original : IPuzzle
 
 		var fabric = new Dictionary<(int x, int y), List<int>>();
 		foreach (var c in claims)
+		{
 			foreach (var x in Enumerable.Range(c.el, c.wide))
+			{
 				foreach (var y in Enumerable.Range(c.et, c.tall))
-					dGetOrAdd(fabric, (x, y)).Add(c.id);
+					GetOrAdd(fabric, (x, y)).Add(c.id);
+			}
+		}
 
 		var part1 = fabric.Count(kvp => kvp.Value.Count > 1).ToString();
 

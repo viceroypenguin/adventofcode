@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks.Dataflow;
-
-namespace AdventOfCode.Puzzles._2019;
+﻿namespace AdventOfCode.Puzzles._2019;
 
 [Puzzle(2019, 19, CodeType.Original)]
 public class Day_19_Original : IPuzzle
@@ -18,8 +16,10 @@ public class Day_19_Original : IPuzzle
 
 		int x = 0, y = 0;
 		for (y = 0; y < 50; y++)
+		{
 			for (x = 0; x < 50; x++)
 				map[y][x] = RunProgram(instructions, x, y);
+		}
 
 		var part1 = map
 			.SelectMany(r => r)
@@ -39,7 +39,7 @@ public class Day_19_Original : IPuzzle
 
 			if (RunProgram(instructions, x - 99, y + 99) == 1)
 			{
-				var part2 = ((x - 99) * 10000 + y).ToString();
+				var part2 = (((x - 99) * 10000) + y).ToString();
 				return (part1, part2);
 			}
 		}

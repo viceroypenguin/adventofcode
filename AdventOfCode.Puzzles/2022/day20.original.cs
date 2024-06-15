@@ -105,6 +105,7 @@ public partial class Day_20_Original : IPuzzle
 			if (n == 0)
 				zero = nn;
 		}
+
 		node.NextNode = node.NextInt = first;
 		first.PrevNode = node;
 

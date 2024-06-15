@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Puzzles._2019;
+namespace AdventOfCode.Puzzles._2019;
 
 [Puzzle(2019, 24, CodeType.Original)]
 public class Day_24_Original : IPuzzle
@@ -31,8 +31,8 @@ public class Day_24_Original : IPuzzle
 			var newState = 0;
 			for (var b = 1; b <= (1 << 24); b <<= 1)
 			{
-				int isSet(int v) => (v & b) != 0 ? 1 : 0;
-				var cnt = isSet(up) + isSet(right) + isSet(down) + isSet(left);
+				int IsSet(int v) => (v & b) != 0 ? 1 : 0;
+				var cnt = IsSet(up) + IsSet(right) + IsSet(down) + IsSet(left);
 				var cell = cnt == 1 || (cnt == 2 && (state & b) == 0) ? b : 0;
 				newState |= cell;
 			}
@@ -41,6 +41,7 @@ public class Day_24_Original : IPuzzle
 			{
 				return newState.ToString();
 			}
+
 			seen.Add(state = newState);
 		}
 	}
@@ -61,6 +62,7 @@ public class Day_24_Original : IPuzzle
 						(x, y) = (1, y + 1);
 				}
 			}
+
 			state.Remove((3, 3, 0));
 		}
 
@@ -75,9 +77,13 @@ public class Day_24_Original : IPuzzle
 						counts[(5, _y, z + 1)] = counts.GetValueOrDefault((5, _y, z + 1)) + 1;
 				}
 				else if (x == 1)
+				{
 					counts[(2, 3, z - 1)] = counts.GetValueOrDefault((2, 3, z - 1)) + 1;
+				}
 				else
+				{
 					counts[(x - 1, y, z)] = counts.GetValueOrDefault((x - 1, y, z)) + 1;
+				}
 
 				if (y - 1 == 3 && x == 3)
 				{
@@ -85,9 +91,13 @@ public class Day_24_Original : IPuzzle
 						counts[(_x, 5, z + 1)] = counts.GetValueOrDefault((_x, 5, z + 1)) + 1;
 				}
 				else if (y == 1)
+				{
 					counts[(3, 2, z - 1)] = counts.GetValueOrDefault((3, 2, z - 1)) + 1;
+				}
 				else
+				{
 					counts[(x, y - 1, z)] = counts.GetValueOrDefault((x, y - 1, z)) + 1;
+				}
 
 				if (x + 1 == 3 && y == 3)
 				{
@@ -95,9 +105,13 @@ public class Day_24_Original : IPuzzle
 						counts[(1, _y, z + 1)] = counts.GetValueOrDefault((1, _y, z + 1)) + 1;
 				}
 				else if (x == 5)
+				{
 					counts[(4, 3, z - 1)] = counts.GetValueOrDefault((4, 3, z - 1)) + 1;
+				}
 				else
+				{
 					counts[(x + 1, y, z)] = counts.GetValueOrDefault((x + 1, y, z)) + 1;
+				}
 
 				if (y + 1 == 3 && x == 3)
 				{
@@ -105,15 +119,21 @@ public class Day_24_Original : IPuzzle
 						counts[(_x, 1, z + 1)] = counts.GetValueOrDefault((_x, 1, z + 1)) + 1;
 				}
 				else if (y == 5)
+				{
 					counts[(3, 4, z - 1)] = counts.GetValueOrDefault((3, 4, z - 1)) + 1;
+				}
 				else
+				{
 					counts[(x, y + 1, z)] = counts.GetValueOrDefault((x, y + 1, z)) + 1;
+				}
 			}
 
 			var newState = new HashSet<(int x, int y, int z)>();
 			foreach (var (pos, c) in counts)
+			{
 				if (c == 1 || (c == 2 && !state.Contains(pos)))
 					newState.Add(pos);
+			}
 
 			state = newState;
 		}

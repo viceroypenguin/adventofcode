@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Puzzles._2023;
+namespace AdventOfCode.Puzzles._2023;
 
 [Puzzle(2023, 06, CodeType.Fastest)]
 public sealed partial class Day_06_Fastest : IPuzzle
@@ -13,39 +13,39 @@ public sealed partial class Day_06_Fastest : IPuzzle
 		Span<int> times = stackalloc int[4];
 		Span<int> distances = stackalloc int[4];
 
-		var line = span.Slice(0, span.IndexOf((byte)'\n'));
-		span = span.Slice(line.Length + 1);
+		var line = span[..span.IndexOf((byte)'\n')];
+		span = span[(line.Length + 1)..];
 
 		var i = 0;
 		while (line.Length > 0)
 		{
-			line = line.Slice(line.IndexOfAnyInRange((byte)'0', (byte)'9'));
+			line = line[line.IndexOfAnyInRange((byte)'0', (byte)'9')..];
 			(times[i++], var n) = line.AtoI();
 
 			for (var j = 0; j < n; j++)
 				time = (time * 10) + line[j] - '0';
 
-			line = line.Slice(n);
+			line = line[n..];
 		}
 
-		line = span.Slice(0, span.IndexOf((byte)'\n'));
-		span = span.Slice(line.Length + 1);
+		line = span[..span.IndexOf((byte)'\n')];
+		span = span[(line.Length + 1)..];
 
 		i = 0;
 		while (line.Length > 0)
 		{
-			line = line.Slice(line.IndexOfAnyInRange((byte)'0', (byte)'9'));
+			line = line[line.IndexOfAnyInRange((byte)'0', (byte)'9')..];
 			(distances[i++], var n) = line.AtoI();
 
 			for (var j = 0; j < n; j++)
 				distance = (distance * 10) + line[j] - '0';
 
-			line = line.Slice(n);
+			line = line[n..];
 		}
 
 		static long GetWinPossibilities(long time, long distance)
 		{
-			var radical = Math.Sqrt((double)time * time - 4 * distance);
+			var radical = Math.Sqrt(((double)time * time) - (4 * distance));
 			var root1 = (long)Math.Ceiling((time + radical) / 2);
 			var root2 = (long)Math.Floor((time - radical) / 2);
 			return root1 - root2 - 1;

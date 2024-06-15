@@ -1,4 +1,4 @@
-﻿using System.Runtime.InteropServices;
+using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics;
 
 namespace AdventOfCode.Puzzles._2023;
@@ -25,7 +25,7 @@ public sealed partial class Day_09_Fastest : IPuzzle
 			{
 				(array[j++], var n) = line.AtoI();
 				if (n == line.Length) break;
-				line = line.Slice(n + 1);
+				line = line[(n + 1)..];
 			}
 
 			var ints = array[..j];
@@ -35,7 +35,7 @@ public sealed partial class Day_09_Fastest : IPuzzle
 			while (true)
 			{
 				ref var intsRef = ref MemoryMarshal.GetReference(ints);
-				ref var intsOneRef = ref MemoryMarshal.GetReference(ints.Slice(1));
+				ref var intsOneRef = ref MemoryMarshal.GetReference(ints[1..]);
 
 				nuint vectorEnd = (uint)(ints.Length - 1);
 				if (vectorEnd >= (uint)(Vector128<int>.Count + 1))

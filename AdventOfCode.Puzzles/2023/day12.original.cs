@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Puzzles._2023;
+namespace AdventOfCode.Puzzles._2023;
 
 [Puzzle(2023, 12, CodeType.Original)]
 public partial class Day_12_Original : IPuzzle
@@ -39,12 +39,12 @@ public partial class Day_12_Original : IPuzzle
 			return counts.Length == 0 ? 1 : 0;
 
 		else if (counts.Length == 0)
-			return memo[(mIndex, cIndex)] = array.Slice(mIndex).IndexOf('#') >= 0 ? 0 : 1;
+			return memo[(mIndex, cIndex)] = array[mIndex..].IndexOf('#') >= 0 ? 0 : 1;
 
 		for (int mi = mIndex, ci = cIndex; mi < array.Length; mi++)
 		{
 			// blanks are good; we don't care about them
-			var n = array.Slice(mi).IndexOfAnyExcept('.');
+			var n = array[mi..].IndexOfAnyExcept('.');
 			if (n >= 0)
 				mi += n;
 
@@ -58,16 +58,16 @@ public partial class Day_12_Original : IPuzzle
 				if (counts[0] > array.Length - mi)
 					return memo[(mIndex, cIndex)] = 0;
 
-				n = array.Slice(mi).IndexOfAnyExcept('#');
+				n = array[mi..].IndexOfAnyExcept('#');
 
 				// perfect match, go to the next condition
 				if (n == counts[0]
-					|| (n == -1 && array.Slice(mi).Length == counts[0]))
+					|| (n == -1 && array[mi..].Length == counts[0]))
 				{
 					// skip the following char; either a `.` or a `?`,
 					// but `?` must be `.` to satisfy so skip anyway
 					mi += counts[0];
-					counts = counts.Slice(1);
+					counts = counts[1..];
 					ci++;
 					continue;
 				}
@@ -90,7 +90,7 @@ public partial class Day_12_Original : IPuzzle
 				}
 
 				// only way for the current arrangement to work, so calculate what's left and gtfo
-				var count = GetArrangementsCount(array, mi + n + variance + 1, counts.Slice(1), ci + 1, memo);
+				var count = GetArrangementsCount(array, mi + n + variance + 1, counts[1..], ci + 1, memo);
 				return memo[(mIndex, cIndex)] = count;
 			}
 
@@ -120,7 +120,7 @@ public partial class Day_12_Original : IPuzzle
 				}
 
 				// add the next count
-				count += GetArrangementsCount(array, mi + counts[0] + 1, counts.Slice(1), ci + 1, memo);
+				count += GetArrangementsCount(array, mi + counts[0] + 1, counts[1..], ci + 1, memo);
 
 				// return what we got
 				return memo[(mIndex, cIndex)] = count;

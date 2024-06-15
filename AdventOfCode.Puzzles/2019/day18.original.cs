@@ -27,12 +27,12 @@ public class Day_18_Original : IPuzzle
 				|| EqualityComparer<(ulong, byte)>.Default.Equals(a, b));
 		var distance = SuperEnumerable.GetShortestPathCost<(ulong keys, byte pos), int>(
 			(keys: 0UL, pos: (byte)'@'),
-			getNeighbors,
-			(allKeys, pos: (byte)0),
+			GetNeighbors,
+			(allKeys, pos: 0),
 			stateComparer: comparer,
 			costComparer: null);
 
-		IEnumerable<((ulong, byte), int)> getNeighbors((ulong keys, byte pos) state, int cost)
+		IEnumerable<((ulong, byte), int)> GetNeighbors((ulong keys, byte pos) state, int cost)
 		{
 			foreach (var (_key, steps, requiredKeys) in importantItems[state.pos])
 			{
@@ -55,13 +55,12 @@ public class Day_18_Original : IPuzzle
 		map
 			.SelectMany((r, y) => r
 				.Select((c, x) => (y, x, c)))
-			.Where(p => 
-				(p.c >= 'a' && p.c <= 'z') 
-				|| p.c == '@'
-				|| p.c == '$'
-				|| p.c == '%'
-				|| p.c == '&'
-				|| p.c == '\'')
+			.Where(p => p.c is
+				(>= (byte)'a' and <= (byte)'z') or (byte)'@'
+				or (byte)'$'
+				or (byte)'%'
+				or (byte)'&'
+				or (byte)'\'')
 			.ToDictionary(
 				p => p.c,
 				p =>
@@ -88,17 +87,17 @@ public class Day_18_Original : IPuzzle
 									(type, state.steps, state.requiredKeys));
 							}
 
-							var newKeys = (type >= 'A' && type <= 'Z')
+							var newKeys = (type is >= (byte)'A' and <= (byte)'Z')
 								? state.requiredKeys | (1UL << (type - 'A'))
 								: state.requiredKeys;
 
-							return new[]
-							{
+							return
+							[
 								((x + 1, y), type, newKeys, state.steps + 1),
 								((x - 1, y), type, newKeys, state.steps + 1),
 								((x, y + 1), type, newKeys, state.steps + 1),
 								((x, y - 1), type, newKeys, state.steps + 1),
-							};
+							];
 						})
 						.Consume();
 
@@ -108,7 +107,9 @@ public class Day_18_Original : IPuzzle
 	private string DoPartB(byte[][] map)
 	{
 		for (var y = 0; y < map.Length; y++)
+		{
 			for (var x = 0; x < map[y].Length; x++)
+			{
 				if (map[y][x] == (byte)'@')
 				{
 					map[y][x] = (byte)'#';
@@ -122,6 +123,8 @@ public class Day_18_Original : IPuzzle
 					map[y - 1][x - 1] = (byte)'\'';
 					goto @out;
 				}
+			}
+		}
 
 @out:
 		var importantItems = BuildDistanceCache(map);
@@ -137,12 +140,12 @@ public class Day_18_Original : IPuzzle
 				|| EqualityComparer<(ulong, uint)>.Default.Equals(a, b));
 		var distance = SuperEnumerable.GetShortestPathCost<(ulong keys, uint pos), int>(
 			(keys: 0UL, pos: 0x24_25_26_27u),
-			getNeighbors,
+			GetNeighbors,
 			(allKeys, 0),
 			stateComparer: comparer,
 			costComparer: null);
 
-		IEnumerable<((ulong, uint), int)> getNeighbors((ulong keys, uint pos) state, int cost)
+		IEnumerable<((ulong, uint), int)> GetNeighbors((ulong keys, uint pos) state, int cost)
 		{
 			var positions = BitConverter.GetBytes(state.pos);
 			for (var i = 0; i < positions.Length; i++)

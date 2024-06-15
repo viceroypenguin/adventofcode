@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Puzzles._2021;
+namespace AdventOfCode.Puzzles._2021;
 
 [Puzzle(2021, 3, CodeType.Original)]
 public class Day_03_Original : IPuzzle
@@ -26,7 +26,7 @@ public class Day_03_Original : IPuzzle
 
 		// technically O(n^2) algorithm;
 		// not enough data to justify improving further
-		
+
 		// start with full list
 		var tmp = input.Lines.ToList();
 		// we're narrowing down to single element

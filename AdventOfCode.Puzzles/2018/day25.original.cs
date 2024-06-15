@@ -18,7 +18,7 @@ public class Day_25_Original : IPuzzle
 			stars.Select((_, i) => -i - 1).ToArray();
 		var constellationNumber = 0;
 
-		int ManhattanDistance((int x, int y, int z, int t) a, (int x, int y, int z, int t) b) =>
+		static int ManhattanDistance((int x, int y, int z, int t) a, (int x, int y, int z, int t) b) =>
 			Math.Abs(a.x - b.x) + Math.Abs(a.y - b.y) + Math.Abs(a.z - b.z) + Math.Abs(a.t - b.t);
 
 		for (var i = 0; i < stars.Length; i++)
@@ -37,19 +37,25 @@ public class Day_25_Original : IPuzzle
 							constellationNumber++;
 						}
 						else
+						{
 							constellations[i] = constellations[j];
+						}
 					}
 					else
 					{
 						if (constellations[j] < 0)
+						{
 							constellations[j] = constellations[i];
+						}
 						else if (constellations[i] != constellations[j])
 						{
 							var oldId = constellations[j];
 							var newId = constellations[i];
 							for (var k = 0; k < stars.Length; k++)
+							{
 								if (constellations[k] == oldId)
 									constellations[k] = newId;
+							}
 						}
 					}
 				}

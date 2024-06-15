@@ -1,12 +1,12 @@
-﻿namespace AdventOfCode.Puzzles._2019;
+namespace AdventOfCode.Puzzles._2019;
 
 [Puzzle(2019, 01, CodeType.Original)]
 public class Day_01_Original : IPuzzle
 {
 	public (string, string) Solve(PuzzleInput input)
 	{
-		static IEnumerable<int> fuelValues(int start) =>
-			SuperEnumerable.Generate(start, s => Math.Max(s / 3 - 2, 0))
+		static IEnumerable<int> FuelValues(int start) =>
+			SuperEnumerable.Generate(start, s => Math.Max((s / 3) - 2, 0))
 				.Skip(1)
 				.TakeWhile(s => s != 0);
 
@@ -15,12 +15,12 @@ public class Day_01_Original : IPuzzle
 			.ToList();
 
 		var part1 = numbers
-			.Select(s => fuelValues(s).First())
+			.Select(s => FuelValues(s).First())
 			.Sum()
 			.ToString();
 
 		var part2 = numbers
-			.Select(s => fuelValues(s).Sum())
+			.Select(s => FuelValues(s).Sum())
 			.Sum()
 			.ToString();
 

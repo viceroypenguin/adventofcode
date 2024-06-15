@@ -14,7 +14,7 @@ public class Day_13_Original : IPuzzle
 		var part1 = times
 			.Where(s => s != "x")
 			.Select(int.Parse)
-			.Select(b => (bus: b, firstTimeAfter: (myEarliestTime / b + 1) * b - myEarliestTime))
+			.Select(b => (bus: b, firstTimeAfter: (((myEarliestTime / b) + 1) * b) - myEarliestTime))
 			.PartialSortBy(1, x => x.firstTimeAfter)
 			.Select(x => x.bus * x.firstTimeAfter)
 			.First()

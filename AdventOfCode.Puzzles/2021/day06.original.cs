@@ -13,23 +13,23 @@ public class Day_06_Original : IPuzzle
 			.GroupBy(x => x)
 			.ToDictionary(g => g.Key, g => (long)g.Count());
 
-	// handles a single day cycle
-	// each day decrements except for special cases
-	static Dictionary<int, long> DayCycle(Dictionary<int, long> fish) =>
-		new()
-		{
-			// all of the 0 ages go to 8 as new fish
-			[8] = fish.GetValueOrDefault(0),
-			[7] = fish.GetValueOrDefault(8),
-			// 0 ages go to 6, along with 7 ages
-			[6] = fish.GetValueOrDefault(0) + fish.GetValueOrDefault(7),
-			[5] = fish.GetValueOrDefault(6),
-			[4] = fish.GetValueOrDefault(5),
-			[3] = fish.GetValueOrDefault(4),
-			[2] = fish.GetValueOrDefault(3),
-			[1] = fish.GetValueOrDefault(2),
-			[0] = fish.GetValueOrDefault(1),
-		};
+		// handles a single day cycle
+		// each day decrements except for special cases
+		static Dictionary<int, long> DayCycle(Dictionary<int, long> fish) =>
+			new()
+			{
+				// all of the 0 ages go to 8 as new fish
+				[8] = fish.GetValueOrDefault(0),
+				[7] = fish.GetValueOrDefault(8),
+				// 0 ages go to 6, along with 7 ages
+				[6] = fish.GetValueOrDefault(0) + fish.GetValueOrDefault(7),
+				[5] = fish.GetValueOrDefault(6),
+				[4] = fish.GetValueOrDefault(5),
+				[3] = fish.GetValueOrDefault(4),
+				[2] = fish.GetValueOrDefault(3),
+				[1] = fish.GetValueOrDefault(2),
+				[0] = fish.GetValueOrDefault(1),
+			};
 
 		// run first 80 days
 		for (var i = 0; i < 80; i++)

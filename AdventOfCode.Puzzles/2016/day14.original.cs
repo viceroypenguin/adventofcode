@@ -41,6 +41,7 @@ public partial class Day_14_Original : IPuzzle
 				var hash = md5.ComputeHash(bytes);
 				hashText = BitConverter.ToString(hash).ToLower().Replace("-", "");
 			}
+
 			return hashText;
 		}
 

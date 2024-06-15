@@ -16,15 +16,13 @@ public class Day_02_Original : IPuzzle
 
 		var partB =
 			lines
-				.Select(arr =>
-				{
-					return (
+				.Select(arr => (
 						from num in arr
 						from div in arr
 						where num != div
 						where num % div == 0
-						select num / div).Single();
-				})
+						select num / div)
+					.Single())
 				.Sum();
 
 		return (partA.ToString(), partB.ToString());

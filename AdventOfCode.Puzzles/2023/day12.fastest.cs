@@ -21,13 +21,13 @@ public sealed partial class Day_12_Fastest : IPuzzle
 			var n = span.IndexOf((byte)' ');
 			var lSprings = span[..n];
 
-			span = span.Slice(n);
+			span = span[n..];
 			var i = 0;
 			while (span.Length > 1)
 			{
-				span = span.Slice(1);
+				span = span[1..];
 				(groups[i++], n) = span.AtoI();
-				span = span.Slice(n);
+				span = span[n..];
 			}
 
 			var lGroups = groups[..i];
@@ -38,15 +38,15 @@ public sealed partial class Day_12_Fastest : IPuzzle
 			springs.Fill((byte)'?');
 			n = lSprings.Length + 1; // leave the `?` gap between sets
 			lSprings.CopyTo(springs);
-			lSprings.CopyTo(springs.Slice(n));
-			lSprings.CopyTo(springs.Slice(n * 2));
-			lSprings.CopyTo(springs.Slice(n * 3));
-			lSprings.CopyTo(springs.Slice(n * 4));
+			lSprings.CopyTo(springs[n..]);
+			lSprings.CopyTo(springs[(n * 2)..]);
+			lSprings.CopyTo(springs[(n * 3)..]);
+			lSprings.CopyTo(springs[(n * 4)..]);
 
-			lGroups.CopyTo(groups.Slice(i));
-			lGroups.CopyTo(groups.Slice(i * 2));
-			lGroups.CopyTo(groups.Slice(i * 3));
-			lGroups.CopyTo(groups.Slice(i * 4));
+			lGroups.CopyTo(groups[i..]);
+			lGroups.CopyTo(groups[(i * 2)..]);
+			lGroups.CopyTo(groups[(i * 3)..]);
+			lGroups.CopyTo(groups[(i * 4)..]);
 
 			memoization.Fill(-1);
 			part2 += ProcessLine(springs[..((n * 5) - 1)], groups[..(i * 5)], memoization);
@@ -78,14 +78,14 @@ public sealed partial class Day_12_Fastest : IPuzzle
 			var n = springs.IndexOfAnyExcept((byte)'.');
 			if (n > 0)
 			{
-				springs = springs.Slice(n);
+				springs = springs[n..];
 				continue;
 			}
 
 			var count = 0L;
 			if (springs[0] == '?')
 			{
-				count += ProcessLine(springs.Slice(1), groups, memoization);
+				count += ProcessLine(springs[1..], groups, memoization);
 			}
 
 			// either a `#` (so return 0) or assume all remaining `?` are `.`
@@ -101,9 +101,10 @@ public sealed partial class Day_12_Fastest : IPuzzle
 			}
 
 			count += ProcessLine(
-				springs.Slice(Math.Min(springs.Length, groups[0] + 1)),
-				groups.Slice(1),
-				memoization);
+				springs[Math.Min(springs.Length, groups[0] + 1)..],
+				groups[1..],
+				memoization
+			);
 
 			return memoization[memoIdx] = count;
 		}

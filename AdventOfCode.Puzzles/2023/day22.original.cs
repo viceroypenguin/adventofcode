@@ -90,6 +90,7 @@ public partial class Day_22_Original : IPuzzle
 				foreach (var s in supporting[j] ?? [])
 					queue.Enqueue(s);
 			}
+
 			part2 += seen.Count - 1;
 		}
 

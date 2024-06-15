@@ -15,9 +15,9 @@ public class Day_09_Original : IPuzzle
 
 		var current = marbles.First;
 
-		LinkedListNode<int> nextNode(LinkedListNode<int> node) =>
+		LinkedListNode<int> NextNode(LinkedListNode<int> node) =>
 			node.Next ?? marbles.First;
-		LinkedListNode<int> prevNode(LinkedListNode<int> node) =>
+		LinkedListNode<int> PrevNode(LinkedListNode<int> node) =>
 			node.Previous ?? marbles.Last;
 
 		var i = 0;
@@ -26,19 +26,20 @@ public class Day_09_Original : IPuzzle
 			if (i % 23 == 0)
 			{
 				for (var j = 0; j < 7; j++)
-					current = prevNode(current);
+					current = PrevNode(current);
 
 				var player = i % numPlayers;
-				players[player] += (i + current.Next.Value);
+				players[player] += i + current.Next.Value;
 				marbles.Remove(current.Next);
 			}
 			else
 			{
-				current = nextNode(current);
-				current = nextNode(current);
+				current = NextNode(current);
+				current = NextNode(current);
 				marbles.AddAfter(current, i);
 			}
 		}
+
 		for (i = 1; i <= maxPoints; i++)
 			DoLoop();
 

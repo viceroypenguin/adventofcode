@@ -40,8 +40,10 @@ public partial class Day_13_Original : IPuzzle
 
 				p1[x] = c;
 			}
+
 			pattern[y] = new string(p1);
 		}
+
 		return -1;
 	}
 

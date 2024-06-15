@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace AdventOfCode.Puzzles._2021;
+﻿namespace AdventOfCode.Puzzles._2021;
 
 [Puzzle(2021, 22, CodeType.Original)]
 public partial class Day_22_Original : IPuzzle
@@ -46,15 +44,17 @@ public partial class Day_22_Original : IPuzzle
 				.Where(a => a.x.lo >= -50 && a.x.hi <= 50
 					&& a.y.lo >= -50 && a.y.hi <= 50
 					&& a.z.lo >= -50 && a.z.hi <= 50))
+		{
 			(
 				// get every cell from all three dimensions
 				from a in GetDimension(x)
 				from b in GetDimension(y)
 				from c in GetDimension(z)
-				// 3d location
+					// 3d location
 				select (a, b, c))
 				// set the cell to the instruction
 				.ForEach(p => map[p] = v);
+		}
 
 		// how many do we have turned on now?
 		return map

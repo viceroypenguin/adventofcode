@@ -124,6 +124,7 @@ public partial class Day_23_Original : IPuzzle
 				default:
 					throw new UnreachableException();
 			}
+
 			ip++;
 		}
 

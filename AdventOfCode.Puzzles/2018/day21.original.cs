@@ -42,8 +42,8 @@ public class Day_21_Original : IPuzzle
 
 		Expression GetRegisterValue(int reg, int ip) =>
 			reg == ipRegister
-				? (Expression)Expression.Constant(ip)
-				: (Expression)registers[reg];
+				? Expression.Constant(ip)
+				: registers[reg];
 
 		var aluOpcodes = new Dictionary<string, Func<int, int, int, Expression>>()
 		{
@@ -119,7 +119,9 @@ public class Day_21_Original : IPuzzle
 							Expression.Goto(labels[i + 2])));
 					}
 					else
+					{
 						throw new InvalidOperationException("Dunno what to do here yet.");
+					}
 				}
 			}
 			else if (aluOpcodes.TryGetValue(inst.inst, out var value))
@@ -158,6 +160,7 @@ public class Day_21_Original : IPuzzle
 				part2 = list.Last();
 				return true;
 			}
+
 			list.Add(val);
 			return false;
 		}

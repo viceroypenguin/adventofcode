@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode.Puzzles._2023;
+namespace AdventOfCode.Puzzles._2023;
+
+#pragma warning disable IDE1006 // Naming Styles
 
 [Puzzle(2023, 24, CodeType.Original)]
 public partial class Day_24_Original : IPuzzle

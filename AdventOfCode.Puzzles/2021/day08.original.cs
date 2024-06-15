@@ -57,7 +57,7 @@ public class Day_08_Original : IPuzzle
 		// only matters for getting last three
 		var e = eight.Except(nine).Single();
 		var c = eight.Except(six).Single();
-		var f = one.Except(new[] { c }).Single();
+		var f = one.Except([c]).Single();
 
 		// of the five, does not contain topright and bottomleft
 		var five = input.Single(x =>
@@ -97,16 +97,16 @@ public class Day_08_Original : IPuzzle
 				// keep track of where in the array
 				.Index()
 				// filter to exact out of order match
-				.Where(n => n.item.Length == x.Length
-					&& !n.item.Except(x).Any()
-					&& !x.Except(n.item).Any())
+				.Where(n => n.Item.Length == x.Length
+					&& !n.Item.Except(x).Any()
+					&& !x.Except(n.Item).Any())
 				// only one, right??
 				.Single()
 				// which one was it?
-				.index)
+				.Index)
 			// start with zero.
 			// for each number n, i = i * 10 + n
 			// return i
-			.Aggregate(0, (i, n) => i * 10 + n);
+			.Aggregate(0, (i, n) => (i * 10) + n);
 	}
 }

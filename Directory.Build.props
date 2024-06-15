@@ -1,30 +1,32 @@
 <Project>
-	
-	<PropertyGroup>
-		<LangVersion>latest</LangVersion>
-		<TargetFramework>net8.0</TargetFramework>
 
-		<Nullable>enable</Nullable>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+  <PropertyGroup>
+	<LangVersion>latest</LangVersion>
+	<TargetFramework>net8.0</TargetFramework>
 
-		<AnalysisLevel>latest-recommended</AnalysisLevel>
+	<Nullable>enable</Nullable>
+	<ImplicitUsings>enable</ImplicitUsings>
+	<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 
-		<TieredPGO>true</TieredPGO>
-	</PropertyGroup>
+	<AnalysisLevel>latest-all</AnalysisLevel>
+	<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
 
-	<ItemGroup>
-		<Using Include="AdventOfCode.Common"/>
-		<Using Include="AdventOfCode.Common.Attributes"/>
-		<Using Include="AdventOfCode.Common.Extensions"/>
-		<Using Include="AdventOfCode.Common.Interfaces"/>
-		<Using Include="AdventOfCode.Common.Models"/>
-		<Using Include="SuperLinq"/>
-		<Using Include="System.Text.RegularExpressions"/>
-	</ItemGroup>
+	<TieredPGO>true</TieredPGO>
+  </PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="SuperLinq" Version="5.4.0" />
-	</ItemGroup>
-	
+  <ItemGroup>
+	<Using Include="AdventOfCode.Common"/>
+	<Using Include="AdventOfCode.Common.Attributes"/>
+	<Using Include="AdventOfCode.Common.Extensions"/>
+	<Using Include="AdventOfCode.Common.Interfaces"/>
+	<Using Include="AdventOfCode.Common.Models"/>
+	<Using Include="SuperLinq"/>
+	<Using Include="System.Text.RegularExpressions"/>
+  </ItemGroup>
+
+  <ItemGroup>
+	<PackageReference Include="SuperLinq" Version="6.1.0" />
+  </ItemGroup>
+
 </Project>

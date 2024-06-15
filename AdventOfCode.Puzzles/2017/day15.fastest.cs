@@ -11,13 +11,13 @@ public class Day_15_Fastest : IPuzzle
 	private const ulong GenB = 48271;
 	private const ulong GenB4 = GenB * GenB * GenB * GenB % 0x7fff_ffff;
 
-	private static readonly Vector256<ulong> aMul = Vector256.Create(GenA4, GenA4, GenA4, GenA4);
-	private static readonly Vector256<ulong> bMul = Vector256.Create(GenB4, GenB4, GenB4, GenB4);
+	private static readonly Vector256<ulong> s_aMul = Vector256.Create(GenA4, GenA4, GenA4, GenA4);
+	private static readonly Vector256<ulong> s_bMul = Vector256.Create(GenB4, GenB4, GenB4, GenB4);
 
-	private static readonly Vector256<ulong> and31Const = Vector256.Create(0x7fff_fffful, 0x7fff_fffful, 0x7fff_fffful, 0x7fff_fffful);
-	private static readonly Vector256<ulong> and16Const = Vector256.Create(0xfffful, 0xfffful, 0xfffful, 0xfffful);
-	private static readonly Vector256<ulong> and3Const = Vector256.Create(0x07ul, 0x07ul, 0x07ul, 0x07ul);
-	private static readonly Vector256<ulong> and2Const = Vector256.Create(0x03ul, 0x03ul, 0x03ul, 0x03ul);
+	private static readonly Vector256<ulong> s_and31Const = Vector256.Create(0x7fff_fffful, 0x7fff_fffful, 0x7fff_fffful, 0x7fff_fffful);
+	private static readonly Vector256<ulong> s_and16Const = Vector256.Create(0xfffful, 0xfffful, 0xfffful, 0xfffful);
+	private static readonly Vector256<ulong> s_and3Const = Vector256.Create(0x07ul, 0x07ul, 0x07ul, 0x07ul);
+	private static readonly Vector256<ulong> s_and2Const = Vector256.Create(0x03ul, 0x03ul, 0x03ul, 0x03ul);
 
 	public (string, string) Solve(PuzzleInput input)
 	{
@@ -46,28 +46,30 @@ public class Day_15_Fastest : IPuzzle
 		var sums = Vector256<ulong>.Zero;
 		for (var i = 0; i < 40_000_000 / 4; i++)
 		{
-			a = Generate(a, aMul);
-			b = Generate(b, bMul);
+			a = Generate(a, s_aMul);
+			b = Generate(b, s_bMul);
 
-			sums = Avx2.Subtract(sums, Avx2.CompareEqual(Avx2.And(a, and16Const), Avx2.And(b, and16Const)));
+			sums = Avx2.Subtract(sums, Avx2.CompareEqual(Avx2.And(a, s_and16Const), Avx2.And(b, s_and16Const)));
 		}
+
 		var partA = (Vector256.GetElement(sums, 0) + Vector256.GetElement(sums, 1) + Vector256.GetElement(sums, 2) + Vector256.GetElement(sums, 3)).ToString();
 
 		a = a0; b = b0;
-		var aMask = Avx.MoveMask(Avx2.CompareEqual(Avx2.And(a, and2Const), Vector256<ulong>.Zero).AsDouble());
-		var bMask = Avx.MoveMask(Avx2.CompareEqual(Avx2.And(b, and3Const), Vector256<ulong>.Zero).AsDouble());
+		var aMask = Avx.MoveMask(Avx2.CompareEqual(Avx2.And(a, s_and2Const), Vector256<ulong>.Zero).AsDouble());
+		var bMask = Avx.MoveMask(Avx2.CompareEqual(Avx2.And(b, s_and3Const), Vector256<ulong>.Zero).AsDouble());
 		var matches = 0;
 		for (var i = 0; i < 5_000_000; i++)
 		{
 			while (aMask == 0)
 			{
-				a = Generate(a, aMul);
-				aMask = Avx.MoveMask(Avx2.CompareEqual(Avx2.And(a, and2Const), Vector256<ulong>.Zero).AsDouble());
+				a = Generate(a, s_aMul);
+				aMask = Avx.MoveMask(Avx2.CompareEqual(Avx2.And(a, s_and2Const), Vector256<ulong>.Zero).AsDouble());
 			}
+
 			while (bMask == 0)
 			{
-				b = Generate(b, bMul);
-				bMask = Avx.MoveMask(Avx2.CompareEqual(Avx2.And(b, and3Const), Vector256<ulong>.Zero).AsDouble());
+				b = Generate(b, s_bMul);
+				bMask = Avx.MoveMask(Avx2.CompareEqual(Avx2.And(b, s_and3Const), Vector256<ulong>.Zero).AsDouble());
 			}
 
 			var aIndex = (int)Bmi1.TrailingZeroCount((uint)aMask);
@@ -79,6 +81,7 @@ public class Day_15_Fastest : IPuzzle
 			if ((Vector256.GetElement(a, aIndex) & 0xffff) == (Vector256.GetElement(b, bIndex) & 0xffff))
 				matches++;
 		}
+
 		var partB = matches.ToString();
 
 		return (partA.ToString(), partB.ToString());
@@ -96,8 +99,8 @@ public class Day_15_Fastest : IPuzzle
 	private static Vector256<ulong> Generate(Vector256<ulong> v, Vector256<ulong> mul)
 	{
 		var x = Avx2.Multiply(v.AsUInt32(), mul.AsUInt32());
-		x = Avx2.Add(Avx2.And(x, and31Const), Avx2.ShiftRightLogical(x, 31));
-		x = Avx2.Add(Avx2.And(x, and31Const), Avx2.ShiftRightLogical(x, 31));
+		x = Avx2.Add(Avx2.And(x, s_and31Const), Avx2.ShiftRightLogical(x, 31));
+		x = Avx2.Add(Avx2.And(x, s_and31Const), Avx2.ShiftRightLogical(x, 31));
 		return x;
 	}
 }

@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Puzzles._2017;
+namespace AdventOfCode.Puzzles._2017;
 
 [Puzzle(2017, 16, CodeType.Original)]
 public partial class Day_16_Original : IPuzzle
@@ -14,8 +14,8 @@ public partial class Day_16_Original : IPuzzle
 			.Select(inst => regex.Match(inst))
 			.ToList();
 
-		const int length = 16;
-		var programs = Enumerable.Range(0, length)
+		const int Length = 16;
+		var programs = Enumerable.Range(0, Length)
 			.Select(i => (char)(i + 'a'))
 			.ToArray();
 
@@ -28,7 +28,7 @@ public partial class Day_16_Original : IPuzzle
 				if (m.Groups["spin"].Success)
 				{
 					var amt = Convert.ToInt32(m.Groups["amt"].Value);
-					@out = @out.Skip(length - amt).Concat(@out.Take(length - amt)).ToArray();
+					@out = @out.Skip(Length - amt).Concat(@out.Take(Length - amt)).ToArray();
 				}
 				else if (m.Groups["xchg"].Success)
 				{
@@ -40,7 +40,7 @@ public partial class Day_16_Original : IPuzzle
 				{
 					var a = m.Groups["part_a"].Value[0];
 					var b = m.Groups["part_b"].Value[0];
-					for (var i = 0; i < length; i++)
+					for (var i = 0; i < Length; i++)
 					{
 						if (@out[i] == a) @out[i] = b;
 						else if (@out[i] == b) @out[i] = a;

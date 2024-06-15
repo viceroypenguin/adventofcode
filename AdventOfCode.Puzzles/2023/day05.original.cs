@@ -21,7 +21,7 @@ public partial class Day_05_Original : IPuzzle
 			.Skip(1)
 			.Select(s =>
 			{
-				var match = mapNameRegex.Match(s.First());
+				var match = mapNameRegex.Match(s[0]);
 				var from = match.Groups[1].Value;
 				var to = match.Groups[2].Value;
 
@@ -46,7 +46,7 @@ public partial class Day_05_Original : IPuzzle
 			})
 			.ToLookup(x => x.from);
 
-		var seeds = intRegex.Matches(segments[0].First())
+		var seeds = intRegex.Matches(segments[0][0])
 			.OfType<Match>()
 			.Select(m => long.Parse(m.Value))
 			.ToList();

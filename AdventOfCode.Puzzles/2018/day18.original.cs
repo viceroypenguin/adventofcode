@@ -3,13 +3,14 @@
 [Puzzle(2018, 18, CodeType.Original)]
 public class Day_18_Original : IPuzzle
 {
-	char[][] map;
-	string GetmapState() =>
-		new string(map.SelectMany(l => l).ToArray());
+	private char[][] _map;
+
+	private string GetmapState() =>
+		new(_map.SelectMany(l => l).ToArray());
 
 	public (string, string) Solve(PuzzleInput input)
 	{
-		map = input.Lines
+		_map = input.Lines
 			.Select(s => s.ToArray())
 			.ToArray();
 
@@ -18,7 +19,7 @@ public class Day_18_Original : IPuzzle
 			DoIteration();
 		}
 
-		var cellTypes = map.SelectMany(l => l)
+		var cellTypes = _map.SelectMany(l => l)
 			.GroupBy(c => c)
 			.ToDictionary(c => c.Key, c => c.Count());
 		var part1 = cellTypes['|'] * cellTypes['#'];
@@ -40,11 +41,13 @@ public class Day_18_Original : IPuzzle
 					flag = true;
 				}
 				else
+				{
 					seenStates[state] = i;
+				}
 			}
 		}
 
-		cellTypes = map.SelectMany(l => l)
+		cellTypes = _map.SelectMany(l => l)
 			.GroupBy(c => c)
 			.ToDictionary(c => c.Key, c => c.Count());
 		var part2 = cellTypes['|'] * cellTypes['#'];
@@ -54,35 +57,36 @@ public class Day_18_Original : IPuzzle
 
 	private void DoIteration()
 	{
-		map = Enumerable.Range(0, map.Length)
-			.Select(x => Enumerable.Range(0, map[0].Length)
+		_map = Enumerable.Range(0, _map.Length)
+			.Select(x => Enumerable.Range(0, _map[0].Length)
 				.Select(y => GetNewValue(x, y))
 				.ToArray())
 			.ToArray();
 	}
 
-	char GetNewValue(int x, int y)
+	private char GetNewValue(int x, int y)
 	{
 		var neighbors = (
-			from x2 in Enumerable.Range(x - 1, 3)
-			where x2 >= 0 && x2 < map.Length
-			from y2 in Enumerable.Range(y - 1, 3)
-			where y2 >= 0 && y2 < map[0].Length
-			where x2 != x || y2 != y
-			group new { } by map[x2][y2])
+				from x2 in Enumerable.Range(x - 1, 3)
+				where x2 >= 0 && x2 < _map.Length
+				from y2 in Enumerable.Range(y - 1, 3)
+				where y2 >= 0 && y2 < _map[0].Length
+				where x2 != x || y2 != y
+				group new { } by _map[x2][y2]
+			)
 			.ToDictionary(c => c.Key, c => c.Count());
 
-		return map[x][y] switch
+		return _map[x][y] switch
 		{
-			'.' => neighbors.TryGetValue('|', out var value) 
+			'.' => neighbors.TryGetValue('|', out var value)
 					&& value >= 3
 					? '|' : '.',
 			'|' => neighbors.TryGetValue('#', out var value)
 					&& value >= 3
 					? '#' : '|',
-			'#' => neighbors.TryGetValue('|', out var value) 
-					&& value >= 1 
-					&& neighbors.TryGetValue('#', out var value2) 
+			'#' => neighbors.TryGetValue('|', out var value)
+					&& value >= 1
+					&& neighbors.TryGetValue('#', out var value2)
 					&& value2 >= 1
 					? '#' : '.',
 			_ => throw new InvalidOperationException(),

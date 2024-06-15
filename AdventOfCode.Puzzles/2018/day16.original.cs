@@ -7,7 +7,7 @@ public class Day_16_Original : IPuzzle
 	{
 		var data = input.Lines;
 
-		int[] ParseRegisters(string str) =>
+		static int[] ParseRegisters(string str) =>
 			str.Substring(9, 10)
 				.Split(',')
 				.Select(s => Convert.ToInt32(s))
@@ -15,22 +15,22 @@ public class Day_16_Original : IPuzzle
 
 		var operations = new (HashSet<int> opcodes, Func<int[], int, int, int> method)[]
 		{
-				(opcodes: new HashSet<int>(), method: (r, a, b) => r[a] + r[b]),
-				(opcodes: new HashSet<int>(), method: (r, a, b) => r[a] + b),
-				(opcodes: new HashSet<int>(), method: (r, a, b) => r[a] * r[b]),
-				(opcodes: new HashSet<int>(), method: (r, a, b) => r[a] * b),
-				(opcodes: new HashSet<int>(), method: (r, a, b) => r[a] & r[b]),
-				(opcodes: new HashSet<int>(), method: (r, a, b) => r[a] & b),
-				(opcodes: new HashSet<int>(), method: (r, a, b) => r[a] | r[b]),
-				(opcodes: new HashSet<int>(), method: (r, a, b) => r[a] | b),
-				(opcodes: new HashSet<int>(), method: (r, a, b) => r[a]),
-				(opcodes: new HashSet<int>(), method: (r, a, b) => a),
-				(opcodes: new HashSet<int>(), method: (r, a, b) => r[a] > r[b] ? 1 : 0),
-				(opcodes: new HashSet<int>(), method: (r, a, b) => a > r[b] ? 1 : 0),
-				(opcodes: new HashSet<int>(), method: (r, a, b) => r[a] > b ? 1 : 0),
-				(opcodes: new HashSet<int>(), method: (r, a, b) => r[a] == r[b] ? 1 : 0),
-				(opcodes: new HashSet<int>(), method: (r, a, b) => a == r[b] ? 1 : 0),
-				(opcodes: new HashSet<int>(), method: (r, a, b) => r[a] == b ? 1 : 0),
+				(opcodes: [], method: (r, a, b) => r[a] + r[b]),
+				(opcodes: [], method: (r, a, b) => r[a] + b),
+				(opcodes: [], method: (r, a, b) => r[a] * r[b]),
+				(opcodes: [], method: (r, a, b) => r[a] * b),
+				(opcodes: [], method: (r, a, b) => r[a] & r[b]),
+				(opcodes: [], method: (r, a, b) => r[a] & b),
+				(opcodes: [], method: (r, a, b) => r[a] | r[b]),
+				(opcodes: [], method: (r, a, b) => r[a] | b),
+				(opcodes: [], method: (r, a, b) => r[a]),
+				(opcodes: [], method: (r, a, b) => a),
+				(opcodes: [], method: (r, a, b) => r[a] > r[b] ? 1 : 0),
+				(opcodes: [], method: (r, a, b) => a > r[b] ? 1 : 0),
+				(opcodes: [], method: (r, a, b) => r[a] > b ? 1 : 0),
+				(opcodes: [], method: (r, a, b) => r[a] == r[b] ? 1 : 0),
+				(opcodes: [], method: (r, a, b) => a == r[b] ? 1 : 0),
+				(opcodes: [], method: (r, a, b) => r[a] == b ? 1 : 0),
 		};
 
 		var key = data
@@ -52,17 +52,21 @@ public class Day_16_Original : IPuzzle
 				{
 					var possibles = 0;
 
-					foreach (var op in operations)
-						if (after[instruction[3]] == op.method(before, instruction[1], instruction[2]))
+					foreach (var (opcodes, method) in operations)
+					{
+						if (after[instruction[3]] == method(before, instruction[1], instruction[2]))
 						{
 							possibles++;
-							op.opcodes.Add(instruction[0]);
+							opcodes.Add(instruction[0]);
 						}
+					}
 
 					return possibles;
 				}
 				else
+				{
 					return 0;
+				}
 			})
 			.ToList();
 
@@ -77,9 +81,9 @@ public class Day_16_Original : IPuzzle
 		{
 			flag = false;
 
-			foreach (var o in operations)
+			foreach (var (opcodes, method) in operations)
 			{
-				var hs = o.opcodes;
+				var hs = opcodes;
 				if (hs.Count == 1)
 					continue;
 				hs.ExceptWith(knownOpcodes);
@@ -111,7 +115,7 @@ public class Day_16_Original : IPuzzle
 		foreach (var i in program)
 			registers[i[3]] = opCodes[i[0]](registers, i[1], i[2]);
 
-		var part2= registers[0];
+		var part2 = registers[0];
 
 		return (part1.ToString(), part2.ToString());
 	}

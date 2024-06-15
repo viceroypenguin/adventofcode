@@ -29,6 +29,7 @@ public class Day_10_Fastest : IPuzzle
 				n = 0;
 			}
 		}
+
 		var partA = bytes[0] * bytes[1];
 
 		var newLength = span.Length - 1 + 5;
@@ -60,6 +61,7 @@ public class Day_10_Fastest : IPuzzle
 			str[i >> 3] = ToHex(b >> 4);
 			str[(i >> 3) + 1] = ToHex(b & 0xf);
 		}
+
 		var partB = new string(str);
 
 		return (partA.ToString(), partB);
@@ -78,6 +80,7 @@ public class Day_10_Fastest : IPuzzle
 			i--; j++;
 			(bytes[j], bytes[i]) = (bytes[i], bytes[j]);
 		}
+
 		skip++; position = (byte)(j + skip);
 		return (position, skip);
 	}

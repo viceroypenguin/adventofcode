@@ -31,21 +31,21 @@ public partial class Day_07_Original : IPuzzle
 			.ToLookup(x => x.color, x => x.from);
 
 		var visited = new HashSet<string>();
-		void visitReverse(string color)
+		void VisitReverse(string color)
 		{
 			if (visited.Contains(color))
 				return;
 			visited.Add(color);
 			foreach (var c in reverse[color])
-				visitReverse(c);
+				VisitReverse(c);
 		}
 
-		visitReverse("shiny gold");
+		VisitReverse("shiny gold");
 		var part1 = (visited.Count - 1).ToString();
 
-		int bagTotal(string color) =>
-			1 + bagRules[color].Sum(x => x.count * bagTotal(x.color));
-		var part2 = (bagTotal("shiny gold") - 1).ToString();
+		int BagTotal(string color) =>
+			1 + bagRules[color].Sum(x => x.count * BagTotal(x.color));
+		var part2 = (BagTotal("shiny gold") - 1).ToString();
 
 		return (part1, part2);
 	}

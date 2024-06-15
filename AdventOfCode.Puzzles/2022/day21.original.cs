@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 
 namespace AdventOfCode.Puzzles._2022;
 
@@ -15,18 +15,19 @@ public partial class Day_21_Original : IPuzzle
 				x => x[0],
 				x => x[1].Split() switch
 				{
-					[var number] => new Monkey(Operation.Constant, decimal.Parse(number)),
-					[var a, var o, var b] => new Monkey(
-						Operation: o switch
-						{
-							"+" => Operation.Add,
-							"-" => Operation.Subtract,
-							"*" => Operation.Multiply,
-							"/" => Operation.Divide,
-							_ => throw new UnreachableException(),
-						},
-						Left: a,
-						Right: b),
+				[var number] => new Monkey(Operation.Constant, decimal.Parse(number)),
+				[var a, var o, var b] => new Monkey(
+					Operation: o switch
+					{
+						"+" => Operation.Add,
+						"-" => Operation.Subtract,
+						"*" => Operation.Multiply,
+						"/" => Operation.Divide,
+						_ => throw new UnreachableException(),
+					},
+					Left: a,
+					Right: b
+				),
 					_ => throw new UnreachableException(),
 				});
 

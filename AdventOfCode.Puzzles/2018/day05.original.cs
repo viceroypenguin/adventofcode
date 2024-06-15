@@ -7,7 +7,7 @@ public class Day_05_Original : IPuzzle
 	{
 		var poly = input.Text;
 
-		int GetReducedPolymerLength(string polymer)
+		static int GetReducedPolymerLength(string polymer)
 		{
 			var characters = polymer
 				.Select(c => (c, isActive: true))
@@ -33,9 +33,9 @@ public class Day_05_Original : IPuzzle
 		var part1 = GetReducedPolymerLength(poly).ToString();
 
 		var part2 = Enumerable.Range(0, 26)
-			.Select(i => (char)(i + (int)'a'))
+			.Select(i => (char)(i + 'a'))
 			.Select(c => Regex.Replace(poly, c.ToString(), "", RegexOptions.IgnoreCase))
-			.Min(s => GetReducedPolymerLength(s))
+			.Min(GetReducedPolymerLength)
 			.ToString();
 
 		return (part1, part2);

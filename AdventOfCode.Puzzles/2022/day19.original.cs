@@ -65,7 +65,7 @@ public partial class Day_19_Original : IPuzzle
 			states++;
 
 			// if it's not even possible for us to beat yield in a perfect world...
-			if (s.GeodeCount + s.GeodeRobots * s.Minute + (s.Minute * (s.Minute + 1) / 2) < yield)
+			if (s.GeodeCount + (s.GeodeRobots * s.Minute) + (s.Minute * (s.Minute + 1) / 2) < yield)
 				return;
 
 			// reduce robots to increase state overlap
@@ -81,9 +81,9 @@ public partial class Day_19_Original : IPuzzle
 			// only need ore to produce robots, so need for more material than we can consume before end of remaining time
 			s = s with
 			{
-				OreCount = Math.Min(s.OreCount, maxOreCost * s.Minute - s.OreRobots * (s.Minute - 1)),
-				ClayCount = Math.Min(s.ClayCount, maxClayCost * s.Minute - s.ClayRobots * (s.Minute - 1)),
-				ObsidianCount = Math.Min(s.ObsidianCount, maxObsidianCost * s.Minute - s.ObsidianRobots * (s.Minute - 1)),
+				OreCount = Math.Min(s.OreCount, (maxOreCost * s.Minute) - (s.OreRobots * (s.Minute - 1))),
+				ClayCount = Math.Min(s.ClayCount, (maxClayCost * s.Minute) - (s.ClayRobots * (s.Minute - 1))),
+				ObsidianCount = Math.Min(s.ObsidianCount, (maxObsidianCost * s.Minute) - (s.ObsidianRobots * (s.Minute - 1))),
 			};
 
 			// have we been here before?
@@ -105,10 +105,10 @@ public partial class Day_19_Original : IPuzzle
 					GetMaxYield(s with
 					{
 						Minute = s.Minute - time,
-						OreCount = s.OreCount + s.OreRobots * time - robots["ore"]["ore"],
-						ClayCount = s.ClayCount + s.ClayRobots * time,
-						ObsidianCount = s.ObsidianCount + s.ObsidianRobots * time,
-						GeodeCount = s.GeodeCount + s.GeodeRobots * time,
+						OreCount = s.OreCount + (s.OreRobots * time) - robots["ore"]["ore"],
+						ClayCount = s.ClayCount + (s.ClayRobots * time),
+						ObsidianCount = s.ObsidianCount + (s.ObsidianRobots * time),
+						GeodeCount = s.GeodeCount + (s.GeodeRobots * time),
 						OreRobots = s.OreRobots + 1,
 					});
 				}
@@ -122,10 +122,10 @@ public partial class Day_19_Original : IPuzzle
 					GetMaxYield(s with
 					{
 						Minute = s.Minute - time,
-						OreCount = s.OreCount + s.OreRobots * time - robots["clay"]["ore"],
-						ClayCount = s.ClayCount + s.ClayRobots * time,
-						ObsidianCount = s.ObsidianCount + s.ObsidianRobots * time,
-						GeodeCount = s.GeodeCount + s.GeodeRobots * time,
+						OreCount = s.OreCount + (s.OreRobots * time) - robots["clay"]["ore"],
+						ClayCount = s.ClayCount + (s.ClayRobots * time),
+						ObsidianCount = s.ObsidianCount + (s.ObsidianRobots * time),
+						GeodeCount = s.GeodeCount + (s.GeodeRobots * time),
 						ClayRobots = s.ClayRobots + 1,
 					});
 				}
@@ -141,10 +141,10 @@ public partial class Day_19_Original : IPuzzle
 					GetMaxYield(s with
 					{
 						Minute = s.Minute - time,
-						OreCount = s.OreCount + s.OreRobots * time - robots["obsidian"]["ore"],
-						ClayCount = s.ClayCount + s.ClayRobots * time - robots["obsidian"]["clay"],
-						ObsidianCount = s.ObsidianCount + s.ObsidianRobots * time,
-						GeodeCount = s.GeodeCount + s.GeodeRobots * time,
+						OreCount = s.OreCount + (s.OreRobots * time) - robots["obsidian"]["ore"],
+						ClayCount = s.ClayCount + (s.ClayRobots * time) - robots["obsidian"]["clay"],
+						ObsidianCount = s.ObsidianCount + (s.ObsidianRobots * time),
+						GeodeCount = s.GeodeCount + (s.GeodeRobots * time),
 						ObsidianRobots = s.ObsidianRobots + 1,
 					});
 				}
@@ -160,10 +160,10 @@ public partial class Day_19_Original : IPuzzle
 					GetMaxYield(s with
 					{
 						Minute = s.Minute - time,
-						OreCount = s.OreCount + s.OreRobots * time - robots["geode"]["ore"],
-						ClayCount = s.ClayCount + s.ClayRobots * time,
-						ObsidianCount = s.ObsidianCount + s.ObsidianRobots * time - robots["geode"]["obsidian"],
-						GeodeCount = s.GeodeCount + s.GeodeRobots * time,
+						OreCount = s.OreCount + (s.OreRobots * time) - robots["geode"]["ore"],
+						ClayCount = s.ClayCount + (s.ClayRobots * time),
+						ObsidianCount = s.ObsidianCount + (s.ObsidianRobots * time) - robots["geode"]["obsidian"],
+						GeodeCount = s.GeodeCount + (s.GeodeRobots * time),
 						GeodeRobots = s.GeodeRobots + 1,
 					});
 				}
@@ -174,7 +174,7 @@ public partial class Day_19_Original : IPuzzle
 				GetMaxYield(s with
 				{
 					Minute = 0,
-					GeodeCount = s.GeodeCount + s.GeodeRobots * s.Minute,
+					GeodeCount = s.GeodeCount + (s.GeodeRobots * s.Minute),
 				});
 			}
 		}

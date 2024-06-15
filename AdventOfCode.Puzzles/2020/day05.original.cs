@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Puzzles._2020;
+namespace AdventOfCode.Puzzles._2020;
 
 [Puzzle(2020, 5, CodeType.Original)]
 public class Day_05_Original : IPuzzle
@@ -7,7 +7,7 @@ public class Day_05_Original : IPuzzle
 	{
 		var ids = input.Lines
 			.Select(s => s
-				.Select(c => c == 'B' || c == 'R')
+				.Select(c => c is 'B' or 'R')
 				.Select((b, idx) => (b, idx))
 				.Aggregate(0, (i, b) => i | ((b.b ? 1 : 0) << (s.Length - b.idx - 1))))
 			.OrderBy(x => x)

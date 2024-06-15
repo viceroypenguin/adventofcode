@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Puzzles._2018;
+namespace AdventOfCode.Puzzles._2018;
 
 [Puzzle(2018, 02, CodeType.Original)]
 public class Day_02_Original : IPuzzle
@@ -19,7 +19,7 @@ public class Day_02_Original : IPuzzle
 
 		var part1 = (twos * threes).ToString();
 
-		var part2 = 
+		var part2 =
 			new string(
 				input.Lines
 					.OrderBy(x => x)

@@ -15,9 +15,9 @@ public partial class Day_25_Original : IPuzzle
 
 			foreach (var to in l.Skip(1))
 			{
-				connections.GetOrAdd(from, _ => new())
+				connections.GetOrAdd(from, _ => [])
 					.Add(to);
-				connections.GetOrAdd(to, to => new())
+				connections.GetOrAdd(to, to => [])
 					.Add(from);
 			}
 		}
@@ -52,6 +52,7 @@ public partial class Day_25_Original : IPuzzle
 			else
 				break;
 		}
+
 		return 0;
 	}
 

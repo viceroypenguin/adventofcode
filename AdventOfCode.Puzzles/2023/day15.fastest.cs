@@ -50,7 +50,7 @@ public sealed partial class Day_15_Fastest : IPuzzle
 					{
 						var len = 8 - (idx + 1);
 						lenses.Slice(@base + idx + 1, len)
-							.CopyTo(lenses.Slice(@base + idx));
+							.CopyTo(lenses[(@base + idx)..]);
 					}
 
 					break;

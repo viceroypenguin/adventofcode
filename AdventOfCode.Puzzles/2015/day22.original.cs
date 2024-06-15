@@ -52,7 +52,7 @@ public class Day_22_Original : IPuzzle
 				return HandleTurn(partB, set, minActions, (actionsSoFar.minMana, actionsSoFar.actions.Push(TurnAction.BossAttack)));
 
 			case WhoseTurn.PlayerTurn:
-				foreach (var effect in _Effects)
+				foreach (var effect in s_effects)
 				{
 					if (set.Player.Mana < effect.Mana)
 						continue;
@@ -69,6 +69,7 @@ public class Day_22_Original : IPuzzle
 					if (playCost.minMana < minActions.minMana)
 						minActions = playCost;
 				}
+
 				return minActions;
 
 			default:
@@ -121,6 +122,7 @@ public class Day_22_Original : IPuzzle
 				effect.Effect.DoEffect(Boss, Player);
 				effect.Timer--;
 			}
+
 			_ = Player.Effects.RemoveAll(e => e.Timer <= 0);
 
 			foreach (var effect in Boss.Effects)
@@ -128,6 +130,7 @@ public class Day_22_Original : IPuzzle
 				effect.Effect.DoEffect(Player, Boss);
 				effect.Timer--;
 			}
+
 			_ = Boss.Effects.RemoveAll(e => e.Timer <= 0);
 		}
 
@@ -155,7 +158,7 @@ public class Day_22_Original : IPuzzle
 			BaseArmor = baseArmor;
 			Mana = mana;
 
-			Effects = new List<ActiveEffect>();
+			Effects = [];
 			EffectArmor = 0;
 		}
 
@@ -227,14 +230,14 @@ public class Day_22_Original : IPuzzle
 		public abstract void DoEffect(Character defender, Character attacker);
 	}
 
-	private static readonly IReadOnlyList<Effect> _Effects = new Effect[]
-	{
+	private static readonly IReadOnlyList<Effect> s_effects =
+	[
 		new MagicMissile(),
 		new Drain(),
 		new Shield(),
 		new Poison(),
 		new Recharge(),
-	};
+	];
 
 	private sealed class MagicMissile : Effect
 	{

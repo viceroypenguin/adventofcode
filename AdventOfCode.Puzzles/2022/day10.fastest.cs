@@ -11,7 +11,7 @@ public partial class Day_10_Fastest : IPuzzle
 		var inst = 0;
 		var delay = 1;
 
-		Span<char> screen = stackalloc char[41 * 6 - 1];
+		Span<char> screen = stackalloc char[(41 * 6) - 1];
 		for (var j = 40; j < screen.Length; j += 41)
 			screen[j] = '\n';
 
@@ -29,7 +29,9 @@ public partial class Day_10_Fastest : IPuzzle
 						(add, _) = l.AsSpan()[5..].AtoI();
 					}
 					else
+					{
 						(delay, add) = (1, 0);
+					}
 				}
 
 				if (x == 19)

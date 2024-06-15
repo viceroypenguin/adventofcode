@@ -9,21 +9,23 @@ public partial class Day_16_Original : IPuzzle
 	[GeneratedRegex(@" ?(\w+): (\d+)")]
 	private static partial Regex IngredientRegex();
 
-	private static readonly char[] newline = ['\r', '\n'];
+	private static readonly char[] s_newline = ['\r', '\n'];
 
 	public (string, string) Solve(PuzzleInput input)
 	{
 		var giftInput =
-@"children: 3
-cats: 7
-samoyeds: 2
-pomeranians: 3
-akitas: 0
-vizslas: 0
-goldfish: 5
-trees: 3
-cars: 2
-perfumes: 1";
+			"""
+			children: 3
+			cats: 7
+			samoyeds: 2
+			pomeranians: 3
+			akitas: 0
+			vizslas: 0
+			goldfish: 5
+			trees: 3
+			cars: 2
+			perfumes: 1
+			""";
 
 		var regex = SueIngredientRegex();
 		var detailRegex = IngredientRegex();
@@ -44,7 +46,7 @@ perfumes: 1";
 			})
 			.ToList();
 
-		var giftDetails = giftInput.Split(newline, StringSplitOptions.RemoveEmptyEntries)
+		var giftDetails = giftInput.Split(s_newline, StringSplitOptions.RemoveEmptyEntries)
 			.Select(c => detailRegex.Match(c))
 			.Select(c => new
 			{

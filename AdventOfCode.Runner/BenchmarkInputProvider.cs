@@ -1,7 +1,3 @@
-﻿using System.Net;
-using System.Text;
-using Microsoft.Extensions.Configuration;
-
 namespace AdventOfCode.Runner;
 
 public static class BenchmarkInputProvider

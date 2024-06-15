@@ -9,13 +9,12 @@ public class Day_04_Original : IPuzzle
 		var segments = input.Lines.Split(string.Empty).ToList();
 
 		// numbers are in first line of first segment
-		var numbers = segments[0].First().Split(',').Select(x => Convert.ToInt32(x)).ToList();
+		var numbers = segments[0][0].Split(',').Select(x => Convert.ToInt32(x)).ToList();
 
 		// segments 1 to end are each one bingo board
 		var boards = segments.Skip(1)
 			.Select(b =>
-			{
-				return b
+				b
 					// for each line (x)
 					.SelectMany((l, x) => l.Split()
 						// skip empty string at front " 7", for example
@@ -26,8 +25,7 @@ public class Day_04_Original : IPuzzle
 					// so dictionary that way instead
 					.ToDictionary(
 						x => x.num,
-						x => x.pos);
-			})
+						x => x.pos))
 			.ToList();
 
 		// local function to access `numbers` variable
@@ -49,6 +47,7 @@ public class Day_04_Original : IPuzzle
 					// keep track of board, the number, and how long it took
 					return (matched, n, i);
 			}
+
 			return default;
 		}
 
@@ -69,12 +68,12 @@ public class Day_04_Original : IPuzzle
 		return (part1, part2);
 	}
 
-	static bool IsBingo(bool[,] board, int x, int y) =>
+	private static bool IsBingo(bool[,] board, int x, int y) =>
 		// check if all of row/column is set;
 		// only need to check the row and column where we
 		// just set a flag, since others won't have changed status
-		Enumerable.Range(0, 5).All(_y => board[x, _y])
-		|| Enumerable.Range(0, 5).All(_x => board[_x, y]);
+		Enumerable.Range(0, 5).All(y => board[x, y])
+		|| Enumerable.Range(0, 5).All(x => board[x, y]);
 
 	private static int GetBingoValue((Dictionary<int, (int x, int y)> b, (bool[,] matched, int number, int count) bingo) mostSuccessful) =>
 		mostSuccessful.bingo.number * GetUnmatchedSum(mostSuccessful.b, mostSuccessful.bingo.matched);

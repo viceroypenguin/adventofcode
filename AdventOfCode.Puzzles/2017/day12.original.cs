@@ -28,7 +28,8 @@ public partial class Day_12_Original : IPuzzle
 					g.UnionWith(g2);
 					_ = groups.Remove(g2);
 				}
-				existingL = new List<HashSet<int>>() { g };
+
+				existingL = [g];
 			}
 
 			var existing = existingL.SingleOrDefault();

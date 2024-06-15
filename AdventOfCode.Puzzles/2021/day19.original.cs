@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace AdventOfCode.Puzzles._2021;
+﻿namespace AdventOfCode.Puzzles._2021;
 
 [Puzzle(2021, 19, CodeType.Original)]
 public partial class Day_19_Original : IPuzzle
@@ -16,7 +14,7 @@ public partial class Day_19_Original : IPuzzle
 			.Segment(x => x.Contains("scanner"))
 			// each for each block, parse scanner id and points
 			.Select(x => (
-				scanner: Convert.ToInt32(NumberRegex().Match(x.First()).Value),
+				scanner: Convert.ToInt32(NumberRegex().Match(x[0]).Value),
 				points: x.Skip(1)
 					.Select(l => l.Split(','))
 					.Select(l => (
@@ -31,11 +29,11 @@ public partial class Day_19_Original : IPuzzle
 				distances: s.points.Index()
 					.Subsets(2)
 					.Select(p => (
-						i: p[0].index,
-						j: p[1].index,
-						x: p[0].item.x - p[1].item.x,
-						y: p[0].item.y - p[1].item.y,
-						z: p[0].item.z - p[1].item.z))
+						i: p[0].Index,
+						j: p[1].Index,
+						x: p[0].Item.x - p[1].Item.x,
+						y: p[0].Item.y - p[1].Item.y,
+						z: p[0].Item.z - p[1].Item.z))
 					.Select(p => (p.i, p.j, dst: Math.Sqrt((p.x * p.x) + (p.y * p.y) + (p.z * p.z))))
 					.ToList()))
 			// transform - we want the raw list of distances

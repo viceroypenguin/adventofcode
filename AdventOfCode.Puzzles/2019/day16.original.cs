@@ -1,4 +1,4 @@
-﻿using System.Numerics;
+using System.Numerics;
 
 namespace AdventOfCode.Puzzles._2019;
 
@@ -44,11 +44,11 @@ public class Day_16_Original : IPuzzle
 		return (part1, part2);
 	}
 
-	private static readonly int[] BasePattern = [0, 1, 0, -1];
+	private static readonly int[] s_basePattern = [0, 1, 0, -1];
 	private static int[][] BuildTransforms(int count) =>
 		Enumerable.Range(1, count)
 			.Select(i => Enumerable.Range(0, count)
-				.Select(j => BasePattern[(j + 1) / i % 4])
+				.Select(j => s_basePattern[(j + 1) / i % 4])
 				.ToArray())
 			.ToArray();
 }

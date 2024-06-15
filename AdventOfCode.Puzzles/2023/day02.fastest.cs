@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Puzzles._2023;
+namespace AdventOfCode.Puzzles._2023;
 
 [Puzzle(2023, 02, CodeType.Fastest)]
 public partial class Day_02_Fastest : IPuzzle
@@ -13,8 +13,7 @@ public partial class Day_02_Fastest : IPuzzle
 		while (span.Length > 0)
 		{
 			id++;
-			span = span.Slice(
-				id switch { >= 100 => 10, >= 10 => 9, _ => 8, });
+			span = span[(id switch { >= 100 => 10, >= 10 => 9, _ => 8, })..];
 
 			var maxRed = 0;
 			var maxGreen = 0;
@@ -23,37 +22,39 @@ public partial class Day_02_Fastest : IPuzzle
 			while (true)
 			{
 				var (num, n) = span.AtoI();
-				span = span.Slice(n + 1);
+				span = span[(n + 1)..];
 
 				switch (span[0])
 				{
 					case (byte)'r':
 					{
 						maxRed = Math.Max(maxRed, num);
-						span = span.Slice(3);
+						span = span[3..];
 						break;
 					}
 					case (byte)'b':
 					{
 						maxBlue = Math.Max(maxBlue, num);
-						span = span.Slice(4);
+						span = span[4..];
 						break;
 					}
 					case (byte)'g':
 					{
 						maxGreen = Math.Max(maxGreen, num);
-						span = span.Slice(5);
+						span = span[5..];
 						break;
 					}
+					default:
+						break;
 				}
 
 				if (span[0] == (byte)'\n')
 					break;
 
-				span = span.Slice(2);
+				span = span[2..];
 			}
 
-			span = span.Slice(1);
+			span = span[1..];
 
 			if (maxRed <= 12
 				&& maxGreen <= 13

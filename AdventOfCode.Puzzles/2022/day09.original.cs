@@ -8,7 +8,7 @@ public partial class Day_09_Original : IPuzzle
 			part1: RunInstructions(input.Lines, 2).ToString(),
 			part2: RunInstructions(input.Lines, 10).ToString());
 
-	static int RunInstructions(string[] instructions, int snakeLength)
+	private static int RunInstructions(string[] instructions, int snakeLength)
 	{
 		Span<(int x, int y)> snake = new (int x, int y)[snakeLength];
 		var tailVisited = new HashSet<(int, int)>() { (0, 0), };
@@ -37,7 +37,7 @@ public partial class Day_09_Original : IPuzzle
 		return tailVisited.Count;
 	}
 
-	static (int x, int y) MoveHead((int x, int y) head, char dir) =>
+	private static (int x, int y) MoveHead((int x, int y) head, char dir) =>
 		dir switch
 		{
 			'U' => (head.x, head.y - 1),
@@ -47,7 +47,7 @@ public partial class Day_09_Original : IPuzzle
 			_ => head,
 		};
 
-	static (int x, int y) MoveFollower((int x, int y) head, (int x, int y) tail) =>
+	private static (int x, int y) MoveFollower((int x, int y) head, (int x, int y) tail) =>
 		(head.x - tail.x, head.y - tail.y) switch
 		{
 			( > 1, > 1) => (head.x - 1, head.y - 1),

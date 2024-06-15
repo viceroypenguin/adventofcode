@@ -10,14 +10,14 @@ public class Day_22_Original : IPuzzle
 			.Select(p => p.Skip(1).Select(int.Parse).ToList())
 			.ToList();
 
-		var part1 = playGame(decks[0], decks[1], static (c1, c2, _, _) => c1 > c2)
+		var part1 = PlayGame(decks[0], decks[1], static (c1, c2, _, _) => c1 > c2)
 			.winningDeck
 			.Reverse()
 			.Select((x, i) => x * (i + 1))
 			.Sum()
 			.ToString();
 
-		var part2 = playGame(decks[0], decks[1], recursiveGame)
+		var part2 = PlayGame(decks[0], decks[1], RecursiveGame)
 			.winningDeck
 			.Reverse()
 			.Select((x, i) => x * (i + 1))
@@ -27,9 +27,10 @@ public class Day_22_Original : IPuzzle
 		return (part1, part2);
 	}
 
-	private static (bool captainWon, Queue<int> winningDeck) playGame(
-		IEnumerable<int> _captain, IEnumerable<int> _crab, 
-		Func<int, int, Queue<int>, Queue<int>, bool> getRoundWinner)
+	private static (bool captainWon, Queue<int> winningDeck) PlayGame(
+		IEnumerable<int> _captain, IEnumerable<int> _crab,
+		Func<int, int, Queue<int>, Queue<int>, bool> getRoundWinner
+	)
 	{
 		var captain = new Queue<int>(_captain);
 		var crab = new Queue<int>(_crab);
@@ -63,8 +64,8 @@ public class Day_22_Original : IPuzzle
 		return (winner, winner ? captain : crab);
 	}
 
-	private static bool recursiveGame(int c1, int c2, Queue<int> d1, Queue<int> d2) =>
-		d1.Count >= c1 && d2.Count >= c2 
-			? playGame(d1.Take(c1), d2.Take(c2), recursiveGame).captainWon 
+	private static bool RecursiveGame(int c1, int c2, Queue<int> d1, Queue<int> d2) =>
+		d1.Count >= c1 && d2.Count >= c2
+			? PlayGame(d1.Take(c1), d2.Take(c2), RecursiveGame).captainWon
 			: c1 > c2;
 }

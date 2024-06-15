@@ -13,8 +13,11 @@ public class Day_03_Original : IPuzzle
 		{
 			var count = 0;
 			for (int x = 0, y = 0; x < map.Length; x += vx, y += vy)
+			{
 				if (map[x][y % map[x].Length])
 					count++;
+			}
+
 			return count;
 		}
 

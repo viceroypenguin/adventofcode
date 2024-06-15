@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Puzzles._2017;
+namespace AdventOfCode.Puzzles._2017;
 
 [Puzzle(2017, 03, CodeType.Original)]
 public class Day_03_Original : IPuzzle
@@ -41,7 +41,7 @@ public class Day_03_Original : IPuzzle
 		var gridSideLength = Math.Max(gridSize * 2, 6);
 		gridSize = gridSideLength / 2;
 		var grid = new int?[gridSideLength + 1, gridSideLength + 1];
-		int getPositionSum(int x, int y) =>
+		int GetPositionSum(int x, int y) =>
 			(grid[x - 1, y] ?? 0) +
 				(grid[x + 1, y] ?? 0) +
 				(grid[x, y - 1] ?? 0) +
@@ -74,7 +74,7 @@ public class Day_03_Original : IPuzzle
 				pos = (x: -y + gridSize, y: x + gridSize);
 			}
 
-			grid[pos.x, pos.y] = getPositionSum(pos.x, pos.y);
+			grid[pos.x, pos.y] = GetPositionSum(pos.x, pos.y);
 		}
 
 		var partB = grid[pos.x, pos.y];

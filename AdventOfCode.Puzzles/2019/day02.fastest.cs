@@ -17,7 +17,9 @@ public class Day_02_Fastest : IPuzzle
 				n = 0;
 			}
 			else if (c >= '0')
-				n = n * 10 + c - '0';
+			{
+				n = (n * 10) + c - '0';
+			}
 		}
 
 		nums = nums[..numCount];
@@ -45,14 +47,14 @@ public class Day_02_Fastest : IPuzzle
 
 		var perNoun = one - zero;
 		var noun = (19690720 - zero) / perNoun;
-		var verb = 19690720 - (zero + perNoun * noun);
+		var verb = 19690720 - (zero + (perNoun * noun));
 
-		var part2 = (noun * 100 + verb).ToString();
+		var part2 = ((noun * 100) + verb).ToString();
 		return (part1, part2);
 	}
 
 	[MethodImpl(MethodImplOptions.AggressiveOptimization | MethodImplOptions.AggressiveInlining)]
-	static void RunProgram(Span<int> instructions, int instructionCount)
+	private static void RunProgram(Span<int> instructions, int instructionCount)
 	{
 		var ip = 0;
 		while (ip < instructionCount && instructions[ip] != 99)

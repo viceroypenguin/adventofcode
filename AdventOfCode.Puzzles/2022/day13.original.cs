@@ -10,15 +10,15 @@ public partial class Day_13_Original : IPuzzle
 	public (string part1, string part2) Solve(PuzzleInput input)
 	{
 		var packets = input.Lines
-			.Where(x => x != string.Empty)
+			.Where(x => !string.IsNullOrEmpty(x))
 			.Select(l => JsonSerializer.Deserialize<JsonNode>(l))
 			.ToList();
 
 		var part1 = packets
 			.Batch(2)
 			.Index()
-			.Where(x => CompareItem(x.item[0], x.item[1]) < 0)
-			.Select(x => x.index + 1)
+			.Where(x => CompareItem(x.Item[0], x.Item[1]) < 0)
+			.Select(x => x.Index + 1)
 			.Sum()
 			.ToString();
 

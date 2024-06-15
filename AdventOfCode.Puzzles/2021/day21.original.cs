@@ -31,12 +31,12 @@ public class Day_21_Original : IPuzzle
 			// = base * 9 + 6
 			// update position mod 10
 			// math isn't exactly perfect, but %10 washes out a lot
-			pos1 = (pos1 + (cnt % 100) * 9 + 6) % 10;
+			pos1 = (pos1 + ((cnt % 100) * 9) + 6) % 10;
 			// increment turn count
 			cnt++;
 			// update score based on position
 			// add one more since 0..9 vs 1..10
-			score1 += (pos1 + 1);
+			score1 += pos1 + 1;
 			// did we win?
 			if (score1 >= 1000)
 			{
@@ -46,9 +46,9 @@ public class Day_21_Original : IPuzzle
 			}
 
 			// vice-versa
-			pos2 = (pos2 + (cnt % 100) * 9 + 6) % 10;
+			pos2 = (pos2 + ((cnt % 100) * 9) + 6) % 10;
 			cnt++;
-			score2 += (pos2 + 1);
+			score2 += pos2 + 1;
 			if (score2 >= 1000)
 			{
 				return (score1 * cnt * 3).ToString();
@@ -64,7 +64,7 @@ public class Day_21_Original : IPuzzle
 				from x in Enumerable.Range(1, 3)
 				from y in Enumerable.Range(1, 3)
 				from z in Enumerable.Range(1, 3)
-				// key by the total sum of the three dice rolls
+					// key by the total sum of the three dice rolls
 				group 1 by x + y + z into a
 				// how many universes of each sum 
 				select (pos: a.Key, cnt: a.Count()))
@@ -100,7 +100,7 @@ public class Day_21_Original : IPuzzle
 							var s1 = score1 + p1 + 1;
 							return (
 								// switch p1/p2
-								state: (pos2, p1, score2, s1), 
+								state: (pos2, p1, score2, s1),
 								// this happened p.cnt times in each of the
 								// existing # of universes
 								count: count * p.cnt);

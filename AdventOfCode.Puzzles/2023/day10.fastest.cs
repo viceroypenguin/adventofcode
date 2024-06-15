@@ -1,4 +1,4 @@
-﻿using System.Buffers;
+using System.Buffers;
 using System.Runtime.Intrinsics.X86;
 using CommunityToolkit.HighPerformance;
 
@@ -7,7 +7,7 @@ namespace AdventOfCode.Puzzles._2023;
 [Puzzle(2023, 10, CodeType.Fastest)]
 public sealed partial class Day_10_Fastest : IPuzzle
 {
-	private static readonly SearchValues<byte> _nextInterest =
+	private static readonly SearchValues<byte> s_nextInterest =
 		SearchValues.Create("|F7\n"u8);
 
 	public (string, string) Solve(PuzzleInput input)
@@ -104,7 +104,7 @@ public sealed partial class Day_10_Fastest : IPuzzle
 		var isInLoop = false;
 		for (p = 0; p < span.Length;)
 		{
-			var n = span.Slice(p).IndexOfAny(_nextInterest);
+			var n = span[p..].IndexOfAny(s_nextInterest);
 
 			if (isInLoop)
 				part2 += GetIsLoopPopCnt(loop, p, n);
@@ -120,6 +120,7 @@ public sealed partial class Day_10_Fastest : IPuzzle
 			{
 				isInLoop = !isInLoop;
 			}
+
 			p++;
 
 		}

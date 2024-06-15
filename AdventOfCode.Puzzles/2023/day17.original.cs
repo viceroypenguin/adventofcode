@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 
 namespace AdventOfCode.Puzzles._2023;
 
@@ -7,7 +7,7 @@ public partial class Day_17_Original : IPuzzle
 {
 	private enum Dir { North, East, South, West, }
 
-	private static readonly (int x, int y, Dir dir)[] Neighbors =
+	private static readonly (int x, int y, Dir dir)[] s_neighbors =
 		[(0, 1, Dir.South), (0, -1, Dir.North), (1, 0, Dir.East), (-1, 0, Dir.West)];
 
 	public (string, string) Solve(PuzzleInput input)
@@ -17,7 +17,7 @@ public partial class Day_17_Original : IPuzzle
 		IEnumerable<((int x, int y, int length, Dir dir), int)> GetP1Neighbors(
 			(int x, int y, int length, Dir dir) state, int cost)
 		{
-			foreach (var (px, py, dir) in Neighbors)
+			foreach (var (px, py, dir) in s_neighbors)
 			{
 				if (state.length == 3 && state.dir == dir)
 					continue;
@@ -62,7 +62,7 @@ public partial class Day_17_Original : IPuzzle
 		IEnumerable<((int x, int y, int length, Dir dir), int)> GetP2Neighbors(
 			(int x, int y, int length, Dir dir) state, int cost)
 		{
-			foreach (var (px, py, dir) in Neighbors)
+			foreach (var (px, py, dir) in s_neighbors)
 			{
 				if (state.length == 10 && state.dir == dir)
 					continue;

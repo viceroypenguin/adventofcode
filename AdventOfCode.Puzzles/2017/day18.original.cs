@@ -101,6 +101,7 @@ public partial class Day_18_Original : IPuzzle
 						ip += (int)GetValue(instruction.Source);
 						continue;
 					}
+
 					break;
 				}
 

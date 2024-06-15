@@ -1,4 +1,4 @@
-﻿
+
 namespace AdventOfCode.Puzzles._2023;
 
 [Puzzle(2023, 07, CodeType.Original)]
@@ -53,7 +53,7 @@ public partial class Day_07_Original : IPuzzle
 			_cards = hand.ToCharArray();
 			_part1 = part1;
 			var cards = _cards
-				.GroupBy(x => x, (x, g) => (card: x, count: g.Count(), order: _p2CardOrder.IndexOf(x)))
+				.GroupBy(x => x, (x, g) => (card: x, count: g.Count(), order: s_p2CardOrder.IndexOf(x)))
 				.OrderByDescending(x => x.count)
 				.ThenBy(x => x.order)
 				.ToList();
@@ -68,35 +68,30 @@ public partial class Day_07_Original : IPuzzle
 				}
 			}
 
-			if (cards[0].count == 5)
-				_handType = HandType.FiveOfAKind;
-			else if (cards[0].count == 4)
-				_handType = HandType.FourOfAKind;
-			else if (cards[0].count == 3 && cards[1].count == 2)
-				_handType = HandType.FullHouse;
-			else if (cards[0].count == 3)
-				_handType = HandType.ThreeOfAKind;
-			else if (cards[0].count == 2 && cards[1].count == 2)
-				_handType = HandType.TwoPair;
-			else if (cards[0].count == 2)
-				_handType = HandType.OnePair;
-			else
-				_handType = HandType.HighCard;
+			_handType = (cards[0].count, cards[1].count) switch
+			{
+				(5, _) => HandType.FiveOfAKind,
+				(4, _) => HandType.FourOfAKind,
+				(3, 2) => HandType.FullHouse,
+				(3, _) => HandType.ThreeOfAKind,
+				(2, 2) => HandType.TwoPair,
+				(2, _) => HandType.OnePair,
+				_ => HandType.HighCard,
+			};
 		}
 
 		public int CompareTo(Hand? other)
 		{
 			if (other == null) throw new InvalidOperationException();
 
-			var cmp = this._handType.CompareTo(other._handType);
+			var cmp = _handType.CompareTo(other._handType);
 			if (cmp != 0) return -cmp;
 
 			foreach (var (l, r) in _cards.Zip(other._cards))
 			{
-				if (_part1)
-					cmp = _p1CardOrder.IndexOf(l).CompareTo(_p1CardOrder.IndexOf(r));
-				else
-					cmp = _p2CardOrder.IndexOf(l).CompareTo(_p2CardOrder.IndexOf(r));
+				cmp = _part1
+					? s_p1CardOrder.IndexOf(l).CompareTo(s_p1CardOrder.IndexOf(r))
+					: s_p2CardOrder.IndexOf(l).CompareTo(s_p2CardOrder.IndexOf(r));
 
 				if (cmp != 0) return -cmp;
 			}
@@ -104,7 +99,7 @@ public partial class Day_07_Original : IPuzzle
 			return 0;
 		}
 
-		private static readonly List<char> _p1CardOrder = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'];
-		private static readonly List<char> _p2CardOrder = ['A', 'K', 'Q', 'T', '9', '8', '7', '6', '5', '4', '3', '2', 'J'];
+		private static readonly List<char> s_p1CardOrder = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'];
+		private static readonly List<char> s_p2CardOrder = ['A', 'K', 'Q', 'T', '9', '8', '7', '6', '5', '4', '3', '2', 'J'];
 	}
 }

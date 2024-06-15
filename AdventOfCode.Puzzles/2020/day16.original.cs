@@ -6,11 +6,11 @@ public class Day_16_Original : IPuzzle
 	public (string, string) Solve(PuzzleInput input)
 	{
 		var segments = input.Lines
-			.Segment(s => string.IsNullOrWhiteSpace(s))
+			.Segment(string.IsNullOrWhiteSpace)
 			.ToArray();
 
 		var rulesDescriptions = segments[0];
-		var myTicket = segments[1].Last().Split(',').Select(int.Parse).ToArray();
+		var myTicket = segments[1][^1].Split(',').Select(int.Parse).ToArray();
 		var otherTickets = segments[2].Skip(2).Select(l => l.Split(',').Select(int.Parse).ToArray()).ToArray();
 
 		var rules = rulesDescriptions

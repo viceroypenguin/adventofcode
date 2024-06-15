@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-using System.Text;
-using System.Threading.Tasks.Dataflow;
+﻿using System.Text;
 
 namespace AdventOfCode.Puzzles._2019;
 
@@ -28,7 +26,7 @@ public partial class Day_25_Original : IPuzzle
 
 		for (var i = 0; ; i++)
 		{
-			var s = script;
+			var s = Script;
 			foreach (var (item, value) in items)
 			{
 				if ((i & value) != 0)
@@ -42,41 +40,43 @@ public partial class Day_25_Original : IPuzzle
 		}
 	}
 
-	const string script =
-@"south
-take astrolabe
-west
-take hologram
-south
-take space law space brochure
-west
-take wreath
-west
-take hypercube
-east
-east
-north
-east
-south
-take cake
-west
-north
-take coin
-south
-east
-east
-south
-east
-take food ration
-south
-drop astrolabe
-drop hologram
-drop space law space brochure
-drop wreath
-drop hypercube
-drop cake
-drop coin
-drop food ration";
+	private const string Script =
+		"""
+		south
+		take astrolabe
+		west
+		take hologram
+		south
+		take space law space brochure
+		west
+		take wreath
+		west
+		take hypercube
+		east
+		east
+		north
+		east
+		south
+		take cake
+		west
+		north
+		take coin
+		south
+		east
+		east
+		south
+		east
+		take food ration
+		south
+		drop astrolabe
+		drop hologram
+		drop space law space brochure
+		drop wreath
+		drop hypercube
+		drop cake
+		drop coin
+		drop food ration
+		""";
 
 	private static (ProgramStatus, string) DoPart(long[] instructions, string scriptCode)
 	{
@@ -98,6 +98,7 @@ drop food ration";
 				var code = CodeRegex().Match(output).Value;
 				return (pc.ProgramStatus, code);
 			}
+
 			pc.Outputs.Clear();
 		}
 

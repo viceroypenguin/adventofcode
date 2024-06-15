@@ -45,6 +45,7 @@ public class Day_25_Original : IPuzzle
 				l.AddRange(Enumerable.Repeat(0, index - l.Count + 1));
 			l[index] = value;
 		}
+
 		void SetValue(int position, int value)
 		{
 			if (position >= 0)

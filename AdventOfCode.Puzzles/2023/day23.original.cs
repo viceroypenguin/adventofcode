@@ -36,7 +36,7 @@ public partial class Day_23_Original : IPuzzle
 			{
 				if (p == end)
 				{
-					var list = graph.GetOrAdd(from, _ => new());
+					var list = graph.GetOrAdd(from, _ => []);
 
 					if (!list.Any(q => q.p == p))
 						list.Add((p, dist));
@@ -56,7 +56,7 @@ public partial class Day_23_Original : IPuzzle
 				}
 				else if (neighbors.Count > 1)
 				{
-					var list = graph.GetOrAdd(from, _ => new());
+					var list = graph.GetOrAdd(from, _ => []);
 
 					if (!list.Any(q => q.p == p))
 					{

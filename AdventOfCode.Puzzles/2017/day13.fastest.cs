@@ -8,9 +8,9 @@ public class Day_2017_13_Fastest : IPuzzle
 {
 	private struct ModMask
 	{
-		public ulong CycleLength;
+		public ulong CycleLength { get; set; }
 		// because max cycle length is > 32, we need 64
-		public ulong Mask;
+		public ulong Mask { get; set; }
 	}
 
 	public (string, string) Solve(PuzzleInput input)
@@ -48,6 +48,7 @@ public class Day_2017_13_Fastest : IPuzzle
 				range = (range * 10) + c - '0';
 			}
 		}
+
 		var partA = severity.ToString();
 
 		// coalesce cycle-length of 2 into -4, -6, etc.
