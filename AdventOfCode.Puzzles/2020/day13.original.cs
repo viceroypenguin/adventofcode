@@ -12,7 +12,7 @@ public class Day_13_Original : IPuzzle
 
 		var myEarliestTime = int.Parse(lines[0]);
 		var part1 = times
-			.Where(s => s != "x")
+			.Where(s => s is not "x")
 			.Select(int.Parse)
 			.Select(b => (bus: b, firstTimeAfter: (((myEarliestTime / b) + 1) * b) - myEarliestTime))
 			.PartialSortBy(1, x => x.firstTimeAfter)
@@ -24,7 +24,7 @@ public class Day_13_Original : IPuzzle
 		var increment = earliestTime;
 		for (var i = 1; i < times.Length; i++)
 		{
-			if (times[i] == "x") continue;
+			if (times[i] is "x") continue;
 
 			var curTime = long.Parse(times[i]);
 			var modValue = curTime - (i % curTime);

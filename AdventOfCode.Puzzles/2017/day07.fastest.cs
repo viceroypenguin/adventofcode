@@ -1,8 +1,11 @@
-﻿namespace AdventOfCode.Puzzles._2017;
+using System.Runtime.InteropServices;
+
+namespace AdventOfCode.Puzzles._2017;
 
 [Puzzle(2017, 07, CodeType.Fastest)]
 public unsafe class Day_07_Fastest : IPuzzle
 {
+	[StructLayout(LayoutKind.Auto)]
 	private struct Line
 	{
 		public long _id;
@@ -10,6 +13,7 @@ public unsafe class Day_07_Fastest : IPuzzle
 		public ValueArray8<long> _children;
 	}
 
+	[StructLayout(LayoutKind.Auto)]
 	private struct HashEntry
 	{
 		public long _id;
@@ -39,7 +43,7 @@ public unsafe class Day_07_Fastest : IPuzzle
 			}
 			else if (c == '>')
 			{
-				;
+				continue;
 			}
 			else if (c >= '0')
 			{

@@ -1,11 +1,14 @@
+using System.Runtime.InteropServices;
+
 namespace AdventOfCode.Puzzles._2022;
 
 [Puzzle(2022, 15, CodeType.Original)]
 public partial class Day_15_Original : IPuzzle
 {
-	[GeneratedRegex("Sensor at x=(?<sx>-?\\d+), y=(?<sy>-?\\d+): closest beacon is at x=(?<bx>-?\\d+), y=(?<by>-?\\d+)")]
+	[GeneratedRegex("Sensor at x=(?<sx>-?\\d+), y=(?<sy>-?\\d+): closest beacon is at x=(?<bx>-?\\d+), y=(?<by>-?\\d+)", RegexOptions.ExplicitCapture)]
 	private static partial Regex SensorRegex();
 
+	[StructLayout(LayoutKind.Auto)]
 	private record struct Sensor(
 		int Sx, int Sy,
 		int Bx, int By,
@@ -93,7 +96,10 @@ public partial class Day_15_Original : IPuzzle
 			.First();
 	}
 
+	[StructLayout(LayoutKind.Auto)]
 	private record struct Point(int X, int Y);
+
+	[StructLayout(LayoutKind.Auto)]
 	private record struct Line(Point A, Point B)
 	{
 		public readonly (int x, int y)? Intersects(Line o)

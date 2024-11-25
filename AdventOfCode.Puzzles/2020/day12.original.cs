@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 
 namespace AdventOfCode.Puzzles._2020;
 
@@ -28,9 +28,9 @@ public class Day_12_Original : IPuzzle
 			(x, y, (d + a) % 4);
 
 		int x = 0, y = 0, d = 0;
-		foreach (var (_d, n) in lines.Select(s => (s[0], Convert.ToInt32(s[1..]))))
+		foreach (var (dir, n) in lines.Select(s => (s[0], Convert.ToInt32(s[1..]))))
 		{
-			(x, y, d) = _d switch
+			(x, y, d) = dir switch
 			{
 				'F' => Move(x, y, d, d, n),
 
@@ -63,9 +63,9 @@ public class Day_12_Original : IPuzzle
 
 		int wayx = 10, wayy = 1;
 		int x = 0, y = 0;
-		foreach (var (_d, n) in lines.Select(s => (s[0], Convert.ToInt32(s[1..]))))
+		foreach (var (dir, n) in lines.Select(s => (s[0], Convert.ToInt32(s[1..]))))
 		{
-			(x, y, wayx, wayy) = _d switch
+			(x, y, wayx, wayy) = dir switch
 			{
 				'F' => (x + (wayx * n), y + (wayy * n), wayx, wayy),
 

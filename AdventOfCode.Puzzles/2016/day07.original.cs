@@ -45,10 +45,7 @@ public class Day_07_Original : IPuzzle
 				})
 				.ToList();
 
-		var partA =
-			splits
-				.Where(x => x.outside.Any(IsABBA) && !x.inside.Any(IsABBA))
-				.Count();
+		var partA = splits.Count(x => x.outside.Exists(IsABBA) && !x.inside.Exists(IsABBA));
 
 		static IList<string> GetABAs(IList<string> strs)
 		{
@@ -69,7 +66,7 @@ public class Day_07_Original : IPuzzle
 		{
 			foreach (var aba in abas)
 			{
-				var bab = string.Join("", new[] { aba[1], aba[0], aba[1] });
+				var bab = string.Join("", [aba[1], aba[0], aba[1]]);
 				if (strs.Any(s => s.Contains(bab)))
 					return true;
 			}

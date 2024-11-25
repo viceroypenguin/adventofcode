@@ -1,9 +1,9 @@
-﻿namespace AdventOfCode.Puzzles._2017;
+namespace AdventOfCode.Puzzles._2017;
 
 [Puzzle(2017, 12, CodeType.Original)]
 public partial class Day_12_Original : IPuzzle
 {
-	[GeneratedRegex("^(?<prog_a>\\w+) \\<-\\> ((?<prog_b>\\w+)(,\\s*)?)*$", RegexOptions.Compiled)]
+	[GeneratedRegex("^(?<prog_a>\\w+) \\<-\\> ((?<prog_b>\\w+)(,\\s*)?)*$", RegexOptions.ExplicitCapture)]
 	private static partial Regex ProgramRegex();
 
 	public (string, string) Solve(PuzzleInput input)

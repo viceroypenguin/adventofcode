@@ -48,7 +48,6 @@ public class Day_05_Fastest : IPuzzle
 	private static void RunProgram(Span<int> instructions, int instructionCount, int progInput, out int progOutput)
 	{
 		progOutput = 0;
-		if (instructions == null) return;
 
 		var ip = 0;
 		while (ip < instructionCount && instructions[ip] != 99)

@@ -1,9 +1,9 @@
-﻿namespace AdventOfCode.Puzzles._2017;
+namespace AdventOfCode.Puzzles._2017;
 
 [Puzzle(2017, 13, CodeType.Original)]
 public partial class Day_13_Original : IPuzzle
 {
-	[GeneratedRegex("^(?<depth>\\d+): (?<range>\\d+)$", RegexOptions.Compiled)]
+	[GeneratedRegex("^(?<depth>\\d+): (?<range>\\d+)$", RegexOptions.ExplicitCapture)]
 	private static partial Regex TargetRegex();
 
 	public (string, string) Solve(PuzzleInput input)

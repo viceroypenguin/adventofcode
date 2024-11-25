@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Puzzles._2020;
+namespace AdventOfCode.Puzzles._2020;
 
 [Puzzle(2020, 22, CodeType.Original)]
 public class Day_22_Original : IPuzzle
@@ -28,12 +28,12 @@ public class Day_22_Original : IPuzzle
 	}
 
 	private static (bool captainWon, Queue<int> winningDeck) PlayGame(
-		IEnumerable<int> _captain, IEnumerable<int> _crab,
+		IEnumerable<int> captainInput, IEnumerable<int> crabInput,
 		Func<int, int, Queue<int>, Queue<int>, bool> getRoundWinner
 	)
 	{
-		var captain = new Queue<int>(_captain);
-		var crab = new Queue<int>(_crab);
+		var captain = new Queue<int>(captainInput);
+		var crab = new Queue<int>(crabInput);
 
 		var seenStates = new HashSet<int>();
 

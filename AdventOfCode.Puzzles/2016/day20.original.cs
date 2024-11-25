@@ -1,9 +1,9 @@
-﻿namespace AdventOfCode.Puzzles._2016;
+namespace AdventOfCode.Puzzles._2016;
 
 [Puzzle(2016, 20, CodeType.Original)]
 public partial class Day_20_Original : IPuzzle
 {
-	[GeneratedRegex("(?<from>\\d+)-(?<to>\\d+)", RegexOptions.Compiled)]
+	[GeneratedRegex("(?<from>\\d+)-(?<to>\\d+)", RegexOptions.ExplicitCapture)]
 	private static partial Regex AddressRangeRegex();
 
 	public (string, string) Solve(PuzzleInput input)

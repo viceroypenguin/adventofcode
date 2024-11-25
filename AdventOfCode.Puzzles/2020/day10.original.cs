@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Puzzles._2020;
+namespace AdventOfCode.Puzzles._2020;
 
 [Puzzle(2020, 10, CodeType.Original)]
 public class Day_10_Original : IPuzzle
@@ -36,7 +36,7 @@ public class Day_10_Original : IPuzzle
 				3 => 4,
 				4 => 7,
 				5 => 15,
-				_ => throw new NotImplementedException("??"),
+				_ => throw new InvalidOperationException("??"),
 			})
 			.Aggregate(1L, (agg, x) => agg * x);
 

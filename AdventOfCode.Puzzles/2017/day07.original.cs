@@ -1,14 +1,15 @@
-﻿namespace AdventOfCode.Puzzles._2017;
+namespace AdventOfCode.Puzzles._2017;
 
 [Puzzle(2017, 07, CodeType.Original)]
-public class Day_07_Original : IPuzzle
+public partial class Day_07_Original : IPuzzle
 {
+	[GeneratedRegex(@"^(?<id>\w+) \((?<weight>\d+)\)( -> ((?<childid>\w+)(,\s*)?)*)?$", RegexOptions.ExplicitCapture)]
+	private static partial Regex ProgramRegex();
+
 	public (string, string) Solve(PuzzleInput input)
 	{
-		var regex = new Regex(@"^(?<id>\w+) \((?<weight>\d+)\)( -> ((?<childid>\w+)(,\s*)?)*)?$", RegexOptions.Compiled);
-
 		var nodes = input.Lines
-			.Select(s => regex.Match(s))
+			.Select(s => ProgramRegex().Match(s))
 			.Select(m => new
 			{
 				id = m.Groups["id"].Value,
@@ -28,7 +29,7 @@ public class Day_07_Original : IPuzzle
 		{
 			var node = dict[id];
 			return node.weight + node.childids.Select(GetSum).Sum();
-		};
+		}
 
 		int GetVariance(string id)
 		{
@@ -46,7 +47,7 @@ public class Day_07_Original : IPuzzle
 				? sums[0].sum - variances[0].sum
 				: variances[0].sum - sums[0].sum;
 			return dict[variantId].weight + adjustment;
-		};
+		}
 
 		var partB = GetVariance(root);
 		return (root, partB.ToString());

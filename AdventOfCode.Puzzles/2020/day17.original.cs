@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 
 namespace AdventOfCode.Puzzles._2020;
 
@@ -14,16 +14,7 @@ public class Day_17_Original : IPuzzle
 
 	private static string DoPartA(byte[] input)
 	{
-		var state = new Dictionary<(int x, int y, int z), bool>(1024);
-		int _x = 0, _y = 0;
-		foreach (var c in input)
-		{
-			if (c == '\n') { _x = 0; _y++; }
-			else
-			{
-				state[(_x++, _y, 0)] = c == '#';
-			}
-		}
+		var state = BuildPartAStates(input);
 
 		var count = new Dictionary<(int x, int y, int z), int>(1024);
 		var dirs = Enumerable.Range(-1, 3)
@@ -60,30 +51,40 @@ public class Day_17_Original : IPuzzle
 			}
 		}
 
-		return state.Where(kvp => kvp.Value).Count().ToString();
+		return state.Count(kvp => kvp.Value).ToString();
+	}
+
+	private static Dictionary<(int x, int y, int z), bool> BuildPartAStates(byte[] input)
+	{
+		var state = new Dictionary<(int x, int y, int z), bool>(8192);
+		int x = 0, y = 0;
+		foreach (var c in input)
+		{
+			if (c == '\n')
+				(x, y) = (0, y + 1);
+			else
+				state[(x++, y, 0)] = c == '#';
+		}
+
+		return state;
 	}
 
 	private static string DoPartB(byte[] input)
 	{
-		var state = new Dictionary<(int x, int y, int z, int w), bool>(8192);
-		int _x = 0, _y = 0;
-		foreach (var c in input)
-		{
-			if (c == '\n') { _x = 0; _y++; }
-			else
-			{
-				state[(_x++, _y, 0, 0)] = c == '#';
-			}
-		}
+		var state = BuildPartBStates(input);
 
 		var count = new Dictionary<(int x, int y, int z, int w), int>(8192);
 		var dirs = Enumerable.Range(-1, 3)
 			.SelectMany(x => Enumerable.Range(-1, 3)
 				.SelectMany(y => Enumerable.Range(-1, 3)
 					.SelectMany(z => Enumerable.Range(-1, 3)
-						.Select(w => (x, y, z, w)))))
+						.Select(w => (x, y, z, w))
+					)
+				)
+			)
 			.Where(d => d != (0, 0, 0, 0))
 			.ToArray();
+
 		for (var i = 0; i < 6; i++)
 		{
 			count.Clear();
@@ -112,6 +113,21 @@ public class Day_17_Original : IPuzzle
 			}
 		}
 
-		return state.Where(kvp => kvp.Value).Count().ToString();
+		return state.Count(kvp => kvp.Value).ToString();
+	}
+
+	private static Dictionary<(int x, int y, int z, int w), bool> BuildPartBStates(byte[] input)
+	{
+		var state = new Dictionary<(int x, int y, int z, int w), bool>(8192);
+		int x = 0, y = 0;
+		foreach (var c in input)
+		{
+			if (c == '\n')
+				(x, y) = (0, y + 1);
+			else
+				state[(x++, y, 0, 0)] = c == '#';
+		}
+
+		return state;
 	}
 }

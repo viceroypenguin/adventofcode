@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Puzzles._2018;
+namespace AdventOfCode.Puzzles._2018;
 
 [Puzzle(2018, 24, CodeType.Original)]
 public partial class Day_24_Original : IPuzzle
@@ -23,7 +23,10 @@ public partial class Day_24_Original : IPuzzle
 		public List<Group> Groups { get; init; } = [];
 	}
 
-	[GeneratedRegex(@"^(?<u>\d+) units each with (?<hp>\d+) hit points (\(((; )?immune to ((, )?(?<immune>\w+))+|(; )?weak to ((, )?(?<weak>\w+))+)+\) )?with an attack that does (?<dmg>\d+) (?<type>\w+) damage at initiative (?<init>\d+)$", RegexOptions.ExplicitCapture | RegexOptions.Compiled)]
+	[GeneratedRegex(
+		@"^(?<u>\d+) units each with (?<hp>\d+) hit points (\(((; )?immune to ((, )?(?<immune>\w+))+|(; )?weak to ((, )?(?<weak>\w+))+)+\) )?with an attack that does (?<dmg>\d+) (?<type>\w+) damage at initiative (?<init>\d+)$",
+		RegexOptions.ExplicitCapture
+	)]
 	private static partial Regex UnitRegex();
 
 	public (string, string) Solve(PuzzleInput input)

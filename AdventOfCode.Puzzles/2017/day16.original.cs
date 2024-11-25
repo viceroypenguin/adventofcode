@@ -3,7 +3,10 @@ namespace AdventOfCode.Puzzles._2017;
 [Puzzle(2017, 16, CodeType.Original)]
 public partial class Day_16_Original : IPuzzle
 {
-	[GeneratedRegex("^((?<spin>s(?<amt>\\d+))|(?<xchg>x(?<xchg_a>\\d+)/(?<xchg_b>\\d+))|(?<partner>p(?<part_a>\\w)/(?<part_b>\\w)))$", RegexOptions.Compiled)]
+	[GeneratedRegex(
+		"^((?<spin>s(?<amt>\\d+))|(?<xchg>x(?<xchg_a>\\d+)/(?<xchg_b>\\d+))|(?<partner>p(?<part_a>\\w)/(?<part_b>\\w)))$",
+		RegexOptions.ExplicitCapture
+	)]
 	private static partial Regex IsntructionRegex();
 
 	public (string, string) Solve(PuzzleInput input)

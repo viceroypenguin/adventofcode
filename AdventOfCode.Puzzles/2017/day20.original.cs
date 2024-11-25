@@ -1,9 +1,9 @@
-﻿namespace AdventOfCode.Puzzles._2017;
+namespace AdventOfCode.Puzzles._2017;
 
 [Puzzle(2017, 20, CodeType.Original)]
 public partial class Day_20_Original : IPuzzle
 {
-	[GeneratedRegex("^p=<(-?\\d+),(-?\\d+),(-?\\d+)>,\\s*v=<(-?\\d+),(-?\\d+),(-?\\d+)>,\\s*a=<(-?\\d+),(-?\\d+),(-?\\d+)>$", RegexOptions.Compiled)]
+	[GeneratedRegex("^p=<(-?\\d+),(-?\\d+),(-?\\d+)>,\\s*v=<(-?\\d+),(-?\\d+),(-?\\d+)>,\\s*a=<(-?\\d+),(-?\\d+),(-?\\d+)>$")]
 	private static partial Regex PointRegex();
 
 	public (string, string) Solve(PuzzleInput input)

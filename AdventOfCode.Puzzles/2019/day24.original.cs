@@ -1,3 +1,6 @@
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
+
 namespace AdventOfCode.Puzzles._2019;
 
 [Puzzle(2019, 24, CodeType.Original)]
@@ -46,6 +49,7 @@ public class Day_24_Original : IPuzzle
 		}
 	}
 
+	[SuppressMessage("Style", "IDE1006:Naming Styles")]
 	private static string DoPartB(byte[] input)
 	{
 		var state = new HashSet<(int x, int y, int z)>();
@@ -74,57 +78,57 @@ public class Day_24_Original : IPuzzle
 				if (x - 1 == 3 && y == 3)
 				{
 					for (var _y = 1; _y <= 5; _y++)
-						counts[(5, _y, z + 1)] = counts.GetValueOrDefault((5, _y, z + 1)) + 1;
+						Increment(counts, 5, _y, z + 1);
 				}
 				else if (x == 1)
 				{
-					counts[(2, 3, z - 1)] = counts.GetValueOrDefault((2, 3, z - 1)) + 1;
+					Increment(counts, 2, 3, z - 1);
 				}
 				else
 				{
-					counts[(x - 1, y, z)] = counts.GetValueOrDefault((x - 1, y, z)) + 1;
+					Increment(counts, x - 1, y, z);
 				}
 
 				if (y - 1 == 3 && x == 3)
 				{
 					for (var _x = 1; _x <= 5; _x++)
-						counts[(_x, 5, z + 1)] = counts.GetValueOrDefault((_x, 5, z + 1)) + 1;
+						Increment(counts, _x, 5, z + 1);
 				}
 				else if (y == 1)
 				{
-					counts[(3, 2, z - 1)] = counts.GetValueOrDefault((3, 2, z - 1)) + 1;
+					Increment(counts, 3, 2, z - 1);
 				}
 				else
 				{
-					counts[(x, y - 1, z)] = counts.GetValueOrDefault((x, y - 1, z)) + 1;
+					Increment(counts, x, y - 1, z);
 				}
 
 				if (x + 1 == 3 && y == 3)
 				{
 					for (var _y = 1; _y <= 5; _y++)
-						counts[(1, _y, z + 1)] = counts.GetValueOrDefault((1, _y, z + 1)) + 1;
+						Increment(counts, 1, _y, z + 1);
 				}
 				else if (x == 5)
 				{
-					counts[(4, 3, z - 1)] = counts.GetValueOrDefault((4, 3, z - 1)) + 1;
+					Increment(counts, 4, 3, z - 1);
 				}
 				else
 				{
-					counts[(x + 1, y, z)] = counts.GetValueOrDefault((x + 1, y, z)) + 1;
+					Increment(counts, x + 1, y, z);
 				}
 
 				if (y + 1 == 3 && x == 3)
 				{
 					for (var _x = 1; _x <= 5; _x++)
-						counts[(_x, 1, z + 1)] = counts.GetValueOrDefault((_x, 1, z + 1)) + 1;
+						Increment(counts, _x, 1, z + 1);
 				}
 				else if (y == 5)
 				{
-					counts[(3, 4, z - 1)] = counts.GetValueOrDefault((3, 4, z - 1)) + 1;
+					Increment(counts, 3, 4, z - 1);
 				}
 				else
 				{
-					counts[(x, y + 1, z)] = counts.GetValueOrDefault((x, y + 1, z)) + 1;
+					Increment(counts, x, y + 1, z);
 				}
 			}
 
@@ -139,5 +143,11 @@ public class Day_24_Original : IPuzzle
 		}
 
 		return state.Count.ToString();
+	}
+
+	private static void Increment(Dictionary<(int x, int y, int z), int> counts, int x, int y, int z)
+	{
+		ref var cnt = ref CollectionsMarshal.GetValueRefOrAddDefault(counts, (x, y, z), out var _);
+		cnt++;
 	}
 }

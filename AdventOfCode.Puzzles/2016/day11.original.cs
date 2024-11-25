@@ -6,6 +6,8 @@ public class Day_11_Original : IPuzzle
 	[Flags]
 	public enum Devices
 	{
+		None = 0,
+
 		StrontiumGenerator = 1,
 		StrontiumMicrochip = 2,
 		StrontiumSet = StrontiumGenerator | StrontiumMicrochip,
@@ -67,14 +69,14 @@ public class Day_11_Original : IPuzzle
 
 	public static bool IsValidState(Devices d)
 	{
-		return (d & Devices.Generators) == 0
-			|| ((d & Devices.StrontiumSet) != Devices.StrontiumMicrochip
-				&& (d & Devices.PlutoniumSet) != Devices.PlutoniumMicrochip
-				&& (d & Devices.ThuliumSet) != Devices.ThuliumMicrochip
-				&& (d & Devices.RutheniumSet) != Devices.RutheniumMicrochip
-				&& (d & Devices.CuriumSet) != Devices.CuriumMicrochip
-				&& (d & Devices.EleriumSet) != Devices.EleriumMicrochip
-				&& (d & Devices.DilithiumSet) != Devices.DilithiumMicrochip);
+		return (d & Devices.Generators) is Devices.None
+			|| ((d & Devices.StrontiumSet) is not Devices.StrontiumMicrochip
+				&& (d & Devices.PlutoniumSet) is not Devices.PlutoniumMicrochip
+				&& (d & Devices.ThuliumSet) is not Devices.ThuliumMicrochip
+				&& (d & Devices.RutheniumSet) is not Devices.RutheniumMicrochip
+				&& (d & Devices.CuriumSet) is not Devices.CuriumMicrochip
+				&& (d & Devices.EleriumSet) is not Devices.EleriumMicrochip
+				&& (d & Devices.DilithiumSet) is not Devices.DilithiumMicrochip);
 	}
 
 	public (string, string) Solve(PuzzleInput input)
@@ -96,7 +98,7 @@ public class Day_11_Original : IPuzzle
 				firstFloor,
 				Devices.ThuliumGenerator | Devices.RutheniumGenerator | Devices.RutheniumMicrochip | Devices.CuriumGenerator | Devices.CuriumMicrochip,
 				Devices.ThuliumMicrochip,
-				0,
+				Devices.None,
 			],
 			ElevatorFloor = 0,
 			StepCount = 0,
@@ -105,10 +107,10 @@ public class Day_11_Original : IPuzzle
 		return SuperEnumerable.GetShortestPathCost<State, int>(
 			initialState,
 			GetNextStates,
-			s => s.Floors[0] == 0
-				&& s.Floors[1] == 0
-				&& s.Floors[2] == 0
-				&& s.Floors[3] != 0);
+			s => s.Floors[0] is Devices.None
+				&& s.Floors[1] is Devices.None
+				&& s.Floors[2] is Devices.None
+				&& s.Floors[3] is not Devices.None);
 	}
 
 	private static readonly Devices[] s_individualDevices =

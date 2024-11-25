@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode.Puzzles._2021;
+using System.Diagnostics.CodeAnalysis;
+
+namespace AdventOfCode.Puzzles._2021;
 
 [Puzzle(2021, 20, CodeType.Original)]
 public class Day_20_Original : IPuzzle
@@ -60,6 +62,7 @@ public class Day_20_Original : IPuzzle
 			.ToDictionary(x => (x.x, x.y), x => x.b);
 	}
 
+	[SuppressMessage("CodeQuality", "IDE0051:Remove unused private members")]
 	private static void DumpImage(Dictionary<(int x, int y), bool> image, int step)
 	{
 		var minX = image.Min(kvp => kvp.Key.x) - 1;

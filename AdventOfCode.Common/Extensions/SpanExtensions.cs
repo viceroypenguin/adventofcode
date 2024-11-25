@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode.Common.Extensions;
+﻿using System.Runtime.InteropServices;
+
+namespace AdventOfCode.Common.Extensions;
 
 public static class SpanExtensions
 {
@@ -12,6 +14,7 @@ public static class SpanExtensions
 /// <remarks>
 /// To get an instance of this type, use <see cref="MemoryExtensions.EnumerateLines(ReadOnlySpan{char})"/>.
 /// </remarks>
+[StructLayout(LayoutKind.Auto)]
 public ref struct SpanByteLineEnumerator
 {
 	private ReadOnlySpan<byte> _remaining;
@@ -77,6 +80,7 @@ public ref struct SpanByteLineEnumerator
 /// <remarks>
 /// To get an instance of this type, use <see cref="MemoryExtensions.EnumerateLines(ReadOnlySpan{char})"/>.
 /// </remarks>
+[StructLayout(LayoutKind.Auto)]
 public ref struct SpanByteLineLengthEnumerator
 {
 	private readonly int _length;

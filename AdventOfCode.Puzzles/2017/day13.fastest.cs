@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+using System.Numerics;
+using System.Runtime.InteropServices;
 using static AdventOfCode.Common.Extensions.NumberExtensions;
 
 namespace AdventOfCode.Puzzles._2017;
@@ -6,6 +7,7 @@ namespace AdventOfCode.Puzzles._2017;
 [Puzzle(2017, 13, CodeType.Original)]
 public class Day_2017_13_Fastest : IPuzzle
 {
+	[StructLayout(LayoutKind.Auto)]
 	private struct ModMask
 	{
 		public ulong CycleLength { get; set; }
@@ -111,7 +113,7 @@ public class Day_2017_13_Fastest : IPuzzle
 		// using for loop, we add fullCycle at end once too many
 		var partB = (delay - fullCycle).ToString();
 
-		return (partA.ToString(), partB.ToString());
+		return (partA, partB);
 	}
 
 	private static int GetLayer(Span<ModMask> span, int i, uint cycleLength)

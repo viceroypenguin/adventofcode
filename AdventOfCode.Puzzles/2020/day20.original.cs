@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 
 namespace AdventOfCode.Puzzles._2020;
 
@@ -208,7 +208,8 @@ public class Day_20_Original : IPuzzle
 			var leftSide = GetSide(leftIdx, 1);
 			foreach (var tileIdx in _tileLookup[leftSide])
 			{
-				if (_stack.Any(x => x.tileId == tileIdx)) continue;
+				if (_stack.Exists(x => x.tileId == tileIdx))
+					continue;
 
 				var tile = _tiles[tileIdx];
 				for (var o = 0; o < 8; o++)
@@ -236,7 +237,7 @@ public class Day_20_Original : IPuzzle
 		}
 	}
 
-	private static (int x, int y)? FindNessie(IReadOnlyList<IReadOnlyList<char>> map, IReadOnlyList<IReadOnlyList<char>> nessie, (int x, int y) loc)
+	private static (int x, int y)? FindNessie(List<List<char>> map, List<List<char>> nessie, (int x, int y) loc)
 	{
 		for (var y = loc.y; y < map.Count - nessie.Count; y++)
 		{
@@ -252,7 +253,7 @@ public class Day_20_Original : IPuzzle
 		return default;
 	}
 
-	private static bool IsNessieHere(IReadOnlyList<IReadOnlyList<char>> map, IReadOnlyList<IReadOnlyList<char>> nessie, (int x, int y) loc)
+	private static bool IsNessieHere(List<List<char>> map, List<List<char>> nessie, (int x, int y) loc)
 	{
 		for (var y = 0; y < nessie.Count; y++)
 		{
@@ -266,7 +267,7 @@ public class Day_20_Original : IPuzzle
 		return true;
 	}
 
-	private static void ClearNessie(List<List<char>> map, IReadOnlyList<IReadOnlyList<char>> nessie, (int x, int y) loc)
+	private static void ClearNessie(List<List<char>> map, List<List<char>> nessie, (int x, int y) loc)
 	{
 		for (var y = 0; y < nessie.Count; y++)
 		{

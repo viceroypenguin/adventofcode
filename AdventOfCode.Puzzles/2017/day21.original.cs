@@ -1,4 +1,4 @@
-﻿using System.Collections.Specialized;
+using System.Collections.Specialized;
 using System.Diagnostics;
 
 namespace AdventOfCode.Puzzles._2017;
@@ -129,13 +129,16 @@ public class Day_21_Original : IPuzzle
 		IEnumerable<BitVector32> Convert3To2(IList<BitVector32> bvs)
 		{
 			var n = (int)Math.Sqrt(bvs.Count);
-			return Enumerable.Range(0, n / 2).SelectMany(_i =>
-				Enumerable.Range(0, n / 2).SelectMany(_j =>
-				{
-					var i = _i * 2;
-					var j = _j * 2;
-					return DoConvert3To2([bvs[(i * n) + j], bvs[(i * n) + j + 1], bvs[((i + 1) * n) + j], bvs[((i + 1) * n) + j + 1],]);
-				}));
+			return Enumerable.Range(0, n / 2).Select(i => i * 2).SelectMany(i =>
+				Enumerable.Range(0, n / 2).Select(j => j * 2).SelectMany(j =>
+					DoConvert3To2([
+						bvs[(i * n) + j],
+						bvs[(i * n) + j + 1],
+						bvs[((i + 1) * n) + j],
+						bvs[((i + 1) * n) + j + 1],
+					])
+				)
+			);
 		}
 
 		IList<BitVector32> TransitionStates(IList<BitVector32> bvs)

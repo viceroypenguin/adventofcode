@@ -1,9 +1,9 @@
-﻿namespace AdventOfCode.Puzzles._2017;
+namespace AdventOfCode.Puzzles._2017;
 
 [Puzzle(2017, 15, CodeType.Original)]
 public partial class Day_15_Original : IPuzzle
 {
-	[GeneratedRegex(@"^Generator (?<gen>\w) starts with (?<init>\d+)$", RegexOptions.Compiled)]
+	[GeneratedRegex(@"^Generator (?<gen>\w) starts with (?<init>\d+)$", RegexOptions.ExplicitCapture)]
 	private static partial Regex GeneratorRegex();
 
 	public (string, string) Solve(PuzzleInput input)

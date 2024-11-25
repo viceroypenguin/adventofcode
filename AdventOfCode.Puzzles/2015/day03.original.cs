@@ -15,7 +15,7 @@ public class Day_03_Original : IPuzzle
 				if (c == 'v') current = (current.x, current.y - 1);
 				return current;
 			})
-			.Concat(new[] { (0, 0) })
+			.Concat([(0, 0)])
 			.Distinct()
 			.Count();
 
@@ -32,7 +32,7 @@ public class Day_03_Original : IPuzzle
 				current = t;
 				return other;
 			})
-			.Concat(new[] { (0, 0) })
+			.Concat([(0, 0)])
 			.Distinct()
 			.Count();
 

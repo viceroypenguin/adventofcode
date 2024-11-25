@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 
 namespace AdventOfCode.Puzzles._2015;
 
@@ -13,7 +13,8 @@ public partial class Day_07_Original : IPuzzle
 			)
 			\s*->\s*
 			(?<dest>\w+)\s*$",
-		RegexOptions.ExplicitCapture | RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace)]
+		RegexOptions.ExplicitCapture | RegexOptions.IgnorePatternWhitespace
+	)]
 	private static partial Regex InstructionRegex();
 
 	public (string, string) Solve(PuzzleInput input)

@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Puzzles._2015;
+namespace AdventOfCode.Puzzles._2015;
 
 [Puzzle(2015, 23, CodeType.Original)]
 public partial class Day_23_Original : IPuzzle
@@ -65,7 +65,7 @@ public partial class Day_23_Original : IPuzzle
 
 	public partial class Half : Instruction
 	{
-		[GeneratedRegex(@"hlf (\w)", RegexOptions.Compiled)]
+		[GeneratedRegex(@"hlf (\w)")]
 		public override partial Regex Parser();
 
 		public override void ProcessInstruction(Match instruction, CPU cpu)
@@ -82,7 +82,7 @@ public partial class Day_23_Original : IPuzzle
 
 	public partial class Third : Instruction
 	{
-		[GeneratedRegex(@"tpl (\w)", RegexOptions.Compiled)]
+		[GeneratedRegex(@"tpl (\w)")]
 		public override partial Regex Parser();
 
 		public override void ProcessInstruction(Match instruction, CPU cpu)
@@ -99,7 +99,7 @@ public partial class Day_23_Original : IPuzzle
 
 	public partial class Increment : Instruction
 	{
-		[GeneratedRegex(@"inc (\w)", RegexOptions.Compiled)]
+		[GeneratedRegex(@"inc (\w)")]
 		public override partial Regex Parser();
 
 		public override void ProcessInstruction(Match instruction, CPU cpu)
@@ -116,7 +116,7 @@ public partial class Day_23_Original : IPuzzle
 
 	public partial class Jump : Instruction
 	{
-		[GeneratedRegex(@"jmp ((\+|\-)\d+)", RegexOptions.Compiled)]
+		[GeneratedRegex(@"jmp ((\+|\-)\d+)")]
 		public override partial Regex Parser();
 
 		public override void ProcessInstruction(Match instruction, CPU cpu)
@@ -128,7 +128,7 @@ public partial class Day_23_Original : IPuzzle
 
 	public partial class JumpEven : Instruction
 	{
-		[GeneratedRegex(@"jie (\w), ((\+|\-)\d+)", RegexOptions.Compiled)]
+		[GeneratedRegex(@"jie (\w), ((\+|\-)\d+)")]
 		public override partial Regex Parser();
 
 		public override void ProcessInstruction(Match instruction, CPU cpu)
@@ -154,7 +154,7 @@ public partial class Day_23_Original : IPuzzle
 
 	public partial class JumpOne : Instruction
 	{
-		[GeneratedRegex(@"jio (\w), ((\+|\-)\d+)", RegexOptions.Compiled)]
+		[GeneratedRegex(@"jio (\w), ((\+|\-)\d+)")]
 		public override partial Regex Parser();
 
 		public override void ProcessInstruction(Match instruction, CPU cpu)

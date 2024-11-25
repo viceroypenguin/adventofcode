@@ -1,9 +1,12 @@
-﻿namespace AdventOfCode.Puzzles._2016;
+namespace AdventOfCode.Puzzles._2016;
 
 [Puzzle(2016, 10, CodeType.Original)]
 public partial class Day_10_Original : IPuzzle
 {
-	[GeneratedRegex("(?:(?<give_away>bot (?<bot>\\d+) gives low to (?<low_type>bot|output) (?<low_num>\\d+) and high to (?<high_type>bot|output) (?<high_num>\\d+))|(?<receive_value>value (?<value>\\d+) goes to bot (?<bot>\\d+)))", RegexOptions.Compiled)]
+	[GeneratedRegex(
+		"(?:(?<give_away>bot (?<bot>\\d+) gives low to (?<low_type>bot|output) (?<low_num>\\d+) and high to (?<high_type>bot|output) (?<high_num>\\d+))|(?<receive_value>value (?<value>\\d+) goes to bot (?<bot>\\d+)))",
+		RegexOptions.ExplicitCapture
+	)]
 	private static partial Regex InstructionRegex();
 
 	public (string, string) Solve(PuzzleInput input)

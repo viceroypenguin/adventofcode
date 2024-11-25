@@ -1,9 +1,12 @@
-﻿namespace AdventOfCode.Puzzles._2016;
+namespace AdventOfCode.Puzzles._2016;
 
 [Puzzle(2016, 08, CodeType.Original)]
 public partial class Day_08_Original : IPuzzle
 {
-	[GeneratedRegex("(?:(?<rect>rect (?<rect_rows>\\d+)x(?<rect_cols>\\d+))|(?<rotate_column>rotate column x=(?<col_num>\\d+) by (?<col_amt>\\d+))|(?<rotate_row>rotate row y=(?<row_num>\\d+) by (?<row_amt>\\d+)))", RegexOptions.Compiled)]
+	[GeneratedRegex(
+		"(?:(?<rect>rect (?<rect_rows>\\d+)x(?<rect_cols>\\d+))|(?<rotate_column>rotate column x=(?<col_num>\\d+) by (?<col_amt>\\d+))|(?<rotate_row>rotate row y=(?<row_num>\\d+) by (?<row_amt>\\d+)))",
+		RegexOptions.ExplicitCapture
+	)]
 	private static partial Regex InstructionRegex();
 
 	public (string, string) Solve(PuzzleInput input)

@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 
 namespace AdventOfCode.Puzzles._2021;
 
@@ -116,7 +116,7 @@ public class Day_16_Original : IPuzzle
 		public uint Version { get; set; }
 		public PacketType Type { get; set; }
 		public ulong Value { get; set; }
-		public IReadOnlyList<Packet> Children { get; set; } = [];
+		public List<Packet> Children { get; set; } = [];
 
 		public int GetVersionSum() =>
 			(int)Version + Children.Sum(c => c.GetVersionSum());

@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Puzzles._2015;
+namespace AdventOfCode.Puzzles._2015;
 
 [Puzzle(2015, 08, CodeType.Original)]
 public partial class Day_08_Original : IPuzzle
@@ -26,6 +26,6 @@ public partial class Day_08_Original : IPuzzle
 		return (partA.ToString(), partB.ToString());
 	}
 
-	[GeneratedRegex(@"""(?<char>\\x.{2}|\\\\|\\\""|\w)*""", RegexOptions.Compiled)]
+	[GeneratedRegex(@"""(?<char>\\x.{2}|\\\\|\\\""|\w)*""", RegexOptions.ExplicitCapture)]
 	private static partial Regex DecodeRegex();
 }

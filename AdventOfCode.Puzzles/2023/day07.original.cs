@@ -42,7 +42,7 @@ public partial class Day_07_Original : IPuzzle
 		HighCard,
 	}
 
-	private sealed class Hand : IComparable<Hand>
+	private sealed class Hand : IComparable<Hand>, IEquatable<Hand>
 	{
 		private readonly HandType _handType;
 		private readonly char[] _cards;
@@ -98,6 +98,13 @@ public partial class Day_07_Original : IPuzzle
 
 			return 0;
 		}
+
+		public bool Equals(Hand? other) =>
+			other is not null
+			&& CompareTo(other) == 0;
+
+		public override bool Equals(object? obj) => Equals(obj as Hand);
+		public override int GetHashCode() => throw new InvalidOperationException();
 
 		private static readonly List<char> s_p1CardOrder = ['A', 'K', 'Q', 'J', 'T', '9', '8', '7', '6', '5', '4', '3', '2'];
 		private static readonly List<char> s_p2CardOrder = ['A', 'K', 'Q', 'T', '9', '8', '7', '6', '5', '4', '3', '2', 'J'];

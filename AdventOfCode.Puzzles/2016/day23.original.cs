@@ -1,11 +1,11 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 
 namespace AdventOfCode.Puzzles._2016;
 
 [Puzzle(2016, 23, CodeType.Original)]
 public partial class Day_23_Original : IPuzzle
 {
-	[GeneratedRegex("(?<i>\\w{3}) (?<x>-?\\d+|a|b|c|d)(?: (?<y>-?\\d+|a|b|c|d))?", RegexOptions.Compiled)]
+	[GeneratedRegex("(?<i>\\w{3}) (?<x>-?\\d+|a|b|c|d)(?: (?<y>-?\\d+|a|b|c|d))?", RegexOptions.ExplicitCapture)]
 	private static partial Regex InstructionRegex();
 
 	public (string, string) Solve(PuzzleInput input)

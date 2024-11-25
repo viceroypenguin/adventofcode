@@ -1,9 +1,9 @@
-﻿namespace AdventOfCode.Puzzles._2016;
+namespace AdventOfCode.Puzzles._2016;
 
 [Puzzle(2016, 15, CodeType.Original)]
 public partial class Day_15_Original : IPuzzle
 {
-	[GeneratedRegex("Disc #(?<disc_num>\\d+) has (?<num_positions>\\d+) positions; at time=0, it is at position (?<initial_position>\\d+).", RegexOptions.Compiled)]
+	[GeneratedRegex("Disc #(?<disc_num>\\d+) has (?<num_positions>\\d+) positions; at time=0, it is at position (?<initial_position>\\d+).", RegexOptions.ExplicitCapture)]
 	private static partial Regex DiscRegex();
 
 	private sealed record Disc(int NumPositions, int InitialPosition);

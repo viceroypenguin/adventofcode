@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace AdventOfCode.Puzzles._2015;
 
@@ -12,6 +13,7 @@ public partial class Day_06_Original : IPuzzle
 		Toggle,
 	}
 
+	[StructLayout(LayoutKind.Auto)]
 	private struct Action
 	{
 		public Command Command { get; set; }
@@ -21,7 +23,7 @@ public partial class Day_06_Original : IPuzzle
 		public int EndY { get; set; }
 	}
 
-	[GeneratedRegex("((?<on>turn on)|(?<off>turn off)|(?<toggle>toggle)) (?<startX>\\d+),(?<startY>\\d+) through (?<endX>\\d+),(?<endY>\\d+)", RegexOptions.ExplicitCapture | RegexOptions.Compiled)]
+	[GeneratedRegex("((?<on>turn on)|(?<off>turn off)|(?<toggle>toggle)) (?<startX>\\d+),(?<startY>\\d+) through (?<endX>\\d+),(?<endY>\\d+)", RegexOptions.ExplicitCapture)]
 	private static partial Regex InstructionRegex();
 
 	public (string, string) Solve(PuzzleInput input)
@@ -68,7 +70,7 @@ public partial class Day_06_Original : IPuzzle
 			}
 
 			return cnt;
-		};
+		}
 
 		var partA = ProcessActions(c =>
 			c switch

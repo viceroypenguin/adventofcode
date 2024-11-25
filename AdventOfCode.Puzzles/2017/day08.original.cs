@@ -1,9 +1,9 @@
-﻿namespace AdventOfCode.Puzzles._2017;
+namespace AdventOfCode.Puzzles._2017;
 
 [Puzzle(2017, 08, CodeType.Original)]
 public partial class Day_08_Original : IPuzzle
 {
-	[GeneratedRegex("^(?<reg_a>\\w+) (?<adj_dir>inc|dec) (?<adj_amt>-?\\d+) if (?<reg_b>\\w+) (?<comp>.{1,2}) (?<val>-?\\d+)$", RegexOptions.Compiled)]
+	[GeneratedRegex("^(?<reg_a>\\w+) (?<adj_dir>inc|dec) (?<adj_amt>-?\\d+) if (?<reg_b>\\w+) (?<comp>.{1,2}) (?<val>-?\\d+)$", RegexOptions.ExplicitCapture)]
 	private static partial Regex InstructionRegex();
 
 	public (string, string) Solve(PuzzleInput input)

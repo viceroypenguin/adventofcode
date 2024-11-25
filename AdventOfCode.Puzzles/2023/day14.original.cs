@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace AdventOfCode.Puzzles._2023;
 
 [Puzzle(2023, 14, CodeType.Original)]
@@ -43,6 +45,7 @@ public partial class Day_14_Original : IPuzzle
 		TiltMapEast(map);
 	}
 
+	[SuppressMessage("CodeQuality", "IDE0051:Remove unused private members")]
 	private static string PrintMap(byte[][] map)
 	{
 		return string.Join(Environment.NewLine,

@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Puzzles._2015;
+namespace AdventOfCode.Puzzles._2015;
 
 [Puzzle(2015, 02, CodeType.Original)]
 public partial class Day_02_Original : IPuzzle
@@ -34,6 +34,6 @@ public partial class Day_02_Original : IPuzzle
 			totalRibbonLength.ToString());
 	}
 
-	[GeneratedRegex("(?<l>\\d+)x(?<w>\\d+)x(?<h>\\d+)", RegexOptions.Compiled)]
+	[GeneratedRegex("(?<l>\\d+)x(?<w>\\d+)x(?<h>\\d+)", RegexOptions.ExplicitCapture)]
 	private static partial Regex BoxRegex();
 }

@@ -3,7 +3,7 @@ namespace AdventOfCode.Puzzles._2018;
 [Puzzle(2018, 03, CodeType.Original)]
 public partial class Day_03_Original : IPuzzle
 {
-	[GeneratedRegex("^#(?<id>\\d+)\\s+@\\s+(?<el>\\d+),(?<et>\\d+): (?<wide>\\d+)x(?<tall>\\d+)$", RegexOptions.Compiled)]
+	[GeneratedRegex("^#(?<id>\\d+)\\s+@\\s+(?<el>\\d+),(?<et>\\d+): (?<wide>\\d+)x(?<tall>\\d+)$", RegexOptions.ExplicitCapture)]
 	private static partial Regex ClaimsRegex();
 
 	public (string, string) Solve(PuzzleInput input)

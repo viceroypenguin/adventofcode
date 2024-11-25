@@ -1,4 +1,4 @@
-﻿using System.Security.Cryptography;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace AdventOfCode.Puzzles._2016;
@@ -10,10 +10,11 @@ public partial class Day_14_Original : IPuzzle
 	{
 		return (
 			ExecutePart(input.Lines[0], 1).ToString(),
-			ExecutePart(input.Lines[0], 2017).ToString());
+			ExecutePart(input.Lines[0], 2017).ToString()
+		);
 	}
 
-	[GeneratedRegex("(\\w|\\d)\\1{2}", RegexOptions.Compiled)]
+	[GeneratedRegex("(\\w|\\d)\\1{2}")]
 	private static partial Regex TripletRegex();
 
 #pragma warning disable CA5351 // Do Not Use Broken Cryptographic Algorithms
@@ -21,8 +22,6 @@ public partial class Day_14_Original : IPuzzle
 	private static int ExecutePart(string input, int numHashes)
 	{
 		using var md5 = MD5.Create();
-
-		var threeMatchingRegex = TripletRegex();
 
 		var queue = new Queue<string>();
 		var index = -1;
@@ -39,7 +38,7 @@ public partial class Day_14_Original : IPuzzle
 			{
 				var bytes = Encoding.ASCII.GetBytes(hashText);
 				var hash = md5.ComputeHash(bytes);
-				hashText = BitConverter.ToString(hash).ToLower().Replace("-", "");
+				hashText = Convert.ToHexStringLower(hash);
 			}
 
 			return hashText;
@@ -59,7 +58,7 @@ public partial class Day_14_Original : IPuzzle
 			index++;
 			EnsureQueueLength();
 
-			var match = threeMatchingRegex.Match(possibleKey.hash);
+			var match = TripletRegex().Match(possibleKey.hash);
 			if (!match.Success) continue;
 
 			var fiveLetter = new string(match.Value[0], 5);

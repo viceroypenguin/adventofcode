@@ -1,9 +1,9 @@
-﻿namespace AdventOfCode.Puzzles._2016;
+namespace AdventOfCode.Puzzles._2016;
 
 [Puzzle(2016, 04, CodeType.Original)]
 public partial class Day_04_Original : IPuzzle
 {
-	[GeneratedRegex("(?<name>[a-z-]+)-(?<id>\\d+)[[](?<checksum>\\w{5})[]]", RegexOptions.Compiled)]
+	[GeneratedRegex("(?<name>[a-z-]+)-(?<id>\\d+)[[](?<checksum>\\w{5})[]]", RegexOptions.ExplicitCapture)]
 	private static partial Regex RoomRegex();
 
 	public (string, string) Solve(PuzzleInput input)

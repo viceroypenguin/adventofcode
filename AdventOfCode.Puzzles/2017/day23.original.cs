@@ -1,11 +1,11 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 
 namespace AdventOfCode.Puzzles._2017;
 
 [Puzzle(2017, 23, CodeType.Original)]
 public partial class Day_23_Original : IPuzzle
 {
-	[GeneratedRegex("^(?<inst>set|sub|mul|jnz) (?<dst>\\w|-?\\d+)( (?<src>\\w|-?\\d+))?$", RegexOptions.Compiled)]
+	[GeneratedRegex("^(?<inst>set|sub|mul|jnz) (?<dst>\\w|-?\\d+)( (?<src>\\w|-?\\d+))?$", RegexOptions.ExplicitCapture)]
 	private static partial Regex InstructionRegex();
 
 	private sealed class Instruction

@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Numerics;
 
 namespace AdventOfCode.Puzzles._2019;
@@ -17,7 +17,8 @@ public partial class Day_22_Original : IPuzzle
 			(?<new_stack>deal\sinto\snew\sstack) |
 			(?<cut>cut\s(?<n>-?\d+)) |
 			(?<increment>deal\swith\sincrement\s(?<n>\d+))",
-		RegexOptions.ExplicitCapture | RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace)]
+		RegexOptions.ExplicitCapture | RegexOptions.IgnorePatternWhitespace
+	)]
 	private static partial Regex InstructionRegex();
 
 	public (string, string) Solve(PuzzleInput input)
@@ -70,7 +71,7 @@ public partial class Day_22_Original : IPuzzle
 
 		// build per-loop offset/increment
 		// net change is v = increment * v + offset
-		var (_increment, _offset) = instructions
+		var (perLoopIncrement, perLoopOffset) = instructions
 			.Aggregate((increment: BigInteger.One, offset: BigInteger.Zero), (x, i) =>
 				i switch
 				{
@@ -81,15 +82,16 @@ public partial class Day_22_Original : IPuzzle
 				});
 
 		// execute Shuffles loops
-		var increment = BigInteger.ModPow(_increment, Shuffles, DeckSize);
-		var offset = _offset
+		var increment = BigInteger.ModPow(perLoopIncrement, Shuffles, DeckSize);
+		var offset = perLoopOffset
 			* (increment - 1)
-			* DeckInverse(_increment - 1)
+			* DeckInverse(perLoopIncrement - 1)
 			% DeckSize;
 
 		// make final adjustments
 		var originalPosition = Normalize(
-			(InitialCard - offset) % DeckSize * DeckInverse(increment));
+			(InitialCard - offset) % DeckSize * DeckInverse(increment)
+		);
 
 		return originalPosition.ToString();
 	}

@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Puzzles._2019;
+namespace AdventOfCode.Puzzles._2019;
 
 [Puzzle(2019, 18, CodeType.Original)]
 public class Day_18_Original : IPuzzle
@@ -34,16 +34,16 @@ public class Day_18_Original : IPuzzle
 
 		IEnumerable<((ulong, byte), int)> GetNeighbors((ulong keys, byte pos) state, int cost)
 		{
-			foreach (var (_key, steps, requiredKeys) in importantItems[state.pos])
+			foreach (var (key, steps, requiredKeys) in importantItems[state.pos])
 			{
-				var key = 1UL << (_key - (byte)'a');
-				if ((state.keys & key) != 0)
+				var keyBit = 1UL << (key - (byte)'a');
+				if ((state.keys & keyBit) != 0)
 					continue;
 				if (~(~requiredKeys | state.keys) != 0)
 					continue;
 
 				yield return (
-					(state.keys | key, _key),
+					(state.keys | keyBit, key),
 					cost + steps);
 			}
 		}
@@ -53,14 +53,19 @@ public class Day_18_Original : IPuzzle
 
 	private static Dictionary<byte, List<(byte key, int steps, ulong requiredKeys)>> BuildDistanceCache(byte[][] map) =>
 		map
-			.SelectMany((r, y) => r
-				.Select((c, x) => (y, x, c)))
-			.Where(p => p.c is
-				(>= (byte)'a' and <= (byte)'z') or (byte)'@'
-				or (byte)'$'
-				or (byte)'%'
-				or (byte)'&'
-				or (byte)'\'')
+			.SelectMany(
+				(r, y) => r
+					.Select((c, x) => (y, x, c))
+			)
+			.Where(
+				p => p.c is
+					(>= (byte)'a' and <= (byte)'z')
+					or (byte)'@'
+					or (byte)'$'
+					or (byte)'%'
+					or (byte)'&'
+					or (byte)'\''
+			)
 			.ToDictionary(
 				p => p.c,
 				p =>
@@ -151,17 +156,17 @@ public class Day_18_Original : IPuzzle
 			for (var i = 0; i < positions.Length; i++)
 			{
 				var basePos = positions[i];
-				foreach (var (_key, steps, requiredKeys) in importantItems[basePos])
+				foreach (var (key, steps, requiredKeys) in importantItems[basePos])
 				{
-					var key = 1UL << (_key - (byte)'a');
-					if ((state.keys & key) != 0)
+					var keyBit = 1UL << (key - (byte)'a');
+					if ((state.keys & keyBit) != 0)
 						continue;
 					if (~(~requiredKeys | state.keys) != 0)
 						continue;
 
-					positions[i] = _key;
+					positions[i] = key;
 					yield return (
-						(state.keys | key, BitConverter.ToUInt32(positions)),
+						(state.keys | keyBit, BitConverter.ToUInt32(positions)),
 						cost + steps);
 				}
 

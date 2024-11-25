@@ -55,7 +55,7 @@ public partial class Day_21_Original : IPuzzle
 			var (monkey, val) = ("root", 0m);
 			while (true)
 			{
-				if (monkey == "humn")
+				if (monkey is "humn")
 					return val;
 
 				var m = values[monkey];

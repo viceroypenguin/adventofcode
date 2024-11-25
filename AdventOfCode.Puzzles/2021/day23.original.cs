@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace AdventOfCode.Puzzles._2021;
 
@@ -299,6 +300,7 @@ public class Day_23_Original : IPuzzle
 	private const byte D = (byte)'D';
 	private const byte Empty = 0;
 
+	[StructLayout(LayoutKind.Auto)]
 	private record struct Board
 	{
 		public ValueArray4<ValueArray4<byte>> _rooms;

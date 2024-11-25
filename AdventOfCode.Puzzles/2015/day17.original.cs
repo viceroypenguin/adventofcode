@@ -22,7 +22,7 @@ public class Day_17_Original : IPuzzle
 		while (cnt < max)
 		{
 			var sum = 0;
-			var bitstream = new BitArray(new[] { cnt });
+			var bitstream = new BitArray([cnt]);
 			foreach (var _ in bitstream.OfType<bool>().Select((b, i) => new { b, i }))
 			{
 				if (_.b)

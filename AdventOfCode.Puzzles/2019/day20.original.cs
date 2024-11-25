@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Puzzles._2019;
+namespace AdventOfCode.Puzzles._2019;
 
 [Puzzle(2019, 20, CodeType.Original)]
 public class Day_20_Original : IPuzzle
@@ -126,8 +126,8 @@ public class Day_20_Original : IPuzzle
 				var otherLetter = (char)input[cur + cur - prev];
 				var destination =
 					prev > cur
-					? new string(new[] { otherLetter, letter, isExternal ? 'e' : 'i' })
-					: new string(new[] { letter, otherLetter, isExternal ? 'e' : 'i' });
+					? new string([otherLetter, letter, isExternal ? 'e' : 'i'])
+					: new string([letter, otherLetter, isExternal ? 'e' : 'i']);
 				destinationVisitor(destination, prev, distance - 1);
 			}
 		}

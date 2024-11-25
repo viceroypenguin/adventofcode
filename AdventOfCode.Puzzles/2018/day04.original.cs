@@ -1,21 +1,23 @@
-﻿namespace AdventOfCode.Puzzles._2018;
+namespace AdventOfCode.Puzzles._2018;
 
 [Puzzle(2018, 04, CodeType.Original)]
-public class Day_04_Original : IPuzzle
+public partial class Day_04_Original : IPuzzle
 {
+	[GeneratedRegex(
+		@"^\[(?<date>\d{4}-\d{2}-\d{2} \d{2}\:\d{2})\] ((Guard #(?<id>\d+) begins shift)|(?<asleep>falls asleep)|(?<awake>wakes up))",
+		RegexOptions.ExplicitCapture
+	)]
+	private static partial Regex GuardShiftRegex();
+
 	public (string, string) Solve(PuzzleInput input)
 	{
 		const int BeginShift = 1;
 		const int FallsAsleep = 2;
 		const int WakesUp = 3;
 
-		var regex = new Regex(
-			@"^\[(?<date>\d{4}-\d{2}-\d{2} \d{2}\:\d{2})\] ((Guard #(?<id>\d+) begins shift)|(?<asleep>falls asleep)|(?<awake>wakes up))",
-			RegexOptions.Compiled | RegexOptions.ExplicitCapture);
-
 		var sleeps = input.Lines
 			.Select(l => l.Trim())
-			.Select(l => regex.Match(l))
+			.Select(l => GuardShiftRegex().Match(l))
 			.Select(m => new
 			{
 				date = Convert.ToDateTime(m.Groups["date"].Value),

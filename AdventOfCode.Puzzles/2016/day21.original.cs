@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode.Puzzles._2016;
+namespace AdventOfCode.Puzzles._2016;
 
 [Puzzle(2016, 21, CodeType.Original)]
 public partial class Day_21_Original : IPuzzle
@@ -14,7 +14,7 @@ public partial class Day_21_Original : IPuzzle
 		(?<reverse>reverse\ positions\ (?<reverse_x>\d+)\ through\ (?<reverse_y>\d+)) |
 		(?<move>move\ position\ (?<move_x>\d+)\ to\ position\ (?<move_y>\d+))
 		""",
-		RegexOptions.Compiled | RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture)]
+		RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture)]
 	private static partial Regex InstructionRegex();
 
 	public (string, string) Solve(PuzzleInput input)

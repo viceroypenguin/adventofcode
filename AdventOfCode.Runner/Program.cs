@@ -59,14 +59,14 @@ else
 	var font = FigletFont.Default;
 	var f = new FigletText(font, "Advent of Code")
 	{
-		Color = ConsoleColor.Green
+		Color = ConsoleColor.Green,
 	};
 
 	console.Write(f);
 
 	var puzzles = runner.Puzzles;
 
-	var years = puzzles.Select(x => x.Year).Distinct().OrderBy(x => x).ToList();
+	var years = puzzles.Select(x => x.Year).Distinct().Order().ToList();
 
 	if (years.Count == 0)
 	{

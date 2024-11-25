@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 namespace AdventOfCode.Puzzles._2023;
 
 #pragma warning disable IDE1006 // Naming Styles
@@ -10,9 +12,11 @@ public partial class Day_24_Original : IPuzzle
 	private const double Low = 200_000_000_000_000;
 	private const double High = 400_000_000_000_000;
 
+	[StructLayout(LayoutKind.Auto)]
 	private record struct Hailstone(
 		double Px, double Py, double Pz,
-		int Vx, int Vy, int Vz)
+		int Vx, int Vy, int Vz
+	)
 	{
 		private readonly double _c2d = (Py * Vx) - (Px * Vy);
 

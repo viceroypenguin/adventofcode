@@ -1,10 +1,12 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace AdventOfCode.Puzzles._2017;
 
 [Puzzle(2017, 18, CodeType.Fastest)]
 public class Day_18_Fastest : IPuzzle
 {
+	[StructLayout(LayoutKind.Auto)]
 	private struct Instruction
 	{
 		public int Operation { get; set; }

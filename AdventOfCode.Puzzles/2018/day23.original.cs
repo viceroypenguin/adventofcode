@@ -1,11 +1,15 @@
-﻿namespace AdventOfCode.Puzzles._2018;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
+
+namespace AdventOfCode.Puzzles._2018;
 
 [Puzzle(2018, 23, CodeType.Original)]
 public partial class Day_23_Original : IPuzzle
 {
+	[StructLayout(LayoutKind.Auto)]
 	public record struct Bot(int X, int Y, int Z, int P);
 
-	[GeneratedRegex("pos=\\<(?<x>\\-?\\d+),(?<y>\\-?\\d+),(?<z>\\-?\\d+)\\>, r=(?<p>\\d+)")]
+	[GeneratedRegex("pos=\\<(?<x>\\-?\\d+),(?<y>\\-?\\d+),(?<z>\\-?\\d+)\\>, r=(?<p>\\d+)", RegexOptions.ExplicitCapture)]
 	private static partial Regex PositionRegex();
 
 	public (string, string) Solve(PuzzleInput input)
@@ -18,7 +22,8 @@ public partial class Day_23_Original : IPuzzle
 				X: Convert.ToInt32(m.Groups["x"].Value),
 				Y: Convert.ToInt32(m.Groups["y"].Value),
 				Z: Convert.ToInt32(m.Groups["z"].Value),
-				P: Convert.ToInt32(m.Groups["p"].Value)))
+				P: Convert.ToInt32(m.Groups["p"].Value)
+			))
 			.ToList();
 
 		var powerful = bots
@@ -69,7 +74,8 @@ public partial class Day_23_Original : IPuzzle
 						b.Y - length + (length * y / 5),
 						b.Z - length + (length * z / 5),
 						length,
-						b.Bots))
+						b.Bots)
+					)
 				.OrderByDescending(b => b.Count)
 				.Take(200)
 				.ToList();
@@ -104,9 +110,11 @@ public partial class Day_23_Original : IPuzzle
 		return (part1, part2);
 	}
 
+	[SuppressMessage("Design", "MA0096:A class that implements IComparable<T> should also implement IEquatable<T>")]
+	[SuppressMessage("Design", "MA0097:A class that implements IComparable<T> or IComparable should override comparison operators")]
 	private sealed class BoundingBox : IComparable<BoundingBox>
 	{
-		public BoundingBox(int x, int y, int z, int length, IList<Bot> bots)
+		public BoundingBox(int x, int y, int z, int length, List<Bot> bots)
 		{
 			X = x;
 			Y = y;
@@ -117,7 +125,8 @@ public partial class Day_23_Original : IPuzzle
 				.Where(b =>
 					Math.Abs(b.X - X) +
 					Math.Abs(b.Y - Y) +
-					Math.Abs(b.Z - Z) <= b.P + Length)
+					Math.Abs(b.Z - Z) <= b.P + Length
+				)
 				.ToList();
 		}
 
@@ -126,7 +135,7 @@ public partial class Day_23_Original : IPuzzle
 		public int Z { get; }
 		public int Length { get; }
 
-		public IList<Bot> Bots { get; }
+		public List<Bot> Bots { get; }
 		public int Count => Bots.Count;
 
 		public int CompareTo(BoundingBox other) =>

@@ -1,4 +1,4 @@
-﻿using static AdventOfCode.Common.Extensions.NumberExtensions;
+using static AdventOfCode.Common.Extensions.NumberExtensions;
 
 namespace AdventOfCode.Puzzles._2019;
 
@@ -57,21 +57,23 @@ public class Day_10_Original : IPuzzle
 					yDist /= gcd;
 				}
 
-				int _x = x + xDist, _y = y + yDist;
+				int newX = x + xDist, newY = y + yDist;
 				var flag = true;
-				while (flag
-					&& _x >= 0 && _x < mapX
-					&& _y >= 0 && _y < mapY
-					&& (_x, _y) != a)
+				while (
+					flag
+					&& newX >= 0 && newX < mapX
+					&& newY >= 0 && newY < mapY
+					&& (newX, newY) != a
+				)
 				{
-					if (asteroids.Contains((_x, _y)))
+					if (asteroids.Contains((newX, newY)))
 					{
 						flag = false;
 					}
 					else
 					{
-						_x += xDist;
-						_y += yDist;
+						newX += xDist;
+						newY += yDist;
 					}
 				}
 

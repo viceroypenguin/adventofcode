@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode.Puzzles._2022;
+﻿using System.Runtime.InteropServices;
+
+namespace AdventOfCode.Puzzles._2022;
 
 [Puzzle(2022, 19, CodeType.Original)]
 public partial class Day_19_Original : IPuzzle
@@ -39,6 +41,7 @@ public partial class Day_19_Original : IPuzzle
 		return (part1, part2);
 	}
 
+	[StructLayout(LayoutKind.Auto)]
 	private readonly record struct State(
 		int Minute,
 		int OreCount = 0,
@@ -48,7 +51,8 @@ public partial class Day_19_Original : IPuzzle
 		int OreRobots = 1,
 		int ClayRobots = 0,
 		int ObsidianRobots = 0,
-		int GeodeRobots = 0);
+		int GeodeRobots = 0
+	);
 
 	private static int GetMaxGeodes(Dictionary<string, Dictionary<string, int>> robots, int minutes)
 	{

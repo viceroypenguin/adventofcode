@@ -1,10 +1,13 @@
-﻿namespace AdventOfCode.Puzzles._2022;
+using System.Runtime.InteropServices;
+
+namespace AdventOfCode.Puzzles._2022;
 
 #pragma warning disable CS1717 // Assignment made to same variable
 
 [Puzzle(2022, 14, CodeType.Fastest)]
 public partial class Day_14_Fastest : IPuzzle
 {
+	[StructLayout(LayoutKind.Auto)]
 	private record struct Line(int X1, int Y1, int X2, int Y2);
 
 	public (string part1, string part2) Solve(PuzzleInput input)

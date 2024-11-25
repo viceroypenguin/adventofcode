@@ -22,8 +22,8 @@ public class Day_19_Original : IPuzzle
 		static int NextPowerOfThree(int n)
 		{
 			var x = 3;
-			for (; x < n; x *= 3)
-				;
+			while (x < n)
+				x *= 3;
 			return x;
 		}
 

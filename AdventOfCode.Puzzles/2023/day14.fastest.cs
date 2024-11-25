@@ -70,8 +70,8 @@ public sealed partial class Day_14_Fastest : IPuzzle
 		for (var x = 0; x < width - 1; x++)
 		{
 			var fallTo = x;
-			for (; map[fallTo] is not (byte)'.'; fallTo += width)
-				;
+			while (map[fallTo] is not (byte)'.')
+				fallTo += width;
 
 			for (var y = fallTo + width; y < map.Length; y += width)
 			{
@@ -98,8 +98,8 @@ public sealed partial class Day_14_Fastest : IPuzzle
 		for (var x = map.Length - 2; map[x] != '\n'; x--)
 		{
 			var fallTo = x;
-			for (; map[fallTo] is not (byte)'.'; fallTo -= width)
-				;
+			while (map[fallTo] is not (byte)'.')
+				fallTo -= width;
 
 			for (var y = fallTo - width; y >= 0; y -= width)
 			{
@@ -126,8 +126,8 @@ public sealed partial class Day_14_Fastest : IPuzzle
 		for (var y = 0; y < map.Length; y += width)
 		{
 			var fallTo = y;
-			for (; map[fallTo] is not (byte)'.'; fallTo++)
-				;
+			while (map[fallTo] is not (byte)'.')
+				fallTo++;
 
 			for (var x = fallTo + 1; map[x] != '\n'; x++)
 			{
@@ -154,8 +154,8 @@ public sealed partial class Day_14_Fastest : IPuzzle
 		for (var y = map.Length - 2; y > 0; y -= width)
 		{
 			var fallTo = y;
-			for (; map[fallTo] is not (byte)'.'; fallTo--)
-				;
+			while (map[fallTo] is not (byte)'.')
+				fallTo--;
 
 			for (var x = fallTo - 1; x >= 0 && map[x] != '\n'; x--)
 			{

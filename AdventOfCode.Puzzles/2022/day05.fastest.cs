@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace AdventOfCode.Puzzles._2022;
@@ -30,8 +30,8 @@ public partial class Day_05_Fastest : IPuzzle
 
 		// find end of map
 		var lineCnt = 0;
-		for (lineCnt = 0; input.Lines[lineCnt][1] != '1'; lineCnt++)
-			;
+		while (input.Lines[lineCnt][1] != '1')
+			lineCnt++;
 
 		// extract map to stacks for p1 and p2
 		var instructionLine = lineCnt + 2;

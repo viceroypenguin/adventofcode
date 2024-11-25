@@ -1,11 +1,14 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace AdventOfCode.Puzzles._2018;
 
 [Puzzle(2018, 10, CodeType.Original)]
 public partial class Day_10_Original : IPuzzle
 {
-	[GeneratedRegex("position=<(?<posx>(\\s*|-)\\d+),(?<posy>(\\s|-)*\\d+)> velocity=<(?<velx>(\\s*|-)\\d+),(?<vely>(\\s|-)*\\d+)>", RegexOptions.Compiled)]
+	[GeneratedRegex("position=<(?<posx>(\\s*|-)\\d+),(?<posy>(\\s|-)*\\d+)> velocity=<(?<velx>(\\s*|-)\\d+),(?<vely>(\\s|-)*\\d+)>", RegexOptions.ExplicitCapture)]
 	private static partial Regex PositionRegex();
 
+	[SuppressMessage("Style", "IDE0042:Deconstruct variable declaration")]
 	public (string, string) Solve(PuzzleInput input)
 	{
 		var regex = PositionRegex();
@@ -27,10 +30,11 @@ public partial class Day_10_Original : IPuzzle
 		var steps = Math.Abs(minyvel.posx - maxyvel.posx) / Math.Abs(maxyvel.velx - minyvel.velx);
 
 		var atStep = points
-			 .Select(p => (
-				  x: p.posx + (steps * p.velx),
-				  y: p.posy + (steps * p.vely)))
-			 .ToList();
+			.Select(p => (
+				x: p.posx + (steps * p.velx),
+				y: p.posy + (steps * p.vely)
+			))
+			.ToList();
 
 		var minx = atStep.Min(p => p.x);
 		var miny = atStep.Min(p => p.y);

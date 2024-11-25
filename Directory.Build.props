@@ -2,7 +2,7 @@
 
   <PropertyGroup>
 	<LangVersion>latest</LangVersion>
-	<TargetFramework>net8.0</TargetFramework>
+	<TargetFramework>net9.0</TargetFramework>
 
 	<Nullable>enable</Nullable>
 	<ImplicitUsings>enable</ImplicitUsings>
@@ -23,10 +23,6 @@
 	<Using Include="AdventOfCode.Common.Models"/>
 	<Using Include="SuperLinq"/>
 	<Using Include="System.Text.RegularExpressions"/>
-  </ItemGroup>
-
-  <ItemGroup>
-	<PackageReference Include="SuperLinq" Version="6.1.0" />
   </ItemGroup>
 
 </Project>

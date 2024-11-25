@@ -1,10 +1,12 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
+using System.Runtime.InteropServices;
 
 namespace AdventOfCode.Puzzles._2017;
 
 [Puzzle(2017, 24, CodeType.Original)]
 public class Day_24_Original : IPuzzle
 {
+	[StructLayout(LayoutKind.Auto)]
 	private struct Component
 	{
 		public int PortA { get; set; }
