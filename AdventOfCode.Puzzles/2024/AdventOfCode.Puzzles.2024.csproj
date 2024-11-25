@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+	<RootNamespace>AdventOfCode.Puzzles._2024</RootNamespace>
+  </PropertyGroup>
+  
+  <ItemGroup>
+	<ProjectReference Include="..\..\AdventOfCode.Common\AdventOfCode.Common.csproj" />
+  </ItemGroup>
+</Project>
