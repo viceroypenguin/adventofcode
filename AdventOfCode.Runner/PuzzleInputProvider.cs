@@ -32,14 +32,14 @@ public sealed class PuzzleInputProvider
 			BaseAddress = baseAddress,
 			DefaultRequestHeaders =
 			{
-				{ "User-Agent", ".NET/7.0 (https://github.com/viceroypenguin/adventofcode by stuart@turner-isageek.com)" },
+				{ "User-Agent", ".NET/9.0 (https://github.com/viceroypenguin/adventofcode by stuart@turner-isageek.com)" },
 			},
 		};
 	}
 
 	public PuzzleInput GetRawInput(int year, int day)
 	{
-		var inputFile = @$"Inputs\{year}\day{day:00}.input.txt";
+		var inputFile = $"Inputs/{year}/day{day:00}.input.txt";
 		_ = Directory.CreateDirectory(Path.GetDirectoryName(inputFile)!);
 		if (!File.Exists(inputFile))
 		{
