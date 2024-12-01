@@ -3,12 +3,13 @@ namespace AdventOfCode.Puzzles._2024;
 [Puzzle(2024, 01, CodeType.Original)]
 public partial class Day_01_Original : IPuzzle
 {
+	[GeneratedRegex(@"(\d+)\s+(\d+)")]
+	private static partial Regex NumbersRegex { get; }
+
 	public (string, string) Solve(PuzzleInput input)
 	{
-		var regex = new Regex(@"(\d+)\s+(\d+)");
-
 		var list = input.Lines
-			.Select(l => regex.Match(l))
+			.Select(l => NumbersRegex.Match(l))
 			.Select(m => new
 			{
 				int1 = int.Parse(m.Groups[1].Value),
