@@ -1,3 +1,6 @@
+using System.Runtime.InteropServices;
+using System.Runtime.Intrinsics;
+
 namespace AdventOfCode.Puzzles._2024;
 
 [Puzzle(2024, 01, CodeType.Fastest)]
@@ -34,25 +37,30 @@ public partial class Day_01_Fastest : IPuzzle
 		list1.Sort();
 		list2.Sort();
 
-		var part1 = 0;
-		var part2 = 0;
-		var l2Idx = 0;
-		for (var i = 0; i < idx; i++)
+		var vec1 = MemoryMarshal.Cast<int, Vector256<int>>(list1);
+		var vec2 = MemoryMarshal.Cast<int, Vector256<int>>(list2);
+
+		var part1 = Vector256<int>.Zero;
+		var part2 = Vector256<int>.Zero;
+		var l1Idx = 0;
+		for (var i = 0; i < vec1.Length && i < vec2.Length; i++)
 		{
+			var v2 = vec2[i];
+			part1 += Vector256.Abs(vec1[i] - v2);
 
-			var l1 = list1[i];
-			part1 += Math.Abs(l1 - list2[i]);
-
-			while (l2Idx < list2.Length && list2[l2Idx] < l1)
-				l2Idx++;
-
-			while (l2Idx < list2.Length && list2[l2Idx] == l1)
+			var max = v2.GetElement(Vector256<int>.Count - 1);
+			while (l1Idx < list1.Length && list1[l1Idx] <= max)
 			{
-				l2Idx++;
-				part2 += l1;
+				var v1 = Vector256.Create(list1[l1Idx]);
+				part2 += Vector256.BitwiseAnd(v1, Vector256.Equals(v1, v2));
+
+				if (list1[l1Idx] == max)
+					break;
+
+				l1Idx++;
 			}
 		}
 
-		return (part1.ToString(), part2.ToString());
+		return (Vector256.Sum(part1).ToString(), Vector256.Sum(part2).ToString());
 	}
 }
