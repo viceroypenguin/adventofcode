@@ -5,19 +5,26 @@ public partial class Day_01_Fastest : IPuzzle
 {
 	public (string, string) Solve(PuzzleInput input)
 	{
-		Span<int> list1 = stackalloc int[input.Bytes.Length / 8];
-		Span<int> list2 = stackalloc int[input.Bytes.Length / 8];
+		Span<int> list1 = new int[input.Bytes.Length / 8];
+		Span<int> list2 = new int[input.Bytes.Length / 8];
 
-		var span = input.Span;
 		var idx = 0;
-		while (span.Length > 0)
+		foreach (var line in input.Span[..^1].EnumerateLines())
 		{
-			(list1[idx], var n) = span.AtoI();
-			span = span[n..];
-			n = span.IndexOfAnyExcept((byte)' ');
-			span = span[n..];
-			(list2[idx], n) = span.AtoI();
-			span = span[(n + 1)..];
+			int i = 0, n = 0;
+
+			while (line[i] != ' ')
+				n = (n * 10) + (line[i++] - '0');
+
+			list1[idx] = n;
+
+			i += 3;
+			n = 0;
+			while (i < line.Length)
+				n = (n * 10) + (line[i++] - '0');
+
+			list2[idx] = n;
+
 			idx++;
 		}
 
@@ -32,15 +39,17 @@ public partial class Day_01_Fastest : IPuzzle
 		var l2Idx = 0;
 		for (var i = 0; i < idx; i++)
 		{
-			part1 += Math.Abs(list1[i] - list2[i]);
 
-			while (l2Idx < list2.Length && list2[l2Idx] < list1[i])
+			var l1 = list1[i];
+			part1 += Math.Abs(l1 - list2[i]);
+
+			while (l2Idx < list2.Length && list2[l2Idx] < l1)
 				l2Idx++;
 
-			while (l2Idx < list2.Length && list2[l2Idx] == list1[i])
+			while (l2Idx < list2.Length && list2[l2Idx] == l1)
 			{
 				l2Idx++;
-				part2 += list1[i];
+				part2 += l1;
 			}
 		}
 
