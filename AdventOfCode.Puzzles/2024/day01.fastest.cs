@@ -37,14 +37,11 @@ public partial class Day_01_Fastest : IPuzzle
 			while (l2Idx < list2.Length && list2[l2Idx] < list1[i])
 				l2Idx++;
 
-			var n = 0;
 			while (l2Idx < list2.Length && list2[l2Idx] == list1[i])
 			{
 				l2Idx++;
-				n++;
+				part2 += list1[i];
 			}
-
-			part2 += list1[i] * n;
 		}
 
 		return (part1.ToString(), part2.ToString());
