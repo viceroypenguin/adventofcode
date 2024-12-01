@@ -43,6 +43,9 @@ public sealed class PuzzleInputProvider
 		_ = Directory.CreateDirectory(Path.GetDirectoryName(inputFile)!);
 		if (!File.Exists(inputFile))
 		{
+			if (DateTimeOffset.Now < new DateTimeOffset(year, 12, day, 0, 0, 0, TimeSpan.FromHours(-5)))
+				throw new InvalidOperationException("Puzzle has not been released yet.");
+
 			var response = _httpClient.GetAsync($"{year}/day/{day}/input")
 				.GetAwaiter()
 				.GetResult();
