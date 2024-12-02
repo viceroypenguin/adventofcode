@@ -46,30 +46,24 @@ public partial class Day_02_Fastest : IPuzzle
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		static bool IsValid(int a, int b) => a - b is >= 1 and <= 3;
 
-		switch (levels[1] >= levels[0])
+		if (levels[1] >= levels[0])
 		{
-			case true:
+			for (var i = 0; i < levels.Length - 1; i++)
 			{
-				for (var i = 0; i < levels.Length - 1; i++)
-				{
-					if (!IsValid(levels[i + 1], levels[i]))
-						return 0;
-				}
-
-				return 1;
-			}
-
-			case false:
-			{
-				for (var i = 0; i < levels.Length - 1; i++)
-				{
-					if (!IsValid(levels[i], levels[i + 1]))
-						return 0;
-				}
-
-				return 1;
+				if (!IsValid(levels[i + 1], levels[i]))
+					return 0;
 			}
 		}
+		else
+		{
+			for (var i = 0; i < levels.Length - 1; i++)
+			{
+				if (!IsValid(levels[i], levels[i + 1]))
+					return 0;
+			}
+		}
+
+		return 1;
 	}
 
 	private static int IsSafe2(Span<int> levels, Span<int> scratch)
