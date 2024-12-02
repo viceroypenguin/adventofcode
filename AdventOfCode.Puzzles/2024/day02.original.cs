@@ -18,12 +18,9 @@ public partial class Day_02_Original : IPuzzle
 	{
 		static bool IsValid(int a, int b) => a - b is >= 1 and <= 3;
 
-		if (levels.Window(2).All(w => IsValid(w[0], w[1])))
-			return true;
-		if (levels.Window(2).All(w => IsValid(w[1], w[0])))
-			return true;
-
-		return false;
+		return
+			levels.Window(2).All(w => IsValid(w[0], w[1]))
+			|| levels.Window(2).All(w => IsValid(w[1], w[0]));
 	}
 
 	private static bool IsSafe2(int[] levels)
