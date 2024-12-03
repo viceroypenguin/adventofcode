@@ -12,7 +12,7 @@ public partial class Day_03_Original : IPuzzle
 	public (string, string) Solve(PuzzleInput input)
 	{
 		var part1 = MulRegex().Matches(input.Text)
-			.Select(m => long.Parse(m.Groups[1].Value) * long.Parse(m.Groups[2].Value))
+			.Select(m => long.Parse(m.Groups[1].ValueSpan) * long.Parse(m.Groups[2].ValueSpan))
 			.Sum()
 			.ToString();
 
@@ -32,7 +32,7 @@ public partial class Day_03_Original : IPuzzle
 
 				case (true, _, true, _):
 				{
-					sum += long.Parse(m.Groups["mul1"].Value) * long.Parse(m.Groups["mul2"].Value);
+					sum += long.Parse(m.Groups["mul1"].ValueSpan) * long.Parse(m.Groups["mul2"].ValueSpan);
 					break;
 				}
 
