@@ -3,20 +3,22 @@ namespace AdventOfCode.Puzzles._2024;
 [Puzzle(2024, 03, CodeType.Original)]
 public partial class Day_03_Original : IPuzzle
 {
+	[GeneratedRegex(@"mul\((\d+),(\d+)\)")]
+	private static partial Regex MulRegex();
+
+	[GeneratedRegex(@"(?<do>do\(\))|(?<mul>mul\((?<mul1>\d+),(?<mul2>\d+)\))|(?<dont>don't\(\))")]
+	private static partial Regex InstructionsRegex();
+
 	public (string, string) Solve(PuzzleInput input)
 	{
-		var regex = new Regex(@"mul\((\d+),(\d+)\)");
-
-		var part1 = regex.Matches(input.Text)
+		var part1 = MulRegex().Matches(input.Text)
 			.Select(m => long.Parse(m.Groups[1].Value) * long.Parse(m.Groups[2].Value))
 			.Sum()
 			.ToString();
 
-		var regex2 = new Regex(@"(?<do>do\(\))|(?<mul>mul\((?<mul1>\d+),(?<mul2>\d+)\))|(?<dont>don't\(\))");
-
 		var sum = 0L;
 		var state = true;
-		foreach (Match m in regex2.Matches(input.Text))
+		foreach (Match m in InstructionsRegex().Matches(input.Text))
 		{
 			switch (state, m.Groups["do"].Success, m.Groups["mul"].Success, m.Groups["dont"].Success)
 			{
