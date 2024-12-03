@@ -43,14 +43,13 @@ public partial class Day_02_Fastest : IPuzzle
 
 	private static int IsSafe1(Span<int> levels)
 	{
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		static bool IsValid(int a, int b) => a - b is >= 1 and <= 3;
+		static bool IsValid(int delta) => delta is >= 1 and <= 3;
 
 		if (levels[1] >= levels[0])
 		{
 			for (var i = 0; i < levels.Length - 1; i++)
 			{
-				if (!IsValid(levels[i + 1], levels[i]))
+				if (!IsValid(levels[i + 1] - levels[i]))
 					return 0;
 			}
 		}
@@ -58,7 +57,7 @@ public partial class Day_02_Fastest : IPuzzle
 		{
 			for (var i = 0; i < levels.Length - 1; i++)
 			{
-				if (!IsValid(levels[i], levels[i + 1]))
+				if (!IsValid(levels[i] - levels[i + 1]))
 					return 0;
 			}
 		}
