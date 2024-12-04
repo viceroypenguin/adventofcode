@@ -1,5 +1,3 @@
-using System.Runtime.CompilerServices;
-
 namespace AdventOfCode.Puzzles._2024;
 
 [Puzzle(2024, 02, CodeType.Fastest)]
