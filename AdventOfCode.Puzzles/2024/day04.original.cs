@@ -51,18 +51,15 @@ public partial class Day_04_Original : IPuzzle
 		{
 			for (var x = 0; x < map[y].Length; x++)
 			{
-				if (x is 0 || y is 0 || x == map[y].Length - 1 || y == map.Length - 1)
+				if (x == 0 || y == 0 || x == map[y].Length - 1 || y == map.Length - 1)
 					continue;
 
-				if (map[y][x] != (byte)'A')
+				if (map[y][x] is not (byte)'A')
 					continue;
 
-				if ((
-						(map[y - 1][x - 1] == 'M' && map[y + 1][x + 1] == 'S')
-						|| (map[y - 1][x - 1] == 'S' && map[y + 1][x + 1] == 'M'))
-					&& (
-						(map[y - 1][x + 1] == 'M' && map[y + 1][x - 1] == 'S')
-						|| (map[y - 1][x + 1] == 'S' && map[y + 1][x - 1] == 'M'))
+				if (
+					(map[y - 1][x - 1], map[y + 1][x + 1]) is ((byte)'M', (byte)'S') or ((byte)'S', (byte)'M')
+					&& (map[y - 1][x + 1], map[y + 1][x - 1]) is ((byte)'M', (byte)'S') or ((byte)'S', (byte)'M')
 				)
 				{
 					count++;
