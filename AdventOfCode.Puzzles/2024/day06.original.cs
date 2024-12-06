@@ -15,14 +15,15 @@ public partial class Day_06_Original : IPuzzle
 			.Select(i => i.p)
 			.First();
 
-		var part1 = DoPart1(map, guard);
+		var positions = RunGuard(map, guard);
+		var part1 = positions.Count.ToString();
 
-		var part2 = DoPart2(map, guard);
+		var part2 = DoPart2(map, guard, positions);
 
 		return (part1, part2);
 	}
 
-	private static string DoPart1(byte[][] map, (int x, int y) guard)
+	private static HashSet<(int, int)> RunGuard(byte[][] map, (int x, int y) guard)
 	{
 		var dir = '^';
 
@@ -46,8 +47,7 @@ public partial class Day_06_Original : IPuzzle
 			}
 		}
 
-		var part1 = positions.Count.ToString();
-		return part1;
+		return positions;
 	}
 
 	private static char RotateDirection(char dir) =>
@@ -57,6 +57,7 @@ public partial class Day_06_Original : IPuzzle
 			'>' => 'v',
 			'v' => '<',
 			'<' => '^',
+			_ => ' ',
 		};
 
 	private static (int x, int y) MovePosition((int x, int y) guard, char dir) =>
@@ -66,25 +67,20 @@ public partial class Day_06_Original : IPuzzle
 			'>' => (x: guard.x + 1, y: guard.y),
 			'v' => (x: guard.x, y: guard.y + 1),
 			'<' => (x: guard.x - 1, y: guard.y),
+			_ => default,
 		};
 
-	private static string DoPart2(byte[][] map, (int x, int y) guard)
+	private static string DoPart2(byte[][] map, (int x, int y) guard, HashSet<(int, int)> positions)
 	{
 		var obstructionCount = 0;
 
-		for (var y = 0; y < map.Length; y++)
+		foreach (var (x, y) in positions)
 		{
-			for (var x = 0; x < map[y].Length; x++)
-			{
-				if (map[y][x] == '#')
-					continue;
-
-				var ch = map[y][x];
-				map[y][x] = (byte)'#';
-				if (IsObstructionLoop(map, guard))
-					obstructionCount++;
-				map[y][x] = ch;
-			}
+			var ch = map[y][x];
+			map[y][x] = (byte)'#';
+			if (IsObstructionLoop(map, guard))
+				obstructionCount++;
+			map[y][x] = ch;
 		}
 
 		return obstructionCount.ToString();
