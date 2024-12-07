@@ -1,4 +1,6 @@
 
+using System.Runtime.InteropServices;
+
 namespace AdventOfCode.Puzzles._2024;
 
 [Puzzle(2024, 07, CodeType.Original)]
@@ -20,10 +22,16 @@ public partial class Day_07_Original : IPuzzle
 		var (part1, part2) = data
 			.Aggregate(
 				(0L, 0L),
-				(x, d) => (
-					x.Item1 + (IsValid(d.TestValue, d.Numbers) ? d.TestValue : 0),
-					x.Item2 + (IsValid2(d.TestValue, d.Numbers) ? d.TestValue : 0)
-				)
+				(x, d) =>
+				{
+					if (IsValid(d.TestValue, d.Numbers))
+						return (x.Item1 + d.TestValue, x.Item2 + d.TestValue);
+
+					if (IsValid2(d.TestValue, CollectionsMarshal.AsSpan(d.Numbers)))
+						return (x.Item1, x.Item2 + d.TestValue);
+
+					return (x.Item1, x.Item2);
+				}
 			);
 
 		return (part1.ToString(), part2.ToString());
@@ -56,43 +64,38 @@ public partial class Day_07_Original : IPuzzle
 		return false;
 	}
 
-	private static bool IsValid2(long testValue, List<int> numbers)
+	private static bool IsValid2(long testValue, Span<int> numbers, long value = 0)
 	{
-		var operators = new int[numbers.Count - 1];
+		if (numbers.Length == 0)
+			return value == testValue;
 
-		while (true)
 		{
-			long value = numbers[0];
+			var sum = value;
+			foreach (var n in numbers)
+				sum += n;
 
-			for (var j = 0; j < numbers.Count - 1; j++)
-			{
-				value = operators[j] switch
-				{
-					0 => value + numbers[j + 1],
-					1 => value * numbers[j + 1],
-					_ => (value * GetMultiplier(numbers[j + 1])) + numbers[j + 1],
-				};
-			}
-
-			if (value == testValue)
+			if (testValue == sum)
 				return true;
 
-			if (operators.All(o => o == 2))
+			if (testValue < sum)
 				return false;
-
-			for (var j = operators.Length - 1; j >= 0; j--)
-			{
-				if (operators[j] == 2)
-				{
-					operators[j] = 0;
-				}
-				else
-				{
-					operators[j]++;
-					break;
-				}
-			}
 		}
+
+		{
+			var product = value;
+			foreach (var n in numbers)
+				product = (product * GetMultiplier(n)) + n;
+
+			if (testValue == product)
+				return true;
+
+			if (testValue > product)
+				return false;
+		}
+
+		return IsValid2(testValue, numbers[1..], value + numbers[0])
+			|| IsValid2(testValue, numbers[1..], value * numbers[0])
+			|| IsValid2(testValue, numbers[1..], (value * GetMultiplier(numbers[0])) + numbers[0]);
 	}
 
 	private static long GetMultiplier(long number) =>
