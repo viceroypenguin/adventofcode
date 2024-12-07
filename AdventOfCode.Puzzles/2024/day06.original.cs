@@ -1,6 +1,3 @@
-
-using System;
-
 namespace AdventOfCode.Puzzles._2024;
 
 [Puzzle(2024, 06, CodeType.Original)]
