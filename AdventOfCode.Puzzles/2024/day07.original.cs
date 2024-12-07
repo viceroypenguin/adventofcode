@@ -4,11 +4,13 @@ namespace AdventOfCode.Puzzles._2024;
 [Puzzle(2024, 07, CodeType.Original)]
 public partial class Day_07_Original : IPuzzle
 {
+	[GeneratedRegex(@"^(?<test>\d+):( (?<numbers>\d+))*$", RegexOptions.ExplicitCapture)]
+	private static partial Regex EquationRegex { get; }
+
 	public (string, string) Solve(PuzzleInput input)
 	{
-		var regex = new Regex(@"^(?<test>\d+):( (?<numbers>\d+))*$", RegexOptions.ExplicitCapture);
 		var data = input.Lines
-			.Select(l => regex.Match(l))
+			.Select(l => EquationRegex.Match(l))
 			.Select(m => new
 			{
 				TestValue = long.Parse(m.Groups[1].Value),

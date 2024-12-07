@@ -3,11 +3,14 @@ namespace AdventOfCode.Puzzles._2024;
 [Puzzle(2024, 05, CodeType.Original)]
 public partial class Day_05_Original : IPuzzle
 {
+	[GeneratedRegex(@"^(\d+)\|(\d+)$")]
+	private static partial Regex OrderingRegex { get; }
+
 	public (string, string) Solve(PuzzleInput input)
 	{
 		var sections = input.Lines.Split(string.Empty).ToList();
 
-		var regex1 = new Regex(@"^(\d+)\|(\d+)$");
+		var regex1 = OrderingRegex;
 		var beforeInstructions = sections[0]
 			.Select(l => regex1.Match(l))
 			.ToLookup(x => int.Parse(x.Groups[1].Value), x => int.Parse(x.Groups[2].Value));
