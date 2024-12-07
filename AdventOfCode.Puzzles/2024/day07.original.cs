@@ -1,4 +1,3 @@
-
 using System.Runtime.InteropServices;
 
 namespace AdventOfCode.Puzzles._2024;
@@ -27,7 +26,7 @@ public partial class Day_07_Original : IPuzzle
 					if (IsValid(d.TestValue, d.Numbers))
 						return (x.Item1 + d.TestValue, x.Item2 + d.TestValue);
 
-					if (IsValid2(d.TestValue, CollectionsMarshal.AsSpan(d.Numbers)))
+					if (IsValid2(d.TestValue, CollectionsMarshal.AsSpan(d.Numbers)[1..], d.Numbers[0]))
 						return (x.Item1, x.Item2 + d.TestValue);
 
 					return (x.Item1, x.Item2);
