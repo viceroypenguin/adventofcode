@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 namespace AdventOfCode.Puzzles._2024;
 
 [Puzzle(2024, 06, CodeType.Original)]
@@ -12,100 +14,73 @@ public partial class Day_06_Original : IPuzzle
 			.Select(i => i.p)
 			.First();
 
-		var positions = RunGuard(map, guard);
-		var part1 = positions.Count.ToString();
-
-		var part2 = DoPart2(map, guard, positions);
-
-		return (part1, part2);
-	}
-
-	private static HashSet<(int, int)> RunGuard(byte[][] map, (int x, int y) guard)
-	{
-		var dir = '^';
-
+		var dir = 0;
 		var positions = new HashSet<(int, int)>() { guard };
+		var obstructionSeen = new HashSet<(int, int, int)>();
+		var obstructionCount = 0;
+
 		while (true)
 		{
-			var newPos = MovePosition(guard, dir);
+			var (x, y) = MovePosition(guard, dir);
 
-			if (newPos.y < 0 || newPos.y >= map.Length || newPos.x < 0 || newPos.x >= map[0].Length)
-			{
+			if (y < 0 || y >= map.Length || x < 0 || x >= map[0].Length)
 				break;
-			}
-			else if (map[newPos.y][newPos.x] == '#')
+
+			if (map[y][x] == '#')
 			{
 				dir = RotateDirection(dir);
+				continue;
 			}
-			else
+
+			if (positions.Add((x, y)))
 			{
-				positions.Add(newPos);
-				guard = newPos;
+				(var ch, map[y][x]) = (map[y][x], (byte)'#');
+
+				if (IsObstructionLoop(map, guard, RotateDirection(dir), obstructionSeen))
+					obstructionCount++;
+				map[y][x] = ch;
 			}
+
+			guard = (x, y);
 		}
 
-		return positions;
+		return (positions.Count.ToString(), obstructionCount.ToString());
 	}
 
-	private static char RotateDirection(char dir) =>
-		dir switch
-		{
-			'^' => '>',
-			'>' => 'v',
-			'v' => '<',
-			'<' => '^',
-			_ => ' ',
-		};
+	private static int RotateDirection(int dir) => (dir + 1) % 4;
 
-	private static (int x, int y) MovePosition((int x, int y) guard, char dir) =>
+	private static (int x, int y) MovePosition((int x, int y) guard, int dir) =>
 		dir switch
 		{
-			'^' => (x: guard.x, y: guard.y - 1),
-			'>' => (x: guard.x + 1, y: guard.y),
-			'v' => (x: guard.x, y: guard.y + 1),
-			'<' => (x: guard.x - 1, y: guard.y),
+			0 => (x: guard.x, y: guard.y - 1),
+			1 => (x: guard.x + 1, y: guard.y),
+			2 => (x: guard.x, y: guard.y + 1),
+			3 => (x: guard.x - 1, y: guard.y),
 			_ => default,
 		};
 
-	private static string DoPart2(byte[][] map, (int x, int y) guard, HashSet<(int, int)> positions)
+	private static bool IsObstructionLoop(byte[][] map, (int x, int y) guard, int dir, HashSet<(int, int, int)> positions)
 	{
-		var obstructionCount = 0;
+		positions.Clear();
+		positions.Add((guard.x, guard.y, dir));
 
-		foreach (var (x, y) in positions)
-		{
-			var ch = map[y][x];
-			map[y][x] = (byte)'#';
-			if (IsObstructionLoop(map, guard))
-				obstructionCount++;
-			map[y][x] = ch;
-		}
-
-		return obstructionCount.ToString();
-	}
-
-	private static bool IsObstructionLoop(byte[][] map, (int x, int y) guard)
-	{
-		var dir = '^';
-
-		var positions = new HashSet<(int, int, char)>() { (guard.x, guard.y, dir) };
 		while (true)
 		{
-			var newPos = MovePosition(guard, dir);
+			var (x, y) = MovePosition(guard, dir);
 
-			if (newPos.y < 0 || newPos.y >= map.Length || newPos.x < 0 || newPos.x >= map[0].Length)
-			{
+			if (y < 0 || y >= map.Length || x < 0 || x >= map[0].Length)
 				return false;
-			}
-			else if (map[newPos.y][newPos.x] == '#')
+
+			if (map[y][x] == '#')
 			{
 				dir = RotateDirection(dir);
 			}
 			else
 			{
-				if (!positions.Add((newPos.x, newPos.y, dir)))
+				if (!positions.Add((x, y, dir)))
 					return true;
 
-				guard = newPos;
+				guard = (x, y);
 			}
 		}
 	}
