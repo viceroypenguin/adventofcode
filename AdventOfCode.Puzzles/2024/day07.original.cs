@@ -15,20 +15,18 @@ public partial class Day_07_Original : IPuzzle
 			{
 				TestValue = long.Parse(m.Groups[1].Value),
 				Numbers = m.Groups[2].Captures.Select(c => int.Parse(c.Value)).ToList(),
-			})
-			.ToList();
+			});
 
-		var part1 = data
-			.Where(d => IsValid(d.TestValue, d.Numbers))
-			.Sum(d => d.TestValue)
-			.ToString();
+		var (part1, part2) = data
+			.Aggregate(
+				(0L, 0L),
+				(x, d) => (
+					x.Item1 + (IsValid(d.TestValue, d.Numbers) ? d.TestValue : 0),
+					x.Item2 + (IsValid2(d.TestValue, d.Numbers) ? d.TestValue : 0)
+				)
+			);
 
-		var part2 = data
-			.Where(d => IsValid2(d.TestValue, d.Numbers))
-			.Sum(d => d.TestValue)
-			.ToString();
-
-		return (part1, part2);
+		return (part1.ToString(), part2.ToString());
 	}
 
 	private static bool IsValid(long testValue, List<int> numbers)
@@ -72,7 +70,7 @@ public partial class Day_07_Original : IPuzzle
 				{
 					0 => value + numbers[j + 1],
 					1 => value * numbers[j + 1],
-					_ => long.Parse(value.ToString() + numbers[j + 1].ToString()),
+					_ => (value * GetMultiplier(numbers[j + 1])) + numbers[j + 1],
 				};
 			}
 
@@ -96,4 +94,28 @@ public partial class Day_07_Original : IPuzzle
 			}
 		}
 	}
+
+	private static long GetMultiplier(long number) =>
+		number switch
+		{
+			0 => 1,
+			< 10 => 10,
+			< 100 => 100,
+			< 1_000 => 1_000,
+			< 10_000 => 10_000,
+			< 100_000 => 100_000,
+			< 1_000_000 => 1_000_000,
+			< 10_000_000 => 10_000_000,
+			< 100_000_000 => 100_000_000,
+			< 1_000_000_000 => 1_000_000_000,
+			< 10_000_000_000 => 10_000_000_000,
+			< 100_000_000_000 => 100_000_000_000,
+			< 1_000_000_000_000 => 1_000_000_000_000,
+			< 10_000_000_000_000 => 10_000_000_000_000,
+			< 100_000_000_000_000 => 100_000_000_000_000,
+			< 1_000_000_000_000_000 => 1_000_000_000_000_000,
+			< 10_000_000_000_000_000 => 10_000_000_000_000_000,
+			< 100_000_000_000_000_000 => 100_000_000_000_000_000,
+			_ => 1_000_000_000_000_000_000,
+		};
 }
