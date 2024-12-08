@@ -22,7 +22,7 @@ public partial class Day_08_Original : IPuzzle
 				})
 			)
 			.Distinct()
-			.Count(p => p.x.Between(0, map[0].Length - 1) && p.y.Between(0, map.Length - 1))
+			.Count(p => p.IsValid(map))
 			.ToString();
 
 		var part2 = antennas
@@ -36,7 +36,7 @@ public partial class Day_08_Original : IPuzzle
 				)
 			)
 			.Distinct()
-			.Count(p => p.x.Between(0, map[0].Length - 1) && p.y.Between(0, map.Length - 1))
+			.Count(p => p.IsValid(map))
 			.ToString();
 
 		return (part1, part2);

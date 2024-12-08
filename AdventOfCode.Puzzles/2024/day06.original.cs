@@ -23,7 +23,7 @@ public partial class Day_06_Original : IPuzzle
 		{
 			var (x, y) = MovePosition(guard, dir);
 
-			if (!y.Between(0, map.Length - 1) || !x.Between(0, map[0].Length - 1))
+			if (!(x, y).IsValid(map))
 				break;
 
 			if (map[y][x] == '#')
@@ -68,7 +68,7 @@ public partial class Day_06_Original : IPuzzle
 		{
 			var (x, y) = MovePosition(guard, dir);
 
-			if (!y.Between(0, map.Length - 1) || !x.Between(0, map[0].Length - 1))
+			if (!(x, y).IsValid(map))
 				return false;
 
 			if (map[y][x] == '#')
