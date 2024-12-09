@@ -1,5 +1,3 @@
-using System.Runtime.InteropServices;
-
 namespace AdventOfCode.Puzzles._2024;
 
 [Puzzle(2024, 08, CodeType.Original)]
