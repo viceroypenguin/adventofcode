@@ -4,7 +4,6 @@ using DocoptNet;
 using Spectre.Console;
 
 var runner = new PuzzleRunner();
-var console = AnsiConsole.Create(new AnsiConsoleSettings());
 
 if (args.Length > 0)
 {
@@ -43,11 +42,13 @@ if (args.Length > 0)
 		}
 		else
 		{
-			RunPuzzles(puzzles
-				.OrderBy(p => p.Year)
-				.ThenBy(p => p.Day)
-				.ThenBy(p => p.CodeType == CodeType.Original ? 0 : 1)
-				.ToList()
+			RunPuzzles(
+				puzzles
+					.OrderBy(p => p.Year)
+					.ThenBy(p => p.Day)
+					.ThenBy(p => p.CodeType == CodeType.Original ? 0 : 1)
+					.ToList(),
+				arguments.OptSilent
 			);
 		}
 
@@ -56,6 +57,7 @@ if (args.Length > 0)
 }
 else
 {
+	var console = AnsiConsole.Create(new AnsiConsoleSettings());
 	var font = FigletFont.Default;
 	var f = new FigletText(font, "Advent of Code")
 	{
@@ -90,7 +92,7 @@ else
 	}
 	else
 	{
-		RunPuzzles(puzzles);
+		RunPuzzles(puzzles, silent: false);
 	}
 
 	(int, IReadOnlyCollection<PuzzleModel>) PickYear(IReadOnlyCollection<PuzzleModel> puzzles, IReadOnlyList<int> years)
@@ -133,8 +135,15 @@ else
 	return 0;
 }
 
-void RunPuzzles(IReadOnlyCollection<PuzzleModel> puzzles)
+void RunPuzzles(IReadOnlyCollection<PuzzleModel> puzzles, bool silent)
 {
+	if (silent)
+	{
+		runner.RunPuzzles(puzzles).Consume();
+		return;
+	}
+
+	var console = AnsiConsole.Create(new AnsiConsoleSettings());
 	var rootTable = new Table().Expand()
 		.AddColumn("Dummy")
 		.HideHeaders()
