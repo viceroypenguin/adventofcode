@@ -14,22 +14,22 @@ public partial class Day_10_Original : IPuzzle
 		var part1 = 0;
 		var part2 = 0;
 
+		var distinct = new HashSet<(int, int)>();
 		foreach (var (p, item) in zeros)
 		{
-			var trailheads = SuperEnumerable
+			distinct.Clear();
+
+			part2 += SuperEnumerable
 				.TraverseBreadthFirst(
 					p,
 					p => p.GetCartesianNeighbors(map)
 						.Where(q => map[q.y][q.x] == map[p.y][p.x] + 1)
 				)
 				.Where(p => map[p.y][p.x] == 9)
-				.ToList();
-
-			part1 += trailheads
-				.Distinct()
+				.Do(p => distinct.Add(p))
 				.Count();
 
-			part2 += trailheads.Count;
+			part1 += distinct.Count;
 		}
 
 		return (part1.ToString(), part2.ToString());
