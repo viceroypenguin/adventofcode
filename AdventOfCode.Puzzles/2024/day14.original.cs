@@ -42,11 +42,8 @@ public partial class Day_14_Original : IPuzzle
 			.Aggregate(1L, (a, b) => a * b.c);
 
 		var part2 = 0;
-		while (true)
+		while (!robots.CountBy(r => (r.px, r.py)).All(k => k.Value == 1))
 		{
-			if (robots.CountBy(r => (r.px, r.py)).All(k => k.Value == 1))
-				break;
-
 			part2++;
 			for (var i = 0; i < robots.Length; i++)
 			{
