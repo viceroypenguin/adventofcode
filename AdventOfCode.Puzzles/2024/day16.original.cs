@@ -68,8 +68,6 @@ public partial class Day_16_Original : IPuzzle
 			if (q.previousState == default)
 				break;
 
-			map[q.previousState.p.y][q.previousState.p.x] = (byte)'O';
-
 			var prev = paths[q.previousState];
 			queue.Enqueue(prev);
 
