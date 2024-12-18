@@ -18,41 +18,38 @@ public partial class Day_18_Original : IPuzzle
 			)
 			.ToList();
 
-		var firstKilo = errors.Take(1024).ToHashSet();
+		var part1 = GetShortestPathCost(errors.Take(1024).ToHashSet());
 
-		var part1 = SuperEnumerable
+		var lo = 1025;
+		var hi = errors.Count - 1;
+		var mid = (lo + hi) / 2;
+		while (lo < hi)
+		{
+			try
+			{
+				GetShortestPathCost(errors.Take(mid).ToHashSet());
+				lo = mid + 1;
+				mid = (lo + hi) / 2;
+			}
+			catch (InvalidOperationException)
+			{
+				hi = mid - 1;
+				mid = (lo + hi) / 2;
+			}
+		}
+
+		var (x, y) = errors[mid];
+		return (part1.ToString(), $"{x},{y}");
+	}
+
+	private static int GetShortestPathCost(HashSet<(int x, int y)> walls) =>
+		SuperEnumerable
 			.GetShortestPathCost<(int x, int y), int>(
 				(0, 0),
 				(p, c) => p.GetCartesianNeighbors()
 					.Where(p => p.x.Between(0, 70) && p.y.Between(0, 70))
-					.Where(p => !firstKilo.Contains(p))
+					.Where(p => !walls.Contains(p))
 					.Select(p => (p, c + 1)),
 				(70, 70)
 			);
-
-		for (var i = 1025; i < errors.Count; i++)
-		{
-			firstKilo = errors.Take(i).ToHashSet();
-			try
-			{
-				SuperEnumerable
-					.GetShortestPathCost<(int x, int y), int>(
-						(0, 0),
-						(p, c) => p.GetCartesianNeighbors()
-							.Where(p => p.x.Between(0, 70) && p.y.Between(0, 70))
-							.Where(p => !firstKilo.Contains(p))
-							.Select(p => (p, c + 1)),
-						(70, 70)
-					);
-			}
-			catch (InvalidOperationException)
-			{
-				var (x, y) = errors[i - 1];
-				return (part1.ToString(), $"{x},{y}");
-			}
-		}
-
-		var part2 = 0;
-		return (part1.ToString(), part2.ToString());
-	}
 }
