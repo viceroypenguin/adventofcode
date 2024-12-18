@@ -22,7 +22,7 @@ public partial class Day_17_Original : IPuzzle
 			for (var j = 0; ; j++)
 			{
 				var values = RunProgram(instructions, num + j);
-				if (instructions.EndsWith(values))
+				if (values.Count == i + 1 && instructions.EndsWith(values))
 				{
 					part2 = num + j;
 					break;
