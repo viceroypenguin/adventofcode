@@ -3,11 +3,13 @@ namespace AdventOfCode.Puzzles._2024;
 [Puzzle(2024, 18, CodeType.Original)]
 public partial class Day_18_Original : IPuzzle
 {
+	[GeneratedRegex(@"(\d+),(\d+)")]
+	private static partial Regex CoordinateRegex { get; }
+
 	public (string, string) Solve(PuzzleInput input)
 	{
-		var regex = new Regex(@"(\d+),(\d+)");
 		var errors = input.Lines
-			.Select(l => regex.Match(l))
+			.Select(l => CoordinateRegex.Match(l))
 			.Select(m =>
 				(
 					x: int.Parse(m.Groups[1].Value),
@@ -28,7 +30,6 @@ public partial class Day_18_Original : IPuzzle
 				(70, 70)
 			);
 
-
 		for (var i = 1025; i < errors.Count; i++)
 		{
 			firstKilo = errors.Take(i).ToHashSet();
@@ -44,7 +45,7 @@ public partial class Day_18_Original : IPuzzle
 						(70, 70)
 					);
 			}
-			catch (Exception ex)
+			catch (InvalidOperationException)
 			{
 				var (x, y) = errors[i - 1];
 				return (part1.ToString(), $"{x},{y}");
