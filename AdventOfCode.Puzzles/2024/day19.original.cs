@@ -18,12 +18,12 @@ public partial class Day_19_Original : IPuzzle
 		return (part1.ToString(), part2.ToString());
 	}
 
-	private static long CountPossible(List<string> available, ReadOnlySpan<char> span, Dictionary<string, long> cache)
+	private static long CountPossible(List<string> available, ReadOnlySpan<char> span, Dictionary<int, long> cache)
 	{
 		if (span is "")
 			return 1;
 
-		if (cache.GetAlternateLookup<ReadOnlySpan<char>>().TryGetValue(span, out var result))
+		if (cache.TryGetValue(span.Length, out var result))
 			return result;
 
 		var sum = 0L;
@@ -33,6 +33,6 @@ public partial class Day_19_Original : IPuzzle
 				sum += CountPossible(available, span[a.Length..], cache);
 		}
 
-		return cache[span.ToString()] = sum;
+		return cache[span.Length] = sum;
 	}
 }
