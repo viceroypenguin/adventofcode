@@ -8,30 +8,14 @@ public partial class Day_19_Original : IPuzzle
 		var splits = input.Lines.Split(string.Empty).ToList();
 		var available = splits[0][0].Split(", ").ToList();
 
-		var part1 = splits[1]
-			.Count(p => IsPossible(available, p, []));
+		var possibles = splits[1]
+			.Select(p => CountPossible(available, p, []))
+			.ToList();
 
-		var part2 = splits[1]
-			.Sum(p => CountPossible(available, p, []));
+		var part1 = possibles.Count(p => p > 0);
+		var part2 = possibles.Sum();
 
 		return (part1.ToString(), part2.ToString());
-	}
-
-	private static bool IsPossible(List<string> available, ReadOnlySpan<char> span, Dictionary<string, bool> cache)
-	{
-		if (span is "")
-			return true;
-
-		if (cache.GetAlternateLookup<ReadOnlySpan<char>>().TryGetValue(span, out var result))
-			return result;
-
-		foreach (var a in available)
-		{
-			if (span.StartsWith(a) && IsPossible(available, span[a.Length..], cache))
-				return cache[span.ToString()] = true;
-		}
-
-		return cache[span.ToString()] = false;
 	}
 
 	private static long CountPossible(List<string> available, ReadOnlySpan<char> span, Dictionary<string, long> cache)
