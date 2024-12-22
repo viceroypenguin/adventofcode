@@ -16,10 +16,7 @@ public partial class Day_22_Original : IPuzzle
 			seen.Clear();
 
 			var num = long.Parse(l);
-			var d1 = 0;
-			var d2 = 0;
-			var d3 = 0;
-			var d4 = 0;
+			var (d1, d2, d3, d4) = (0, 0, 0, 0);
 
 			for (var i = 0; i < 2000; i++)
 			{
