@@ -44,13 +44,10 @@ public partial class Day_23_Original : IPuzzle
 	private static string DoPart2(ILookup<string, string> connections)
 	{
 		var groups = new List<List<string>>();
-		var queue = new Queue<string>();
 
-		foreach (var connection in connections)
-			queue.Enqueue(connection.Key);
-
-		while (queue.TryDequeue(out var next))
+		foreach (var n in connections)
 		{
+			var next = n.Key;
 			foreach (var g in groups)
 			{
 				if (g.TrueForAll(node => connections[node].Contains(next)))
