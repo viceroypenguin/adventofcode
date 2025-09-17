@@ -56,8 +56,13 @@ public partial class Day_09_Original : IPuzzle
 				break;
 
 			disk[index] = disk[i];
-			disk = disk[..i];
+			disk[i] = ushort.MaxValue;
 		}
+
+		if (disk[index - 1] == ushort.MaxValue)
+			disk[index - 1] = disk[index];
+
+		disk = disk[..index];
 
 		var sum = 0L;
 		for (var i = 0; i < disk.Length; i++)
