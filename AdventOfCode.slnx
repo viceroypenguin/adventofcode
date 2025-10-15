@@ -1,0 +1,20 @@
+<Solution>
+  <Folder Name="/.root/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Project Path="AdventOfCode.Common/AdventOfCode.Common.csproj" />
+  <Project Path="AdventOfCode.Puzzles/2015/AdventOfCode.Puzzles.2015.csproj" />
+  <Project Path="AdventOfCode.Puzzles/2016/AdventOfCode.Puzzles.2016.csproj" />
+  <Project Path="AdventOfCode.Puzzles/2017/AdventOfCode.Puzzles.2017.csproj" />
+  <Project Path="AdventOfCode.Puzzles/2018/AdventOfCode.Puzzles.2018.csproj" />
+  <Project Path="AdventOfCode.Puzzles/2019/AdventOfCode.Puzzles.2019.csproj" />
+  <Project Path="AdventOfCode.Puzzles/2020/AdventOfCode.Puzzles.2020.csproj" />
+  <Project Path="AdventOfCode.Puzzles/2021/AdventOfCode.Puzzles.2021.csproj" />
+  <Project Path="AdventOfCode.Puzzles/2022/AdventOfCode.Puzzles.2022.csproj" />
+  <Project Path="AdventOfCode.Puzzles/2023/AdventOfCode.Puzzles.2023.csproj" />
+  <Project Path="AdventOfCode.Puzzles/2024/AdventOfCode.Puzzles.2024.csproj" />
+  <Project Path="AdventOfCode.Runner/AdventOfCode.Runner.csproj" />
+</Solution>
