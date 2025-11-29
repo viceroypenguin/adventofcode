@@ -4,17 +4,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-	<PackageVersion Include="BenchmarkDotNet" Version="0.15.4" />
+	<PackageVersion Include="BenchmarkDotNet" Version="0.15.6" />
 	<PackageVersion Include="CommunityToolkit.HighPerformance" Version="8.4.0" />
 	<PackageVersion Include="docopt.net" Version="0.8.1" />
-	<PackageVersion Include="Microsoft.Extensions.Configuration" Version="9.0.10" />
-	<PackageVersion Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="9.0.10" />
-	<PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="9.0.10" />
-	<PackageVersion Include="Spectre.Console" Version="0.52.0" />
+	<PackageVersion Include="Microsoft.Extensions.Configuration" Version="10.0.0" />
+	<PackageVersion Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="10.0.0" />
+	<PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="10.0.0" />
+	<PackageVersion Include="Spectre.Console" Version="0.54.0" />
 	<PackageVersion Include="SuperLinq" Version="6.4.1" />
   </ItemGroup>
 
   <ItemGroup>
-	<GlobalPackageReference Include="Meziantou.Analyzer" Version="2.0.227" PrivateAssets="All" />
+	<GlobalPackageReference Include="Meziantou.Analyzer" Version="2.0.257" PrivateAssets="All" />
   </ItemGroup>
 </Project>

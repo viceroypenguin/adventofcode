@@ -32,7 +32,7 @@ public sealed class PuzzleInputProvider
 			BaseAddress = baseAddress,
 			DefaultRequestHeaders =
 			{
-				{ "User-Agent", ".NET/9.0 (https://github.com/viceroypenguin/adventofcode by stuart@turner-isageek.com)" },
+				{ "User-Agent", ".NET/10.0 (https://github.com/viceroypenguin/adventofcode by stuart@turner-isageek.com)" },
 			},
 		};
 	}

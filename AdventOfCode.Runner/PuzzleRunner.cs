@@ -26,6 +26,7 @@ public class PuzzleRunner
 		Assembly.GetAssembly(typeof(Puzzles._2022.Day_01_Original))!,
 		Assembly.GetAssembly(typeof(Puzzles._2023.Day_01_Original))!,
 		Assembly.GetAssembly(typeof(Puzzles._2024.Day_01_Original))!,
+		Assembly.GetAssembly(typeof(Puzzles._2025.Day_01_Original))!,
 	];
 
 	public PuzzleRunner()

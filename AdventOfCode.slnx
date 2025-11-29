@@ -16,5 +16,6 @@
   <Project Path="AdventOfCode.Puzzles/2022/AdventOfCode.Puzzles.2022.csproj" />
   <Project Path="AdventOfCode.Puzzles/2023/AdventOfCode.Puzzles.2023.csproj" />
   <Project Path="AdventOfCode.Puzzles/2024/AdventOfCode.Puzzles.2024.csproj" />
+  <Project Path="AdventOfCode.Puzzles/2025/AdventOfCode.Puzzles.2025.csproj" />
   <Project Path="AdventOfCode.Runner/AdventOfCode.Runner.csproj" />
 </Solution>
