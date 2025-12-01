@@ -10,9 +10,9 @@ namespace AdventOfCode.Runner;
 
 public class PuzzleRunner
 {
-	private readonly IReadOnlyList<PuzzleModel> _puzzles;
-	private readonly MethodInfo _runMethod;
-	private readonly Type _benchmarkClass;
+	private readonly IReadOnlyList<PuzzleModel> _puzzles = GetAllPuzzles();
+	private readonly MethodInfo _runMethod = typeof(PuzzleRunner).GetMethod(nameof(RunPuzzle), BindingFlags.Static | BindingFlags.NonPublic)!;
+	private readonly Type _benchmarkClass = typeof(PuzzleBenchmarkRunner<>);
 
 	private static readonly Assembly[] s_assemblies =
 	[
@@ -28,13 +28,6 @@ public class PuzzleRunner
 		Assembly.GetAssembly(typeof(Puzzles._2024.Day_01_Original))!,
 		Assembly.GetAssembly(typeof(Puzzles._2025.Day_01_Original))!,
 	];
-
-	public PuzzleRunner()
-	{
-		_puzzles = GetAllPuzzles();
-		_runMethod = GetType().GetMethod(nameof(RunPuzzle), BindingFlags.Static | BindingFlags.NonPublic)!;
-		_benchmarkClass = typeof(PuzzleBenchmarkRunner<>);
-	}
 
 	public IReadOnlyCollection<PuzzleModel> Puzzles => _puzzles;
 
