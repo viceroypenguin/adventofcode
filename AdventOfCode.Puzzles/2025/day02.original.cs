@@ -13,9 +13,7 @@ public partial class Day_02_Original : IPuzzle
 
 		var part1 = ranges
 			.SelectMany(x => SuperEnumerable.Generate(x.lo, x => x + 1).TakeWhile(y => y <= x.hi))
-			.Select(x => x.ToString())
-			.Where(x => x[..(x.Length / 2)] == x[(x.Length / 2)..])
-			.Select(long.Parse)
+			.Where(x => InvalidPart1IdRegex.IsMatch(x.ToString()))
 			.Sum();
 
 		var part2 = ranges
@@ -28,6 +26,9 @@ public partial class Day_02_Original : IPuzzle
 
 	[GeneratedRegex(@"(?<lo>\d+)-(?<hi>\d+)")]
 	private static partial Regex RangeRegex { get; }
+
+	[GeneratedRegex(@"^(\d+)(\1)$")]
+	private static partial Regex InvalidPart1IdRegex { get; }
 
 	[GeneratedRegex(@"^(\d+)(\1)+$")]
 	private static partial Regex InvalidPart2IdRegex { get; }
