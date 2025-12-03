@@ -1,5 +1,3 @@
-using System.Numerics;
-
 namespace AdventOfCode.Puzzles._2025;
 
 [Puzzle(2025, 02, CodeType.Original)]
