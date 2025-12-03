@@ -68,16 +68,16 @@ public partial class Day_02_Fastest : IPuzzle
 		var @base = 1L;
 		var base10 = 10L;
 
-		var pattern = CalculatePattern(base10, numDigits);
-		while (pattern != 0 && pattern * @base < n)
+		while (
+			CalculatePattern(base10, numDigits) is not 0 and var pattern
+			&& pattern * @base < n
+		)
 		{
 			var min = Math.Min((n + pattern - 1) / pattern, base10);
 			result += pattern * SumSequence(@base, min);
 
 			@base = base10;
 			base10 *= 10;
-
-			pattern = CalculatePattern(base10, numDigits);
 		}
 
 		return result;
