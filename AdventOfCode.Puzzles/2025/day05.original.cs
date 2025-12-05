@@ -3,16 +3,18 @@ namespace AdventOfCode.Puzzles._2025;
 [Puzzle(2025, 05, CodeType.Original)]
 public partial class Day_05_Original : IPuzzle
 {
-	[GeneratedRegex(@"(?<lo>\d+)-(?<hi>\d+)")]
-	private static partial Regex RangeRegex { get; }
-
 	public (string, string) Solve(PuzzleInput input)
 	{
 		var parts = input.Lines.Split(string.Empty).ToArray();
 
 		var idRanges = parts[0]
-			.Select(l => RangeRegex.Match(l))
-			.Select(m => (lo: long.Parse(m.Groups["lo"].Value), hi: long.Parse(m.Groups["hi"].Value)))
+			.Select(l =>
+			{
+				var span = l.AsSpan();
+				var (lo, n) = span.AtoL();
+				var (hi, _) = span[(n + 1)..].AtoL();
+				return (lo, hi);
+			})
 			.Order()
 			.Merge()
 			.ToList();
@@ -33,10 +35,9 @@ public partial class Day_05_Original : IPuzzle
 
 	private static int CompareIdToRange((long Lo, long Hi) x, (long Lo, long Hi) y)
 	{
-		var id = y.Lo;
-		if (id < x.Lo)
+		if (y.Lo < x.Lo)
 			return 1;
-		if (id > x.Hi)
+		if (y.Lo > x.Hi)
 			return -1;
 		return 0;
 	}
