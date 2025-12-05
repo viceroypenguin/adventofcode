@@ -14,8 +14,10 @@ public partial class Day_04_Original : IPuzzle
 				.Where(
 					p =>
 						p.item == '@'
-						&& p.p.GetCartesianAdjacent(map)
-							.Count(q => map[q.y][q.x] == '@') < 4
+						&& !p.p.GetCartesianAdjacent(map)
+							.Where(q => map[q.y][q.x] == '@')
+							.Skip(3)
+							.Any()
 				)
 				.ToList();
 
