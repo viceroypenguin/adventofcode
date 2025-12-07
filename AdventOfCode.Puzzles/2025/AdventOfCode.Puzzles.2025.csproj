@@ -2,7 +2,11 @@
   <PropertyGroup>
 	<RootNamespace>AdventOfCode.Puzzles._2025</RootNamespace>
   </PropertyGroup>
-  
+
+  <ItemGroup>
+	<PackageReference Include="CommunityToolkit.HighPerformance" />
+  </ItemGroup>
+
   <ItemGroup>
 	<ProjectReference Include="..\..\AdventOfCode.Common\AdventOfCode.Common.csproj" />
   </ItemGroup>
