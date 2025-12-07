@@ -27,7 +27,7 @@ public sealed partial class Day_03_Fastest : IPuzzle
 		var part1 = 0;
 		var part2 = 0;
 
-		var mutableMap = new Span2D<byte>(input.Bytes, 0, input.Bytes.Length / (stride + 1), stride, 1);
+		var mutableMap = new ReadOnlySpan2D<byte>(input.Bytes, 0, input.Bytes.Length / (stride + 1), stride, 1);
 		for (var y = 0; y < mutableMap.Height; y++)
 		{
 			var line = mutableMap.GetRowSpan(y);
@@ -78,7 +78,7 @@ public sealed partial class Day_03_Fastest : IPuzzle
 		return (part1.ToString(), part2.ToString());
 	}
 
-	private static int SweepAndReplace(Span2D<byte> mutableMap, int x, int y)
+	private static int SweepAndReplace(ReadOnlySpan2D<byte> mutableMap, int x, int y)
 	{
 		var xStart = x;
 		while (xStart > 0 && mutableMap[y, xStart - 1].Between((byte)'0', (byte)'9'))
@@ -93,7 +93,7 @@ public sealed partial class Day_03_Fastest : IPuzzle
 		}
 
 		var number = mutableMap.GetRowSpan(y).Slice(xStart, xEnd - xStart + 1);
-		var (output, _) = ((ReadOnlySpan<byte>)number).AtoI();
+		var (output, _) = number.AtoI();
 		return output;
 	}
 }
