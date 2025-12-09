@@ -15,16 +15,6 @@ public static class NumberExtensions
 		return (uint)(value - min) <= (uint)(max - min);
 	}
 
-	public static bool Between(this int value, int min, int max)
-	{
-		return (uint)(value - min) <= (uint)(max - min);
-	}
-
-	public static bool Between(this long value, long min, long max)
-	{
-		return (ulong)(value - min) <= (ulong)(max - min);
-	}
-
 	public static long Gcd(long a, long b)
 	{
 		while (b != 0) b = a % (a = b);
